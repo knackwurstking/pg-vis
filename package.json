@@ -1,0 +1,21 @@
+{
+  "name": "pg",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "homepage": "/pg-vis.github.io",
+  "scripts": {
+    "dev": "vite --host",
+    "preview": "vite preview --host",
+    "build": "vite build --minify -c vite.config.js --emptyOutDir"
+  },
+  "devDependencies": {
+    "vite": "^5.0.8",
+    "vite-plugin-pwa": "^0.20.0"
+  },
+  "dependencies": {
+    "file-saver": "^2.0.5",
+    "jszip": "^3.10.1",
+    "ui": "knackwurstking/ui#v0.2.16"
+  }
+}
