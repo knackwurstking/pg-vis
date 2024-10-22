@@ -1,0 +1,143 @@
+[data-theme="light"] { /* {{{ */
+    /* {{{ Basics */
+
+    --ui-lineHeight: 1.5;
+
+    --ui-radius: 0.25rem;
+    --ui-spacing: 0.5rem;
+
+    --ui-fontFamily: "RecVar";
+    --ui-fontSize: 16px;
+
+    --ui-fontVariation:                 "CASL" 1, "MONO" 0, "slnt" 0;
+    --ui-heading-fontVariation:         "CASL" 1, "MONO" 0, "slnt" -9;
+    --ui-button-fontVariation:          "CASL" 1, "MONO" 0, "slnt" -6;
+    --ui-input-fontVariation:           "CASL" 1, "MONO" 1, "slnt" 0;
+    --ui-text-primary-fontVariation:    "CASL" 1, "MONO" 0, "slnt" 0;
+    --ui-text-secondary-fontVariation:  "CASL" 1, "MONO" 0, "slnt" -15;
+    --ui-select-fontVariation:          "CASL" 1, "MONO" 1, "slnt" 0;
+
+    --ui-bgColor-hsl: 240, 10%, 96.1%;
+    --ui-bgColor: hsla(var(--ui-bgColor-hsl), 1);
+    --ui-color-hsl: 240, 10%, 10%;
+    --ui-color: hsla(var(--ui-color-hsl), 1);
+
+    --ui-primary-bgColor: hsla(240, 10%, 3.9%, 1);
+    --ui-primary-color: hsla(240, 10%, 98%, 1);
+
+    --ui-secondary-bgColor: hsla(240, 10%, 75%, 1);
+    --ui-secondary-color: hsla(240, 10%, 10%, 1);
+
+    --ui-destructive-bgColor: hsla(0, 72.22%, 50.59%, 1);
+    --ui-destructive-color: hsla(0, 0%, 98%, 1);
+
+    --ui-borderColor: hsla(240, 10%, 82%, 1);
+
+    --ui-ripple-color: currentColor;
+    --ui-ripple-opacity: 0.2;
+
+    --ui-backdrop-bgColor: hsla(var(--ui-bgColor-hsl), .2);
+    --ui-backdropFilter: blur(5px);
+
+    --ui-app-bar-height: 3rem;
+    --ui-dialog-header-height: 2.5rem;
+    --ui-dialog-footer-height: 3rem;
+
+    /* }}} */
+
+    /* {{{ Muted: code, pre */
+
+    --ui-muted-bgColor: hsla(240, 10%, 84.1%, 1);
+    --ui-muted-color: hsla(240, 10%, 36.1%, 1);
+    --ui-muted-borderColor: var(--ui-borderColor);
+    --ui-muted-radius: var(--ui-radius);
+    --ui-muted-fontFamily: var(--ui-fontFamily);
+    --ui-muted-fontVariation: "CASL" 0, "MONO" 1, "slnt" 0;
+
+    /* }}} */
+
+    /* {{{ ui-card */
+
+    --ui-card-bgColor: hsla(240, 10%, 92.1%, 1);
+    --ui-card-color: hsla(240, 10%, 3.9%, 1);
+    --ui-card-borderColor: var(--ui-borderColor);
+    --ui-card-radius: var(--ui-radius);
+
+    /* }}} */
+
+    background-color: var(--ui-bgColor);
+    color: var(--ui-color);
+    color-scheme: light;
+} /* }}} */
+
+[data-theme="dark"] { /* {{{ */
+    /* {{{ Basics */
+
+    --ui-lineHeight: 1.5;
+
+    --ui-radius: 0.25rem;
+    --ui-spacing: 0.5rem;
+
+    --ui-fontFamily: "RecVar";
+    --ui-fontSize: 16px;
+
+    --ui-fontVariation:                 "CASL" 1, "MONO" 0, "slnt" 0;
+    --ui-heading-fontVariation:         "CASL" 1, "MONO" 0, "slnt" -9;
+    --ui-button-fontVariation:          "CASL" 1, "MONO" 0, "slnt" -6;
+    --ui-input-fontVariation:           "CASL" 1, "MONO" 1, "slnt" 0;
+    --ui-text-primary-fontVariation:    "CASL" 1, "MONO" 0, "slnt" 0;
+    --ui-text-secondary-fontVariation:  "CASL" 1, "MONO" 0, "slnt" -15;
+    --ui-select-fontVariation:          "CASL" 1, "MONO" 1, "slnt" 0;
+
+    --ui-bgColor-hsl: 240, 10%, 3.9%;
+    --ui-bgColor: hsla(var(--ui-bgColor-hsl), 1);
+    --ui-color-hsl: 240, 10%, 90%;
+    --ui-color: hsla(var(--ui-color-hsl), 1);
+
+    --ui-primary-bgColor: hsla(240, 10%, 98%, 1);
+    --ui-primary-color: hsla(240, 10%, 10%, 1);
+
+    --ui-secondary-bgColor: hsla(240, 10%, 25%, 1);
+    --ui-secondary-color: hsla(240, 10%, 98%, 1);
+
+    --ui-destructive-bgColor: hsla(0, 62.8%, 30.6%, 1);
+    --ui-destructive-color: hsla(0, 0%, 98%, 1);
+
+    --ui-borderColor: hsla(240, 10%, 18%, 1);
+
+    --ui-ripple-color: currentColor;
+    --ui-ripple-opacity: 0.2;
+
+    --ui-backdrop-bgColor: hsla(var(--ui-bgColor-hsl), .2);
+    --ui-backdropFilter: blur(5px);
+
+    --ui-app-bar-height: 3rem;
+    --ui-dialog-header-height: 2.5rem;
+    --ui-dialog-footer-height: 3rem;
+
+    /* }}} */
+
+    /* {{{ Muted: code, pre */
+
+    --ui-muted-bgColor: hsla(240, 10%, 15.9%, 1);
+    --ui-muted-color: hsla(240, 10%, 64.9%, 1);
+    --ui-muted-borderColor: var(--ui-borderColor);
+    --ui-muted-radius: var(--ui-radius);
+    --ui-muted-fontFamily: var(--ui-fontFamily);
+    --ui-muted-fontVariation: "CASL" 0, "MONO" 1, "slnt" 0;
+
+    /* }}} */
+
+    /* {{{ ui-card */
+
+    --ui-card-bgColor: hsla(240, 10%, 7.9%, 1);
+    --ui-card-color: hsla(240, 10%, 98%, 1);
+    --ui-card-borderColor: var(--ui-borderColor);
+    --ui-card-radius: var(--ui-radius);
+
+    /* }}} */
+
+    background-color: var(--ui-bgColor);
+    color: var(--ui-color);
+    color-scheme: dark;
+} /* }}} */
