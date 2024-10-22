@@ -1,6 +1,4 @@
-[data-theme="light"] { /* {{{ */
-    /* {{{ Basics */
-
+:root {
     --ui-lineHeight: 1.5;
 
     --ui-radius: 0.25rem;
@@ -9,14 +7,26 @@
     --ui-fontFamily: "RecVar";
     --ui-fontSize: 16px;
 
-    --ui-fontVariation:                 "CASL" 1, "MONO" 0, "slnt" 0;
-    --ui-heading-fontVariation:         "CASL" 1, "MONO" 0, "slnt" -9;
-    --ui-button-fontVariation:          "CASL" 1, "MONO" 0, "slnt" -6;
-    --ui-input-fontVariation:           "CASL" 1, "MONO" 1, "slnt" 0;
-    --ui-text-primary-fontVariation:    "CASL" 1, "MONO" 0, "slnt" 0;
-    --ui-text-secondary-fontVariation:  "CASL" 1, "MONO" 0, "slnt" -15;
-    --ui-select-fontVariation:          "CASL" 1, "MONO" 1, "slnt" 0;
+    --ui-fontVariation: "CASL" 1, "MONO" 0, "slnt" 0;
+    --ui-heading-fontVariation: "CASL" 1, "MONO" 0, "slnt" -9;
+    --ui-button-fontVariation: "CASL" 1, "MONO" 0, "slnt" -6;
+    --ui-input-fontVariation: "CASL" 1, "MONO" 1, "slnt" 0;
+    --ui-text-primary-fontVariation: "CASL" 1, "MONO" 0, "slnt" 0;
+    --ui-text-secondary-fontVariation: "CASL" 1, "MONO" 0, "slnt" -15;
+    --ui-select-fontVariation: "CASL" 1, "MONO" 1, "slnt" 0;
+    --ui-thead-fontVariation: "CASL" 1, "MONO" 0, "slnt" 0;
+    --ui-tbody-fontVariation: "CASL" 1, "MONO" 0, "slnt" -3;
 
+    --ui-app-bar-height: 3rem;
+    --ui-dialog-header-height: 2.5rem;
+    --ui-dialog-footer-height: 3rem;
+    --ui-drawer-width: 20rem;
+}
+
+[data-theme="light"] {
+    /*
+     * Basics
+     */
     --ui-bgColor-hsl: 240, 10%, 96.1%;
     --ui-bgColor: hsla(var(--ui-bgColor-hsl), 1);
     --ui-color-hsl: 240, 10%, 10%;
@@ -39,13 +49,9 @@
     --ui-backdrop-bgColor: hsla(var(--ui-bgColor-hsl), .2);
     --ui-backdropFilter: blur(5px);
 
-    --ui-app-bar-height: 3rem;
-    --ui-dialog-header-height: 2.5rem;
-    --ui-dialog-footer-height: 3rem;
-
-    /* }}} */
-
-    /* {{{ Muted: code, pre */
+    /*
+     * Muted: code, pre
+     */
 
     --ui-muted-bgColor: hsla(240, 10%, 84.1%, 1);
     --ui-muted-color: hsla(240, 10%, 36.1%, 1);
@@ -54,40 +60,24 @@
     --ui-muted-fontFamily: var(--ui-fontFamily);
     --ui-muted-fontVariation: "CASL" 0, "MONO" 1, "slnt" 0;
 
-    /* }}} */
-
-    /* {{{ ui-card */
+    /*
+     * ui-card
+     */
 
     --ui-card-bgColor: hsla(240, 10%, 92.1%, 1);
     --ui-card-color: hsla(240, 10%, 3.9%, 1);
     --ui-card-borderColor: var(--ui-borderColor);
     --ui-card-radius: var(--ui-radius);
 
-    /* }}} */
-
     background-color: var(--ui-bgColor);
     color: var(--ui-color);
     color-scheme: light;
-} /* }}} */
+}
 
-[data-theme="dark"] { /* {{{ */
-    /* {{{ Basics */
-
-    --ui-lineHeight: 1.5;
-
-    --ui-radius: 0.25rem;
-    --ui-spacing: 0.5rem;
-
-    --ui-fontFamily: "RecVar";
-    --ui-fontSize: 16px;
-
-    --ui-fontVariation:                 "CASL" 1, "MONO" 0, "slnt" 0;
-    --ui-heading-fontVariation:         "CASL" 1, "MONO" 0, "slnt" -9;
-    --ui-button-fontVariation:          "CASL" 1, "MONO" 0, "slnt" -6;
-    --ui-input-fontVariation:           "CASL" 1, "MONO" 1, "slnt" 0;
-    --ui-text-primary-fontVariation:    "CASL" 1, "MONO" 0, "slnt" 0;
-    --ui-text-secondary-fontVariation:  "CASL" 1, "MONO" 0, "slnt" -15;
-    --ui-select-fontVariation:          "CASL" 1, "MONO" 1, "slnt" 0;
+[data-theme="dark"] {
+    /*
+     * Basics
+     */
 
     --ui-bgColor-hsl: 240, 10%, 3.9%;
     --ui-bgColor: hsla(var(--ui-bgColor-hsl), 1);
@@ -111,13 +101,9 @@
     --ui-backdrop-bgColor: hsla(var(--ui-bgColor-hsl), .2);
     --ui-backdropFilter: blur(5px);
 
-    --ui-app-bar-height: 3rem;
-    --ui-dialog-header-height: 2.5rem;
-    --ui-dialog-footer-height: 3rem;
-
-    /* }}} */
-
-    /* {{{ Muted: code, pre */
+    /*
+     * Muted: code, pre
+     */
 
     --ui-muted-bgColor: hsla(240, 10%, 15.9%, 1);
     --ui-muted-color: hsla(240, 10%, 64.9%, 1);
@@ -126,18 +112,16 @@
     --ui-muted-fontFamily: var(--ui-fontFamily);
     --ui-muted-fontVariation: "CASL" 0, "MONO" 1, "slnt" 0;
 
-    /* }}} */
-
-    /* {{{ ui-card */
+    /*
+     * ui-card
+     */
 
     --ui-card-bgColor: hsla(240, 10%, 7.9%, 1);
     --ui-card-color: hsla(240, 10%, 98%, 1);
     --ui-card-borderColor: var(--ui-borderColor);
     --ui-card-radius: var(--ui-radius);
 
-    /* }}} */
-
     background-color: var(--ui-bgColor);
     color: var(--ui-color);
     color-scheme: dark;
-} /* }}} */
+}
