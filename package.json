@@ -1,7 +1,7 @@
 {
     "name": "pg",
     "private": true,
-    "version": "1.0.0",
+    "version": "1.1.0",
     "type": "module",
     "homepage": "/pg-vis.github.io",
     "scripts": {
@@ -16,6 +16,6 @@
     "dependencies": {
         "file-saver": "^2.0.5",
         "jszip": "^3.10.1",
-        "ui": "file:../ui"
+        "ui": "knackwurstking/ui#v1.0.0"
     }
 }
