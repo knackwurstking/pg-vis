@@ -46,6 +46,7 @@
 - [ ] Update icons, just like the picow-led-server project
 - [ ] Fix: Cancel a gist pull will set the revision to undefined
 - [ ] Fix: Cancel a gist push will not remove the spinner
+- [ ] Fix: Revisions counter stopping at 30, need to get the real revisions count
 - [ ] Open a confirmation dialog before deleting a drawer item
 - [ ] Vis Lists entries should always take current vis product data if possible,
         mark if no data available and use stored data for this entry
