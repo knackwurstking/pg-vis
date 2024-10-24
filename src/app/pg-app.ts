@@ -1,6 +1,8 @@
+import "./pg-app-bar";
+
 import { css, html, LitElement, PropertyValues } from "lit";
 import { customElement } from "lit/decorators.js";
-import { globalStylesToShadowRoot } from "ui";
+import { globalStylesToShadowRoot, svg } from "ui";
 
 @customElement("pg-app")
 class PGApp extends LitElement {
@@ -22,8 +24,56 @@ class PGApp extends LitElement {
                 <ui-stack-layout></ui-stack-layout>
             </div>
 
-            <pg-app-bar></pg-app-bar>
+            ${this.renderAppBar()}
             <pg-drawer></pg-drawer>
+        `;
+    }
+
+    protected renderAppBar() {
+        return html`
+            <ui-app-bar position="top">
+                <ui-app-bar-item name="menu" slot="left">
+                    <ui-icon-button ghost>
+                        ${svg.smoothieLineIcons.menu}
+                    </ui-icon-button>
+                </ui-app-bar-item>
+
+                <ui-app-bar-item name="back" slot="left" hidden>
+                    <ui-icon-button ghost>
+                        ${svg.smoothieLineIcons.chevronLeft}
+                    </ui-icon-button>
+                </ui-app-bar-item>
+
+                <ui-app-bar-item name="title" slot="center">
+                    <ui-heading style="white-space: nowrap;">
+                        PG: Vis
+                    </ui-heading>
+                </ui-app-bar-item>
+
+                <ui-app-bar-item name="edit" slot="right">
+                    <ui-icon-button ghost>
+                        ${svg.smoothieLineIcons.pen}
+                    </ui-icon-button>
+                </ui-app-bar-item>
+
+                <ui-app-bar-item name="share" slot="right">
+                    <ui-icon-button ghost>
+                        ${svg.smoothieLineIcons.share}
+                    </ui-icon-button>
+                </ui-app-bar-item>
+
+                <ui-app-bar-item name="search" slot="right">
+                    <ui-icon-button ghost>
+                        ${svg.smoothieLineIcons.search}
+                    </ui-icon-button>
+                </ui-app-bar-item>
+
+                <ui-app-bar-item name="bookmark" slot="right">
+                    <ui-icon-button ghost>
+                        ${svg.smoothieLineIcons.bookmark}
+                    </ui-icon-button>
+                </ui-app-bar-item>
+            </ui-app-bar>
         `;
     }
 
