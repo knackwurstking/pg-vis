@@ -1,21 +1,6 @@
-import { UIAppBar, html } from "ui";
+import { UIAppBar } from "ui";
 
 export class PGAppBar extends UIAppBar {
-    constructor() {
-        super();
-
-        /** @type {PGStore} */
-        this.uiStore = document.querySelector("ui-store");
-
-        /** @type {import("ui").UIDrawer} */
-        this.uiDrawer = document.querySelector("pg-drawer");
-
-        /** @type {import("ui").UIStackLayout} */
-        this.stackLayout = document.querySelector("ui-stack-layout");
-
-        this.render();
-    }
-
     connectedCallback() {
         super.connectedCallback();
 

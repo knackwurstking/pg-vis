@@ -1,11 +1,14 @@
-import "./pg-app-bar";
-
 import { css, html, LitElement, PropertyValues } from "lit";
 import { customElement } from "lit/decorators.js";
 import { globalStylesToShadowRoot, svg } from "ui";
+import { PGStore } from "../types";
 
 @customElement("pg-app")
 class PGApp extends LitElement {
+    static get queryStore() {
+        return document.querySelector<PGStore>("ui-store");
+    }
+
     static get styles() {
         return css`
             :host {
@@ -29,7 +32,7 @@ class PGApp extends LitElement {
         `;
     }
 
-    protected renderAppBar() {
+    private renderAppBar() {
         return html`
             <ui-app-bar position="top">
                 <ui-app-bar-item name="menu" slot="left">
@@ -75,11 +78,6 @@ class PGApp extends LitElement {
                 </ui-app-bar-item>
             </ui-app-bar>
         `;
-    }
-
-    protected updated(_changedProperties: PropertyValues): void {
-        // TODO: Store: Handle the "current" page
-        // TODO: Stack Layout: Handle "change" events and initial setup (app-bar, drawer)
     }
 
     protected firstUpdated(_changedProperties: PropertyValues): void {
