@@ -7,22 +7,19 @@ class PGApp extends LitElement {
     static get styles() {
         return css`
             :host {
-                position: fixed;
+                position: fixed !important;
                 top: 0;
                 right: 0;
                 bottom: 0;
                 left: 0;
-                overflow: auto;
             }
         `;
     }
 
     protected render() {
         return html`
-            <div class="is-container">
-                <ui-stack-layout
-                    style="--pg-search-bar-height: 0rem;"
-                ></ui-stack-layout>
+            <div class="is-container no-scrollbar" style="height: 100%;">
+                <ui-stack-layout></ui-stack-layout>
             </div>
 
             <pg-app-bar></pg-app-bar>
