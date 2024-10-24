@@ -51,6 +51,8 @@
 - [ ] Add a search bar for vis data
 - [ ] Edit Vis Data from the product page, just click to edit
 
+- [ ] Replace "pg-vis-dev.github.io" with "pg-vis.github.io" before publishing
+
 ## v1.0.0 — [2024-08-12]
 
 - [ui version v0.2.16](https://github.com/knackwurstking/ui)
