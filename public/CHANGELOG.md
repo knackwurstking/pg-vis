@@ -42,8 +42,8 @@
 ## v1.1.0 — [unreleased]
 
 - [ ] Create a GitHub pages repo for dev
-- [ ] Convert project to typescript using lit
-- [ ] Update icons, just like the picow-led-server project
+- [ ] Convert project to typescript using lit [work-in-progress]
+- [x] Update icons, just like the picow-led-server project
 - [ ] Fix: Cancel a gist pull will set the revision to undefined
 - [ ] Fix: Cancel a gist push will not remove the spinner
 - [ ] Fix: Revisions counter stopping at 30, need to get the real revisions count
