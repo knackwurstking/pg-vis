@@ -1,4 +1,4 @@
-import "../node_modules/ui/css/main.css";
+import "../node_modules/ui/lib/css/main.css";
 import "./app/pg-app"; // Register "pg-app"
 
 import { registerSW } from "virtual:pwa-register";
