@@ -10,7 +10,7 @@ import {
     VisDataPage,
     VisListsPage,
     VisPage,
-} from "../components";
+} from "../_components";
 import { pages } from "../data/constants";
 import { build } from "../data/version";
 
