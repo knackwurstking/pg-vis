@@ -21,6 +21,6 @@
         "file-saver": "^2.0.5",
         "jszip": "^3.10.1",
         "lit": "^3.2.1",
-        "ui": "knackwurstking/ui#v1.0.0"
+        "ui": "file:../ui"
     }
 }
