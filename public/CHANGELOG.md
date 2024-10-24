@@ -43,6 +43,7 @@
 
 - [ ] Create a GitHub pages repo for dev
 - [ ] Convert project to typescript using lit
+- [ ] Update icons, just like the picow-led-server project
 - [ ] Fix: Cancel a gist pull will set the revision to undefined
 - [ ] Fix: Cancel a gist push will not remove the spinner
 - [ ] Open a confirmation dialog before deleting a drawer item
@@ -52,6 +53,7 @@
 - [ ] Edit Vis Data from the product page, just click to edit
 
 - [ ] Replace "pg-vis-dev.github.io" with "pg-vis.github.io" before publishing
+- [ ] ~Replace "pg-vis-dev:" with "pg-vis:"~
 
 ## v1.0.0 — [2024-08-12]
 
