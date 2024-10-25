@@ -203,11 +203,12 @@ class PGApp extends LitElement {
     }
 
     protected firstUpdated(_changedProperties: PropertyValues): void {
-        this.initStores();
-        this.initStoreHandlers();
+        this._initStores();
+
+        this._storeHandlers();
     }
 
-    private initStores() {
+    private _initStores() {
         const store = PGApp.queryStore();
         store.setData(
             "alertLists",
@@ -225,10 +226,13 @@ class PGApp extends LitElement {
         ); // NOTE: Dummy data for testing
     }
 
-    private initStoreHandlers() {
+    private _storeHandlers() {
         const store = PGApp.queryStore();
 
-        // Alert List Handler
+        this._renderDrawerItemsForAlertLists(store);
+    }
+
+    private _renderDrawerItemsForAlertLists(store: PGStore): void {
         store.addListener(
             "alertLists",
             (data) => {
