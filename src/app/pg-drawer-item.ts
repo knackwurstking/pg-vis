@@ -53,6 +53,7 @@ class PGDrawerItem extends UIDrawerGroupItem {
                           flex="0"
                       >
                           <ui-icon-button
+                              style="height: 100%"
                               color="destructive"
                               ghost
                               ripple
