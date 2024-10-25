@@ -1,12 +1,21 @@
 import { css, html, LitElement, PropertyValues } from "lit";
 import { customElement } from "lit/decorators.js";
-import { globalStylesToShadowRoot, svg } from "ui";
+import { globalStylesToShadowRoot, svg, UIAppBar, UIDrawer } from "ui";
 import { PGStore } from "../types";
+import { build, version } from "../constants";
 
 @customElement("pg-app")
 class PGApp extends LitElement {
-    static get queryStore() {
+    static queryStore(): PGStore | null {
         return document.querySelector<PGStore>("ui-store");
+    }
+
+    public queryAppBar(): UIAppBar | null {
+        return this.shadowRoot?.querySelector<UIAppBar>("ui-app-bar") || null;
+    }
+
+    public queryDrawer(): UIDrawer | null {
+        return this.shadowRoot?.querySelector<UIDrawer>("ui-drawer") || null;
     }
 
     static get styles() {
@@ -18,6 +27,17 @@ class PGApp extends LitElement {
                 bottom: 0;
                 left: 0;
             }
+
+            ui-drawer ui-button.version {
+                display: flex;
+                justify-content: flex-start;
+
+                margin-bottom: var(--ui-spacing);
+                padding: 0.25rem;
+
+                font-size: 0.85rem;
+                text-transform: none;
+            }
         `;
     }
 
@@ -27,8 +47,7 @@ class PGApp extends LitElement {
                 <ui-stack-layout></ui-stack-layout>
             </div>
 
-            ${this.renderAppBar()}
-            <pg-drawer></pg-drawer>
+            ${this.renderAppBar()} ${this.renderDrawer()}
         `;
     }
 
@@ -36,13 +55,20 @@ class PGApp extends LitElement {
         return html`
             <ui-app-bar position="top">
                 <ui-app-bar-item name="menu" slot="left">
-                    <ui-icon-button ghost>
+                    <ui-icon-button
+                        ghost
+                        ripple
+                        @click=${() => {
+                            const drawer = this.queryDrawer()!;
+                            drawer.open = true;
+                        }}
+                    >
                         ${svg.smoothieLineIcons.menu}
                     </ui-icon-button>
                 </ui-app-bar-item>
 
                 <ui-app-bar-item name="back" slot="left" hidden>
-                    <ui-icon-button ghost>
+                    <ui-icon-button ghost ripple>
                         ${svg.smoothieLineIcons.chevronLeft}
                     </ui-icon-button>
                 </ui-app-bar-item>
@@ -53,30 +79,75 @@ class PGApp extends LitElement {
                     </ui-heading>
                 </ui-app-bar-item>
 
-                <ui-app-bar-item name="edit" slot="right">
-                    <ui-icon-button ghost>
+                <ui-app-bar-item name="edit" slot="right" hidden>
+                    <ui-icon-button ripple ghost>
                         ${svg.smoothieLineIcons.pen}
                     </ui-icon-button>
                 </ui-app-bar-item>
 
-                <ui-app-bar-item name="share" slot="right">
-                    <ui-icon-button ghost>
+                <ui-app-bar-item name="share" slot="right" hidden>
+                    <ui-icon-button ripple ghost>
                         ${svg.smoothieLineIcons.share}
                     </ui-icon-button>
                 </ui-app-bar-item>
 
-                <ui-app-bar-item name="search" slot="right">
-                    <ui-icon-button ghost>
+                <ui-app-bar-item name="search" slot="right" hidden>
+                    <ui-icon-button ripple ghost>
                         ${svg.smoothieLineIcons.search}
                     </ui-icon-button>
                 </ui-app-bar-item>
 
-                <ui-app-bar-item name="bookmark" slot="right">
-                    <ui-icon-button ghost>
+                <ui-app-bar-item name="bookmark" slot="right" hidden>
+                    <ui-icon-button ripple ghost>
                         ${svg.smoothieLineIcons.bookmark}
                     </ui-icon-button>
                 </ui-app-bar-item>
             </ui-app-bar>
+        `;
+    }
+
+    private renderDrawer() {
+        return html`
+            <ui-drawer>
+                <ui-drawer-group name="app-info" no-fold>
+                    <ui-button
+                        class="version"
+                        variant="ghost"
+                        color="primary"
+                        ripple
+                        @click=${() => {
+                            // TODO: Open build info dialog
+                            // NOTE: Old version
+                            // const versionElement = this.querySelector("ui-button.version");
+                            // versionElement.ui.events.on("click", () => {
+                            //     utils.create.buildInfoDialog();
+                            // });
+                        }}
+                    >
+                        ${version} - [Build: ${build}]
+                    </ui-button>
+                </ui-drawer-group>
+
+                <ui-drawer-group name="alert-lists" title="Alarm Listen">
+                    <!-- TODO: Continue here... -->
+                </ui-drawer-group>
+
+                <ui-drawer-group name="metal-sheets" title="Blech Listen">
+                    <!-- TODO: ... -->
+                </ui-drawer-group>
+
+                <ui-drawer-group name="vis" title="Vis">
+                    <!-- TODO: ... -->
+                </ui-drawer-group>
+
+                <ui-drawer-group name="vis-bookmarks" title="Vis Bookmarks">
+                    <!-- TODO: ... -->
+                </ui-drawer-group>
+
+                <ui-drawer-group name="vis-data" title="Vis Data">
+                    <!-- TODO: ... -->
+                </ui-drawer-group>
+            </ui-drawer>
         `;
     }
 

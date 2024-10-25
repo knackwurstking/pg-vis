@@ -21,63 +21,42 @@ import { PGDrawerRevision } from "./pg-drawer-revision";
  */
 
 export class PGDrawer extends UIDrawer {
-  static register = () => {
-    // Groups
-    PGDrawerGroupAlertLists.register();
-    PGDrawerGroupMetalSheetLists.register();
-    PGDrawerGroupVisData.register();
-    PGDrawerGroupVisLists.register();
-    PGDrawerGroupVis.register();
+    static register = () => {
+        // Groups
+        PGDrawerGroupAlertLists.register();
+        PGDrawerGroupMetalSheetLists.register();
+        PGDrawerGroupVisData.register();
+        PGDrawerGroupVisLists.register();
+        PGDrawerGroupVis.register();
 
-    // Items
-    PGDrawerItemGist.register();
-    PGDrawerItemImport.register();
-    PGDrawerItemNew.register();
+        // Items
+        PGDrawerItemGist.register();
+        PGDrawerItemImport.register();
+        PGDrawerItemNew.register();
 
-    // Components
-    PGDrawerRevision.register();
+        // Components
+        PGDrawerRevision.register();
 
-    customElements.define("pg-drawer", PGDrawer);
-  };
+        customElements.define("pg-drawer", PGDrawer);
+    };
 
-  constructor() {
-    super();
-    this.render();
-  }
+    constructor() {
+        super();
+        this.render();
+    }
 
-  render() {
-    this.innerHTML = html`
-      <ui-button
-        class="version flex justify-start"
-        style="${styles(
-          "font-size: 0.85rem",
-          "padding: 0.25rem",
-          "margin-bottom: var(--ui-spacing)",
-          "font-weight: normal",
-          "text-transform: none;",
-        )}"
-        variant="ghost"
-        color="primary"
-      >
-        ${version} - [Build: ${build}]
-      </ui-button>
+    render() {
+        this.innerHTML = html`
+            <pg-drawer-group-alert-lists fold></pg-drawer-group-alert-lists>
 
-      <pg-drawer-group-alert-lists fold></pg-drawer-group-alert-lists>
+            <pg-drawer-group-metal-sheet-lists fold>
+            </pg-drawer-group-metal-sheet-lists>
 
-      <pg-drawer-group-metal-sheet-lists fold>
-      </pg-drawer-group-metal-sheet-lists>
+            <pg-drawer-group-vis fold></pg-drawer-group-vis>
 
-      <pg-drawer-group-vis fold></pg-drawer-group-vis>
+            <pg-drawer-group-vis-lists fold></pg-drawer-group-vis-lists>
 
-      <pg-drawer-group-vis-lists fold></pg-drawer-group-vis-lists>
-
-      <pg-drawer-group-vis-data fold></pg-drawer-group-vis-data>
-    `;
-
-    /** @type {import("ui").UIButton} */
-    const versionElement = this.querySelector("ui-button.version");
-    versionElement.ui.events.on("click", () => {
-      utils.create.buildInfoDialog();
-    });
-  }
+            <pg-drawer-group-vis-data fold></pg-drawer-group-vis-data>
+        `;
+    }
 }
