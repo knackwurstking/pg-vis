@@ -67,14 +67,16 @@ class PGDrawerItem extends UIDrawerGroupItem {
                                       return;
                                   }
 
-                                  const store = PGApp.queryStore();
-                                  store.updateData(this.storeKey, (data) => {
-                                      return data.filter(
-                                          (entry) =>
-                                              entry.title !==
-                                              this.storeKeyEntry,
-                                      );
-                                  });
+                                  PGApp.queryStore().updateData(
+                                      this.storeKey,
+                                      (data) => {
+                                          return data.filter(
+                                              (entry) =>
+                                                  entry.title !==
+                                                  this.storeKeyEntry,
+                                          );
+                                      },
+                                  );
                               }}
                           >
                               ${svg.smoothieLineIcons.trash}
