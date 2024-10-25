@@ -128,24 +128,70 @@ class PGApp extends LitElement {
                     </ui-button>
                 </ui-drawer-group>
 
-                <ui-drawer-group name="alert-lists" title="Alarm Listen">
-                    <!-- TODO: Continue here... -->
+                <ui-drawer-group
+                    name="alert-lists"
+                    title="Alarm Listen"
+                    data-fixed-items="2"
+                >
+                    <!-- Fixed Item 1 -->
+                    <!-- TODO: Import / Export -->
+                    <span class="placeholder"></span>
+
+                    <!-- Fixed Item 2 -->
+                    <!-- TODO: Gist -->
+                    <span class="placeholder"></span>
                 </ui-drawer-group>
 
-                <ui-drawer-group name="metal-sheets" title="Blech Listen">
-                    <!-- TODO: ... -->
+                <ui-drawer-group
+                    name="metal-sheets"
+                    title="Blech Listen"
+                    data-fixed-items="3"
+                >
+                    <!-- Fixed Item 1 -->
+                    <!-- TODO: Import / Export -->
+                    <span class="placeholder"></span>
+
+                    <!-- Fixed Item 2 -->
+                    <!-- TODO: Gist -->
+                    <span class="placeholder"></span>
+
+                    <!-- Fixed Item 3 -->
+                    <!-- TODO: Create new table -->
+                    <span class="placeholder"></span>
                 </ui-drawer-group>
 
-                <ui-drawer-group name="vis" title="Vis">
-                    <!-- TODO: ... -->
+                <ui-drawer-group name="vis" title="Vis" data-fixed-items="2">
+                    <!-- Fixed Item 1 -->
+                    <!-- TODO: Import / Export -->
+                    <span class="placeholder"></span>
+
+                    <!-- Fixed Item 2 -->
+                    <!-- TODO: Gist -->
+                    <span class="placeholder"></span>
                 </ui-drawer-group>
 
-                <ui-drawer-group name="vis-bookmarks" title="Vis Bookmarks">
-                    <!-- TODO: ... -->
-                </ui-drawer-group>
+                <ui-drawer-group
+                    name="vis-bookmarks"
+                    title="Vis Bookmarks"
+                    data-fixed-items="0"
+                ></ui-drawer-group>
 
-                <ui-drawer-group name="vis-data" title="Vis Data">
-                    <!-- TODO: ... -->
+                <ui-drawer-group
+                    name="vis-data"
+                    title="Vis Data"
+                    data-fixed-items="3"
+                >
+                    <!-- Fixed Item 1 -->
+                    <!-- TODO: Import / Export -->
+                    <span class="placeholder"></span>
+
+                    <!-- Fixed Item 2 -->
+                    <!-- TODO: Gist -->
+                    <span class="placeholder"></span>
+
+                    <!-- Fixed Item 3 -->
+                    <!-- TODO: Create new -->
+                    <span class="placeholder"></span>
                 </ui-drawer-group>
             </ui-drawer>
         `;
