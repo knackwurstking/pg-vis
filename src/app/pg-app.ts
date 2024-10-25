@@ -248,16 +248,14 @@ class PGApp extends LitElement {
                     .slice(0, fixedItems)
                     .forEach((child) => groupContainer.removeChild(child));
 
-                data.forEach((list) => {
-                    setTimeout(async () => {
-                        const groupItem = new PGDrawerItem();
-                        groupItem.storeKey = "alertLists";
-                        groupItem.storeKeyEntry = list.title;
-                        groupItem.primary = list.title;
-                        groupItem.secondary = `${list.data.length} Entries`;
-                        groupItem.allowDeletion = true;
-                        groupContainer.appendChild(groupItem);
-                    });
+                data.forEach(async (list) => {
+                    const groupItem = new PGDrawerItem();
+                    groupItem.storeKey = "alertLists";
+                    groupItem.storeKeyEntry = list.title;
+                    groupItem.primary = list.title;
+                    groupItem.secondary = `${list.data.length} Entries`;
+                    groupItem.allowDeletion = true;
+                    groupContainer.appendChild(groupItem);
                 });
             },
             true,
