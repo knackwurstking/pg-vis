@@ -253,7 +253,7 @@ class PGApp extends LitElement {
                     groupItem.storeKey = "alertLists";
                     groupItem.storeKeyEntry = list.title;
                     groupItem.primary = list.title;
-                    groupItem.secondary = `${list.data.length} Entries`;
+                    groupItem.secondary = `${list.data.length} Einträge`;
                     groupItem.allowDeletion = true;
                     groupContainer.appendChild(groupItem);
                 });
