@@ -1,6 +1,8 @@
 import { html } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { svg, UIDrawerGroupItem } from "ui";
+import PGApp from "./pg-app";
+import { PGStoreEvents } from "../types";
 
 /**
  * ```
@@ -15,7 +17,7 @@ import { svg, UIDrawerGroupItem } from "ui";
  */
 @customElement("pg-drawer-item")
 class PGDrawerItem extends UIDrawerGroupItem {
-    storeKey?: string;
+    storeKey?: keyof PGStoreEvents;
 
     /**
      * Entry to access, or delete, from the global ui-store element
@@ -58,7 +60,21 @@ class PGDrawerItem extends UIDrawerGroupItem {
                               ghost
                               ripple
                               @click=${async (): Promise<void> => {
-                                  // TODO: Delete this item from data table
+                                  if (
+                                      this.storeKey === undefined ||
+                                      !this.storeKeyEntry === undefined
+                                  ) {
+                                      return;
+                                  }
+
+                                  const store = PGApp.queryStore();
+                                  store.updateData(this.storeKey, (data) => {
+                                      return data.filter(
+                                          (entry) =>
+                                              entry.title !==
+                                              this.storeKeyEntry,
+                                      );
+                                  });
                               }}
                           >
                               ${svg.smoothieLineIcons.trash}
