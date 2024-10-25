@@ -3,6 +3,13 @@ import { UIStore } from "ui";
 export type PGStore = UIStore<PGStoreEvents>;
 
 export interface PGStoreEvents {
+    drawer: { open: boolean };
+    drawerGroup: {
+        "alert-lists"?: {
+            open: boolean;
+        };
+    };
+
     alertLists: AlertList[];
     // TODO: Store Keys for "metal-sheets"
     // TODO: Store Keys for "vis"
