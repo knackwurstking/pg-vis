@@ -249,7 +249,6 @@ class PGApp extends LitElement {
                     .forEach((child) => groupContainer.removeChild(child));
 
                 data.forEach((list) => {
-                    console.debug(list);
                     setTimeout(async () => {
                         const groupItem = new PGDrawerItem();
                         groupItem.storeKey = "alertLists";
