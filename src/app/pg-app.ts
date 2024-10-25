@@ -1,8 +1,9 @@
 import { css, html, LitElement, PropertyValues } from "lit";
 import { customElement } from "lit/decorators.js";
-import { globalStylesToShadowRoot, svg, UIAppBar, UIDrawer } from "ui";
-import { PGStore } from "../types";
+import { svg, UIAppBar, UIDrawer } from "ui";
 import { build, version } from "../constants";
+import { PGStore } from "../types";
+import PGDrawerItem from "./pg-drawer-item";
 
 @customElement("pg-app")
 class PGApp extends LitElement {
@@ -10,12 +11,12 @@ class PGApp extends LitElement {
         return document.querySelector<PGStore>("ui-store")!;
     }
 
-    public queryAppBar(): UIAppBar | null {
-        return this.shadowRoot?.querySelector<UIAppBar>("ui-app-bar") || null;
+    static queryAppBar(): UIAppBar | null {
+        return document.querySelector<UIAppBar>("ui-app-bar") || null;
     }
 
-    public queryDrawer(): UIDrawer | null {
-        return this.shadowRoot?.querySelector<UIDrawer>("ui-drawer") || null;
+    static queryDrawer(): UIDrawer | null {
+        return document.querySelector<UIDrawer>("ui-drawer") || null;
     }
 
     static get styles() {
@@ -59,7 +60,7 @@ class PGApp extends LitElement {
                         ghost
                         ripple
                         @click=${() => {
-                            const drawer = this.queryDrawer()!;
+                            const drawer = PGApp.queryDrawer()!;
                             drawer.open = true;
                         }}
                     >
@@ -197,28 +198,67 @@ class PGApp extends LitElement {
         `;
     }
 
-    protected firstUpdated(_changedProperties: PropertyValues): void {
-        globalStylesToShadowRoot(this.shadowRoot!);
+    protected createRenderRoot(): HTMLElement | DocumentFragment {
+        return this;
+    }
 
+    protected firstUpdated(_changedProperties: PropertyValues): void {
+        this.initStores();
         this.initStoreHandlers();
+    }
+
+    private initStores() {
+        const store = PGApp.queryStore();
+        store.setData(
+            "alertLists",
+            [
+                {
+                    title: "Test List 1",
+                    data: [],
+                },
+                {
+                    title: "Test List 2",
+                    data: [],
+                },
+            ],
+            false,
+        ); // NOTE: Dummy data for testing
     }
 
     private initStoreHandlers() {
         const store = PGApp.queryStore();
 
         // Alert List Handler
-        store.addListener("alertLists", (data) => {
-            const container = this.shadowRoot!.querySelector(
-                `ui-drawer-group-group[name="alert-lists"]`,
-            )!;
+        store.addListener(
+            "alertLists",
+            (data) => {
+                const groupContainer = this.querySelector(
+                    `ui-drawer-group[name="alert-lists"]`,
+                )!;
 
-            const fixedItems = parseInt(
-                container.getAttribute("data-fixed-items") || "0",
-            );
+                const fixedItems = parseInt(
+                    groupContainer.getAttribute("data-fixed-items") || "0",
+                );
 
-            // TODO: Update drawer items, need and component here
-            //const item = new PGDrawerItem() // extends UIDrawerGroupItem
-        });
+                Array.from(groupContainer.children)
+                    .slice(0, fixedItems)
+                    .forEach((child) => groupContainer.removeChild(child));
+
+                data.forEach((list) => {
+                    console.debug(list);
+                    setTimeout(async () => {
+                        const groupItem = new PGDrawerItem();
+                        groupItem.storeKey = "alertLists";
+                        groupItem.storeKeyEntry = list.title;
+                        groupItem.primary = list.title;
+                        groupItem.secondary = `${list.data.length} Entries`;
+                        groupItem.allowDeletion = true;
+                        groupContainer.appendChild(groupItem);
+                    });
+                });
+            },
+            true,
+        );
     }
 }
 
