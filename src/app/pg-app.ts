@@ -5,6 +5,11 @@ import { build, version } from "../constants";
 import { PGStore } from "../types";
 import PGDrawerItem from "./pg-drawer-item";
 
+/**
+ * TODO:
+ *  - Store drawer state (open/closed) `{ drawer: boolean }`
+ *  - store drawer group:name state `{ "drawer-group:<name>": { open: true } }`
+ */
 @customElement("pg-app")
 class PGApp extends LitElement {
     static queryStore(): PGStore {
