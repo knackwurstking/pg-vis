@@ -6,8 +6,8 @@ import { build, version } from "../constants";
 
 @customElement("pg-app")
 class PGApp extends LitElement {
-    static queryStore(): PGStore | null {
-        return document.querySelector<PGStore>("ui-store");
+    static queryStore(): PGStore {
+        return document.querySelector<PGStore>("ui-store")!;
     }
 
     public queryAppBar(): UIAppBar | null {
@@ -199,6 +199,26 @@ class PGApp extends LitElement {
 
     protected firstUpdated(_changedProperties: PropertyValues): void {
         globalStylesToShadowRoot(this.shadowRoot!);
+
+        this.initStoreHandlers();
+    }
+
+    private initStoreHandlers() {
+        const store = PGApp.queryStore();
+
+        // Alert List Handler
+        store.addListener("alertLists", (data) => {
+            const container = this.shadowRoot!.querySelector(
+                `ui-drawer-group-group[name="alert-lists"]`,
+            )!;
+
+            const fixedItems = parseInt(
+                container.getAttribute("data-fixed-items") || "0",
+            );
+
+            // TODO: Update drawer items, need and component here
+            //const item = new PGDrawerItem() // extends UIDrawerGroupItem
+        });
     }
 }
 
