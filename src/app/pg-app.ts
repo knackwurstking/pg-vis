@@ -5,11 +5,6 @@ import { build, version } from "../constants";
 import { PGStore } from "../types";
 import PGDrawerItem from "./pg-drawer-item";
 
-/**
- * TODO:
- *  - Store drawer state (open/closed) `{ drawer: boolean }`
- *  - store drawer group:name state `{ "drawer-group:<name>": { open: true } }`
- */
 @customElement("pg-app")
 class PGApp extends LitElement {
     static queryStore(): PGStore {
@@ -45,6 +40,32 @@ class PGApp extends LitElement {
                 text-transform: none;
             }
         `;
+    }
+
+    constructor() {
+        super();
+        this._initStores();
+    }
+
+    private _initStores() {
+        const store = PGApp.queryStore();
+
+        store.setData("drawerGroup", {}, true);
+
+        store.setData(
+            "alertLists",
+            [
+                {
+                    title: "Test List 1",
+                    data: [],
+                },
+                {
+                    title: "Test List 2",
+                    data: [],
+                },
+            ],
+            false,
+        ); // NOTE: Dummy data for testing
     }
 
     protected render() {
@@ -113,8 +134,18 @@ class PGApp extends LitElement {
     }
 
     private renderDrawer() {
+        const store = PGApp.queryStore();
+
         return html`
-            <ui-drawer>
+            <ui-drawer
+                ?open=${!!store.getData("drawer")?.open}
+                @open=${() => {
+                    store.setData("drawer", { open: true });
+                }}
+                @close=${() => {
+                    store.setData("drawer", { open: false });
+                }}
+            >
                 <ui-drawer-group name="app-info" no-fold>
                     <ui-button
                         class="version"
@@ -138,6 +169,20 @@ class PGApp extends LitElement {
                     name="alert-lists"
                     title="Alarm Listen"
                     data-fixed-items="2"
+                    ?open=${!!store.getData("drawerGroup")?.["alert-lists"]
+                        ?.open}
+                    @fold=${() => {
+                        store.updateData(`drawerGroup`, (data) => {
+                            data["alert-lists"] = { open: false };
+                            return data;
+                        });
+                    }}
+                    @unfold=${() => {
+                        store.updateData(`drawerGroup`, (data) => {
+                            data["alert-lists"] = { open: true };
+                            return data;
+                        });
+                    }}
                 >
                     <!-- Fixed Item 1 -->
                     <!-- TODO: Import / Export -->
@@ -208,27 +253,7 @@ class PGApp extends LitElement {
     }
 
     protected firstUpdated(_changedProperties: PropertyValues): void {
-        this._initStores();
-
         this._storeHandlers();
-    }
-
-    private _initStores() {
-        const store = PGApp.queryStore();
-        store.setData(
-            "alertLists",
-            [
-                {
-                    title: "Test List 1",
-                    data: [],
-                },
-                {
-                    title: "Test List 2",
-                    data: [],
-                },
-            ],
-            false,
-        ); // NOTE: Dummy data for testing
     }
 
     private _storeHandlers() {
