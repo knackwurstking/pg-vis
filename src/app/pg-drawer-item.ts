@@ -1,8 +1,7 @@
 import { html } from "lit";
 import { customElement, property } from "lit/decorators.js";
-import { svg, UIDrawerGroupItem, UIStackLayoutPage } from "ui";
+import { svg, UIDrawerGroupItem } from "ui";
 import PGApp from "./pg-app";
-import { PGStackLayoutPage } from "../types";
 
 /**
  * ```
