@@ -7,7 +7,8 @@ export type PGStackLayoutPage =
     | "metalSheets"
     | "vis"
     | "vis-bookmarks"
-    | "visData";
+    | "visData"
+    | "alert";
 
 export interface PGStoreEvents {
     drawer: { open: boolean };
