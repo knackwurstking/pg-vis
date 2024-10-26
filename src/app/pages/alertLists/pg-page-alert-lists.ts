@@ -36,9 +36,6 @@ class PGPageAlertLists extends PGPageBase<AlertList[]> {
                     @click=${async (ev: MouseEvent): Promise<void> => {
                         if (!(ev?.target instanceof Element)) return;
 
-                        const stack = PGApp.queryStackLayout();
-                        if (!stack) return;
-
                         const target = query.targetFromElementPath(
                             ev.target,
                             `.alert-item`,
@@ -50,7 +47,7 @@ class PGPageAlertLists extends PGPageBase<AlertList[]> {
                         ) as Alert | null;
                         if (data === null) return;
 
-                        stack.set(
+                        PGApp.queryStackLayout()!.set(
                             "alert",
                             (page): void => {
                                 if (!(page instanceof PGPageAlert)) return;
