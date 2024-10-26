@@ -1,7 +1,8 @@
 import { html } from "lit";
 import { customElement, property } from "lit/decorators.js";
-import { svg, UIDrawerGroupItem } from "ui";
+import { svg, UIDrawerGroupItem, UIStackLayoutPage } from "ui";
 import PGApp from "./pg-app";
+import { PGStackLayoutPage } from "../types";
 
 /**
  * ```
@@ -42,7 +43,7 @@ class PGDrawerItem extends UIDrawerGroupItem {
                         secondary="${this.secondary || ""}"
                         ripple
                         @click=${async (): Promise<void> => {
-                            // TODO: Add page, with "data", to the "stack layout"...
+                            await this.setStackLayoutPage();
                         }}
                     ></ui-label>
                 </ui-flex-grid-item>
@@ -88,6 +89,23 @@ class PGDrawerItem extends UIDrawerGroupItem {
 
     protected createRenderRoot(): HTMLElement | DocumentFragment {
         return this;
+    }
+
+    public setStackLayoutPage() {
+        if (!this.storeKey) return;
+
+        const stack = PGApp.queryStackLayout()!;
+        stack.set(this.storeKey, (page) => {
+            const store = PGApp.queryStore();
+
+            const data = store
+                .getData(this.storeKey!)
+                ?.find((list) => list.title === this.storeKeyEntry);
+
+            if (data) {
+                // TODO: Set page data here...
+            }
+        });
     }
 }
 
