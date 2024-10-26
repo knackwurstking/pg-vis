@@ -6,7 +6,7 @@ export type PGStackLayoutPage =
     | "alertLists"
     | "metalSheets"
     | "vis"
-    | "vis-bookmarks"
+    | "visBookmarks"
     | "visData"
     | "alert";
 
@@ -20,9 +20,13 @@ export interface PGStoreEvents {
 
     alertLists: AlertList[];
     // TODO: Store Keys for "metal-sheets"
+    metalSheets: [];
     // TODO: Store Keys for "vis"
+    vis: [];
     // TODO: Store Keys for "vis-bookmarks"
+    visBookmarks: [];
     // TODO: Store Keys for "vis-data"
+    visData: [];
 
     // NOTE: This was the old store
     //alertLists: PGStore_AlertList[];
