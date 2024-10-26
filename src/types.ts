@@ -2,6 +2,13 @@ import { UIStore } from "ui";
 
 export type PGStore = UIStore<PGStoreEvents>;
 
+export type PGStackLayoutPage =
+    | "alertLists"
+    | "metalSheets"
+    | "vis"
+    | "vis-bookmarks"
+    | "visData";
+
 export interface PGStoreEvents {
     drawer: { open: boolean };
     drawerGroup: {
