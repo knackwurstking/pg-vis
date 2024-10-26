@@ -106,6 +106,7 @@ class PGDrawerItem extends UIDrawerGroupItem {
         }
 
         const stack = PGApp.queryStackLayout()!;
+        stack.clear();
         stack.set(this.storeKey, async (page) => {
             if (page instanceof PGPageBase) page.setData(data);
         });
