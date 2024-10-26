@@ -2,7 +2,6 @@ import { html } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { svg, UIDrawerGroupItem } from "ui";
 import PGApp from "./pg-app";
-import { PGStoreEvents } from "../types";
 
 /**
  * ```
@@ -17,7 +16,7 @@ import { PGStoreEvents } from "../types";
  */
 @customElement("pg-drawer-item")
 class PGDrawerItem extends UIDrawerGroupItem {
-    storeKey?: keyof PGStoreEvents;
+    storeKey?: "alertLists"; // TODO: Add: "metalSheets" | "vis" | "visBookmarks" | "visData"
 
     /**
      * Entry to access, or delete, from the global ui-store element
@@ -43,7 +42,7 @@ class PGDrawerItem extends UIDrawerGroupItem {
                         secondary="${this.secondary || ""}"
                         ripple
                         @click=${async (): Promise<void> => {
-                            // TODO: Add page, with "data", to the "stack layout"
+                            // TODO: Add page, with "data", to the "stack layout"...
                         }}
                     ></ui-label>
                 </ui-flex-grid-item>
