@@ -1,8 +1,8 @@
 import { html } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { svg, UIDrawerGroupItem } from "ui";
-import PGApp from "./pg-app";
 import PGPageBase from "./pages/pg-page-base";
+import PGApp from "./pg-app";
 
 /**
  * ```
@@ -17,7 +17,13 @@ import PGPageBase from "./pages/pg-page-base";
  */
 @customElement("pg-drawer-item")
 class PGDrawerItem extends UIDrawerGroupItem {
-    storeKey?: "alertLists"; // TODO: Add: "metalSheets" | "vis" | "visBookmarks" | "visData"
+    @property({ type: String, attribute: "store-key", reflect: true })
+    storeKey?:
+        | "alertLists"
+        | "metalSheets"
+        | "vis"
+        | "visBookmarks"
+        | "visData";
 
     /**
      * Entry to access, or delete, from the global ui-store element
@@ -61,23 +67,7 @@ class PGDrawerItem extends UIDrawerGroupItem {
                               ghost
                               ripple
                               @click=${async (): Promise<void> => {
-                                  if (
-                                      this.storeKey === undefined ||
-                                      !this.storeKeyEntry === undefined
-                                  ) {
-                                      return;
-                                  }
-
-                                  PGApp.queryStore().updateData(
-                                      this.storeKey,
-                                      (data) => {
-                                          return data.filter(
-                                              (entry) =>
-                                                  entry.title !==
-                                                  this.storeKeyEntry,
-                                          );
-                                      },
-                                  );
+                                  await this.deleteStoreData();
                               }}
                           >
                               ${svg.smoothieLineIcons.trash}
@@ -92,7 +82,7 @@ class PGDrawerItem extends UIDrawerGroupItem {
         return this;
     }
 
-    public async setStackLayoutPage() {
+    protected async setStackLayoutPage() {
         if (!this.storeKey) return;
 
         const data = PGApp.queryStore()
@@ -110,6 +100,25 @@ class PGDrawerItem extends UIDrawerGroupItem {
         stack.set(this.storeKey, async (page) => {
             if (page instanceof PGPageBase) page.setData(data);
         });
+    }
+
+    protected async deleteStoreData() {
+        if (this.storeKey === undefined || !this.storeKeyEntry === undefined) {
+            return;
+        }
+
+        switch (this.storeKey) {
+            case "alertLists":
+            case "metalSheets":
+            case "vis":
+            case "visBookmarks":
+            case "visData":
+                PGApp.queryStore().updateData(this.storeKey, (data) => {
+                    return data.filter(
+                        (entry) => entry.title !== this.storeKeyEntry,
+                    );
+                });
+        }
     }
 }
 
