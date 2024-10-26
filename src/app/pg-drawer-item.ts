@@ -44,6 +44,7 @@ class PGDrawerItem extends UIDrawerGroupItem {
                         ripple
                         @click=${async (): Promise<void> => {
                             await this.setStackLayoutPage();
+                            PGApp.queryDrawer()!.open = false;
                         }}
                     ></ui-label>
                 </ui-flex-grid-item>
@@ -91,20 +92,22 @@ class PGDrawerItem extends UIDrawerGroupItem {
         return this;
     }
 
-    public setStackLayoutPage() {
+    public async setStackLayoutPage() {
         if (!this.storeKey) return;
 
+        const data = PGApp.queryStore()
+            .getData(this.storeKey!)
+            ?.find((list) => list.title === this.storeKeyEntry);
+
+        if (data === undefined) {
+            throw new Error(
+                `Data undefined for "${this.storeKeyEntry}" in "${this.storeKey}"`,
+            );
+        }
+
         const stack = PGApp.queryStackLayout()!;
-        stack.set(this.storeKey, (page) => {
-            const store = PGApp.queryStore();
-
-            const data = store
-                .getData(this.storeKey!)
-                ?.find((list) => list.title === this.storeKeyEntry);
-
-            if (data) {
-                // TODO: Set page data here...
-            }
+        stack.set(this.storeKey, async (page) => {
+            // TODO: Set page data here...
         });
     }
 }
