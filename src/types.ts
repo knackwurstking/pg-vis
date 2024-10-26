@@ -38,12 +38,12 @@ export interface PGStoreEvents {
     //bookmark: PGStore_Bookmark;
 }
 
-interface AlertList {
+export interface AlertList {
     title: string;
     data: Alert[];
 }
 
-interface Alert {
+export interface Alert {
     from: number;
     to: number;
     alert: string;

@@ -2,6 +2,7 @@ import { html } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { svg, UIDrawerGroupItem } from "ui";
 import PGApp from "./pg-app";
+import PGPageBase from "./pages/pg-page-base";
 
 /**
  * ```
@@ -106,7 +107,7 @@ class PGDrawerItem extends UIDrawerGroupItem {
 
         const stack = PGApp.queryStackLayout()!;
         stack.set(this.storeKey, async (page) => {
-            // TODO: Set page data here...
+            if (page instanceof PGPageBase) page.setData(data);
         });
     }
 }

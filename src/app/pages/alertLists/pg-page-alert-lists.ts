@@ -1,11 +1,15 @@
 import { html, TemplateResult } from "lit";
 import { customElement } from "lit/decorators.js";
-import { styles, UIStackLayoutPage } from "ui";
-import PGApp from "../../pg-app";
+import { styles } from "ui";
+import PGSearchBar from "../../../components/pg-search-bar";
 import { query } from "../../../lib";
+import PGApp from "../../pg-app";
+import PGPageAlert from "../alert/pg-page-alert";
+import PGPageBase from "../pg-page-base";
+import { Alert, AlertList } from "../../../types";
 
 @customElement("pg-page-alert-lists")
-class PGPageAlertLists extends UIStackLayoutPage {
+class PGPageAlertLists extends PGPageBase<AlertList[]> {
     name = "alertLists";
 
     public querySearchBar(): PGSearchBar | null {
@@ -14,7 +18,6 @@ class PGPageAlertLists extends UIStackLayoutPage {
 
     protected render(): TemplateResult<1> {
         return html`
-            <!-- TODO: Add "PGSearchBar" component -->
             <pg-search-bar title="Alarmsuche (RegEx Mode)"></pg-search-bar>
 
             <div
@@ -42,12 +45,16 @@ class PGPageAlertLists extends UIStackLayoutPage {
                         );
                         if (!target) return;
 
-                        const data = target.getAttribute(`data-json`);
-                        if (!data) return;
+                        const data = JSON.parse(
+                            target.getAttribute(`data-json`) || "null",
+                        ) as Alert | null;
+                        if (data === null) return;
 
                         stack.set(
                             "alert",
-                            (page: PGPageAlert) => {
+                            (page): void => {
+                                if (!(page instanceof PGPageAlert)) return;
+
                                 page.setData(data);
                             },
                             true,
