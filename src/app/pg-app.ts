@@ -1,8 +1,8 @@
 import { css, html, LitElement, PropertyValues } from "lit";
 import { customElement } from "lit/decorators.js";
-import { svg, UIAppBar, UIDrawer } from "ui";
+import { svg, UIAppBar, UIDrawer, UIStackLayout } from "ui";
 import { build, version } from "../constants";
-import { PGStore } from "../types";
+import { PGStackLayoutPage, PGStore } from "../types";
 import PGDrawerItem from "./pg-drawer-item";
 
 @customElement("pg-app")
@@ -17,6 +17,12 @@ class PGApp extends LitElement {
 
     static queryDrawer(): UIDrawer | null {
         return document.querySelector<UIDrawer>("ui-drawer") || null;
+    }
+
+    static queryStackLayout(): UIStackLayout<PGStackLayoutPage> | null {
+        return document.querySelector<UIStackLayout<PGStackLayoutPage>>(
+            "ui-stack-layout",
+        );
     }
 
     static get styles() {
