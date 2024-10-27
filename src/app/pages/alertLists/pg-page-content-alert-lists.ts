@@ -6,18 +6,22 @@ import PGSearchBar from "../../../components/pg-search-bar";
 import { query } from "../../../lib";
 import { AlertList } from "../../../types";
 import PGApp from "../../pg-app";
-import PGPageAlert from "../alert/pg-page-alert";
-import PGPageBase from "../pg-page-base";
+import PGPageContentAlert from "../alert/pg-page-content-alert";
+import PGPageContent from "../pg-page-content";
 
 const searchBarHeight = "4.5rem";
 const initialSearchBarHeight = "0";
 
-@customElement("pg-page-alert-lists")
-class PGPageAlertLists extends PGPageBase<AlertList> {
+@customElement("pg-page-content-alert-lists")
+class PGPageContentAlertLists extends PGPageContent<AlertList> {
     name = "alertLists";
 
     public querySearchBar(): PGSearchBar | null {
         return this.querySelector<PGSearchBar>(`pg-search-bar`);
+    }
+
+    protected createRenderRoot(): HTMLElement | DocumentFragment {
+        return this;
     }
 
     protected render(): TemplateResult<1> {
@@ -67,7 +71,8 @@ class PGPageAlertLists extends PGPageBase<AlertList> {
                         PGApp.queryStackLayout()!.setPage(
                             "alert",
                             (page): void => {
-                                if (!(page instanceof PGPageAlert)) return;
+                                if (!(page instanceof PGPageContentAlert))
+                                    return;
                                 page.data = target.data;
                             },
                             true,
@@ -76,11 +81,6 @@ class PGPageAlertLists extends PGPageBase<AlertList> {
                 ></div>
             </div>
         `;
-    }
-
-    protected createRenderRoot(): HTMLElement | DocumentFragment {
-        // FIXME: Find out how to do this but also use the base styles `:host`
-        return this;
     }
 
     protected updated(_changedProperties: PropertyValues): void {
@@ -102,8 +102,7 @@ class PGPageAlertLists extends PGPageBase<AlertList> {
     protected firstUpdated(_changedProperties: PropertyValues): void {
         this.style.display = "block";
         this.style.paddingTop = "var(--ui-app-bar-height)";
-        this.style.border = "1px solid red";
     }
 }
 
-export default PGPageAlertLists;
+export default PGPageContentAlertLists;

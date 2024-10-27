@@ -1,2 +1,2 @@
-export { default as PGPageAlert } from "./alert/pg-page-alert";
-export { default as PGPageAlertLists } from "./alertLists/pg-page-alert-lists";
+export { default as PGPageContentAlert } from "./alert/pg-page-content-alert";
+export { default as PGPageContentAlertLists } from "./alertLists/pg-page-content-alert-lists";

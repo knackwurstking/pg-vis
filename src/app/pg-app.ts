@@ -1,9 +1,16 @@
-import { css, html, LitElement, PropertyValues } from "lit";
+import { html, LitElement, PropertyValues } from "lit";
 import { customElement } from "lit/decorators.js";
-import { styles, svg, UIAppBar, UIDrawer, UIStackLayout } from "ui";
+import {
+    styles,
+    svg,
+    UIAppBar,
+    UIDrawer,
+    UIStackLayout,
+    UIStackLayoutPage,
+} from "ui";
 import { build, version } from "../constants";
 import { PGStackLayoutPage, PGStore } from "../types";
-import { PGPageAlert, PGPageAlertLists } from "./pages";
+import { PGPageContentAlert, PGPageContentAlertLists } from "./pages";
 import PGDrawerItem from "./pg-drawer-item";
 
 @customElement("pg-app")
@@ -24,18 +31,6 @@ class PGApp extends LitElement {
         return document.querySelector<UIStackLayout<PGStackLayoutPage>>(
             "ui-stack-layout",
         );
-    }
-
-    static get styles() {
-        return css`
-            :host {
-                position: fixed !important;
-                top: 0;
-                right: 0;
-                bottom: 0;
-                left: 0;
-            }
-        `;
     }
 
     constructor() {
@@ -104,6 +99,10 @@ class PGApp extends LitElement {
             ],
             false,
         ); // NOTE: Dummy data for testing
+    }
+
+    protected createRenderRoot(): HTMLElement | DocumentFragment {
+        return this;
     }
 
     protected render() {
@@ -295,10 +294,6 @@ class PGApp extends LitElement {
         `;
     }
 
-    protected createRenderRoot(): HTMLElement | DocumentFragment {
-        return this;
-    }
-
     protected updated(_changedProperties: PropertyValues): void {
         this._registerPages();
     }
@@ -309,17 +304,29 @@ class PGApp extends LitElement {
         // Main pages
 
         stack.registerPage("alertLists", () => {
-            return new PGPageAlertLists();
+            const page = new UIStackLayoutPage();
+            const content = new PGPageContentAlertLists();
+            page.appendChild(content);
+            return page;
         });
 
         // Sub pages
 
         stack.registerPage("alert", () => {
-            return new PGPageAlert();
+            const page = new UIStackLayoutPage();
+            const content = new PGPageContentAlert();
+            page.appendChild(content);
+            return page;
         });
     }
 
     protected firstUpdated(_changedProperties: PropertyValues): void {
+        this.style.position = "fixed";
+        this.style.top = "0";
+        this.style.right = "0";
+        this.style.bottom = "0";
+        this.style.left = "0";
+
         const store = PGApp.queryStore();
 
         this._addAlertListsDrawerItems(store);

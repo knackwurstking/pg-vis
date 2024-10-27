@@ -1,7 +1,7 @@
 import { html } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { svg, UIDrawerGroupItem } from "ui";
-import PGPageBase from "./pages/pg-page-base";
+import PGPageContent from "./pages/pg-page-content";
 import PGApp from "./pg-app";
 
 /**
@@ -100,7 +100,10 @@ class PGDrawerItem extends UIDrawerGroupItem {
         const stack = PGApp.queryStackLayout()!;
         stack.clearStack();
         stack.setPage(this.storeKey, async (page) => {
-            if (page instanceof PGPageBase) page.data = data;
+            const content = page.children[0] as PGPageContent<any> | undefined;
+            if (content !== undefined) {
+                content.data = data;
+            }
         });
     }
 
