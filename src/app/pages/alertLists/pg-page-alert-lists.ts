@@ -9,6 +9,9 @@ import PGApp from "../../pg-app";
 import PGPageAlert from "../alert/pg-page-alert";
 import PGPageBase from "../pg-page-base";
 
+const searchBarHeight = "4.5rem";
+const initialSearchBarHeight = "0";
+
 @customElement("pg-page-alert-lists")
 class PGPageAlertLists extends PGPageBase<AlertList> {
     name = "alertLists";
@@ -27,6 +30,16 @@ class PGPageAlertLists extends PGPageBase<AlertList> {
             <pg-search-bar
                 title="Alarmsuche (RegEx Mode)"
                 storage-key="${this.data?.title}"
+                height="${searchBarHeight}"
+                @open=${() => {
+                    this.style.setProperty(
+                        `--_search-bar-height`,
+                        searchBarHeight,
+                    );
+                }}
+                @close=${() => {
+                    this.style.setProperty(`--_search-bar-height`, "0");
+                }}
             ></pg-search-bar>
 
             <div
@@ -34,13 +47,12 @@ class PGPageAlertLists extends PGPageBase<AlertList> {
                 style="${styles({
                     width: "100%",
                     height: "100%",
-                    paddingTop:
-                        "calc(var(--ui-app-bar-height) + var(--pg-search-bar-height))",
+                    paddingTop: `calc(var(--ui-app-bar-height) + var(--_search-bar-height, ${initialSearchBarHeight}))`,
                     overflow: "auto",
                     scrollBehavior: "smooth",
                 } as CSSStyleDeclaration)}"
             >
-                <ul
+                <div
                     class="list"
                     @click=${async (ev: MouseEvent): Promise<void> => {
                         if (!(ev?.target instanceof Element)) return;
@@ -61,24 +73,36 @@ class PGPageAlertLists extends PGPageBase<AlertList> {
                             true,
                         );
                     }}
-                ></ul>
+                ></div>
             </div>
         `;
     }
 
+    protected createRenderRoot(): HTMLElement | DocumentFragment {
+        // FIXME: Find out how to do this but also use the base styles `:host`
+        return this;
+    }
+
     protected updated(_changedProperties: PropertyValues): void {
-        const ul = this.querySelector(`ul.list`)!;
+        const ul = this.querySelector(`div.list`)!;
         if (this.data !== undefined) {
-            this.data.data.forEach(async (alert) => {
+            this.data.data.forEach(async (alert, index) => {
                 const item = new PGAlertListItem();
                 item.data = alert;
+                item.ripple = true;
                 ul.appendChild(item);
+
+                if (index < this.data!.data.length - 1) {
+                    ul.appendChild(document.createElement("hr"));
+                }
             });
         }
     }
 
-    protected createRenderRoot(): HTMLElement | DocumentFragment {
-        return this;
+    protected firstUpdated(_changedProperties: PropertyValues): void {
+        this.style.display = "block";
+        this.style.paddingTop = "var(--ui-app-bar-height)";
+        this.style.border = "1px solid red";
     }
 }
 
