@@ -75,6 +75,8 @@ class PGApp extends LitElement {
     }
 
     protected render() {
+        console.debug(`Render the "pg-app" component`);
+
         return html`
             <div class="is-container no-scrollbar" style="height: 100%;">
                 <ui-stack-layout></ui-stack-layout>

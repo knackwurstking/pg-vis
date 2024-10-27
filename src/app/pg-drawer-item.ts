@@ -41,6 +41,8 @@ class PGDrawerItem extends UIDrawerGroupItem {
     allowDeletion?: boolean;
 
     protected render() {
+        console.debug(`Render the "pg-drawer-item" component`);
+
         return html`
             <ui-flex-grid-row>
                 <ui-flex-grid-item>
