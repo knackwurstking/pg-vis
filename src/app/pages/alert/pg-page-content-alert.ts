@@ -1,3 +1,4 @@
+import { html, TemplateResult } from "lit";
 import { customElement } from "lit/decorators.js";
 import { Alert } from "../../../types";
 import PGPageContent from "../pg-page-content";
@@ -6,7 +7,11 @@ import PGPageContent from "../pg-page-content";
 class PGPageContentAlert extends PGPageContent<Alert> {
     name = "alert";
 
-    // TODO: ...
+    protected render(): TemplateResult<1> {
+        console.debug(`Render component`, this);
+
+        return html``;
+    }
 }
 
 export default PGPageContentAlert;

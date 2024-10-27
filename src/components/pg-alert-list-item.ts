@@ -15,6 +15,10 @@ class PGAlertListItem extends LitElement {
 
     private rippleCleanUp: CleanUpFunction | null = null;
 
+    protected createRenderRoot(): HTMLElement | DocumentFragment {
+        return this;
+    }
+
     protected render() {
         if (this.data === undefined) return html``;
 
@@ -41,10 +45,6 @@ class PGAlertListItem extends LitElement {
         this.style.position = "relative";
         this.style.cursor = "pointer";
         this.style.borderRadius = "var(--ui-radius)";
-    }
-
-    protected createRenderRoot(): HTMLElement | DocumentFragment {
-        return this;
     }
 
     attributeChangedCallback(

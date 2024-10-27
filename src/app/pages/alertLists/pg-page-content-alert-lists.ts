@@ -6,7 +6,6 @@ import PGSearchBar from "../../../components/pg-search-bar";
 import { query } from "../../../lib";
 import { AlertList } from "../../../types";
 import PGApp from "../../pg-app";
-import PGPageContentAlert from "../alert/pg-page-content-alert";
 import PGPageContent from "../pg-page-content";
 
 const searchBarHeight = "4.5rem";
@@ -20,12 +19,8 @@ class PGPageContentAlertLists extends PGPageContent<AlertList> {
         return this.querySelector<PGSearchBar>(`pg-search-bar`);
     }
 
-    protected createRenderRoot(): HTMLElement | DocumentFragment {
-        return this;
-    }
-
     protected render(): TemplateResult<1> {
-        console.debug(`Render the "pg-page-alert-lists" component`, this);
+        console.debug(`Render component`, this);
 
         PGApp.queryAppBar()!.contentName("title")!.contentAt(0).innerText =
             this.data !== undefined ? this.data.title : "Alarm Liste";
@@ -71,9 +66,13 @@ class PGPageContentAlertLists extends PGPageContent<AlertList> {
                         PGApp.queryStackLayout()!.setPage(
                             "alert",
                             (page): void => {
-                                if (!(page instanceof PGPageContentAlert))
-                                    return;
-                                page.data = target.data;
+                                const content = page.children[0] as
+                                    | PGPageContent<any>
+                                    | undefined;
+
+                                if (content !== undefined) {
+                                    content.data = target.data;
+                                }
                             },
                             true,
                         );

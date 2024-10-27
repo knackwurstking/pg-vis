@@ -106,7 +106,7 @@ class PGApp extends LitElement {
     }
 
     protected render() {
-        console.debug(`Render the "pg-app" component`, this);
+        console.debug(`Render component`, this);
 
         return html`
             <div class="is-container no-scrollbar" style="height: 100%;">

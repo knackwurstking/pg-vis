@@ -40,8 +40,12 @@ class PGDrawerItem extends UIDrawerGroupItem {
     @property({ type: Boolean, attribute: "allow-deletion", reflect: true })
     allowDeletion?: boolean;
 
+    protected createRenderRoot(): HTMLElement | DocumentFragment {
+        return this;
+    }
+
     protected render() {
-        console.debug(`Render the "pg-drawer-item" component`, this);
+        console.debug(`Render component`, this);
 
         return html`
             <ui-flex-grid-row>
@@ -78,10 +82,6 @@ class PGDrawerItem extends UIDrawerGroupItem {
                     : ""}
             </ui-flex-grid-row>
         `;
-    }
-
-    protected createRenderRoot(): HTMLElement | DocumentFragment {
-        return this;
     }
 
     protected async setStackLayoutPage() {
