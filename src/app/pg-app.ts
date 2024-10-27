@@ -3,9 +3,8 @@ import { customElement } from "lit/decorators.js";
 import { styles, svg, UIAppBar, UIDrawer, UIStackLayout } from "ui";
 import { build, version } from "../constants";
 import { PGStackLayoutPage, PGStore } from "../types";
+import { PGPageAlert, PGPageAlertLists } from "./pages";
 import PGDrawerItem from "./pg-drawer-item";
-import PGPageAlertLists from "./pages/alertLists/pg-page-alert-lists";
-import PGPageAlert from "./pages/alert/pg-page-alert";
 
 @customElement("pg-app")
 class PGApp extends LitElement {

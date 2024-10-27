@@ -21,7 +21,7 @@ class PGPageAlertLists extends PGPageBase<AlertList> {
         console.debug(`Render the "pg-page-alert-lists" component`, this);
 
         PGApp.queryAppBar()!.contentName("title")!.contentAt(0).innerText =
-            this.data !== undefined ? "" : "Alarm Liste";
+            this.data !== undefined ? this.data.title : "Alarm Liste";
 
         return html`
             <pg-search-bar
