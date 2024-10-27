@@ -4,6 +4,8 @@ import { styles, svg, UIAppBar, UIDrawer, UIStackLayout } from "ui";
 import { build, version } from "../constants";
 import { PGStackLayoutPage, PGStore } from "../types";
 import PGDrawerItem from "./pg-drawer-item";
+import PGPageAlertLists from "./pages/alertLists/pg-page-alert-lists";
+import PGPageAlert from "./pages/alert/pg-page-alert";
 
 @customElement("pg-app")
 class PGApp extends LitElement {
@@ -256,11 +258,27 @@ class PGApp extends LitElement {
         return this;
     }
 
-    protected firstUpdated(_changedProperties: PropertyValues): void {
-        this._storeHandlers();
+    protected updated(_changedProperties: PropertyValues): void {
+        this._registerPages();
     }
 
-    private _storeHandlers() {
+    private _registerPages() {
+        const stack = PGApp.queryStackLayout()!;
+
+        // Main pages
+
+        stack.registerPage("alertLists", () => {
+            return new PGPageAlertLists();
+        });
+
+        // Sub pages
+
+        stack.registerPage("alert", () => {
+            return new PGPageAlert();
+        });
+    }
+
+    protected firstUpdated(_changedProperties: PropertyValues): void {
         const store = PGApp.queryStore();
 
         this._renderDrawerItemsForAlertLists(store);
