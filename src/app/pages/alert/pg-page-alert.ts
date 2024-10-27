@@ -7,6 +7,10 @@ class PGPageAlert extends PGPageBase<Alert> {
     name = "alert";
 
     // TODO: ...
+
+    protected createRenderRoot(): HTMLElement | DocumentFragment {
+        return this;
+    }
 }
 
 export default PGPageAlert;
