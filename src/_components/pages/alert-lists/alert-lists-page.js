@@ -63,19 +63,6 @@ export class AlertListsPage extends UIStackLayoutPage {
         this.cleanup.run();
     }
 
-    /** @param {PGStore_AlertList} list */
-    set(list) {
-        const title = list?.title || "";
-
-        this.list = list || null;
-        this.uiStore.ui.set("appBarTitle", title);
-        this.searchBar.pg.input().ui.storagekey = utils.getAlertListKey(
-            this.list,
-        );
-
-        this.renderList();
-    }
-
     /** @param {string} value */
     async search(value) {
         const regex = new RegExp(value.replaceAll(" ", ".*"), "i");
