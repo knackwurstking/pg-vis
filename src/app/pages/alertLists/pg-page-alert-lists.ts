@@ -1,12 +1,13 @@
-import { html, TemplateResult } from "lit";
+import { html, PropertyValues, TemplateResult } from "lit";
 import { customElement } from "lit/decorators.js";
 import { styles } from "ui";
+import PGAlertListItem from "../../../components/pg-alert-list-item";
 import PGSearchBar from "../../../components/pg-search-bar";
 import { query } from "../../../lib";
+import { AlertList } from "../../../types";
 import PGApp from "../../pg-app";
 import PGPageAlert from "../alert/pg-page-alert";
 import PGPageBase from "../pg-page-base";
-import { Alert, AlertList } from "../../../types";
 
 @customElement("pg-page-alert-lists")
 class PGPageAlertLists extends PGPageBase<AlertList> {
@@ -22,7 +23,6 @@ class PGPageAlertLists extends PGPageBase<AlertList> {
         PGApp.queryAppBar()!.contentName("title")!.contentAt(0).innerText =
             this.data !== undefined ? "" : "Alarm Liste";
 
-        // TODO: Parse and set data here...
         return html`
             <pg-search-bar
                 title="Alarmsuche (RegEx Mode)"
@@ -45,22 +45,18 @@ class PGPageAlertLists extends PGPageBase<AlertList> {
                     @click=${async (ev: MouseEvent): Promise<void> => {
                         if (!(ev?.target instanceof Element)) return;
 
-                        const target = query.targetFromElementPath(
-                            ev.target,
-                            `.alert-item`,
-                        );
-                        if (!target) return;
-
-                        const data = JSON.parse(
-                            target.getAttribute(`data-json`) || "null",
-                        ) as Alert | null;
-                        if (data === null) return;
+                        const target =
+                            query.targetFromElementPath<PGAlertListItem>(
+                                ev.target,
+                                `pg-alert-list-item`,
+                            );
+                        if (target === null) return;
 
                         PGApp.queryStackLayout()!.set(
                             "alert",
                             (page): void => {
                                 if (!(page instanceof PGPageAlert)) return;
-                                page.data = data;
+                                page.data = target.data;
                             },
                             true,
                         );
@@ -68,6 +64,17 @@ class PGPageAlertLists extends PGPageBase<AlertList> {
                 ></ul>
             </div>
         `;
+    }
+
+    protected updated(_changedProperties: PropertyValues): void {
+        const ul = this.querySelector(`ui.list`)!;
+        if (this.data !== undefined) {
+            this.data.data.forEach(async (alert) => {
+                const item = new PGAlertListItem();
+                item.data = alert;
+                ul.appendChild(item);
+            });
+        }
     }
 
     protected createRenderRoot(): HTMLElement | DocumentFragment {
