@@ -280,10 +280,10 @@ class PGApp extends LitElement {
     protected firstUpdated(_changedProperties: PropertyValues): void {
         const store = PGApp.queryStore();
 
-        this._renderDrawerItemsForAlertLists(store);
+        this._addAlertListsDrawerItems(store);
     }
 
-    private _renderDrawerItemsForAlertLists(store: PGStore): void {
+    private _addAlertListsDrawerItems(store: PGStore): void {
         store.addListener(
             "alertLists",
             (data) => {
