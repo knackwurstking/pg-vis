@@ -1,11 +1,14 @@
-export function targetFromElementPath(target: Element, selector: string) {
+export function targetFromElementPath<T extends Element>(
+    target: Element,
+    selector: string,
+): T | null {
     while (!target.matches(selector)) {
         if (!target.parentElement) {
-            return null
+            return null;
         }
 
-        target = target.parentElement
+        target = target.parentElement;
     }
 
-    return target
+    return target as T;
 }
