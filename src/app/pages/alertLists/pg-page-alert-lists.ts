@@ -67,7 +67,7 @@ class PGPageAlertLists extends PGPageBase<AlertList> {
     }
 
     protected updated(_changedProperties: PropertyValues): void {
-        const ul = this.querySelector(`ui.list`)!;
+        const ul = this.querySelector(`ul.list`)!;
         if (this.data !== undefined) {
             this.data.data.forEach(async (alert) => {
                 const item = new PGAlertListItem();
