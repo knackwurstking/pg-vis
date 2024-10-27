@@ -9,7 +9,7 @@ import PGPageBase from "../pg-page-base";
 import { Alert, AlertList } from "../../../types";
 
 @customElement("pg-page-alert-lists")
-class PGPageAlertLists extends PGPageBase<AlertList[]> {
+class PGPageAlertLists extends PGPageBase<AlertList> {
     name = "alertLists";
 
     public querySearchBar(): PGSearchBar | null {
@@ -17,6 +17,10 @@ class PGPageAlertLists extends PGPageBase<AlertList[]> {
     }
 
     protected render(): TemplateResult<1> {
+        PGApp.queryAppBar()!.contentName("title")!.contentAt(0).innerText =
+            this.data !== undefined ? "" : "Alarm Liste";
+
+        // TODO: Parse and set data here...
         return html`
             <pg-search-bar title="Alarmsuche (RegEx Mode)"></pg-search-bar>
 
@@ -51,8 +55,7 @@ class PGPageAlertLists extends PGPageBase<AlertList[]> {
                             "alert",
                             (page): void => {
                                 if (!(page instanceof PGPageAlert)) return;
-
-                                page.setData(data);
+                                page.data = data;
                             },
                             true,
                         );
