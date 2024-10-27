@@ -17,12 +17,17 @@ class PGPageAlertLists extends PGPageBase<AlertList> {
     }
 
     protected render(): TemplateResult<1> {
+        console.debug(`Render the "pg-page-alert-lists" component`);
+
         PGApp.queryAppBar()!.contentName("title")!.contentAt(0).innerText =
             this.data !== undefined ? "" : "Alarm Liste";
 
         // TODO: Parse and set data here...
         return html`
-            <pg-search-bar title="Alarmsuche (RegEx Mode)"></pg-search-bar>
+            <pg-search-bar
+                title="Alarmsuche (RegEx Mode)"
+                storage-key="${this.data?.title}"
+            ></pg-search-bar>
 
             <div
                 class="no-scrollbar"
