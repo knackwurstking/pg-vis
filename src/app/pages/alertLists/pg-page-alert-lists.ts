@@ -52,7 +52,7 @@ class PGPageAlertLists extends PGPageBase<AlertList> {
                             );
                         if (target === null) return;
 
-                        PGApp.queryStackLayout()!.set(
+                        PGApp.queryStackLayout()!.setPage(
                             "alert",
                             (page): void => {
                                 if (!(page instanceof PGPageAlert)) return;
