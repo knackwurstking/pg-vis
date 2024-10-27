@@ -17,7 +17,7 @@ class PGPageAlertLists extends PGPageBase<AlertList> {
     }
 
     protected render(): TemplateResult<1> {
-        console.debug(`Render the "pg-page-alert-lists" component`);
+        console.debug(`Render the "pg-page-alert-lists" component`, this);
 
         PGApp.queryAppBar()!.contentName("title")!.contentAt(0).innerText =
             this.data !== undefined ? "" : "Alarm Liste";

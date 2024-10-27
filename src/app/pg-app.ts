@@ -1,6 +1,6 @@
 import { css, html, LitElement, PropertyValues } from "lit";
 import { customElement } from "lit/decorators.js";
-import { svg, UIAppBar, UIDrawer, UIStackLayout } from "ui";
+import { styles, svg, UIAppBar, UIDrawer, UIStackLayout } from "ui";
 import { build, version } from "../constants";
 import { PGStackLayoutPage, PGStore } from "../types";
 import PGDrawerItem from "./pg-drawer-item";
@@ -34,17 +34,6 @@ class PGApp extends LitElement {
                 bottom: 0;
                 left: 0;
             }
-
-            ui-drawer ui-button.version {
-                display: flex;
-                justify-content: flex-start;
-
-                margin-bottom: var(--ui-spacing);
-                padding: 0.25rem;
-
-                font-size: 0.85rem;
-                text-transform: none;
-            }
         `;
     }
 
@@ -75,7 +64,7 @@ class PGApp extends LitElement {
     }
 
     protected render() {
-        console.debug(`Render the "pg-app" component`);
+        console.debug(`Render the "pg-app" component`, this);
 
         return html`
             <div class="is-container no-scrollbar" style="height: 100%;">
@@ -156,7 +145,14 @@ class PGApp extends LitElement {
             >
                 <ui-drawer-group name="app-info" no-fold>
                     <ui-button
-                        class="version"
+                        style="${styles({
+                            display: "flex",
+                            justifyContent: "flex-start",
+                            marginBottom: "var(--ui-spacing)",
+                            padding: "0.25rem",
+                            fontSize: "0.85rem",
+                            textTransform: "none",
+                        } as CSSStyleDeclaration)}"
                         variant="ghost"
                         color="primary"
                         ripple
