@@ -97,11 +97,6 @@ class PGPageContentAlertLists extends PGPageContent<AlertList> {
             });
         }
     }
-
-    protected firstUpdated(_changedProperties: PropertyValues): void {
-        this.style.display = "block";
-        this.style.paddingTop = "var(--ui-app-bar-height)";
-    }
 }
 
 export default PGPageContentAlertLists;

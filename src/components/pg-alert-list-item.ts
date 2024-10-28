@@ -5,8 +5,6 @@ import { Alert } from "../types";
 
 @customElement("pg-alert-list-item")
 class PGAlertListItem extends LitElement {
-    role = "button";
-
     @property({ type: Object, attribute: "data", reflect: false })
     data?: Alert;
 
@@ -21,6 +19,17 @@ class PGAlertListItem extends LitElement {
 
     protected render() {
         if (this.data === undefined) return html``;
+
+        if (this.ripple && this.rippleCleanUp === null) {
+            this.style.cursor = "pointer";
+            this.role = "button";
+            this.rippleCleanUp = ripple.create(this);
+        } else if (!this.ripple && this.rippleCleanUp !== null) {
+            this.style.cursor = "default";
+            this.role = "none";
+            this.rippleCleanUp();
+            this.rippleCleanUp = null;
+        }
 
         return html`
             <ui-text>${this.data.alert}</ui-text>
@@ -43,27 +52,7 @@ class PGAlertListItem extends LitElement {
         this.style.padding = "var(--ui-spacing)";
         this.style.overflow = "hidden";
         this.style.position = "relative";
-        this.style.cursor = "pointer";
         this.style.borderRadius = "var(--ui-radius)";
-    }
-
-    attributeChangedCallback(
-        name: string,
-        _old: string | null,
-        value: string | null,
-    ): void {
-        super.attributeChangedCallback(name, _old, value);
-
-        switch (name) {
-            case "ripple":
-                if (this.ripple && this.rippleCleanUp === null) {
-                    this.rippleCleanUp = ripple.create(this);
-                } else if (!this.ripple && this.rippleCleanUp !== null) {
-                    this.rippleCleanUp();
-                    this.rippleCleanUp = null;
-                }
-                break;
-        }
     }
 }
 

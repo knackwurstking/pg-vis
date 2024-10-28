@@ -11,6 +11,8 @@ class PGPageContent<T> extends LitElement {
     slot = "";
 
     protected createRenderRoot(): HTMLElement | DocumentFragment {
+        this.style.display = "block";
+        this.style.paddingTop = "var(--ui-app-bar-height)";
         return this;
     }
 }
