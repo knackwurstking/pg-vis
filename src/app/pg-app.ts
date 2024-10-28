@@ -134,7 +134,14 @@ class PGApp extends LitElement {
                 </ui-app-bar-item>
 
                 <ui-app-bar-item name="back" slot="left" hidden>
-                    <ui-icon-button ghost ripple>
+                    <ui-icon-button
+                        ghost
+                        ripple
+                        @click=${() => {
+                            const stack = PGApp.queryStackLayout()!;
+                            stack.goBack();
+                        }}
+                    >
                         ${svg.smoothieLineIcons.chevronLeft}
                     </ui-icon-button>
                 </ui-app-bar-item>
