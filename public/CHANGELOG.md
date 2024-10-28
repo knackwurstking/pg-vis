@@ -53,6 +53,10 @@
 - [ ] Add a search bar for vis data
 - [ ] Edit Vis Data from the product page, just click to edit
  -[ ] Make Vis Data "title" optional
+ -[ ] Redesign the gist (drawer) and import/download items
+    - Import gist id or import files/zip
+    - Display current gist id in use
+    - update (button) from gist
 
 - [ ] Replace "pg-vis-dev.github.io" with "pg-vis.github.io" before publishing
 - [ ] ~Replace "pg-vis-dev:" with "pg-vis:"~
