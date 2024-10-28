@@ -35,10 +35,10 @@ class PGApp extends LitElement {
 
     constructor() {
         super();
-        this._initStores();
+        this.initializeStores();
     }
 
-    private _initStores() {
+    private initializeStores() {
         const store = PGApp.queryStore();
 
         store.setData("drawerGroup", {}, true);
@@ -295,10 +295,11 @@ class PGApp extends LitElement {
     }
 
     protected updated(_changedProperties: PropertyValues): void {
-        this._registerPages();
+        this.updatedRegisterPages();
+        this.updatedLayout();
     }
 
-    private _registerPages() {
+    private updatedRegisterPages() {
         const stack = PGApp.queryStackLayout()!;
 
         // Main pages
@@ -320,6 +321,15 @@ class PGApp extends LitElement {
         });
     }
 
+    private updatedLayout() {
+        const stack = PGApp.queryStackLayout()!;
+        const appBar = PGApp.queryAppBar()!;
+
+        stack.events.addListener("change", ({ current }) => {
+            // TODO: Handle stack layout changes, set app bar and resets
+        });
+    }
+
     protected firstUpdated(_changedProperties: PropertyValues): void {
         this.style.position = "fixed";
         this.style.top = "0";
@@ -329,10 +339,6 @@ class PGApp extends LitElement {
 
         const store = PGApp.queryStore();
 
-        this._addAlertListsDrawerItems(store);
-    }
-
-    private _addAlertListsDrawerItems(store: PGStore): void {
         store.addListener(
             "alertLists",
             (data) => {
