@@ -118,11 +118,17 @@ class PGDrawerItem extends UIDrawerGroupItem {
             case "vis":
             case "visBookmarks":
             case "visData":
-                PGApp.queryStore().updateData(this.storeKey, (data) => {
-                    return data.filter(
-                        (entry) => entry.title !== this.storeKeyEntry,
-                    );
-                });
+                if (
+                    confirm(
+                        `Möchten Sie "${this.storeKeyEntry}" wirklich löschen?`,
+                    )
+                ) {
+                    PGApp.queryStore().updateData(this.storeKey, (data) => {
+                        return data.filter(
+                            (entry) => entry.title !== this.storeKeyEntry,
+                        );
+                    });
+                }
         }
     }
 }
