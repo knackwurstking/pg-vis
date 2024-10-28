@@ -324,9 +324,49 @@ class PGApp extends LitElement {
     private updatedLayout() {
         const stack = PGApp.queryStackLayout()!;
         const appBar = PGApp.queryAppBar()!;
+        const drawer = PGApp.queryDrawer()!;
 
         stack.events.addListener("change", ({ current }) => {
-            // TODO: Handle stack layout changes, set app bar and resets
+            if (stack.stackSize() > 1) {
+                appBar.contentName("back")!.show();
+            } else {
+                appBar.contentName("back")!.hide();
+            }
+
+            appBar.content("left").forEach((child) => {
+                if (child.name === "menu" || child.name === "back") return;
+                child.hide();
+            });
+
+            appBar.content("right").forEach((child) => {
+                child.hide();
+            });
+
+            if (current === null) {
+                appBar.contentName("title")!.contentAt(0)!.innerText =
+                    "PG: Vis";
+
+                drawer.open = true;
+                return;
+            }
+
+            switch (current.name as PGStackLayoutPage) {
+                case "alertLists":
+                    appBar.contentName("search")!.show();
+                    break;
+
+                case "metalSheets":
+                    appBar.contentName("edit")!.show();
+                    break;
+
+                case "visData":
+                    appBar.contentName("edit")!.show();
+                    break;
+
+                //case "product":
+                //    appBar.contentName("bookmark")!.show();
+                //    break;
+            }
         });
     }
 
@@ -406,12 +446,6 @@ export default PGApp;
 //        this.pgDrawer.ui.open = true;
 //
 //        this.cleanup.add(
-//            this.uiStore.ui.on(
-//                "appBarTitle",
-//                this.onAppBarTitle.bind(this),
-//                true,
-//            ),
-//
 //            this.uiStore.ui.on("share", this.onShare.bind(this), true),
 //        );
 //
@@ -488,99 +522,6 @@ export default PGApp;
 //        this.uiStore.ui.set("share", null, false);
 //        this.uiStore.ui.set("search", { active: false }, false);
 //        this.uiStore.ui.set("bookmark", { active: false }, false);
-//    }
-//
-//    /** @private */
-//    createStackLayout() {
-//        this.stackLayout.ui.events.on("change", ({ newPage }) => {
-//            // Handle back button
-//            if (this.stackLayout.ui.size() > 1) {
-//                // Enable back button
-//                this.pgAppBar.items.back.ui.show();
-//            } else {
-//                // Disable back button
-//                this.pgAppBar.items.back.ui.hide();
-//            }
-//
-//            if (!newPage) {
-//                this.setupNoPage();
-//                return;
-//            }
-//
-//            switch (newPage.ui.name) {
-//                case pages.alertLists:
-//                case pages.alert:
-//                case pages.metalSheetLists:
-//                case pages.vis:
-//                case pages.product:
-//                case pages.visLists:
-//                case pages.visData:
-//                case pages.visDataEntry:
-//                    this.resetAppBar();
-//            }
-//
-//            switch (newPage.ui.name) {
-//                case pages.alertLists:
-//                    this.pgAppBar.items.search.ui.show();
-//                    break;
-//
-//                case pages.metalSheetLists:
-//                    this.pgAppBar.items.edit.ui.show();
-//                    break;
-//
-//                case pages.product:
-//                    this.pgAppBar.items.bookmark.ui.show();
-//                    break;
-//
-//                case pages.visData:
-//                    this.pgAppBar.items.edit.ui.show();
-//                    break;
-//            }
-//        });
-//
-//        this.stackLayout.ui.register(
-//            pages.alertLists,
-//            () => new AlertListsPage(),
-//        );
-//        this.stackLayout.ui.register(pages.alert, () => new AlertPage());
-//
-//        this.stackLayout.ui.register(
-//            pages.metalSheetLists,
-//            () => new MetalSheetListsPage(),
-//        );
-//
-//        this.stackLayout.ui.register(pages.vis, () => new VisPage());
-//        this.stackLayout.ui.register(pages.visLists, () => new VisListsPage());
-//        this.stackLayout.ui.register(pages.visData, () => new VisDataPage());
-//
-//        this.stackLayout.ui.register(pages.product, () => new ProductPage());
-//        this.stackLayout.ui.register(
-//            pages.visDataEntry,
-//            () => new VisDataEntryPage(),
-//        );
-//    }
-//
-//    /** @private */
-//    setupNoPage() {
-//        this.resetAppBar();
-//        this.uiStore.ui.set("appBarTitle", "PG: Vis");
-//        this.pgDrawer.ui.open = true;
-//    }
-//
-//    /** @private */
-//    resetAppBar() {
-//        this.pgAppBar.items.edit.ui.hide();
-//        this.pgAppBar.items.share.ui.hide();
-//        this.pgAppBar.items.search.ui.hide();
-//        this.pgAppBar.items.bookmark.ui.hide();
-//    }
-//
-//    /**
-//     * @private
-//     * @param {string} title
-//     */
-//    async onAppBarTitle(title) {
-//        this.pgAppBar.items.title.ui.child.innerHTML = title || "";
 //    }
 //
 //    /**
