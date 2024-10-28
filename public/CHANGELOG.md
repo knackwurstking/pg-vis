@@ -52,6 +52,7 @@
         mark if no data available and use stored data for this entry
 - [ ] Add a search bar for vis data
 - [ ] Edit Vis Data from the product page, just click to edit
+ -[ ] Make Vis Data "title" optional
 
 - [ ] Replace "pg-vis-dev.github.io" with "pg-vis.github.io" before publishing
 - [ ] ~Replace "pg-vis-dev:" with "pg-vis:"~
