@@ -26,7 +26,7 @@ export class AlertPage extends UIStackLayoutPage {
 
                 <ui-flex-grid-item class="desc"> </ui-flex-grid-item>
             </ui-flex-grid>
-        `; // TODO: Continue here...
+        `;
 
         this.className = "no-scrollbar";
         this.style.paddingTop =
