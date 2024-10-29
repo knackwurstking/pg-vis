@@ -232,6 +232,7 @@ class PGApp extends LitElement {
                     name="alert-lists"
                     title="Alarm Listen"
                     data-fixed-items="2"
+                    gap="0.25rem"
                     ?open=${!!store.getData("drawerGroup")?.["alert-lists"]
                         ?.open}
                     @fold=${() => {
