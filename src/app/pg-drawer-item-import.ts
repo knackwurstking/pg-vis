@@ -4,7 +4,7 @@ import { html } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { svg, UIDialog, UIDrawerGroupItem, UIInput } from "ui";
 import { Gist, GistData } from "../lib/gist";
-import { AlertListsStore } from "../lib/lists-store";
+import { AlertListsStore, ListsStore } from "../lib/lists-store";
 import PGApp from "./pg-app";
 
 @customElement("pg-drawer-item-import")
@@ -46,7 +46,6 @@ class PGDrawerItemImport extends UIDrawerGroupItem {
 
                 <ui-flex-grid-item
                     class="flex align-center justify-center"
-                    style="display: none;"
                     flex="0"
                 >
                     <ui-icon-button
@@ -93,6 +92,8 @@ class PGDrawerItemImport extends UIDrawerGroupItem {
 
                 <ui-button
                     slot="actions"
+                    variant="full"
+                    color="primary"
                     @click=${async () => {
                         const input = this.querySelector<UIInput>(
                             `ui-dialog ui-input[name="gistID"]`,
@@ -101,6 +102,11 @@ class PGDrawerItemImport extends UIDrawerGroupItem {
                         const gistID = input.value;
                         if (gistID === "") await this.importFromFile();
                         else await this.importFromGist(gistID);
+
+                        const dialog = this.querySelector<UIDialog>(
+                            `ui-dialog[name="import"]`,
+                        )!;
+                        dialog.close();
                     }}
                 >
                     Submit
@@ -110,15 +116,8 @@ class PGDrawerItemImport extends UIDrawerGroupItem {
     }
 
     private dialogTitle(): string {
-        let title: string = "";
-
-        switch (this.storeKey) {
-            case "alertLists":
-                title = "Alarm Listen";
-                break;
-        }
-
-        return title;
+        let listsStore = this.getListsStore();
+        return listsStore.title();
     }
 
     private async importFromFile() {
@@ -137,26 +136,16 @@ class PGDrawerItemImport extends UIDrawerGroupItem {
                 reader.onload = async () => {
                     if (typeof reader.result !== "string") return;
 
-                    switch (this.storeKey) {
-                        case "alertLists":
-                            {
-                                const listsStore = new AlertListsStore();
+                    let listsStore = this.getListsStore();
 
-                                const data = listsStore.validate(
-                                    JSON.parse(reader.result),
-                                );
-                                if (data === null) {
-                                    alert(
-                                        `Ungültige Daten für "${listsStore.title()}"!`,
-                                    );
-                                    return;
-                                }
-
-                                listsStore.data = data;
-                                listsStore.updateStore();
-                            }
-                            break;
+                    const data = listsStore.validate(JSON.parse(reader.result));
+                    if (data === null) {
+                        alert(`Ungültige Daten für "${listsStore.title()}"!`);
+                        return;
                     }
+
+                    listsStore.data = data;
+                    listsStore.updateStore(true);
                 };
 
                 reader.onerror = () => {
@@ -188,25 +177,20 @@ class PGDrawerItemImport extends UIDrawerGroupItem {
         const store = PGApp.queryStore();
         let revision: number = 0;
 
-        switch (this.storeKey) {
-            case "alertLists":
-                {
-                    const listsStore = new AlertListsStore();
-                    for (const file of Object.values(gistData.files)) {
-                        const data = listsStore.validate(file.content);
-                        if (data === null) {
-                            alert(`Ungültige Daten für "${listsStore.title}"!`);
-                            return;
-                        }
+        let listsStore = this.getListsStore();
 
-                        gistData.files[file.filename].content = data;
-                    }
+        for (const file of Object.values(gistData.files)) {
+            const data = listsStore.validate(file.content);
+            if (data === null) {
+                alert(`Ungültige Daten für "${listsStore.title}"!`);
+                return;
+            }
 
-                    store.setData(this.storeKey, []); // Clear data first
-                    listsStore.updateStore();
-                }
-                break;
+            gistData.files[file.filename].content = data;
         }
+
+        store.setData(this.storeKey, []); // Clear data first
+        listsStore.updateStore();
 
         store.updateData("gist", (data) => {
             data[`${this.storeKey}`] = {
@@ -224,25 +208,30 @@ class PGDrawerItemImport extends UIDrawerGroupItem {
         const zip = new JSZip();
         const store = PGApp.queryStore();
 
+        let listsStore = this.getListsStore();
+
+        const storeData = store.getData(this.storeKey);
+        if (storeData === undefined) return;
+        listsStore.data = storeData;
+
+        for (const list of listsStore.data) {
+            const fileName = listsStore.fileName(list);
+            zip.file(fileName, JSON.stringify(list, null, 4));
+        }
+
+        FileSaver.saveAs(
+            await zip.generateAsync({ type: "blob" }),
+            listsStore.zipFileName(),
+        );
+    }
+
+    private getListsStore(): ListsStore<any> {
         switch (this.storeKey) {
             case "alertLists":
-                const listsStore = new AlertListsStore();
-
-                const storeData = store.getData(this.storeKey);
-                if (storeData === undefined) return;
-                listsStore.data = storeData;
-
-                for (const list of listsStore.data) {
-                    const fileName = listsStore.fileName(list);
-                    zip.file(fileName, JSON.stringify(list, null, 4));
-                }
-
-                FileSaver.saveAs(
-                    await zip.generateAsync({ type: "blob" }),
-                    listsStore.zipFileName(),
-                );
-
+                return new AlertListsStore();
                 break;
+            default:
+                throw new Error(`unknown "${this.storeKey}"`);
         }
     }
 }

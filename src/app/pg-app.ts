@@ -248,8 +248,9 @@ class PGApp extends LitElement {
                     }}
                 >
                     <!-- Fixed Item 1 -->
-                    <!-- TODO: Import / Export - Continue here... -->
-                    <span class="placeholder"></span>
+                    <pg-drawer-item-import
+                        store-key="alertLists"
+                    ></pg-drawer-item-import>
 
                     <!-- Fixed Item 2 -->
                     <!-- TODO: Gist -->
@@ -408,7 +409,7 @@ class PGApp extends LitElement {
                 );
 
                 Array.from(groupContainer.children)
-                    .slice(0, fixedItems)
+                    .slice(fixedItems)
                     .forEach((child) => groupContainer.removeChild(child));
 
                 data.forEach(async (list) => {

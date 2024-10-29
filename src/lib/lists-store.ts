@@ -37,14 +37,25 @@ export class ListsStore<T extends keyof ListsStoreData> {
         return data;
     }
 
-    // TODO: ...
+    sort(data: ListsStoreData[T][]): ListsStoreData[T][] {
+        const result: ListsStoreData[T][] = [];
 
-    updateStore() {}
+        const keys = data.map((list) => `${list.title}`).sort();
+
+        for (const key of keys) {
+            const keyData = data.find((list) => `${list.title}` === key);
+            if (keyData !== undefined) result.push(keyData);
+        }
+
+        return result;
+    }
+
+    updateStore(sort?: boolean) {}
 }
 
 export class AlertListsStore extends ListsStore<"alertLists"> {
     key(): keyof ListsStoreData {
-        return "alertList" as keyof ListsStoreData;
+        return "alertLists";
     }
 
     listKey(list: AlertList): string {
@@ -104,22 +115,25 @@ export class AlertListsStore extends ListsStore<"alertLists"> {
         return data;
     }
 
-    updateStore() {
+    updateStore(sort?: boolean) {
         const store = PGApp.queryStore();
 
         const storeData = store.getData(this.key());
+        console.debug("updateStore...", this.key(), storeData, this.data);
         if (storeData === undefined) {
             return;
         }
 
-        const data = storeData.map((storeList) => {
-            return (
-                this.data.find(
-                    (list) => this.listKey(list) === this.listKey(storeList),
-                ) || storeList
+        const filteredData = storeData.filter((storeList) => {
+            const data = this.data.find(
+                (list) => this.listKey(list) === this.listKey(storeList),
             );
+
+            return data !== undefined;
         });
 
-        store.setData(this.key(), data);
+        const mergedData = [...filteredData, ...this.data];
+
+        store.setData(this.key(), sort ? this.sort(mergedData) : mergedData);
     }
 }
