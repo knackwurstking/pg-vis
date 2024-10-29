@@ -8,248 +8,155 @@ import { git, utils } from "../../lib";
  * @template {any} T
  */
 export class PGDrawerItemImport extends UIDrawerGroupItem {
-  static register = () => {
-    customElements.define("pg-drawer-item-import", PGDrawerItemImport);
-  };
-
-  static observedAttributes = ["disabled"];
-
-  constructor() {
-    super();
-
-    /** @type {PGStore} */
-    this.uiStore = document.querySelector("ui-store");
-
-    /** @type {UIButton} */
-    this.importButton = null;
-    /** @type {UIIconButton} */
-    this.exportButton = null;
-
-    /** @type {(() => void|Promise<void>) | null} */
-    this.beforeUpdate = null;
-    /** @type {((data: any) => T|Promise<T>) | null} */
-    this.onValidate = null;
-    /** @type {((data: T) => void|Promise<void>) | null} */
-    this.onUpdate = null;
-
-    this.pg = {
-      root: this,
-
-      get title() {
-        return this.root.getAttribute("title");
-      },
-
-      set title(value) {
-        if (!value) {
-          this.root.removeAttribute("title");
-          return;
-        }
-
-        this.root.setAttribute("title", value);
-      },
-
-      get storegistkey() {
-        return this.root.getAttribute("storegistkey");
-      },
-
-      set storegistkey(value) {
-        if (!value) {
-          this.root.removeAttribute("storegistkey");
-          return;
-        }
-
-        this.root.setAttribute("storegistkey", value);
-      },
-
-      get disabled() {
-        return this.root.hasAttribute("disabled");
-      },
-
-      set disabled(state) {
-        if (!state) {
-          this.root.removeAttribute("disabled");
-          return;
-        }
-
-        this.root.setAttribute("disabled", "");
-      },
-
-      /** @param {(() => void|Promise<void>) | null} fn */
-      setBeforeUpdateHandler(fn) {
-        this.root.beforeUpdate = fn;
-      },
-
-      /** @param {((data: any, gistID?: string | null) => T|Promise<T>) | null} fn */
-      setValidateHandler(fn) {
-        this.root.onValidate = fn;
-      },
-
-      /** @param {((data: T) => void|Promise<void>) | null} fn */
-      setUpdateHandler(fn) {
-        this.root.onUpdate = fn;
-      },
-
-      /** @param {(() => void|Promise<void>) | null} fn */
-      setExportHandler(fn) {
-        if (fn === null) {
-          this.root.exportButton.parentElement.style.display = "none";
-          return;
-        }
-
-        this.root.exportButton.parentElement.style.display = "flex";
-        this.root.exportButton.onclick = () => fn();
-      },
+    static register = () => {
+        customElements.define("pg-drawer-item-import", PGDrawerItemImport);
     };
 
-    this.render();
-  }
+    static observedAttributes = ["disabled"];
 
-  render() {
-    this.innerHTML = html`
-      <ui-flex-grid-row gap="0.25rem">
-        <ui-flex-grid-item>
-          <ui-button variant="full" color="primary"> Import </ui-button>
-        </ui-flex-grid-item>
+    constructor() {
+        super();
 
-        <ui-flex-grid-item
-          class="flex align-center justify-center"
-          style="display: none;"
-          flex="0"
-        >
-          <ui-icon-button style="width: 2.5rem; height: 2.5rem;" ghost>
-            ${svgDownload}
-          </ui-icon-button>
-        </ui-flex-grid-item>
-      </ui-flex-grid-row>
-    `;
+        /** @type {PGStore} */
+        this.uiStore = document.querySelector("ui-store");
 
-    this.importButton = this.querySelector(`ui-button`);
-    this.importButton.ui.events.on("click", () => this.import());
+        /** @type {UIButton} */
+        this.importButton = null;
+        /** @type {UIIconButton} */
+        this.exportButton = null;
 
-    this.exportButton = this.querySelector(`ui-icon-button`);
-  }
+        /** @type {(() => void|Promise<void>) | null} */
+        this.beforeUpdate = null;
+        /** @type {((data: any) => T|Promise<T>) | null} */
+        this.onValidate = null;
+        /** @type {((data: T) => void|Promise<void>) | null} */
+        this.onUpdate = null;
 
-  /**
-   * @param {string} name
-   * @param {string} _oldValue
-   * @param {string} newValue
-   */
-  attributeChangedCallback(name, _oldValue, newValue) {
-    switch (name) {
-      case "disabled":
-        this.setDisabled(newValue);
-        break;
-    }
-  }
+        this.pg = {
+            root: this,
 
-  /** @param {string | null} value */
-  setDisabled(value) {
-    if (value === null) {
-      this.importButton.ui.disabled = false;
-      this.exportButton.ui.disabled = false;
-      return;
-    }
+            get title() {
+                return this.root.getAttribute("title");
+            },
 
-    this.importButton.ui.disabled = true;
-    this.importButton.ui.disabled = true;
-    this.exportButton.ui.disabled = true;
-  }
+            set title(value) {
+                if (!value) {
+                    this.root.removeAttribute("title");
+                    return;
+                }
 
-  /** @private */
-  async import() {
-    const dialog = new ImportDialog(this.pg.title);
-    dialog.ui.events.on("submit", async (gistID) => {
-      if (!this.onValidate) {
-        throw new Error(`missing callback: "onValidate"`);
-      }
+                this.root.setAttribute("title", value);
+            },
 
-      if (!this.onUpdate) {
-        throw new Error(`missing callback: "onUpdate"`);
-      }
+            get storegistkey() {
+                return this.root.getAttribute("storegistkey");
+            },
 
-      // Import files
-      if (!gistID) {
-        utils.file.load(async (result) => {
-          /**
-           * @type {T}
-           */
-          let data = null;
+            set storegistkey(value) {
+                if (!value) {
+                    this.root.removeAttribute("storegistkey");
+                    return;
+                }
 
-          try {
-            data = await this.onValidate(result);
-          } catch (err) {
-            // Validation failed: ${err}
-            alert(`Validierung fehlgeschlagen: ${err}`);
-            return;
-          }
+                this.root.setAttribute("storegistkey", value);
+            },
 
-          if (data === null) return;
-          await this.onUpdate(data);
-        });
+            get disabled() {
+                return this.root.hasAttribute("disabled");
+            },
 
-        return;
-      }
+            set disabled(state) {
+                if (!state) {
+                    this.root.removeAttribute("disabled");
+                    return;
+                }
 
-      // Import Gist
-      if (this.pg.storegistkey === null) {
-        throw new Error(`missing "storegistkey"`);
-      }
+                this.root.setAttribute("disabled", "");
+            },
 
-      /**
-       * @type {git.Gist<T>}
-       */
-      const gist = new git.Gist(gistID);
-      /**
-       * @type {Gist_Data<T>}
-       */
-      let gistData;
+            /** @param {(() => void|Promise<void>) | null} fn */
+            setBeforeUpdateHandler(fn) {
+                this.root.beforeUpdate = fn;
+            },
 
-      try {
-        gistData = await gist.get();
-      } catch (err) {
-        // Something went wrong: ${err}
-        alert(`Etwas ist schiefgelaufen: ${err}`);
-        return;
-      }
+            /** @param {((data: any, gistID?: string | null) => T|Promise<T>) | null} fn */
+            setValidateHandler(fn) {
+                this.root.onValidate = fn;
+            },
 
-      // Validate
-      try {
-        for (const key in gistData.files) {
-          gistData.files[key].content = await this.onValidate(
-            gistData.files[key].content,
-          );
-        }
-      } catch (err) {
-        // Validation failed: ${err}
-        alert(`Validierung fehlgeschlagen: ${err}`);
-        return;
-      }
+            /** @param {((data: T) => void|Promise<void>) | null} fn */
+            setUpdateHandler(fn) {
+                this.root.onUpdate = fn;
+            },
 
-      this.uiStore.ui.update("gist", (data) => {
-        data[`${this.pg.storegistkey}`] = {
-          id: gistID,
-          revision: gistData.revision,
+            /** @param {(() => void|Promise<void>) | null} fn */
+            setExportHandler(fn) {
+                if (fn === null) {
+                    this.root.exportButton.parentElement.style.display = "none";
+                    return;
+                }
+
+                this.root.exportButton.parentElement.style.display = "flex";
+                this.root.exportButton.onclick = () => fn();
+            },
         };
 
-        return data;
-      });
+        this.render();
+    }
 
-      // Before Update
-      if (typeof this.beforeUpdate === "function") {
-        await this.beforeUpdate();
-      }
+    render() {
+        this.innerHTML = html`
+            <ui-flex-grid-row gap="0.25rem">
+                <ui-flex-grid-item>
+                    <ui-button variant="full" color="primary">
+                        Import
+                    </ui-button>
+                </ui-flex-grid-item>
 
-      // Update
-      for (const file of Object.values(gistData.files)) {
-        await this.onUpdate(file.content);
-      }
-    });
+                <ui-flex-grid-item
+                    class="flex align-center justify-center"
+                    style="display: none;"
+                    flex="0"
+                >
+                    <ui-icon-button
+                        style="width: 2.5rem; height: 2.5rem;"
+                        ghost
+                    >
+                        ${svgDownload}
+                    </ui-icon-button>
+                </ui-flex-grid-item>
+            </ui-flex-grid-row>
+        `;
 
-    dialog.ui.events.on("close", () => {
-      document.body.removeChild(dialog);
-    });
+        this.importButton = this.querySelector(`ui-button`);
+        this.importButton.ui.events.on("click", () => this.import());
 
-    document.body.appendChild(dialog);
-    dialog.ui.open(true);
-  }
+        this.exportButton = this.querySelector(`ui-icon-button`);
+    }
+
+    /**
+     * @param {string} name
+     * @param {string} _oldValue
+     * @param {string} newValue
+     */
+    attributeChangedCallback(name, _oldValue, newValue) {
+        switch (name) {
+            case "disabled":
+                this.setDisabled(newValue);
+                break;
+        }
+    }
+
+    /** @param {string | null} value */
+    setDisabled(value) {
+        if (value === null) {
+            this.importButton.ui.disabled = false;
+            this.exportButton.ui.disabled = false;
+            return;
+        }
+
+        this.importButton.ui.disabled = true;
+        this.importButton.ui.disabled = true;
+        this.exportButton.ui.disabled = true;
+    }
 }

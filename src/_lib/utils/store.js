@@ -11,131 +11,96 @@ import { gistPull, gistPush } from "../git";
  * @param {(data: Object) => void | Promise<void>} options.onUpdate
  */
 export function gistHandler(
-  gistItem,
-  data,
-  { storeGistKey, storeDataKey, getFileName, onUpdate },
+    gistItem,
+    data,
+    { storeGistKey, storeDataKey, getFileName, onUpdate },
 ) {
-  if (!data) return;
+    if (!data) return;
 
-  /**
-   * @type {PGStore}
-   */
-  const uiStore = document.querySelector("ui-store");
+    /**
+     * @type {PGStore}
+     */
+    const uiStore = document.querySelector("ui-store");
 
-  const g = data[storeGistKey];
-  if (!g) {
-    gistItem.set(null, null);
-    gistItem.pg.onPull = null;
-    gistItem.pg.onPush = null;
-    return;
-  }
-
-  gistItem.set(g.id, g.revision);
-
-  /**
-   * @type {UISpinner}
-   */
-  let spinner;
-  const spinnerStart = () => {
-    if (!!spinner) gistItem.removeChild(spinner);
-    spinner = new UISpinner();
-    gistItem.appendChild(spinner);
-  };
-
-  const spinnerStop = () => {
-    if (!spinner) return;
-
-    gistItem.removeChild(spinner);
-    spinner = undefined;
-  };
-
-  gistItem.pg.onPull = async (id, rev) => {
-    spinnerStart();
-
-    try {
-      const newRevision = await gistPull(id, rev, {
-        beforeUpdate: async () => {
-          uiStore.ui.set(storeDataKey, []);
-        },
-        update: onUpdate,
-      });
-
-      uiStore.ui.update("gist", (data) => {
-        data[storeGistKey] = {
-          id: id,
-          revision: newRevision,
-        };
-        return data;
-      });
-    } catch (err) {
-      alert(err);
-    } finally {
-      spinnerStop();
+    const g = data[storeGistKey];
+    if (!g) {
+        gistItem.set(null, null);
+        gistItem.pg.onPull = null;
+        gistItem.pg.onPush = null;
+        return;
     }
-  };
 
-  gistItem.pg.onPush = async (id, rev) => {
-    spinnerStart();
+    gistItem.set(g.id, g.revision);
 
-    try {
-      const lists = uiStore.ui.get(storeDataKey);
-      if (!Array.isArray(lists)) {
-        // No data to push for store key "${key}"
-        throw new Error(
-          `keine Daten zum Pushen für Store-Schlüssel "${storeDataKey}"`,
-        );
-      }
+    /**
+     * @type {UISpinner}
+     */
+    let spinner;
+    const spinnerStart = () => {
+        if (!!spinner) gistItem.removeChild(spinner);
+        spinner = new UISpinner();
+        gistItem.appendChild(spinner);
+    };
 
-      const newRevision = await gistPush(id, rev, lists, {
-        getFileName: getFileName,
-      });
+    const spinnerStop = () => {
+        if (!spinner) return;
 
-      uiStore.ui.update("gist", (data) => {
-        data[storeGistKey] = {
-          id: id,
-          revision: newRevision,
-        };
-        return data;
-      });
-    } catch (err) {
-      alert(err);
-    } finally {
-      spinnerStop();
-    }
-  };
-}
+        gistItem.removeChild(spinner);
+        spinner = undefined;
+    };
 
-/**
- * @param {PGStore} uiStore
- * @param {any} data
- * @param {Object} options
- * @param {"alertLists" | "metalSheetLists" | "vis" | "visLists" | "visData"} options.storeDataKey
- * @param {(data: any) => string} options.getKey
- */
-export function update(uiStore, data, { storeDataKey, getKey }) {
-  // Overwrite
-  const key = getKey(data);
-  if (
-    !!uiStore.ui.get(storeDataKey).find((list) => {
-      if (getKey(list) === key) return true;
-      return false;
-    })
-  ) {
-    uiStore.ui.update(storeDataKey, (lists) => {
-      return lists.map((list) => {
-        if (getKey(list) === key) {
-          return data;
+    gistItem.pg.onPull = async (id, rev) => {
+        spinnerStart();
+
+        try {
+            const newRevision = await gistPull(id, rev, {
+                beforeUpdate: async () => {
+                    uiStore.ui.set(storeDataKey, []);
+                },
+                update: onUpdate,
+            });
+
+            uiStore.ui.update("gist", (data) => {
+                data[storeGistKey] = {
+                    id: id,
+                    revision: newRevision,
+                };
+                return data;
+            });
+        } catch (err) {
+            alert(err);
+        } finally {
+            spinnerStop();
         }
+    };
 
-        return list;
-      });
-    });
+    gistItem.pg.onPush = async (id, rev) => {
+        spinnerStart();
 
-    return;
-  }
+        try {
+            const lists = uiStore.ui.get(storeDataKey);
+            if (!Array.isArray(lists)) {
+                // No data to push for store key "${key}"
+                throw new Error(
+                    `keine Daten zum Pushen für Store-Schlüssel "${storeDataKey}"`,
+                );
+            }
 
-  // Add
-  uiStore.ui.update(storeDataKey, (lists) => {
-    return [...lists, data];
-  });
+            const newRevision = await gistPush(id, rev, lists, {
+                getFileName: getFileName,
+            });
+
+            uiStore.ui.update("gist", (data) => {
+                data[storeGistKey] = {
+                    id: id,
+                    revision: newRevision,
+                };
+                return data;
+            });
+        } catch (err) {
+            alert(err);
+        } finally {
+            spinnerStop();
+        }
+    };
 }
