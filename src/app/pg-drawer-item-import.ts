@@ -1,11 +1,11 @@
 import FileSaver from "file-saver";
+import JSZip from "jszip";
 import { html } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { svg, UIDialog, UIDrawerGroupItem, UIInput } from "ui";
-import { AlertListsStore } from "../lib/store";
 import { Gist, GistData } from "../lib/gist";
+import { AlertListsStore } from "../lib/store";
 import PGApp from "./pg-app";
-import JSZip from "jszip";
 
 @customElement("pg-drawer-item-import")
 class PGDrawerItemImport extends UIDrawerGroupItem {
