@@ -6,7 +6,7 @@ const manifestForPlugIn = {
     strategies: "generateSW",
     registerType: "autoUpdate",
     includeAssets: [
-        "/assets/fonts/Recursive_F_1.085--subset_range_english_basic.woff2",
+        "/assets/fonts/Recursive_VF_1.085--subset_range_english_basic.woff2",
         "/assets/fonts/Recursive_VF_1.085--subset_range_latin_1_punc.woff2",
         "/assets/fonts/Recursive_VF_1.085--subset_range_remaining.woff2",
         "/assets/fonts/Recursive_VF_1.085--subset_range_latin_1.woff2",
@@ -57,12 +57,11 @@ export default defineConfig({
     clearScreen: false,
     base: "/pg-vis-dev.github.io/",
 
-    build: {
-        outDir: "dist/",
-    },
-
-    // TODO: Uncommend this before publishing
     //build: {
-    //    outDir: "../pg-vis-dev.github.io/",
+    //    outDir: "dist/",
     //},
+
+    build: {
+        outDir: "../pg-vis-dev.github.io/",
+    },
 });
