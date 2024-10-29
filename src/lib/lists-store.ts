@@ -50,7 +50,7 @@ export class ListsStore<T extends keyof ListsStoreData> {
         return result;
     }
 
-    updateStore(sort?: boolean) {}
+    updateStore(_sort?: boolean) {}
 }
 
 export class AlertListsStore extends ListsStore<"alertLists"> {
