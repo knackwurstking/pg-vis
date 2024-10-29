@@ -1,3 +1,5 @@
+import "./pg-drawer-item-import"; // Register "pg-drawer-item-import"
+
 import { html, LitElement, PropertyValues } from "lit";
 import { customElement } from "lit/decorators.js";
 import {
