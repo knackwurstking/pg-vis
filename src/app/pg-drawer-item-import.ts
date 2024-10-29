@@ -234,7 +234,7 @@ class PGDrawerItemImport extends UIDrawerGroupItem {
 
                 for (const list of listsStore.data) {
                     const fileName = listsStore.fileName(list);
-                    zip.file(fileName, JSON.stringify(list));
+                    zip.file(fileName, JSON.stringify(list, null, 4));
                 }
 
                 FileSaver.saveAs(
