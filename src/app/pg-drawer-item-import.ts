@@ -190,7 +190,7 @@ class PGDrawerItemImport extends UIDrawerGroupItem {
         }
 
         store.setData(this.storeKey, []); // Clear data first
-        listsStore.updateStore();
+        listsStore.updateStore(true);
 
         store.updateData("gist", (data) => {
             data[`${this.storeKey}`] = {
