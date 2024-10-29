@@ -131,12 +131,12 @@ class PGDrawerItemImport extends UIDrawerGroupItem {
         input.onchange = async () => {
             if (input.files === null) return;
 
-            let listsStore = this.getListsStore();
-
             for (const file of input.files) {
                 const reader = new FileReader();
                 reader.onload = async () => {
                     if (typeof reader.result !== "string") return;
+
+                    let listsStore = this.getListsStore();
 
                     const data = listsStore.validate(JSON.parse(reader.result));
                     if (data === null) {
@@ -145,6 +145,7 @@ class PGDrawerItemImport extends UIDrawerGroupItem {
                     }
 
                     listsStore.data.push(data);
+                    listsStore.updateStore(true);
                 };
 
                 reader.onerror = () => {
@@ -153,8 +154,6 @@ class PGDrawerItemImport extends UIDrawerGroupItem {
 
                 reader.readAsText(file);
             }
-
-            listsStore.updateStore(true);
         };
 
         input.click();

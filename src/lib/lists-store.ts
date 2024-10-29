@@ -119,11 +119,9 @@ export class AlertListsStore extends ListsStore<"alertLists"> {
     }
 
     updateStore(sort?: boolean) {
-        console.debug(this.data);
         const store = PGApp.queryStore();
 
         const storeData = store.getData(this.key());
-        console.debug("updateStore...", this.key(), storeData, this.data);
         if (storeData === undefined) {
             return;
         }
@@ -133,7 +131,7 @@ export class AlertListsStore extends ListsStore<"alertLists"> {
                 (list) => this.listKey(list) === this.listKey(storeList),
             );
 
-            return data !== undefined;
+            return data === undefined;
         });
 
         const mergedData = [...filteredData, ...this.data];
