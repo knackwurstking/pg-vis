@@ -3,10 +3,10 @@ import { customElement } from "lit/decorators.js";
 import { styles } from "ui";
 import PGAlertListItem from "../../../components/pg-alert-list-item";
 import PGSearchBar from "../../../components/pg-search-bar";
-import { query } from "../../../lib";
 import { AlertList } from "../../../types";
 import PGApp from "../../pg-app";
 import PGPageContent from "../pg-page-content";
+import { queryTargetFromElementPath } from "../../../lib/query";
 
 const searchBarHeight = "4.5rem";
 const initialSearchBarHeight = "0";
@@ -57,7 +57,7 @@ class PGPageContentAlertLists extends PGPageContent<AlertList> {
                         if (!(ev?.target instanceof Element)) return;
 
                         const target =
-                            query.targetFromElementPath<PGAlertListItem>(
+                            queryTargetFromElementPath<PGAlertListItem>(
                                 ev.target,
                                 `pg-alert-list-item`,
                             );

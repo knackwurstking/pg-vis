@@ -1,7 +1,11 @@
+import FileSaver from "file-saver";
 import { html } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { svg, UIDialog, UIDrawerGroupItem, UIInput } from "ui";
 import { AlertListsStore } from "../lib/store";
+import { Gist, GistData } from "../lib/gist";
+import PGApp from "./pg-app";
+import JSZip from "jszip";
 
 @customElement("pg-drawer-item-import")
 class PGDrawerItemImport extends UIDrawerGroupItem {
@@ -49,9 +53,7 @@ class PGDrawerItemImport extends UIDrawerGroupItem {
                         style="width: 2.5rem; height: 2.5rem;"
                         ghost
                         ripple
-                        @click=${async () => {
-                            // TODO: Export here...
-                        }}
+                        @click=${async () => await this.export()}
                     >
                         ${svg.smoothieLineIcons.download}
                     </ui-icon-button>
@@ -98,7 +100,7 @@ class PGDrawerItemImport extends UIDrawerGroupItem {
 
                         const gistID = input.value;
                         if (gistID === "") await this.importFromFile();
-                        else await this.importFromGist();
+                        else await this.importFromGist(gistID);
                     }}
                 >
                     Submit
@@ -120,14 +122,13 @@ class PGDrawerItemImport extends UIDrawerGroupItem {
     }
 
     private async importFromFile() {
+        if (this.storeKey === undefined) return;
+
         const input = document.createElement("input");
 
         input.type = "file";
         input.multiple = true;
 
-        /**
-         * @param {Event & { currentTarget: HTMLInputElement }} ev
-         */
         input.onchange = async () => {
             if (input.files === null) return;
 
@@ -145,7 +146,9 @@ class PGDrawerItemImport extends UIDrawerGroupItem {
                                     JSON.parse(reader.result),
                                 );
                                 if (data === null) {
-                                    alert(`Ungültige Daten!`);
+                                    alert(
+                                        `Ungültige Daten für "${listsStore.title()}"!`,
+                                    );
                                     return;
                                 }
 
@@ -167,89 +170,81 @@ class PGDrawerItemImport extends UIDrawerGroupItem {
         input.click();
     }
 
-    // TODO: Continue here...
-    private async importFromGist() {
-        if (this.pg.storegistkey === null) {
-            throw new Error(`missing "storegistkey"`);
-        }
+    private async importFromGist(gistID: string) {
+        if (this.storeKey === undefined) return;
 
-        /**
-         * @type {git.Gist<T>}
-         */
-        const gist = new git.Gist(gistID);
-        /**
-         * @type {Gist_Data<T>}
-         */
-        let gistData;
+        const gist = new Gist(gistID);
+
+        let gistData: GistData<any>;
 
         try {
-            gistData = await gist.get();
+            gistData = await gist.get<any>();
         } catch (err) {
             // Something went wrong: ${err}
             alert(`Etwas ist schiefgelaufen: ${err}`);
             return;
         }
 
-        // Validate
-        try {
-            for (const key in gistData.files) {
-                gistData.files[key].content = await this.onValidate(
-                    gistData.files[key].content,
-                );
-            }
-        } catch (err) {
-            // Validation failed: ${err}
-            alert(`Validierung fehlgeschlagen: ${err}`);
-            return;
+        const store = PGApp.queryStore();
+        let revision: number = 0;
+
+        switch (this.storeKey) {
+            case "alertLists":
+                {
+                    const listsStore = new AlertListsStore();
+                    for (const file of Object.values(gistData.files)) {
+                        const data = listsStore.validate(file.content);
+                        if (data === null) {
+                            alert(`Ungültige Daten für "${listsStore.title}"!`);
+                            return;
+                        }
+
+                        gistData.files[file.filename].content = data;
+                    }
+
+                    store.setData(this.storeKey, []); // Clear data first
+                    listsStore.updateStore();
+                }
+                break;
         }
 
-        this.uiStore.ui.update("gist", (data) => {
-            data[`${this.pg.storegistkey}`] = {
+        store.updateData("gist", (data) => {
+            data[`${this.storeKey}`] = {
                 id: gistID,
-                revision: gistData.revision,
+                revision: revision,
             };
 
             return data;
         });
-
-        // Before Update
-        if (typeof this.beforeUpdate === "function") {
-            await this.beforeUpdate();
-        }
-
-        // Update
-        for (const file of Object.values(gistData.files)) {
-            await this.onUpdate(file.content);
-        }
     }
 
-    //private async export() {
-    //    if (this.storeKey === undefined) return;
-    //
-    //    const store = PGApp.queryStore();
-    //
-    //    const storeData = store.getData(this.storeKey);
-    //    if (storeData === undefined) return;
-    //
-    //    const zip = new JSZip();
-    //
-    //    for (let x = 0; x < storeData.length; x++) {
-    //        const fileName = `${x}.json`;
-    //        zip.file(fileName, JSON.stringify(storeData[x]));
-    //    }
-    //
-    //    const blob = await zip.generateAsync({ type: "blob" });
-    //
-    //    const fileName = this.getZipFileName();
-    //    if (fileName === null)
-    //        throw new Error(`unknown store key "${this.storeKey}"`);
-    //
-    //    FileSaver.saveAs(blob, fileName);
-    //}
-    //
-    //private updateStore(data) {
+    private async export() {
+        if (this.storeKey === undefined) return;
 
-    //}
+        const zip = new JSZip();
+        const store = PGApp.queryStore();
+
+        switch (this.storeKey) {
+            case "alertLists":
+                const listsStore = new AlertListsStore();
+
+                const storeData = store.getData(this.storeKey);
+                if (storeData === undefined) return;
+                listsStore.data = storeData;
+
+                for (const list of listsStore.data) {
+                    const fileName = listsStore.fileName(list);
+                    zip.file(fileName, JSON.stringify(list));
+                }
+
+                FileSaver.saveAs(
+                    await zip.generateAsync({ type: "blob" }),
+                    listsStore.zipFileName(),
+                );
+
+                break;
+        }
+    }
 }
 
 export default PGDrawerItemImport;

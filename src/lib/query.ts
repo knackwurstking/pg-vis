@@ -1,4 +1,4 @@
-export function targetFromElementPath<T extends Element>(
+export function queryTargetFromElementPath<T extends Element>(
     target: Element,
     selector: string,
 ): T | null {

@@ -28,6 +28,13 @@ export interface PGStoreEvents {
     // TODO: Store Keys for "vis-data"
     visData: [];
 
+    gist: {
+        [key: string]: {
+            id: string;
+            revision: number;
+        };
+    };
+
     // NOTE: This was the old store
     //alertLists: PGStore_AlertList[];
     //metalSheetLists: PGStore_MetalSheetList[];
