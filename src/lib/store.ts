@@ -1,5 +1,5 @@
 import PGApp from "../app/pg-app";
-import { AlertList } from "../types";
+import { AlertList } from "../store-types";
 
 export interface ListsStoreData {
     alertLists: AlertList;

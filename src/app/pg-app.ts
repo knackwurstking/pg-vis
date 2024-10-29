@@ -11,9 +11,17 @@ import {
     UIStackLayoutPage,
 } from "ui";
 import { build, version } from "../constants";
-import { PGStackLayoutPage, PGStore } from "../types";
+import { PGStore } from "../store-types";
 import { PGPageContentAlert, PGPageContentAlertLists } from "./pages";
 import PGDrawerItem from "./pg-drawer-item";
+
+export type PGStackLayoutPage =
+    | "alertLists"
+    | "metalSheets"
+    | "vis"
+    | "visBookmarks"
+    | "visData"
+    | "alert";
 
 @customElement("pg-app")
 class PGApp extends LitElement {

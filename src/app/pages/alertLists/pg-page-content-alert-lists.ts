@@ -3,7 +3,7 @@ import { customElement } from "lit/decorators.js";
 import { styles } from "ui";
 import PGAlertListItem from "../../../components/pg-alert-list-item";
 import PGSearchBar from "../../../components/pg-search-bar";
-import { AlertList } from "../../../types";
+import { AlertList } from "../../../store-types";
 import PGApp from "../../pg-app";
 import PGPageContent from "../pg-page-content";
 import { queryTargetFromElementPath } from "../../../lib/query";
