@@ -9,6 +9,9 @@ export class ListsStore<T extends keyof ListsStoreData> {
     public data: ListsStoreData[T][] = [];
 
     constructor(data?: ListsStoreData[T][]) {
+        if (!!data && !Array.isArray(data))
+            throw new Error("data not from type array");
+
         this.data = data || [];
     }
 
@@ -33,8 +36,8 @@ export class ListsStore<T extends keyof ListsStoreData> {
         return `${new Date().getTime()}.zip`;
     }
 
-    validate(data: any): ListsStoreData[T][] | null {
-        return data;
+    validate(list: any): ListsStoreData[T] | null {
+        return list;
     }
 
     sort(data: ListsStoreData[T][]): ListsStoreData[T][] {
@@ -74,12 +77,12 @@ export class AlertListsStore extends ListsStore<"alertLists"> {
         return `${this.title()} - ${super.zipFileName()}`;
     }
 
-    validate(data: any): AlertList[] | null {
-        if (typeof data?.title !== "string") return null;
-        if (!("data" in data)) return null;
-        if (!Array.isArray(data.data)) return null;
+    validate(list: any): AlertList | null {
+        if (typeof list?.title !== "string") return null;
+        if (!("data" in list)) return null;
+        if (!Array.isArray(list.data)) return null;
 
-        for (const part of data.data) {
+        for (const part of list.data) {
             if (
                 !(
                     "from" in part &&
@@ -112,10 +115,11 @@ export class AlertListsStore extends ListsStore<"alertLists"> {
             }
         }
 
-        return data;
+        return list;
     }
 
     updateStore(sort?: boolean) {
+        console.debug(this.data);
         const store = PGApp.queryStore();
 
         const storeData = store.getData(this.key());
