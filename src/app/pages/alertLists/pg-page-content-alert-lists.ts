@@ -6,7 +6,7 @@ import PGSearchBar from "../../../components/pg-search-bar";
 import { AlertList } from "../../../store-types";
 import PGApp from "../../pg-app";
 import PGPageContent from "../pg-page-content";
-import { queryTargetFromElementPath } from "../../../lib/query";
+import { queryTargetFromElementPath } from "../../../lib/query-utils";
 
 const searchBarHeight = "4.5rem";
 const initialSearchBarHeight = "0";

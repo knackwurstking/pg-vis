@@ -4,7 +4,7 @@ import { html } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { svg, UIDialog, UIDrawerGroupItem, UIInput } from "ui";
 import { Gist, GistData } from "../lib/gist";
-import { AlertListsStore } from "../lib/store";
+import { AlertListsStore } from "../lib/lists-store";
 import PGApp from "./pg-app";
 
 @customElement("pg-drawer-item-import")
