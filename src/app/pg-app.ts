@@ -4,9 +4,7 @@ import {
     styles,
     svg,
     UIAppBar,
-    UIDialog,
     UIDrawer,
-    UIInput,
     UIStackLayout,
     UIStackLayoutPage,
 } from "ui";
