@@ -5,8 +5,6 @@ import PGPageContent from "../pg-page-content";
 
 @customElement("pg-page-content-alert")
 class PGPageContentAlert extends PGPageContent<Alert> {
-    name = "alert";
-
     protected render(): TemplateResult<1> {
         console.debug(`Render component`, this);
 

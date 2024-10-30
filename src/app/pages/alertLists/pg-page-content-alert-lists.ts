@@ -13,8 +13,6 @@ const initialSearchBarHeight = "0";
 
 @customElement("pg-page-content-alert-lists")
 class PGPageContentAlertLists extends PGPageContent<AlertList> {
-    name = "alertLists";
-
     public querySearchBar(): PGSearchBar | null {
         return this.querySelector<PGSearchBar>(`pg-search-bar`);
     }
