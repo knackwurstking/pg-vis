@@ -1,5 +1,5 @@
 import "./pg-drawer-item-import"; // Register "pg-drawer-item-import"
-import "./pg-drawer-item-revision"; // Register "pg-drawer-item-revision"
+import "./pg-drawer-item-gist"; // Register "pg-drawer-item-gist"
 
 import { html, LitElement, PropertyValues } from "lit";
 import { customElement } from "lit/decorators.js";
