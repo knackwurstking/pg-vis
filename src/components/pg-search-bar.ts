@@ -1,5 +1,6 @@
 import { css, html, LitElement } from "lit";
 import { customElement, property } from "lit/decorators.js";
+import { UISearch } from "ui";
 
 @customElement("pg-search-bar")
 class PGSearchBar extends LitElement {
@@ -42,6 +43,12 @@ class PGSearchBar extends LitElement {
                 }}
             ></ui-search>
         `;
+    }
+
+    public value(): string {
+        return (
+            this.shadowRoot?.querySelector<UISearch>("ui-search")?.value || ""
+        );
     }
 }
 

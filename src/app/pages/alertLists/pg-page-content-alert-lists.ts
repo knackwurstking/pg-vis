@@ -10,7 +10,6 @@ import PGPageContent from "../pg-page-content";
 
 const searchBarHeight = "4.5rem";
 const initialSearchBarHeight = "0";
-const searchBarTimeout = 250;
 
 @customElement("pg-page-content-alert-lists")
 class PGPageContentAlertLists extends PGPageContent<AlertList> {
@@ -24,15 +23,18 @@ class PGPageContentAlertLists extends PGPageContent<AlertList> {
         PGApp.queryAppBar()!.contentName("title")!.contentAt(0).innerText =
             this.data !== undefined ? this.data.title : "Alarm Liste";
 
-        // TODO: Handle search bar input "change" event and filter output
         return html`
             <pg-search-bar
                 title="Alarmsuche (RegEx Mode)"
                 storage-key="${this.data?.title}"
                 height="${searchBarHeight}"
                 @change=${(ev: Event) => {
-                    const value = (ev.currentTarget as PGSearchBar).value;
+                    const value = (ev.currentTarget as PGSearchBar).value();
+
                     // TODO: Filter...
+
+                    if (value === "") console.debug("disable filters...");
+                    else console.debug(`search: "${value}"`);
                 }}
                 @open=${() => {
                     this.style.setProperty(
