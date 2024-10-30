@@ -373,10 +373,8 @@ class PGApp extends LitElement {
                 return;
             }
 
-            console.debug("handle stack layout change...", current.name);
             switch (current.name as PGStackLayoutPage) {
                 case "alertLists":
-                    console.debug("show search icon button");
                     appBar.contentName("search")!.show();
                     break;
 
