@@ -7,6 +7,9 @@ class PGSearchBar extends LitElement {
     @property({ type: String, attribute: "title", reflect: true })
     title: string = "";
 
+    @property({ type: String, attribute: "storage-key", reflect: true })
+    storageKey: string = "";
+
     @property({ type: Boolean, attribute: "active", reflect: true })
     active?: boolean;
 
@@ -40,7 +43,8 @@ class PGSearchBar extends LitElement {
                 no-submit
                 storage
                 storage-prefix="pg-vis:search:"
-                storage-key=""
+                storage-key="${this.storageKey}"
+                @storage=${() => console.debug("Storage event fired...")}
                 @change=${() => {
                     this.dispatchEvent(new Event("change"));
                 }}
