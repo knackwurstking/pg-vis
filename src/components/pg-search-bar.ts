@@ -4,6 +4,9 @@ import { UISearch } from "ui";
 
 @customElement("pg-search-bar")
 class PGSearchBar extends LitElement {
+    @property({ type: String, attribute: "title", reflect: true })
+    title: string = "";
+
     @property({ type: Boolean, attribute: "active", reflect: true })
     active?: boolean;
 
@@ -14,18 +17,17 @@ class PGSearchBar extends LitElement {
             }
 
             :host {
-                display: none;
                 position: absolute !important;
                 top: var(--ui-app-bar-height);
                 left: 0;
                 right: 0;
-                height: var(--pg-search-bar-height);
-                padding: var(--ui-spacing);
+                height: fit-content;
+                margin: var(--ui-spacing);
                 overflow: hidden;
             }
 
-            :host([active]) {
-                display: block;
+            :host(:not([active])) ui-search {
+                display: none;
             }
         `;
     }
@@ -34,6 +36,7 @@ class PGSearchBar extends LitElement {
         return html`
             <ui-search
                 style="z-index: 10;"
+                title="${this.title}"
                 no-submit
                 storage
                 storage-prefix="pg-vis:search:"

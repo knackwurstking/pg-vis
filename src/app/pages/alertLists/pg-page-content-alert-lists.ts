@@ -1,6 +1,6 @@
 import { html, PropertyValues, TemplateResult } from "lit";
-import { customElement } from "lit/decorators.js";
-import { styles } from "ui";
+import { customElement, property } from "lit/decorators.js";
+import { styles, UIIconButton } from "ui";
 import PGAlertListItem from "../../../components/pg-alert-list-item";
 import PGSearchBar from "../../../components/pg-search-bar";
 import { queryTargetFromElementPath } from "../../../lib/query-utils";
@@ -8,11 +8,15 @@ import { AlertList } from "../../../store-types";
 import PGApp from "../../pg-app";
 import PGPageContent from "../pg-page-content";
 
-const searchBarHeight = "4.5rem";
-const initialSearchBarHeight = "0";
-
 @customElement("pg-page-content-alert-lists")
 class PGPageContentAlertLists extends PGPageContent<AlertList> {
+    @property({ type: Boolean, attribute: "search-bar", reflect: true })
+    searchBar?: boolean;
+
+    private _onAppBarSearchClick = () => {
+        this.searchBar = !this.searchBar;
+    };
+
     public querySearchBar(): PGSearchBar | null {
         return this.querySelector<PGSearchBar>(`pg-search-bar`);
     }
@@ -20,15 +24,19 @@ class PGPageContentAlertLists extends PGPageContent<AlertList> {
     protected render(): TemplateResult<1> {
         console.debug(`Render component`, this);
 
-        PGApp.queryAppBar()!.contentName("title")!.contentAt(0).innerText =
+        const appBar = PGApp.queryAppBar()!;
+
+        appBar.contentName("title")!.contentAt(0).innerText =
             this.data !== undefined ? this.data.title : "Alarm Liste";
 
         return html`
             <pg-search-bar
                 title="Alarmsuche (RegEx Mode)"
                 storage-key="${this.data?.title}"
-                height="${searchBarHeight}"
+                ?active=${!!this.searchBar}
                 @change=${(ev: Event) => {
+                    if (!this.searchBar) return;
+
                     const value = (ev.currentTarget as PGSearchBar).value();
 
                     // TODO: Filter...
@@ -36,23 +44,13 @@ class PGPageContentAlertLists extends PGPageContent<AlertList> {
                     if (value === "") console.debug("disable filters...");
                     else console.debug(`search: "${value}"`);
                 }}
-                @open=${() => {
-                    this.style.setProperty(
-                        `--_search-bar-height`,
-                        searchBarHeight,
-                    );
-                }}
-                @close=${() => {
-                    this.style.setProperty(`--_search-bar-height`, "0");
-                }}
             ></pg-search-bar>
 
             <div
-                class="no-scrollbar"
+                class="container no-scrollbar"
                 style="${styles({
                     width: "100%",
                     height: "100%",
-                    paddingTop: `calc(var(--ui-app-bar-height) + var(--_search-bar-height, ${initialSearchBarHeight}))`,
                     overflow: "auto",
                     scrollBehavior: "smooth",
                 } as CSSStyleDeclaration)}"
@@ -89,16 +87,34 @@ class PGPageContentAlertLists extends PGPageContent<AlertList> {
     }
 
     protected updated(_changedProperties: PropertyValues): void {
-        const ul = this.querySelector(`div.list`)!;
+        const pgSearchBar = this.querySelector<HTMLElement>(`pg-search-bar`)!;
+        const container = this.querySelector<HTMLElement>(`div.container`)!;
+
+        if (this.searchBar) {
+            container.style.paddingTop = `calc(${pgSearchBar.clientHeight}px + var(--ui-spacing) * 2)`;
+        } else {
+            container.style.paddingTop = `0`;
+        }
+    }
+
+    protected firstUpdated(_changedProperties: PropertyValues): void {
+        const appBar = PGApp.queryAppBar()!;
+
+        appBar
+            .contentName("search")!
+            .contentAt<UIIconButton>(0)
+            .addEventListener("click", this._onAppBarSearchClick);
+
+        const container = this.querySelector(`div.list`)!;
         if (this.data !== undefined) {
             this.data.data.forEach(async (alert, index) => {
                 const item = new PGAlertListItem();
                 item.data = alert;
                 item.ripple = true;
-                ul.appendChild(item);
+                container.appendChild(item);
 
                 if (index < this.data!.data.length - 1) {
-                    ul.appendChild(document.createElement("hr"));
+                    container.appendChild(document.createElement("hr"));
                 }
             });
         }
