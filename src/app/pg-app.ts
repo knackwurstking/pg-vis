@@ -325,6 +325,8 @@ class PGApp extends LitElement {
 
         stack.registerPage("alertLists", () => {
             const page = new UIStackLayoutPage();
+            page.name = "alertLists";
+
             const content = new PGPageContentAlertLists();
             page.appendChild(content);
             return page;
@@ -334,6 +336,8 @@ class PGApp extends LitElement {
 
         stack.registerPage("alert", () => {
             const page = new UIStackLayoutPage();
+            page.name = "alert";
+
             const content = new PGPageContentAlert();
             page.appendChild(content);
             return page;
@@ -369,8 +373,10 @@ class PGApp extends LitElement {
                 return;
             }
 
+            console.debug("handle stack layout change...", current.name);
             switch (current.name as PGStackLayoutPage) {
                 case "alertLists":
+                    console.debug("show search icon button");
                     appBar.contentName("search")!.show();
                     break;
 
