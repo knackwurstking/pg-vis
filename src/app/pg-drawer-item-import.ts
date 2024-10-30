@@ -22,8 +22,6 @@ class PGDrawerItemImport extends UIDrawerGroupItem {
     }
 
     protected render() {
-        console.debug(`Render component`, this);
-
         return html`
             <ui-flex-grid-row gap="0.25rem">
                 <ui-flex-grid-item>

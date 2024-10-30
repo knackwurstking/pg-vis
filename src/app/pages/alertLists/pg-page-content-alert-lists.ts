@@ -22,8 +22,6 @@ class PGPageContentAlertLists extends PGPageContent<AlertList> {
     }
 
     protected render(): TemplateResult<1> {
-        console.debug(`Render component`, this);
-
         const appBar = PGApp.queryAppBar()!;
 
         appBar.contentName("title")!.contentAt(0).innerText =

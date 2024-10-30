@@ -6,8 +6,6 @@ import PGPageContent from "../pg-page-content";
 @customElement("pg-page-content-alert")
 class PGPageContentAlert extends PGPageContent<Alert> {
     protected render(): TemplateResult<1> {
-        console.debug(`Render component`, this);
-
         return html`
             <ui-flex-grid style="width: 100%; height: 100%;">
                 <ui-flex-grid-item flex="0">

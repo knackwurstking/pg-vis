@@ -45,8 +45,6 @@ class PGDrawerItem extends UIDrawerGroupItem {
     }
 
     protected render() {
-        console.debug(`Render component`, this);
-
         return html`
             <ui-flex-grid-row>
                 <ui-flex-grid-item>
