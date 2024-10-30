@@ -1,4 +1,5 @@
 import "./pg-drawer-item-import"; // Register "pg-drawer-item-import"
+import "./pg-drawer-item-revision"; // Register "pg-drawer-item-revision"
 
 import { html, LitElement, PropertyValues } from "lit";
 import { customElement } from "lit/decorators.js";
@@ -116,8 +117,6 @@ class PGApp extends LitElement {
     }
 
     protected render() {
-        console.debug(`Render component`, this);
-
         return html`
             <div class="is-container no-scrollbar" style="height: 100%;">
                 <ui-stack-layout></ui-stack-layout>
