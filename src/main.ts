@@ -1,5 +1,6 @@
 import "../node_modules/ui/lib/css/main.css";
 import "./app/pg-app"; // Register "pg-app"
+import "./components/pg-search-bar"; // Register "pg-search-bar"
 
 import { registerSW } from "virtual:pwa-register";
 import { version } from "./constants";
