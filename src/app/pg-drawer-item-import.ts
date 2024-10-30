@@ -172,7 +172,6 @@ class PGDrawerItemImport extends UIDrawerGroupItem {
         }
 
         const store = PGApp.queryStore();
-        let revision: number = 0;
 
         let listsStore = this.getListsStore();
 
@@ -192,7 +191,7 @@ class PGDrawerItemImport extends UIDrawerGroupItem {
         store.updateData("gist", (data) => {
             data[`${this.storeKey}`] = {
                 id: gistID,
-                revision: revision,
+                revision: gistData.revision,
             };
 
             return data;
