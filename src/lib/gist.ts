@@ -13,11 +13,9 @@ export interface GistData<T extends any> {
 
 export class Gist {
     public id: string;
-    public token?: string;
 
-    constructor(id: string, token?: string) {
+    constructor(id: string) {
         this.id = id;
-        this.token = token;
     }
 
     async get<T extends any>(): Promise<GistData<T>> {
