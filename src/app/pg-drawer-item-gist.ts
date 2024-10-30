@@ -13,11 +13,11 @@ class PGDrawerItemGist extends UIDrawerGroupItem {
     @property({ type: String, attribute: "store-key", reflect: true })
     storeKey?: keyof ListsStoreData;
 
-    @property({ type: Number, attribute: "revision", reflect: true })
-    revision?: number;
+    @property({ type: Number, attribute: false, reflect: true })
+    revision: number = 0;
 
-    @property({ type: String, attribute: "gist-id", reflect: true })
-    gistID?: string;
+    @property({ type: String, attribute: false, reflect: true })
+    gistID: string = "";
 
     protected cleanup = new CleanUp();
 
@@ -28,19 +28,16 @@ class PGDrawerItemGist extends UIDrawerGroupItem {
     protected render() {
         return html`
             <ui-flex-grid>
-                <ui-flex-grid-item>
-                    <ui-text style="display: block;">${this.gistID}</ui-text>
-                    <ui-text style="display: block;">
-                        revision: ${this.revision}
-                    </ui-text>
+                <ui-flex-grid-item direction="column" align="center">
+                    <ui-text>${this.gistID}</ui-text>
+                    <ui-text> revision: ${this.revision} </ui-text>
                 </ui-flex-grid-item>
 
                 <ui-flex-grid-item>
                     <ui-button
                         variant="full"
                         color="secondary"
-                        ?disabled=${this.gistID === "" ||
-                        this.gistID === undefined}
+                        ?disabled=${this.gistID === ""}
                         @click=${async () => await this.pullFromGist()}
                     >
                         Aktualisieren
@@ -56,14 +53,18 @@ class PGDrawerItemGist extends UIDrawerGroupItem {
         const store = PGApp.queryStore();
 
         this.cleanup.add(
-            store.addListener("gist", (data) => {
-                const listsStore = this.getListsStore();
-                const part = data[listsStore.key()];
-                if (part !== undefined) {
-                    this.gistID = part.id;
-                    this.revision = part.revision;
-                }
-            }),
+            store.addListener(
+                "gist",
+                (data) => {
+                    const listsStore = this.getListsStore();
+                    const part = data[listsStore.key()];
+                    if (part !== undefined) {
+                        this.gistID = part.id;
+                        this.revision = part.revision;
+                    }
+                },
+                true,
+            ),
         );
     }
 
@@ -73,10 +74,11 @@ class PGDrawerItemGist extends UIDrawerGroupItem {
     }
 
     private async pullFromGist() {
-        if (this.gistID === undefined) return;
+        if (this.gistID === "") return;
 
         const gist = new Gist(this.gistID);
         const listsStore = this.getListsStore();
+        const store = PGApp.queryStore();
 
         try {
             const gistData = await gist.get<any>();
@@ -93,6 +95,13 @@ class PGDrawerItemGist extends UIDrawerGroupItem {
             }
 
             listsStore.updateStore(true);
+            store.updateData("gist", (data) => {
+                data[listsStore.key()] = {
+                    id: this.gistID,
+                    revision: gistData.revision,
+                };
+                return data;
+            });
         } catch (err) {
             alert(err);
         }
