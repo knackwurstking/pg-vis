@@ -245,8 +245,9 @@ class PGApp extends LitElement {
                     ></pg-drawer-item-import>
 
                     <!-- Fixed Item 2 -->
-                    <!-- TODO: Gist, Continue here... -->
-                    <span class="placeholder"></span>
+                    <pg-drawer-item-gist
+                        store-key="alertLists"
+                    ></pg-drawer-item-gist>
                 </ui-drawer-group>
 
                 <ui-drawer-group
