@@ -4,18 +4,17 @@ import { html } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { svg, UIDialog, UIDrawerGroupItem, UIInput } from "ui";
 import { Gist, GistData } from "../lib/gist";
-import { AlertListsStore, ListsStore } from "../lib/lists-store";
+import {
+    AlertListsStore,
+    ListsStore,
+    ListsStoreData,
+} from "../lib/lists-store";
 import PGApp from "./pg-app";
 
 @customElement("pg-drawer-item-import")
 class PGDrawerItemImport extends UIDrawerGroupItem {
     @property({ type: String, attribute: "store-key", reflect: true })
-    storeKey?:
-        | "alertLists"
-        | "metalSheets"
-        | "vis"
-        | "visBookmarks"
-        | "visData";
+    storeKey?: keyof ListsStoreData;
 
     protected createRenderRoot(): HTMLElement | DocumentFragment {
         return this;

@@ -13,17 +13,22 @@ export interface GistData<T extends any> {
 
 export class Gist {
     public id: string;
+    private _url: string = "";
+
+    get url() {
+        return this._url;
+    }
 
     constructor(id: string) {
         this.id = id;
     }
 
     async get<T extends any>(): Promise<GistData<T>> {
-        const url = `https://api.github.com/gists/${this.id}`;
-        const req = await fetch(url);
+        this._url = `https://api.github.com/gists/${this.id}`;
+        const req = await fetch(this.url);
 
         if (!req.ok) {
-            throw `request to "${url}" failed with "${req.status}"!`;
+            throw `request to "${this.url}" failed with "${req.status}"!`;
         }
 
         const data = await req.json();

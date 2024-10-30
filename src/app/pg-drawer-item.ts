@@ -3,6 +3,7 @@ import { customElement, property } from "lit/decorators.js";
 import { svg, UIDrawerGroupItem } from "ui";
 import PGPageContent from "./pages/pg-page-content";
 import PGApp from "./pg-app";
+import { ListsStoreData } from "../lib/lists-store";
 
 /**
  * ```
@@ -18,12 +19,7 @@ import PGApp from "./pg-app";
 @customElement("pg-drawer-item")
 class PGDrawerItem extends UIDrawerGroupItem {
     @property({ type: String, attribute: "store-key", reflect: true })
-    storeKey?:
-        | "alertLists"
-        | "metalSheets"
-        | "vis"
-        | "visBookmarks"
-        | "visData";
+    storeKey?: keyof ListsStoreData;
 
     /**
      * Entry to access, or delete, from the global ui-store element

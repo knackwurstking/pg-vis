@@ -1,6 +1,6 @@
 import { html, PropertyValues, TemplateResult } from "lit";
 import { customElement, property } from "lit/decorators.js";
-import { styles, UIIconButton } from "ui";
+import { CleanUp, styles, UIIconButton } from "ui";
 import PGAlertListItem from "../../../components/pg-alert-list-item";
 import PGSearchBar from "../../../components/pg-search-bar";
 import { queryTargetFromElementPath } from "../../../lib/query-utils";
@@ -13,9 +13,7 @@ class PGPageContentAlertLists extends PGPageContent<AlertList> {
     @property({ type: Boolean, attribute: "search-bar", reflect: true })
     searchBar?: boolean;
 
-    private _onAppBarSearchClick = () => {
-        this.searchBar = !this.searchBar;
-    };
+    private cleanup = new CleanUp();
 
     public querySearchBar(): PGSearchBar | null {
         return this.querySelector<PGSearchBar>(`pg-search-bar`);
@@ -96,12 +94,7 @@ class PGPageContentAlertLists extends PGPageContent<AlertList> {
     }
 
     protected firstUpdated(_changedProperties: PropertyValues): void {
-        const appBar = PGApp.queryAppBar()!;
-
-        appBar
-            .contentName("search")!
-            .contentAt<UIIconButton>(0)
-            .addEventListener("click", this._onAppBarSearchClick);
+        // Render Items
 
         const container = this.querySelector(`div.list`)!;
         if (this.data !== undefined) {
@@ -116,6 +109,31 @@ class PGPageContentAlertLists extends PGPageContent<AlertList> {
                 }
             });
         }
+    }
+
+    connectedCallback(): void {
+        super.connectedCallback();
+
+        // App Bar Events
+
+        const appBar = PGApp.queryAppBar()!;
+
+        const onClick = async () => (this.searchBar = !this.searchBar);
+
+        const appBarSearchButton = appBar
+            .contentName("search")!
+            .contentAt<UIIconButton>(0);
+
+        appBarSearchButton.addEventListener("click", onClick);
+
+        this.cleanup.add(() =>
+            appBarSearchButton.removeEventListener("click", onClick),
+        );
+    }
+
+    disconnectedCallback(): void {
+        super.disconnectedCallback();
+        this.cleanup.run();
     }
 }
 
