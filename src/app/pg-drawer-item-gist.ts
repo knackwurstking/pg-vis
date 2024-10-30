@@ -1,4 +1,3 @@
-import { PropertyValues } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { CleanUp, html, UIDrawerGroupItem } from "ui";
 import { Gist } from "../lib/gist";

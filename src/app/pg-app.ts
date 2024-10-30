@@ -1,5 +1,5 @@
-import "./pg-drawer-item-import"; // Register "pg-drawer-item-import"
 import "./pg-drawer-item-gist"; // Register "pg-drawer-item-gist"
+import "./pg-drawer-item-import"; // Register "pg-drawer-item-import"
 
 import { html, LitElement, PropertyValues } from "lit";
 import { customElement } from "lit/decorators.js";
@@ -245,7 +245,7 @@ class PGApp extends LitElement {
                     ></pg-drawer-item-import>
 
                     <!-- Fixed Item 2 -->
-                    <!-- TODO: Gist -->
+                    <!-- TODO: Gist, Continue here... -->
                     <span class="placeholder"></span>
                 </ui-drawer-group>
 
