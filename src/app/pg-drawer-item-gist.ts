@@ -32,7 +32,7 @@ class PGDrawerItemGist extends UIDrawerGroupItem {
                     <ui-text mono="1" size="0.85rem"
                         >${this.gistID || html`???`}</ui-text
                     >
-                    <ui-text mono="1">
+                    <ui-text mono="1" size="0.95rem">
                         <ui-text mono="0" size="0.75rem">REVISION:</ui-text>
                         ${this.revision}
                     </ui-text>
