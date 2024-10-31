@@ -13,6 +13,11 @@ class PGSearchBar extends LitElement {
     @property({ type: Boolean, attribute: "active", reflect: true })
     active?: boolean;
 
+    static generateRegExp(value: string): RegExp {
+        const regexSplit: string[] = value.split(" ").filter((v) => v !== "");
+        return new RegExp("(" + regexSplit.join("|") + ")", "i");
+    }
+
     static get styles() {
         return css`
             * {
