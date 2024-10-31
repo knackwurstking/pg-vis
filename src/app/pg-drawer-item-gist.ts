@@ -1,5 +1,5 @@
 import { customElement, property } from "lit/decorators.js";
-import { CleanUp, html, UIDrawerGroupItem } from "ui";
+import { CleanUp, html, styles, UIDrawerGroupItem } from "ui";
 import { Gist } from "../lib/gist";
 import {
     AlertListsStore,
@@ -37,13 +37,32 @@ class PGDrawerItemGist extends UIDrawerGroupItem {
                     <ui-button
                         variant="full"
                         color="secondary"
+                        ?ripple=${this.gistID !== ""}
                         ?disabled=${this.gistID === ""}
-                        @click=${async () => await this.pullFromGist()}
+                        @click=${async () => {
+                            try {
+                                this.startSpinner();
+                                await this.pullFromGist();
+                            } finally {
+                                this.stopSpinner();
+                            }
+                        }}
                     >
                         Aktualisieren
                     </ui-button>
                 </ui-flex-grid-item>
             </ui-flex-grid>
+
+            <ui-spinner
+                style="${styles({
+                    position: "absolute",
+                    top: "0",
+                    right: "0",
+                    bottom: "0",
+                    left: "0",
+                    display: "none",
+                } as CSSStyleDeclaration)}"
+            ></ui-spinner>
         `;
     }
 
@@ -73,16 +92,22 @@ class PGDrawerItemGist extends UIDrawerGroupItem {
         this.cleanup.run();
     }
 
-    private async pullFromGist() {
+    public startSpinner() {
+        // TODO: ...
+    }
+
+    public stopSpinner() {
+        // TODO: ...
+    }
+
+    public async pullFromGist() {
         if (this.gistID === "") return;
 
-        const gist = new Gist(this.gistID);
-        const listsStore = this.getListsStore();
-        const store = PGApp.queryStore();
-
         try {
+            const gist = new Gist(this.gistID);
             const gistData = await gist.get<any>();
 
+            const listsStore = this.getListsStore();
             for (const file of Object.values(gistData.files)) {
                 const data = listsStore.validate(file.content);
 
@@ -95,7 +120,8 @@ class PGDrawerItemGist extends UIDrawerGroupItem {
             }
 
             listsStore.updateStore(true);
-            store.updateData("gist", (data) => {
+
+            PGApp.queryStore().updateData("gist", (data) => {
                 data[listsStore.key()] = {
                     id: this.gistID,
                     revision: gistData.revision,
