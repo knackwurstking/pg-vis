@@ -82,8 +82,10 @@ class PGDrawerItem extends UIDrawerGroupItem {
         if (!this.storeKey) return;
 
         const listsStore = newListsStore(this.storeKey);
-        const data = PGApp.queryStore().getData(this.storeKey);
-        data?.find((list) => listsStore.listKey(list) === this.storeListKey);
+        const storeData = PGApp.queryStore().getData(this.storeKey);
+        const data = storeData?.find(
+            (list) => listsStore.listKey(list) === this.storeListKey,
+        );
 
         if (data === undefined) {
             throw new Error(
