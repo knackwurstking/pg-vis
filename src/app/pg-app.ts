@@ -257,6 +257,7 @@ class PGApp extends LitElement {
                     name="metal-sheets"
                     title="Blech Listen"
                     data-fixed-items="3"
+                    gap="0.25rem"
                 >
                     <!-- Fixed Item 1 -->
                     <pg-drawer-item-import
