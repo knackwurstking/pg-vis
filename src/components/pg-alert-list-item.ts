@@ -52,7 +52,8 @@ class PGAlertListItem extends LitElement {
         this.style.padding = "var(--ui-spacing)";
         this.style.overflow = "hidden";
         this.style.position = "relative";
-        this.style.borderRadius = "var(--ui-radius)";
+        this.style.borderRadius = "0";
+        this.style.borderBottom = "1px solid hsl(var(--ui-hsl-borderColor)";
     }
 }
 

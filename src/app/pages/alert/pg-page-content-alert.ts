@@ -7,7 +7,7 @@ import PGPageContent from "../pg-page-content";
 class PGPageContentAlert extends PGPageContent<Alert> {
     protected render(): TemplateResult<1> {
         return html`
-            <ui-flex-grid style="width: 100%; height: 100%;">
+            <ui-flex-grid style="width: 100%; height: 100%;" gap="0.25rem">
                 <ui-flex-grid-item flex="0">
                     ${this.data !== undefined
                         ? html`<pg-alert-list-item
@@ -15,8 +15,6 @@ class PGPageContentAlert extends PGPageContent<Alert> {
                           ></pg-alert-list-item>`
                         : ""}
                 </ui-flex-grid-item>
-
-                <hr />
 
                 <ui-flex-grid-item>
                     <p

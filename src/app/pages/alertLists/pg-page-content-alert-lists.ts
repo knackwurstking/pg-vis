@@ -101,8 +101,6 @@ class PGPageContentAlertLists extends PGPageContent<AlertList> {
                 const item = new PGAlertListItem();
                 item.data = alert;
                 item.ripple = true;
-                item.style.borderBottom =
-                    "1px solid hsl(var(--ui-hsl-borderColor)";
                 container.appendChild(item);
             });
         }
