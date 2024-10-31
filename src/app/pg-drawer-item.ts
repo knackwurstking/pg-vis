@@ -45,9 +45,9 @@ class PGDrawerItem extends UIDrawerGroupItem {
             <ui-flex-grid-row>
                 <ui-flex-grid-item>
                     <ui-label
+                        style="cursor: pointer;"
                         primary="${this.primary || ""}"
                         secondary="${this.secondary || ""}"
-                        ripple
                         @click=${async (): Promise<void> => {
                             await this.setStackLayoutPage();
                             PGApp.queryDrawer()!.open = false;
