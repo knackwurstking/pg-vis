@@ -5,7 +5,7 @@ import { MetalSheet } from "../../../store-types";
 import PGApp from "../../pg-app";
 import PGPageContent from "../pg-page-content";
 
-@customElement("pg-page-content-alert-lists")
+@customElement("pg-page-content-metal-sheets")
 class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
     protected render(): TemplateResult<1> {
         PGApp.queryAppBar()!.contentName("title")!.contentAt(0).innerText =
