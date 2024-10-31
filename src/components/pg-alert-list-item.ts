@@ -34,7 +34,10 @@ class PGAlertListItem extends LitElement {
         return html`
             <ui-text>${this.data.alert}</ui-text>
 
-            <ui-text style="color: hsl(var(--ui-hsl-primary));" wght="750">
+            <ui-text
+                style="color: hsl(var(--ui-hsl-primary)); text-wrap: nowrap; margin-left: var(--ui-spacing);"
+                wght="750"
+            >
                 ${this.data.from === this.data.to
                     ? this.data.from
                     : `${this.data.from}..${this.data.to}`}
