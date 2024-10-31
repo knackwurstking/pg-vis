@@ -7,6 +7,7 @@ import { queryTargetFromElementPath } from "../../../lib/query-utils";
 import { AlertList } from "../../../store-types";
 import PGApp from "../../pg-app";
 import PGPageContent from "../pg-page-content";
+import { newListsStore } from "../../../lib/lists-store";
 
 @customElement("pg-page-content-alert-lists")
 class PGPageContentAlertLists extends PGPageContent<AlertList> {
@@ -20,10 +21,10 @@ class PGPageContentAlertLists extends PGPageContent<AlertList> {
     }
 
     protected render(): TemplateResult<1> {
-        const appBar = PGApp.queryAppBar()!;
-
-        appBar.contentName("title")!.contentAt(0).innerText =
-            this.data !== undefined ? this.data.title : "Alarm Liste";
+        PGApp.queryAppBar()!.contentName("title")!.contentAt(0).innerText =
+            this.data !== undefined
+                ? newListsStore("alertLists").listKey(this.data)
+                : "Alarm Liste";
 
         return html`
             <pg-search-bar

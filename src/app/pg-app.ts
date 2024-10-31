@@ -13,11 +13,15 @@ import {
     UIStackLayoutPage,
 } from "ui";
 import { build, version } from "../constants";
+import { newListsStore } from "../lib/lists-store";
 import { PGStackLayoutPage, PGStore } from "../store-types";
 import PGImportDialog from "./dialogs/pg-import-dialog";
-import { PGPageContentAlert, PGPageContentAlertLists } from "./pages";
+import {
+    PGPageContentAlert,
+    PGPageContentAlertLists,
+    PGPageContentMetalSheets,
+} from "./pages";
 import PGDrawerItem from "./pg-drawer-item";
-import { newListsStore } from "../lib/lists-store";
 
 @customElement("pg-app")
 class PGApp extends LitElement {
@@ -283,6 +287,15 @@ class PGApp extends LitElement {
             page.name = "alertLists";
 
             const content = new PGPageContentAlertLists();
+            page.appendChild(content);
+            return page;
+        });
+
+        stack.registerPage("metalSheets", () => {
+            const page = new UIStackLayoutPage();
+            page.name = "metalSheets";
+
+            const content = new PGPageContentMetalSheets();
             page.appendChild(content);
             return page;
         });
