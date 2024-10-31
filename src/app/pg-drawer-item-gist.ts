@@ -44,7 +44,14 @@ class PGDrawerItemGist extends UIDrawerGroupItem {
                         @click=${async () => {
                             try {
                                 this.startSpinner();
-                                await this.pullFromGist();
+
+                                if (
+                                    confirm(
+                                        `Alle Ihre Änderungen gehen verloren!`,
+                                    )
+                                ) {
+                                    await this.pullFromGist();
+                                }
                             } finally {
                                 this.stopSpinner();
                             }
