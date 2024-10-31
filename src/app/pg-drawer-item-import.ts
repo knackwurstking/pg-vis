@@ -121,10 +121,8 @@ class PGDrawerItemImport extends UIDrawerGroupItem {
         if (this.storeKey === undefined) return;
 
         const input = document.createElement("input");
-
         input.type = "file";
         input.multiple = true;
-
         input.onchange = async () => {
             if (input.files === null) return;
 
@@ -133,8 +131,7 @@ class PGDrawerItemImport extends UIDrawerGroupItem {
                 reader.onload = async () => {
                     if (typeof reader.result !== "string") return;
 
-                    let listsStore = this.getListsStore();
-
+                    const listsStore = this.getListsStore();
                     const data = listsStore.validate(JSON.parse(reader.result));
                     if (data === null) {
                         alert(`Ungültige Daten für "${listsStore.title()}"!`);
@@ -159,21 +156,16 @@ class PGDrawerItemImport extends UIDrawerGroupItem {
     private async importFromGist(gistID: string) {
         if (this.storeKey === undefined) return;
 
-        const gist = new Gist(gistID);
-
         let gistData: GistData<any>;
-
         try {
-            gistData = await gist.get<any>();
+            gistData = await new Gist(gistID).get<any>();
         } catch (err) {
             // Something went wrong: ${err}
             alert(`Etwas ist schiefgelaufen: ${err}`);
             return;
         }
 
-        const store = PGApp.queryStore();
-
-        let listsStore = this.getListsStore();
+        const listsStore = this.getListsStore();
 
         for (const file of Object.values(gistData.files)) {
             const data = listsStore.validate(file.content);
@@ -182,12 +174,12 @@ class PGDrawerItemImport extends UIDrawerGroupItem {
                 return;
             }
 
-            gistData.files[file.filename].content = data;
+            listsStore.data.push(data);
         }
 
+        const store = PGApp.queryStore();
         store.setData(this.storeKey, []); // Clear data first
         listsStore.updateStore(true);
-
         store.updateData("gist", (data) => {
             data[`${this.storeKey}`] = {
                 id: gistID,
@@ -202,11 +194,9 @@ class PGDrawerItemImport extends UIDrawerGroupItem {
         if (this.storeKey === undefined) return;
 
         const zip = new JSZip();
-        const store = PGApp.queryStore();
+        const listsStore = this.getListsStore();
 
-        let listsStore = this.getListsStore();
-
-        const storeData = store.getData(this.storeKey);
+        const storeData = PGApp.queryStore().getData(this.storeKey);
         if (storeData === undefined) return;
         listsStore.data = storeData;
 
