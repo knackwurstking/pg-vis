@@ -29,7 +29,7 @@ class PGDrawerItemGist extends UIDrawerGroupItem {
         return html`
             <ui-flex-grid>
                 <ui-flex-grid-item direction="column" align="center">
-                    <ui-text>${this.gistID}</ui-text>
+                    <ui-text>${this.gistID || html`???`}</ui-text>
                     <ui-text> revision: ${this.revision} </ui-text>
                 </ui-flex-grid-item>
 
