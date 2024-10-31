@@ -16,8 +16,8 @@ export class ListsStore<T extends keyof ListsStoreData> {
         this.data = data || [];
     }
 
-    key() {
-        return "";
+    key(): keyof ListsStoreData {
+        return "" as keyof ListsStoreData;
     }
 
     listKey(list: ListsStoreData[T]): string {
