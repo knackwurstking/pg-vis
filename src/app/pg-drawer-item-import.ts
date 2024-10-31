@@ -2,20 +2,53 @@ import FileSaver from "file-saver";
 import JSZip from "jszip";
 import { html } from "lit";
 import { customElement, property } from "lit/decorators.js";
+import { Octokit } from "octokit";
 import { svg, UIDialog, UIDrawerGroupItem, UIInput } from "ui";
-import { Gist, GistData } from "../lib/gist";
-import {
-    AlertListsStore,
-    ListsStore,
-    ListsStoreData,
-    MetalSheetsStore,
-} from "../lib/lists-store";
+import { ListsStoreData, newListsStore } from "../lib/lists-store";
 import PGApp from "./pg-app";
 
 @customElement("pg-drawer-item-import")
 class PGDrawerItemImport extends UIDrawerGroupItem {
     @property({ type: String, attribute: "store-key", reflect: true })
     storeKey?: keyof ListsStoreData;
+
+    // TODO: Move to lib function "lib/github"
+    static async gist(gistID: string) {
+        const octokit = new Octokit();
+        const resp = await octokit.request("GET /gists/{gist_id}", {
+            gist_id: gistID,
+            headers: {
+                "X-GitHub-Api-Version": "2022-11-28",
+            },
+        });
+
+        if (resp.status !== 200) {
+            console.error(resp);
+            throw new Error(
+                `anfrage von "GET /gist/${gistID}" ist mit Statuscode ${resp.status} fehlgeschlagen`,
+            );
+        }
+
+        return resp;
+    }
+
+    // TODO: Move to lib function "lib/github"
+    static async revision(gistID: string): Promise<number> {
+        const octokit = new Octokit();
+        const resp = await octokit.request("GET /gists/{gist_id}/commits", {
+            gist_id: gistID,
+            headers: {
+                "X-GitHub-Api-Version": "2022-11-28",
+            },
+        });
+
+        if (resp.status !== 200) {
+            console.error(resp);
+            return -1;
+        }
+
+        return resp.data.length;
+    }
 
     protected createRenderRoot(): HTMLElement | DocumentFragment {
         return this;
@@ -114,12 +147,12 @@ class PGDrawerItemImport extends UIDrawerGroupItem {
     }
 
     private dialogTitle(): string {
-        let listsStore = this.getListsStore();
-        return listsStore.title();
+        if (!this.storeKey) return "";
+        return newListsStore(this.storeKey).title();
     }
 
-    private async importFromFile() {
-        if (this.storeKey === undefined) return;
+    public async importFromFile() {
+        if (!this.storeKey) return;
 
         const input = document.createElement("input");
         input.type = "file";
@@ -131,8 +164,9 @@ class PGDrawerItemImport extends UIDrawerGroupItem {
                 const reader = new FileReader();
                 reader.onload = async () => {
                     if (typeof reader.result !== "string") return;
+                    if (this.storeKey === undefined) return;
 
-                    const listsStore = this.getListsStore();
+                    const listsStore = newListsStore(this.storeKey);
                     const data = listsStore.validate(JSON.parse(reader.result));
                     if (data === null) {
                         alert(`Ungültige Daten für "${listsStore.title()}"!`);
@@ -154,48 +188,54 @@ class PGDrawerItemImport extends UIDrawerGroupItem {
         input.click();
     }
 
-    private async importFromGist(gistID: string) {
-        if (this.storeKey === undefined) return;
+    // TODO: Move to lib function "lib/github"
+    public async importFromGist(gistID: string) {
+        if (!this.storeKey) return;
 
-        let gistData: GistData<any>;
         try {
-            gistData = await new Gist(gistID).get<any>();
+            const resp = await PGDrawerItemImport.gist(gistID);
+
+            const listsStore = newListsStore(this.storeKey);
+
+            for (const file of Object.values(resp.data.files || {})) {
+                if (!file?.content) continue;
+
+                const data = listsStore.validate(JSON.parse(file.content));
+                if (data === null) {
+                    throw new Error(
+                        `ungültige Daten für "${listsStore.title()}"!`,
+                    );
+                }
+
+                listsStore.data.push(data);
+            }
+
+            const revision = await PGDrawerItemImport.revision(gistID);
+
+            const store = PGApp.queryStore();
+            store.setData(this.storeKey, []); // Clear data first
+
+            listsStore.updateStore(true);
+            store.updateData("gist", (data) => {
+                data[`${this.storeKey}`] = {
+                    id: gistID,
+                    revision: revision,
+                };
+
+                return data;
+            });
         } catch (err) {
             // Something went wrong: ${err}
             alert(`Etwas ist schiefgelaufen: ${err}`);
             return;
         }
-
-        const listsStore = this.getListsStore();
-
-        for (const file of Object.values(gistData.files)) {
-            const data = listsStore.validate(file.content);
-            if (data === null) {
-                alert(`Ungültige Daten für "${listsStore.title}"!`);
-                return;
-            }
-
-            listsStore.data.push(data);
-        }
-
-        const store = PGApp.queryStore();
-        store.setData(this.storeKey, []); // Clear data first
-        listsStore.updateStore(true);
-        store.updateData("gist", (data) => {
-            data[`${this.storeKey}`] = {
-                id: gistID,
-                revision: gistData.revision,
-            };
-
-            return data;
-        });
     }
 
-    private async export() {
-        if (this.storeKey === undefined) return;
+    public async export() {
+        if (!this.storeKey) return;
 
         const zip = new JSZip();
-        const listsStore = this.getListsStore();
+        const listsStore = newListsStore(this.storeKey);
 
         const storeData = PGApp.queryStore().getData(this.storeKey);
         if (storeData === undefined) return;
@@ -210,17 +250,6 @@ class PGDrawerItemImport extends UIDrawerGroupItem {
             await zip.generateAsync({ type: "blob" }),
             listsStore.zipFileName(),
         );
-    }
-
-    private getListsStore(): ListsStore<any> {
-        switch (this.storeKey) {
-            case "alertLists":
-                return new AlertListsStore();
-            case "metalSheets":
-                return new MetalSheetsStore();
-            default:
-                throw new Error(`unknown "${this.storeKey}"`);
-        }
     }
 }
 

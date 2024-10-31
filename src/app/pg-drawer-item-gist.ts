@@ -1,13 +1,8 @@
 import { customElement, property } from "lit/decorators.js";
 import { CleanUp, html, styles, UIDrawerGroupItem, UISpinner } from "ui";
-import { Gist } from "../lib/gist";
-import {
-    AlertListsStore,
-    ListsStore,
-    ListsStoreData,
-    MetalSheetsStore,
-} from "../lib/lists-store";
+import { ListsStoreData, newListsStore } from "../lib/lists-store";
 import PGApp from "./pg-app";
+import PGDrawerItemImport from "./pg-drawer-item-import";
 
 @customElement("pg-drawer-item-gist")
 class PGDrawerItemGist extends UIDrawerGroupItem {
@@ -56,7 +51,9 @@ class PGDrawerItemGist extends UIDrawerGroupItem {
                                         `Alle Ihre Änderungen gehen verloren!`,
                                     )
                                 ) {
-                                    await this.pullFromGist();
+                                    const importItem = new PGDrawerItemImport();
+                                    importItem.storeKey = this.storeKey;
+                                    importItem.importFromGist(this.gistID);
                                 }
                             } finally {
                                 this.stopSpinner();
@@ -90,7 +87,8 @@ class PGDrawerItemGist extends UIDrawerGroupItem {
             store.addListener(
                 "gist",
                 (data) => {
-                    const listsStore = this.getListsStore();
+                    if (!this.storeKey) return;
+                    const listsStore = newListsStore(this.storeKey);
                     const part = data[listsStore.key()];
                     if (part !== undefined) {
                         this.gistID = part.id;
@@ -113,50 +111,6 @@ class PGDrawerItemGist extends UIDrawerGroupItem {
 
     public stopSpinner() {
         this.querySelector<UISpinner>("ui-spinner")!.style.display = "none";
-    }
-
-    public async pullFromGist() {
-        if (this.gistID === "") return;
-
-        try {
-            const gist = new Gist(this.gistID);
-            const gistData = await gist.get<any>();
-
-            const listsStore = this.getListsStore();
-            for (const file of Object.values(gistData.files)) {
-                const data = listsStore.validate(file.content);
-
-                if (data === null) {
-                    alert(`Ungültige Daten von "${gist.url}"!`);
-                    continue;
-                }
-
-                listsStore.data.push(data);
-            }
-
-            listsStore.updateStore(true);
-
-            PGApp.queryStore().updateData("gist", (data) => {
-                data[listsStore.key()] = {
-                    id: this.gistID,
-                    revision: gistData.revision,
-                };
-                return data;
-            });
-        } catch (err) {
-            alert(err);
-        }
-    }
-
-    private getListsStore(): ListsStore<any> {
-        switch (this.storeKey) {
-            case "alertLists":
-                return new AlertListsStore();
-            case "metalSheets":
-                return new MetalSheetsStore();
-            default:
-                throw new Error(`unknown "${this.storeKey}"`);
-        }
     }
 }
 

@@ -205,3 +205,16 @@ export class MetalSheetsStore extends ListsStore<"metalSheets"> {
         return list;
     }
 }
+
+export function newListsStore<T extends keyof ListsStoreData>(
+    key: T,
+): ListsStore<T> {
+    switch (key) {
+        case "alertLists":
+            return new AlertListsStore() as ListsStore<T>;
+        case "metalSheets":
+            return new MetalSheetsStore() as ListsStore<T>;
+        default:
+            throw new Error(`unknown "${key}"`);
+    }
+}
