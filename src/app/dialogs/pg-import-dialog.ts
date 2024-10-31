@@ -1,0 +1,118 @@
+import { html, LitElement, TemplateResult } from "lit";
+import { customElement, property } from "lit/decorators.js";
+import { UIDialog, UIInput } from "ui";
+import { importFromGist } from "../../lib/gist";
+import { ListsStoreData, newListsStore } from "../../lib/lists-store";
+
+@customElement("pg-import-dialog")
+class PGImportDialog extends LitElement {
+    @property({ type: String, attribute: "store-key", reflect: true })
+    storeKey?: keyof ListsStoreData;
+
+    protected createRenderRoot(): HTMLElement | DocumentFragment {
+        return this;
+    }
+
+    protected render(): TemplateResult<1> {
+        return html`
+            <ui-dialog title="Import ${this.dialogTitle()}" modal inert>
+                <ui-flex-grid gap="0.5rem">
+                    <ui-flex-grid-item>
+                        <ui-label
+                            secondary="Zum Importieren einer Datei leer lassen"
+                        ></ui-label>
+                    </ui-flex-grid-item>
+
+                    <ui-flex-grid-item>
+                        <ui-input
+                            name="gistID"
+                            type="text"
+                            title="Gist ID"
+                        ></ui-input>
+                    </ui-flex-grid-item>
+                </ui-flex-grid>
+
+                <ui-button
+                    slot="actions"
+                    variant="full"
+                    color="secondary"
+                    @click=${async () => this.close()}
+                >
+                    Cancel
+                </ui-button>
+
+                <ui-button
+                    slot="actions"
+                    variant="full"
+                    color="primary"
+                    @click=${async () => {
+                        if (!this.storeKey) return;
+
+                        const gistID = this.querySelector<UIInput>(
+                            `ui-dialog ui-input[name="gistID"]`,
+                        )!.value;
+
+                        if (gistID === "") await this.importFromFile();
+                        else await importFromGist(this.storeKey, gistID);
+
+                        this.close();
+                    }}
+                >
+                    Submit
+                </ui-button>
+            </ui-dialog>
+        `;
+    }
+
+    public async importFromFile() {
+        if (!this.storeKey) return;
+
+        const input = document.createElement("input");
+        input.type = "file";
+        input.multiple = true;
+        input.onchange = async () => {
+            if (input.files === null) return;
+
+            for (const file of input.files) {
+                const reader = new FileReader();
+                reader.onload = async () => {
+                    if (typeof reader.result !== "string") return;
+                    if (this.storeKey === undefined) return;
+
+                    const listsStore = newListsStore(this.storeKey);
+                    const data = listsStore.validate(JSON.parse(reader.result));
+                    if (data === null) {
+                        alert(`Ungültige Daten für "${listsStore.title()}"!`);
+                        return;
+                    }
+
+                    listsStore.data.push(data);
+                    listsStore.updateStore(true);
+                };
+
+                reader.onerror = () => {
+                    alert(`Lesen der Datei "${file.name}" ist fehlgeschlagen!`);
+                };
+
+                reader.readAsText(file);
+            }
+        };
+
+        input.click();
+    }
+
+    private dialogTitle(): string {
+        if (!this.storeKey) return "";
+        return '"' + newListsStore(this.storeKey).title() + '"';
+    }
+
+    show() {
+        this.querySelector<UIDialog>("ui-dialog")!.show();
+    }
+
+    close() {
+        this.querySelector<UIDialog>("ui-dialog")!.close();
+    }
+}
+
+export default PGImportDialog;

@@ -3,7 +3,7 @@ import { customElement, property } from "lit/decorators.js";
 import { svg, UIDrawerGroupItem } from "ui";
 import PGPageContent from "./pages/pg-page-content";
 import PGApp from "./pg-app";
-import { ListsStoreData } from "../lib/lists-store";
+import { ListsStoreData, newListsStore } from "../lib/lists-store";
 
 /**
  * ```
@@ -24,8 +24,8 @@ class PGDrawerItem extends UIDrawerGroupItem {
     /**
      * Entry to access, or delete, from the global ui-store element
      */
-    @property({ type: String, attribute: "store-key-entry", reflect: true })
-    storeKeyEntry?: string;
+    @property({ type: String, attribute: "store-list-key", reflect: true })
+    storeListKey?: string;
 
     @property({ type: String, attribute: "primary", reflect: true })
     primary?: string;
@@ -81,13 +81,13 @@ class PGDrawerItem extends UIDrawerGroupItem {
     protected async setStackLayoutPage() {
         if (!this.storeKey) return;
 
-        const data = PGApp.queryStore()
-            .getData(this.storeKey!)
-            ?.find((list) => list.title === this.storeKeyEntry);
+        const listsStore = newListsStore(this.storeKey);
+        const data = PGApp.queryStore().getData(this.storeKey);
+        data?.find((list) => listsStore.listKey(list) === this.storeListKey);
 
         if (data === undefined) {
             throw new Error(
-                `Data undefined for "${this.storeKeyEntry}" in "${this.storeKey}"`,
+                `Data undefined for "${this.storeListKey}" in "${this.storeKey}"`,
             );
         }
 
@@ -102,25 +102,24 @@ class PGDrawerItem extends UIDrawerGroupItem {
     }
 
     protected async deleteStoreData() {
-        if (this.storeKey === undefined || !this.storeKeyEntry === undefined) {
+        if (!this.storeKey || !this.storeListKey) {
             return;
         }
 
         switch (this.storeKey) {
             case "alertLists":
             case "metalSheets":
-            case "vis":
-            case "visBookmarks":
-            case "visData":
                 if (
                     confirm(
-                        `Möchten Sie "${this.storeKeyEntry}" wirklich löschen?`,
+                        `Möchten Sie "${this.storeListKey}" wirklich löschen?`,
                     )
                 ) {
+                    const listsStore = newListsStore(this.storeKey);
                     PGApp.queryStore().updateData(this.storeKey, (data) => {
                         return data.filter(
-                            (entry) => entry.title !== this.storeKeyEntry,
-                        );
+                            (list) =>
+                                listsStore.listKey(list) !== this.storeListKey,
+                        ) as any[];
                     });
                 }
         }

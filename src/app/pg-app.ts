@@ -1,3 +1,4 @@
+import "./dialogs/pg-import-dialog"; // Register "pg-import-dialog"
 import "./pg-drawer-item-gist"; // Register "pg-drawer-item-gist"
 import "./pg-drawer-item-import"; // Register "pg-drawer-item-import"
 
@@ -13,6 +14,7 @@ import {
 } from "ui";
 import { build, version } from "../constants";
 import { PGStackLayoutPage, PGStore } from "../store-types";
+import PGImportDialog from "./dialogs/pg-import-dialog";
 import { PGPageContentAlert, PGPageContentAlertLists } from "./pages";
 import PGDrawerItem from "./pg-drawer-item";
 
@@ -34,6 +36,10 @@ class PGApp extends LitElement {
         return document.querySelector<UIStackLayout<PGStackLayoutPage>>(
             "ui-stack-layout",
         );
+    }
+
+    static queryImportDialog(): PGImportDialog | null {
+        return document.querySelector<PGImportDialog>(`pg-import-dialog`);
     }
 
     constructor() {
@@ -63,6 +69,7 @@ class PGApp extends LitElement {
             </div>
 
             ${this.renderAppBar()} ${this.renderDrawer()}
+            ${this.renderDialogs()}
         `;
     }
 
@@ -256,6 +263,10 @@ class PGApp extends LitElement {
         `;
     }
 
+    private renderDialogs() {
+        return html` <pg-import-dialog></pg-import-dialog> `;
+    }
+
     protected updated(_changedProperties: PropertyValues): void {
         this.updatedRegisterPages();
         this.updatedLayout();
@@ -363,7 +374,7 @@ class PGApp extends LitElement {
                 data.forEach(async (list) => {
                     const groupItem = new PGDrawerItem();
                     groupItem.storeKey = "alertLists";
-                    groupItem.storeKeyEntry = list.title;
+                    groupItem.storeListKey = list.title;
                     groupItem.primary = list.title;
                     groupItem.secondary = `${list.data.length} Einträge`;
                     groupItem.allowDeletion = true;
