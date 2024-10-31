@@ -20,7 +20,7 @@ export interface PGStoreEvents {
 
     alertLists: AlertList[];
     // TODO: Store Keys for "metal-sheets"
-    metalSheets: [];
+    metalSheets: MetalSheet[];
     // TODO: Store Keys for "vis"
     vis: [];
     // TODO: Store Keys for "vis-bookmarks"
@@ -59,4 +59,19 @@ export interface Alert {
     to: number;
     alert: string;
     desc: string[];
+}
+
+export interface MetalSheet {
+    format: string;
+    toolID: string;
+    data: {
+        /**
+         * Use `-1` for none
+         */
+        press: number;
+        table: {
+            header: string[];
+            data: string[][];
+        };
+    };
 }

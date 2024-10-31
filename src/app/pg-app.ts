@@ -259,12 +259,14 @@ class PGApp extends LitElement {
                     data-fixed-items="3"
                 >
                     <!-- Fixed Item 1 -->
-                    <!-- TODO: Import / Export -->
-                    <span class="placeholder"></span>
+                    <pg-drawer-item-import
+                        store-key="metalSheets"
+                    ></pg-drawer-item-import>
 
                     <!-- Fixed Item 2 -->
-                    <!-- TODO: Gist -->
-                    <span class="placeholder"></span>
+                    <pg-drawer-item-gist
+                        store-key="metalSheets"
+                    ></pg-drawer-item-gist>
 
                     <!-- Fixed Item 3 -->
                     <!-- TODO: Create new table -->

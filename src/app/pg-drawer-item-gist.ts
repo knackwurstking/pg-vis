@@ -5,6 +5,7 @@ import {
     AlertListsStore,
     ListsStore,
     ListsStoreData,
+    MetalSheetsStore,
 } from "../lib/lists-store";
 import PGApp from "./pg-app";
 
@@ -151,6 +152,8 @@ class PGDrawerItemGist extends UIDrawerGroupItem {
         switch (this.storeKey) {
             case "alertLists":
                 return new AlertListsStore();
+            case "metalSheets":
+                return new MetalSheetsStore();
             default:
                 throw new Error(`unknown "${this.storeKey}"`);
         }

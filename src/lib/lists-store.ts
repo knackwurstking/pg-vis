@@ -1,8 +1,9 @@
 import PGApp from "../app/pg-app";
-import { AlertList } from "../store-types";
+import { AlertList, MetalSheet, PGStoreEvents } from "../store-types";
 
 export interface ListsStoreData {
     alertLists: AlertList;
+    metalSheets: MetalSheet;
 }
 
 export class ListsStore<T extends keyof ListsStoreData> {
@@ -43,17 +44,41 @@ export class ListsStore<T extends keyof ListsStoreData> {
     sort(data: ListsStoreData[T][]): ListsStoreData[T][] {
         const result: ListsStoreData[T][] = [];
 
-        const keys = data.map((list) => `${list.title}`).sort();
+        const keys = data.map((list) => `${this.listKey(list)}`).sort();
 
         for (const key of keys) {
-            const keyData = data.find((list) => `${list.title}` === key);
+            const keyData = data.find(
+                (list) => `${this.listKey(list)}` === key,
+            );
             if (keyData !== undefined) result.push(keyData);
         }
 
         return result;
     }
 
-    updateStore(_sort?: boolean) {}
+    updateStore(sort?: boolean) {
+        const store = PGApp.queryStore();
+
+        const storeData = store.getData(this.key() as keyof ListsStoreData);
+        if (storeData === undefined) {
+            return;
+        }
+
+        const filteredData = storeData.filter((storeList: any) => {
+            const data = this.data.find(
+                (list) => this.listKey(list) === this.listKey(storeList),
+            );
+
+            return data === undefined;
+        });
+
+        const mergedData = [...filteredData, ...this.data];
+
+        store.setData(
+            this.key() as keyof ListsStoreData,
+            (sort ? this.sort(mergedData as any[]) : mergedData) as any[],
+        );
+    }
 }
 
 export class AlertListsStore extends ListsStore<"alertLists"> {
@@ -117,25 +142,32 @@ export class AlertListsStore extends ListsStore<"alertLists"> {
 
         return list;
     }
+}
 
-    updateStore(sort?: boolean) {
-        const store = PGApp.queryStore();
+export class MetalSheetsStore extends ListsStore<"metalSheets"> {
+    key(): keyof ListsStoreData {
+        return "metalSheets";
+    }
 
-        const storeData = store.getData(this.key());
-        if (storeData === undefined) {
-            return;
-        }
+    listKey(list: MetalSheet): string {
+        return `${list.format} ${list.toolID}`;
+    }
 
-        const filteredData = storeData.filter((storeList) => {
-            const data = this.data.find(
-                (list) => this.listKey(list) === this.listKey(storeList),
-            );
+    title(): string {
+        return "Blech Listen";
+    }
 
-            return data === undefined;
-        });
+    fileName(list: MetalSheet): string {
+        return `Blech Liste - ${super.fileName(list)}`;
+    }
 
-        const mergedData = [...filteredData, ...this.data];
+    zipFileName(): string {
+        return `${this.title()} - ${super.zipFileName()}`;
+    }
 
-        store.setData(this.key(), sort ? this.sort(mergedData) : mergedData);
+    validate(list: any): MetalSheet | null {
+        // TODO: Continue here...
+
+        return list;
     }
 }
