@@ -102,6 +102,8 @@ class PGApp extends LitElement {
             ],
             false,
         ); // NOTE: Dummy data for testing
+
+        store.setData("gist", {}, false); // TODO: Set to "true" in production
     }
 
     protected createRenderRoot(): HTMLElement | DocumentFragment {
