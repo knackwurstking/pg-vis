@@ -83,8 +83,12 @@ class PGPageContentAlertLists extends PGPageContent<AlertList> {
 
         if (this.searchBar) {
             container.style.paddingTop = `calc(${pgSearchBar.clientHeight}px + var(--ui-spacing) * 2)`;
+            this.filter(
+                this.querySelector<PGSearchBar>(`pg-search-bar`)!.value(),
+            );
         } else {
             container.style.paddingTop = `0`;
+            this.filter("");
         }
     }
 
@@ -93,15 +97,13 @@ class PGPageContentAlertLists extends PGPageContent<AlertList> {
 
         const container = this.querySelector(`.list`)!;
         if (this.data !== undefined) {
-            this.data.data.forEach(async (alert, index) => {
+            this.data.data.forEach(async (alert) => {
                 const item = new PGAlertListItem();
                 item.data = alert;
                 item.ripple = true;
+                item.style.borderBottom =
+                    "1px solid hsl(var(--ui-hsl-borderColor)";
                 container.appendChild(item);
-
-                if (index < this.data!.data.length - 1) {
-                    container.appendChild(document.createElement("hr"));
-                }
             });
         }
     }
@@ -133,16 +135,6 @@ class PGPageContentAlertLists extends PGPageContent<AlertList> {
 
     public async filter(value: string) {
         const container = this.querySelector(`.list`)!;
-
-        if (!this.searchBar || value === "") {
-            for (const child of [...container.children]) {
-                if (!(child instanceof PGAlertListItem)) return;
-                child.style.display = "flex";
-            }
-
-            return;
-        }
-
         const regex: RegExp = PGSearchBar.generateRegExp(value);
 
         let alertNumberStrings: string[];
@@ -153,19 +145,21 @@ class PGPageContentAlertLists extends PGPageContent<AlertList> {
             if (!(child instanceof PGAlertListItem)) continue;
             if (child.data === undefined) continue;
 
-            from = Math.min(child.data.from, child.data.to);
-            to = Math.max(child.data.from, child.data.to);
-            alertNumberStrings = [];
-            for (let n = from; n < to; n++) {
-                alertNumberStrings.push(n.toString());
-            }
+            ((child: PGAlertListItem) => {
+                from = Math.min(child.data!.from, child.data!.to);
+                to = Math.max(child.data!.from, child.data!.to);
+                alertNumberStrings = [];
+                for (let n = from; n < to; n++) {
+                    alertNumberStrings.push(n.toString());
+                }
 
-            searchString = `${alertNumberStrings.join(",")} ${child.data.alert}`;
-            if (regex.test(searchString)) {
-                child.style.display = "flex";
-            } else {
-                child.style.display = "none";
-            }
+                searchString = `${alertNumberStrings.join(",")} ${child.data!.alert}`;
+                if (regex.test(searchString)) {
+                    child.style.display = "flex";
+                } else {
+                    child.style.display = "none";
+                }
+            })(child);
         }
     }
 }
