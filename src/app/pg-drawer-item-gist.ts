@@ -1,5 +1,5 @@
 import { customElement, property } from "lit/decorators.js";
-import { CleanUp, html, styles, UIDrawerGroupItem } from "ui";
+import { CleanUp, html, styles, UIDrawerGroupItem, UISpinner } from "ui";
 import { Gist } from "../lib/gist";
 import {
     AlertListsStore,
@@ -93,11 +93,11 @@ class PGDrawerItemGist extends UIDrawerGroupItem {
     }
 
     public startSpinner() {
-        // TODO: ...
+        this.querySelector<UISpinner>("ui-spinner")!.style.display = "block";
     }
 
     public stopSpinner() {
-        // TODO: ...
+        this.querySelector<UISpinner>("ui-spinner")!.style.display = "none";
     }
 
     public async pullFromGist() {
