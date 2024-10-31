@@ -28,7 +28,7 @@ class PGDrawerItemGist extends UIDrawerGroupItem {
     protected render() {
         return html`
             <ui-flex-grid>
-                <ui-flex-grid-item direction="column" align="center">
+                <ui-flex-grid-item direction="column" align="flex-start">
                     <ui-text mono="1" size="0.85rem"
                         >${this.gistID || html`???`}</ui-text
                     >
