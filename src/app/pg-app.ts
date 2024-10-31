@@ -101,7 +101,7 @@ class PGApp extends LitElement {
                 },
             ],
             false,
-        ); // NOTE: Dummy data for testing
+        ); // TODO: Set to "true" in production & Remove dummy data
 
         store.setData("gist", {}, false); // TODO: Set to "true" in production
     }
