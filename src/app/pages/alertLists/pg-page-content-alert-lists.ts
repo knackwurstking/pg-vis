@@ -137,7 +137,7 @@ class PGPageContentAlertLists extends PGPageContent<AlertList> {
         if (!this.searchBar || value === "") {
             for (const child of [...container.children]) {
                 if (!(child instanceof PGAlertListItem)) return;
-                child.style.display = "block";
+                child.style.display = "flex";
             }
 
             return;
@@ -162,7 +162,7 @@ class PGPageContentAlertLists extends PGPageContent<AlertList> {
 
             searchString = `${alertNumberStrings.join(",")} ${child.data.alert}`;
             if (regex.test(searchString)) {
-                child.style.display = "block";
+                child.style.display = "flex";
             } else {
                 child.style.display = "none";
             }
