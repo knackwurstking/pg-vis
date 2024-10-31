@@ -1,8 +1,8 @@
 import { customElement, property } from "lit/decorators.js";
 import { CleanUp, html, styles, UIDrawerGroupItem, UISpinner } from "ui";
+import { importFromGist } from "../lib/gist";
 import { ListsStoreData, newListsStore } from "../lib/lists-store";
 import PGApp from "./pg-app";
-import PGDrawerItemImport from "./pg-drawer-item-import";
 
 @customElement("pg-drawer-item-gist")
 class PGDrawerItemGist extends UIDrawerGroupItem {
@@ -41,6 +41,8 @@ class PGDrawerItemGist extends UIDrawerGroupItem {
                         ?ripple=${this.gistID !== ""}
                         ?disabled=${this.gistID === ""}
                         @click=${async () => {
+                            if (!this.storeKey) return;
+
                             try {
                                 this.startSpinner();
 
@@ -51,9 +53,10 @@ class PGDrawerItemGist extends UIDrawerGroupItem {
                                         `Alle Ihre Änderungen gehen verloren!`,
                                     )
                                 ) {
-                                    const importItem = new PGDrawerItemImport();
-                                    importItem.storeKey = this.storeKey;
-                                    importItem.importFromGist(this.gistID);
+                                    await importFromGist(
+                                        this.storeKey,
+                                        this.gistID,
+                                    );
                                 }
                             } finally {
                                 this.stopSpinner();

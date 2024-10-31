@@ -2,8 +2,8 @@ import FileSaver from "file-saver";
 import JSZip from "jszip";
 import { html } from "lit";
 import { customElement, property } from "lit/decorators.js";
-import { Octokit } from "octokit";
 import { svg, UIDialog, UIDrawerGroupItem, UIInput } from "ui";
+import { importFromGist } from "../lib/gist";
 import { ListsStoreData, newListsStore } from "../lib/lists-store";
 import PGApp from "./pg-app";
 
@@ -11,44 +11,6 @@ import PGApp from "./pg-app";
 class PGDrawerItemImport extends UIDrawerGroupItem {
     @property({ type: String, attribute: "store-key", reflect: true })
     storeKey?: keyof ListsStoreData;
-
-    // TODO: Move to lib function "lib/github"
-    static async gist(gistID: string) {
-        const octokit = new Octokit();
-        const resp = await octokit.request("GET /gists/{gist_id}", {
-            gist_id: gistID,
-            headers: {
-                "X-GitHub-Api-Version": "2022-11-28",
-            },
-        });
-
-        if (resp.status !== 200) {
-            console.error(resp);
-            throw new Error(
-                `anfrage von "GET /gist/${gistID}" ist mit Statuscode ${resp.status} fehlgeschlagen`,
-            );
-        }
-
-        return resp;
-    }
-
-    // TODO: Move to lib function "lib/github"
-    static async revision(gistID: string): Promise<number> {
-        const octokit = new Octokit();
-        const resp = await octokit.request("GET /gists/{gist_id}/commits", {
-            gist_id: gistID,
-            headers: {
-                "X-GitHub-Api-Version": "2022-11-28",
-            },
-        });
-
-        if (resp.status !== 200) {
-            console.error(resp);
-            return -1;
-        }
-
-        return resp.data.length;
-    }
 
     protected createRenderRoot(): HTMLElement | DocumentFragment {
         return this;
@@ -126,18 +88,18 @@ class PGDrawerItemImport extends UIDrawerGroupItem {
                     variant="full"
                     color="primary"
                     @click=${async () => {
-                        const input = this.querySelector<UIInput>(
+                        if (!this.storeKey) return;
+
+                        const gistID = this.querySelector<UIInput>(
                             `ui-dialog ui-input[name="gistID"]`,
-                        )!;
+                        )!.value;
 
-                        const gistID = input.value;
                         if (gistID === "") await this.importFromFile();
-                        else await this.importFromGist(gistID);
+                        else await importFromGist(this.storeKey, gistID);
 
-                        const dialog = this.querySelector<UIDialog>(
+                        this.querySelector<UIDialog>(
                             `ui-dialog[name="import"]`,
-                        )!;
-                        dialog.close();
+                        )!.close();
                     }}
                 >
                     Submit
@@ -186,49 +148,6 @@ class PGDrawerItemImport extends UIDrawerGroupItem {
         };
 
         input.click();
-    }
-
-    // TODO: Move to lib function "lib/github"
-    public async importFromGist(gistID: string) {
-        if (!this.storeKey) return;
-
-        try {
-            const resp = await PGDrawerItemImport.gist(gistID);
-
-            const listsStore = newListsStore(this.storeKey);
-
-            for (const file of Object.values(resp.data.files || {})) {
-                if (!file?.content) continue;
-
-                const data = listsStore.validate(JSON.parse(file.content));
-                if (data === null) {
-                    throw new Error(
-                        `ungültige Daten für "${listsStore.title()}"!`,
-                    );
-                }
-
-                listsStore.data.push(data);
-            }
-
-            const revision = await PGDrawerItemImport.revision(gistID);
-
-            const store = PGApp.queryStore();
-            store.setData(this.storeKey, []); // Clear data first
-
-            listsStore.updateStore(true);
-            store.updateData("gist", (data) => {
-                data[`${this.storeKey}`] = {
-                    id: gistID,
-                    revision: revision,
-                };
-
-                return data;
-            });
-        } catch (err) {
-            // Something went wrong: ${err}
-            alert(`Etwas ist schiefgelaufen: ${err}`);
-            return;
-        }
     }
 
     public async export() {
