@@ -30,15 +30,10 @@ class PGPageContentAlertLists extends PGPageContent<AlertList> {
                 title="Alarmsuche (RegEx Mode)"
                 storage-key="${this.data?.title}"
                 ?active=${!!this.searchBar}
-                @change=${(ev: Event) => {
-                    if (!this.searchBar) return;
-
-                    const value = (ev.currentTarget as PGSearchBar).value();
-
-                    // TODO: Filter...
-
-                    if (value === "") console.debug("disable filters...");
-                    else console.debug(`search: "${value}"`);
+                @change=${async (ev: Event) => {
+                    await this.filter(
+                        (ev.currentTarget as PGSearchBar).value(),
+                    );
                 }}
             ></pg-search-bar>
 
@@ -96,7 +91,7 @@ class PGPageContentAlertLists extends PGPageContent<AlertList> {
     protected firstUpdated(_changedProperties: PropertyValues): void {
         // Render Items
 
-        const container = this.querySelector(`div.list`)!;
+        const container = this.querySelector(`.list`)!;
         if (this.data !== undefined) {
             this.data.data.forEach(async (alert, index) => {
                 const item = new PGAlertListItem();
@@ -134,6 +129,44 @@ class PGPageContentAlertLists extends PGPageContent<AlertList> {
     disconnectedCallback(): void {
         super.disconnectedCallback();
         this.cleanup.run();
+    }
+
+    public async filter(value: string) {
+        const container = this.querySelector(`.list`)!;
+
+        if (!this.searchBar || value === "") {
+            for (const child of [...container.children]) {
+                if (!(child instanceof PGAlertListItem)) return;
+                child.style.display = "block";
+            }
+
+            return;
+        }
+
+        const regex: RegExp = PGSearchBar.generateRegExp(value);
+
+        let alertNumberStrings: string[];
+        let searchString: string;
+        let from: number;
+        let to: number;
+        for (const child of [...container.children]) {
+            if (!(child instanceof PGAlertListItem)) continue;
+            if (child.data === undefined) continue;
+
+            from = Math.min(child.data.from, child.data.to);
+            to = Math.max(child.data.from, child.data.to);
+            alertNumberStrings = [];
+            for (let n = from; n < to; n++) {
+                alertNumberStrings.push(n.toString());
+            }
+
+            searchString = `${alertNumberStrings.join(",")} ${child.data.alert}`;
+            if (regex.test(searchString)) {
+                child.style.display = "block";
+            } else {
+                child.style.display = "none";
+            }
+        }
     }
 }
 
