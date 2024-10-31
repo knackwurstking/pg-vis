@@ -1,5 +1,5 @@
 import PGApp from "../app/pg-app";
-import { AlertList, MetalSheet, PGStoreEvents } from "../store-types";
+import { AlertList, MetalSheet } from "../store-types";
 
 export interface ListsStoreData {
     alertLists: AlertList;
