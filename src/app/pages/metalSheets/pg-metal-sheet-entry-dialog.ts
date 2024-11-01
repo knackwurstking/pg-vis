@@ -1,6 +1,6 @@
-import { html, LitElement } from "lit";
+import { html, LitElement, TemplateResult } from "lit";
 import { customElement, property } from "lit/decorators.js";
-import { UIDialog } from "ui";
+import { UIDialog, UIInput } from "ui";
 
 /**
  * @fires submit
@@ -33,22 +33,7 @@ class PGMetalSheetEntryDialog extends LitElement {
         return html`
             <ui-dialog name="entry" title="Eintrag Bearbeiten" modal inert>
                 <ui-flex-grid gap="0.25rem">
-                    ${[
-                        ...(this.header || []).map(
-                            (head, index) => html`
-                                <ui-flex-grid-item>
-                                    <ui-input
-                                        title="${head}"
-                                        type="text"
-                                        value="${this.entryData[index] || ""}"
-                                        @change=${() => {
-                                            // TODO: Update entry data
-                                        }}
-                                    ></ui-input>
-                                </ui-flex-grid-item>
-                            `,
-                        ),
-                    ]}
+                    ${this.renderHeaderInputs()}
                 </ui-flex-grid>
 
                 <ui-button
@@ -73,6 +58,29 @@ class PGMetalSheetEntryDialog extends LitElement {
                 </ui-button>
             </ui-dialog>
         `;
+    }
+
+    private renderHeaderInputs() {
+        const content: TemplateResult<1>[] = [
+            ...(this.header || []).map(
+                (head, index) => html`
+                    <ui-flex-grid-item>
+                        <ui-input
+                            title="${head}"
+                            type="text"
+                            value="${this.entryData[index]}"
+                            @change=${(
+                                ev: Event & { currentTarget: UIInput },
+                            ) => {
+                                this.entryData[index] = ev.currentTarget.value;
+                            }}
+                        ></ui-input>
+                    </ui-flex-grid-item>
+                `,
+            ),
+        ];
+
+        return html`${content}`;
     }
 
     show() {
