@@ -4,7 +4,7 @@ import { newListsStore } from "../../../lib/lists-store";
 import { MetalSheet } from "../../../store-types";
 import PGApp from "../../pg-app";
 import PGPageContent from "../pg-page-content";
-import { styles } from "ui";
+import { draggable, styles } from "ui";
 
 @customElement("pg-page-content-metal-sheets")
 class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
@@ -60,10 +60,13 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
 
         const content: TemplateResult<1>[] = [];
         for (const data of this.data.data.table.data) {
-            // TODO: Add "data-json" to "tr"
             // TODO: Add @click handler -> modify table entry dialog
             content.push(html`
-                <tr style="cursor: pointer;" role="button">
+                <tr
+                    style="cursor: pointer;"
+                    role="button"
+                    data-json="${JSON.stringify(data)}"
+                >
                     ${[
                         ...data.map(
                             (part) => html`
@@ -79,7 +82,23 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
     }
 
     protected updated(_changedProperties: PropertyValues): void {
-        // TODO: Make table body children draggable
+        const body = this.querySelector(`tbody`)!;
+        draggable.createMobile(body, {
+            onDragEnd: () => {
+                if (!this.data) return;
+                this.data.data.table.data = Array.from(body.children).map(
+                    (child) => {
+                        const data = child.getAttribute("data-json");
+                        if (!data)
+                            throw new Error(`missing attribute "data-json"`);
+
+                        return JSON.parse(data);
+                    },
+                );
+
+                this.updateStoreData(this.data);
+            },
+        });
     }
 
     protected firstUpdated(_changedProperties: PropertyValues): void {
@@ -87,6 +106,19 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
 
         this.style.overflow = "hidden";
         this.style.overflowY = "auto";
+    }
+
+    protected updateStoreData(list: MetalSheet) {
+        const store = PGApp.queryStore();
+
+        const listsStore = newListsStore("metalSheets");
+        const listKey = listsStore.listKey(list);
+
+        store.updateData("metalSheets", (data) => {
+            return data.map((dataList) =>
+                listsStore.listKey(dataList) === listKey ? list : dataList,
+            );
+        });
     }
 }
 export default PGPageContentMetalSheets;
