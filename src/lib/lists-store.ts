@@ -174,7 +174,7 @@ export class MetalSheetsStore extends ListsStore<"metalSheets"> {
         if (!("data" in list)) return null;
 
         if (typeof list.data !== "object") return null;
-        if (list.data.press !== "number") return null;
+        if (typeof list.data.press !== "number") return null;
 
         if (!("table" in list.data)) {
             list.data.table = { header: [], data: [] };
@@ -186,7 +186,7 @@ export class MetalSheetsStore extends ListsStore<"metalSheets"> {
 
             if (
                 !Array.isArray(list.data.table.header) ||
-                !Array.isArray(list.data.table.table)
+                !Array.isArray(list.data.table.data)
             ) {
                 return null;
             }
