@@ -19,7 +19,6 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
                 class="no-scrollbar"
                 style="${styles({
                     width: "100%",
-                    paddingTop: "var(--ui-app-bar-height)",
                     overflowX: "auto",
                 } as CSSStyleDeclaration)}"
             >
@@ -48,7 +47,9 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
 
         const content: TemplateResult<1>[] = [];
         for (const title of this.data.data.table.header) {
-            content.push(html`<th style="text-align: center;">${title}</th>`);
+            content.push(html`
+                <th style="text-align: center; text-wrap: nowrap;">${title}</th>
+            `);
         }
 
         return html`${[...content]}`;
