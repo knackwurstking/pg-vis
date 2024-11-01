@@ -47,7 +47,6 @@ const manifestForPlugIn = {
         display: "standalone",
         scope: ".",
         start_url: "./",
-        orientation: "any",
         publicPath: "/pg-vis-dev.github.io",
     },
 };
@@ -63,5 +62,5 @@ export default defineConfig({
 
     build: {
         outDir: "../pg-vis-dev.github.io/",
+    });
     },
-});
