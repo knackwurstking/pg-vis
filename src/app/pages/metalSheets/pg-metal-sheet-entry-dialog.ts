@@ -1,6 +1,10 @@
 import { html, LitElement } from "lit";
 import { customElement, property } from "lit/decorators.js";
+import { UIDialog } from "ui";
 
+/**
+ * @fires submit
+ */
 @customElement("pg-metal-sheet-entry-dialog")
 class PGMetalSheetEntryDialog extends LitElement {
     @property({ type: Object, attribute: "header", reflect: true })
@@ -47,15 +51,36 @@ class PGMetalSheetEntryDialog extends LitElement {
                     ]}
                 </ui-flex-grid>
 
-                <ui-button slot="actions" variant="full" color="secondary">
+                <ui-button
+                    slot="actions"
+                    variant="full"
+                    color="secondary"
+                    @click=${async () => this.close()}
+                >
                     Cancel
                 </ui-button>
 
-                <ui-button slot="actions" variant="full" color="primary">
+                <ui-button
+                    slot="actions"
+                    variant="full"
+                    color="primary"
+                    @click=${async () => {
+                        this.dispatchEvent(new Event("submit"));
+                        this.close();
+                    }}
+                >
                     Submit
                 </ui-button>
             </ui-dialog>
         `;
+    }
+
+    show() {
+        this.querySelector<UIDialog>("ui-dialog")!.show();
+    }
+
+    close() {
+        this.querySelector<UIDialog>("ui-dialog")!.close();
     }
 }
 
