@@ -1,3 +1,5 @@
+import "./pg-metal-sheet-entry-dialog"; // Register component
+
 import { html, PropertyValues, TemplateResult } from "lit";
 import { customElement } from "lit/decorators.js";
 import { draggable, styles } from "ui";
@@ -5,6 +7,7 @@ import { newListsStore } from "../../../lib/lists-store";
 import { MetalSheet } from "../../../store-types";
 import PGApp from "../../pg-app";
 import PGPageContent from "../pg-page-content";
+import PGMetalSheetEntryDialog from "./pg-metal-sheet-entry-dialog";
 
 @customElement("pg-page-content-metal-sheets")
 class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
@@ -37,8 +40,40 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
             <br />
 
             <ui-flex-grid-row class="actions">
-                <!-- TODO: New table entry button here... -->
+                <ui-button
+                    variant="full"
+                    color="primary"
+                    @click=${() => {
+                        const dialog =
+                            this.querySelector<PGMetalSheetEntryDialog>(
+                                `pg-metal-sheet-entry-dialog`,
+                            )!;
+                        dialog.tableIndex = -1; // NOTE: -1 will create a new entry
+                        dialog.entryData = [];
+                        dialog.show();
+                    }}
+                ></ui-button>
             </ui-flex-grid-row>
+
+            <pg-metal-sheet-entry-dialog
+                header="${JSON.stringify(this.data?.data.table.header || [])}"
+                @submit=${(
+                    ev: Event & { currentTarget: PGMetalSheetEntryDialog },
+                ) => {
+                    if (!this.data) return;
+
+                    if (ev.currentTarget.tableIndex < 0) {
+                        this.data.data.table.data.push(
+                            ev.currentTarget.entryData,
+                        );
+                    } else {
+                        this.data.data.table.data[ev.currentTarget.tableIndex] =
+                            ev.currentTarget.entryData;
+                    }
+
+                    this.updateStoreData(this.data);
+                }}
+            ></pg-metal-sheet-entry-dialog>
         `;
     }
 
@@ -60,12 +95,19 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
 
         const content: TemplateResult<1>[] = [];
         for (const data of this.data.data.table.data) {
-            // TODO: Add @click handler -> modify table entry dialog
             content.push(html`
                 <tr
                     style="cursor: pointer;"
                     role="button"
                     data-json="${JSON.stringify(data)}"
+                    @click=${() => {
+                        const dialog =
+                            this.querySelector<PGMetalSheetEntryDialog>(
+                                `pg-metal-sheet-entry-dialog`,
+                            )!;
+                        dialog.entryData = data;
+                        dialog.show();
+                    }}
                 >
                     ${[
                         ...data.map(

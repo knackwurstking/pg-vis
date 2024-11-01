@@ -17,11 +17,20 @@ class PGMetalSheetEntryDialog extends LitElement {
     @property({ type: Object, attribute: "entry-data", reflect: true })
     entryData: string[] = [];
 
+    @property({ type: Number, attribute: "table-index", reflect: true })
+    tableIndex: number = -1;
+
     protected createRenderRoot(): HTMLElement | DocumentFragment {
         return this;
     }
 
     protected render() {
+        console.debug("Render the metal-sheet entry dialog", {
+            header: this.header,
+            entryData: this.entryData,
+            tableIndex: this.tableIndex,
+        }); // TODO: Remove this later
+
         if (this.header !== undefined) {
             // Prepare entry data,
             if (this.header.length > this.entryData.length)
