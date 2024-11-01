@@ -399,30 +399,34 @@ class PGApp extends LitElement {
             true,
         );
 
-        store.addListener("metalSheets", (data) => {
-            const groupContainer = this.querySelector(
-                `ui-drawer-group[name="metal-sheets"]`,
-            )!;
+        store.addListener(
+            "metalSheets",
+            (data) => {
+                const groupContainer = this.querySelector(
+                    `ui-drawer-group[name="metal-sheets"]`,
+                )!;
 
-            const fixedItems = parseInt(
-                groupContainer.getAttribute("data-fixed-items") || "0",
-            );
+                const fixedItems = parseInt(
+                    groupContainer.getAttribute("data-fixed-items") || "0",
+                );
 
-            Array.from(groupContainer.children)
-                .slice(fixedItems)
-                .forEach((child) => groupContainer.removeChild(child));
+                Array.from(groupContainer.children)
+                    .slice(fixedItems)
+                    .forEach((child) => groupContainer.removeChild(child));
 
-            const listsStore = newListsStore("metalSheets");
-            data.forEach(async (list) => {
-                const groupItem = new PGDrawerItem();
-                groupItem.storeKey = listsStore.key();
-                groupItem.primary = groupItem.storeListKey =
-                    listsStore.listKey(list);
-                groupItem.secondary = `${list.data.table.data.length} Einträge`;
-                groupItem.allowDeletion = true;
-                groupContainer.appendChild(groupItem);
-            });
-        });
+                const listsStore = newListsStore("metalSheets");
+                data.forEach(async (list) => {
+                    const groupItem = new PGDrawerItem();
+                    groupItem.storeKey = listsStore.key();
+                    groupItem.primary = groupItem.storeListKey =
+                        listsStore.listKey(list);
+                    groupItem.secondary = `${list.data.table.data.length} Einträge`;
+                    groupItem.allowDeletion = true;
+                    groupContainer.appendChild(groupItem);
+                });
+            },
+            true,
+        );
     }
 }
 
