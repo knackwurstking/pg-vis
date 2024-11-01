@@ -62,5 +62,5 @@ export default defineConfig({
 
     build: {
         outDir: "../pg-vis-dev.github.io/",
-    });
     },
+});
