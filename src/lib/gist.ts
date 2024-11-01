@@ -8,14 +8,18 @@ export async function importFromGist(
 ) {
     try {
         const resp = await gist(gistID);
-
         const listsStore = newListsStore(storeKey);
 
         for (const file of Object.values(resp.data.files || {})) {
             if (!file?.content) continue;
 
-            const data = listsStore.validate(JSON.parse(file.content));
+            const content = JSON.parse(file.content);
+            const data = listsStore.validate(content);
             if (data === null) {
+                console.error(
+                    `Invalid data for "${listsStore.title()}":`,
+                    content,
+                );
                 throw new Error(`ungültige Daten für "${listsStore.title()}"!`);
             }
 
