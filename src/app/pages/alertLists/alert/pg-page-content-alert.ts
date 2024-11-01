@@ -1,7 +1,7 @@
 import { html, PropertyValues, TemplateResult } from "lit";
 import { customElement } from "lit/decorators.js";
-import { Alert } from "../../../store-types";
-import PGPageContent from "../pg-page-content";
+import { Alert } from "../../../../store-types";
+import PGPageContent from "../../pg-page-content";
 
 @customElement("pg-page-content-alert")
 class PGPageContentAlert extends PGPageContent<Alert> {

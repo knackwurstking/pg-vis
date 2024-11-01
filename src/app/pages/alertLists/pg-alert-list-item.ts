@@ -1,7 +1,7 @@
 import { html, LitElement, PropertyValues } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { CleanUpFunction, ripple } from "ui";
-import { Alert } from "../store-types";
+import { Alert } from "../../../store-types";
 
 @customElement("pg-alert-list-item")
 class PGAlertListItem extends LitElement {

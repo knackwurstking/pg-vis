@@ -1,10 +1,10 @@
 import { html, PropertyValues, TemplateResult } from "lit";
 import { customElement } from "lit/decorators.js";
+import { draggable, styles } from "ui";
 import { newListsStore } from "../../../lib/lists-store";
 import { MetalSheet } from "../../../store-types";
 import PGApp from "../../pg-app";
 import PGPageContent from "../pg-page-content";
-import { draggable, styles } from "ui";
 
 @customElement("pg-page-content-metal-sheets")
 class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {

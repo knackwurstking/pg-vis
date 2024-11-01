@@ -1,13 +1,13 @@
 import { html, PropertyValues, TemplateResult } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { CleanUp, styles, UIIconButton } from "ui";
-import PGAlertListItem from "../../../components/pg-alert-list-item";
 import PGSearchBar from "../../../components/pg-search-bar";
+import { newListsStore } from "../../../lib/lists-store";
 import { queryTargetFromElementPath } from "../../../lib/query-utils";
 import { AlertList } from "../../../store-types";
 import PGApp from "../../pg-app";
 import PGPageContent from "../pg-page-content";
-import { newListsStore } from "../../../lib/lists-store";
+import PGAlertListItem from "./pg-alert-list-item";
 
 @customElement("pg-page-content-alert-lists")
 class PGPageContentAlertLists extends PGPageContent<AlertList> {
