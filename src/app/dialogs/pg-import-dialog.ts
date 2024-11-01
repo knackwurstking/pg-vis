@@ -38,7 +38,7 @@ class PGImportDialog extends LitElement {
                     color="secondary"
                     @click=${async () => this.close()}
                 >
-                    Cancel
+                    Abbrechen
                 </ui-button>
 
                 <ui-button
@@ -58,7 +58,7 @@ class PGImportDialog extends LitElement {
                         this.close();
                     }}
                 >
-                    Submit
+                    OK
                 </ui-button>
             </ui-dialog>
         `;

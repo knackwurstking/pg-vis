@@ -52,7 +52,9 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
                         dialog.entryData = [];
                         dialog.show();
                     }}
-                ></ui-button>
+                >
+                    Neuer Eintrag
+                </ui-button>
             </ui-flex-grid-row>
 
             <pg-metal-sheet-entry-dialog
