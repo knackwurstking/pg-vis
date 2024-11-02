@@ -3,6 +3,7 @@ import { customElement, property } from "lit/decorators.js";
 import { UIDialog, UIInput } from "ui";
 import { importFromGist } from "../../lib/gist";
 import { ListsStoreData, newListsStore } from "../../lib/lists-store";
+import PGApp from "../pg-app";
 
 @customElement("pg-import-dialog")
 class PGImportDialog extends LitElement {
@@ -54,6 +55,10 @@ class PGImportDialog extends LitElement {
 
                         if (gistID === "") await this.importFromFile();
                         else await importFromGist(this.storeKey, gistID);
+
+                        // NOTE: Pages would not update if data changes here
+                        const stack = PGApp.queryStackLayout()!;
+                        stack.clearStack();
 
                         this.close();
                     }}

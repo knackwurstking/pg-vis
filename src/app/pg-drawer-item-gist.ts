@@ -57,6 +57,10 @@ class PGDrawerItemGist extends UIDrawerGroupItem {
                                         this.storeKey,
                                         this.gistID,
                                     );
+
+                                    // NOTE: Pages would not update if data changes here
+                                    const stack = PGApp.queryStackLayout()!;
+                                    stack.clearStack();
                                 }
                             } finally {
                                 this.stopSpinner();
