@@ -51,10 +51,10 @@ class PGApp extends LitElement {
 
     constructor() {
         super();
-        this.initializeStores();
+        this._initializeStores();
     }
 
-    private initializeStores() {
+    private _initializeStores() {
         const store = PGApp.queryStore();
 
         // NOTE: Always open the drawer on app start for now
@@ -78,12 +78,12 @@ class PGApp extends LitElement {
                 <ui-stack-layout></ui-stack-layout>
             </div>
 
-            ${this.renderAppBar()} ${this.renderDrawer()}
-            ${this.renderDialogs()}
+            ${this._renderAppBar()} ${this._renderDrawer()}
+            ${this._renderDialogs()}
         `;
     }
 
-    private renderAppBar() {
+    private _renderAppBar() {
         return html`
             <ui-app-bar position="top">
                 <ui-app-bar-item name="menu" slot="left">
@@ -145,7 +145,7 @@ class PGApp extends LitElement {
         `;
     }
 
-    private renderDrawer() {
+    private _renderDrawer() {
         const store = PGApp.queryStore();
 
         return html`
@@ -287,7 +287,7 @@ class PGApp extends LitElement {
         `;
     }
 
-    private renderDialogs() {
+    private _renderDialogs() {
         return html`
             <pg-import-dialog></pg-import-dialog>
 
@@ -335,18 +335,25 @@ class PGApp extends LitElement {
                         }
                     }
 
-                    listsStore.addToStore(store, [newData], true);
+                    listsStore.addToStore(store, [], true);
                 }}
             ></pg-metal-sheet-table-dialog>
         `;
     }
 
-    protected updated(_changedProperties: PropertyValues): void {
-        this.updatedRegisterPages();
-        this.updatedLayout();
+    protected firstUpdated(_changedProperties: PropertyValues): void {
+        this.style.position = "fixed";
+        this.style.top = "0";
+        this.style.right = "0";
+        this.style.bottom = "0";
+        this.style.left = "0";
+
+        this._registerPages();
+        this._handleStackLayoutChanges();
+        this._storeEventHandlers();
     }
 
-    private updatedRegisterPages() {
+    private _registerPages() {
         const stack = PGApp.queryStackLayout()!;
 
         // Main pages
@@ -381,7 +388,7 @@ class PGApp extends LitElement {
         });
     }
 
-    private updatedLayout() {
+    private _handleStackLayoutChanges() {
         const stack = PGApp.queryStackLayout()!;
         const appBar = PGApp.queryAppBar()!;
         const drawer = PGApp.queryDrawer()!;
@@ -430,15 +437,8 @@ class PGApp extends LitElement {
         });
     }
 
-    protected firstUpdated(_changedProperties: PropertyValues): void {
-        this.style.position = "fixed";
-        this.style.top = "0";
-        this.style.right = "0";
-        this.style.bottom = "0";
-        this.style.left = "0";
-
+    private _storeEventHandlers() {
         const store = PGApp.queryStore();
-
         store.addListener(
             "alertLists",
             (data) => {
