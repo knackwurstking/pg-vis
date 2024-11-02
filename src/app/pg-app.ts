@@ -432,9 +432,12 @@ class PGApp extends LitElement {
                 data.forEach(async (list) => {
                     const groupItem = new PGDrawerItem();
                     groupItem.storeKey = listsStore.key();
-                    groupItem.primary = groupItem.storeListKey =
+
+                    groupItem.primary =
                         (list.data.press >= 0 ? `[P${list.data.press}] ` : "") +
                         listsStore.listKey(list);
+
+                    groupItem.storeListKey = listsStore.listKey(list);
                     groupItem.secondary = `${list.data.table.data.length} Einträge`;
                     groupItem.allowDeletion = true;
                     groupContainer.appendChild(groupItem);
