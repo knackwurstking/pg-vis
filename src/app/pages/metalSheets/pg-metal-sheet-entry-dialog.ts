@@ -6,6 +6,7 @@ import { UIDialog, UIInput } from "ui";
  * This dialog will reset all properties after each close dialog call
  *
  * @fires submit
+ * @fires delete
  */
 @customElement("pg-metal-sheet-entry-dialog")
 class PGMetalSheetEntryDialog extends LitElement {
@@ -40,6 +41,8 @@ class PGMetalSheetEntryDialog extends LitElement {
                 <ui-flex-grid gap="0.25rem">
                     ${this.renderInputs()}
                 </ui-flex-grid>
+
+                ${this.renderDeleteAction()}
 
                 <ui-button
                     slot="actions"
@@ -86,6 +89,23 @@ class PGMetalSheetEntryDialog extends LitElement {
         ];
 
         return html`${content}`;
+    }
+
+    private renderDeleteAction() {
+        if (this.tableIndex < 0) return html``;
+        return html`
+            <ui-button
+                slot="actions"
+                variant="full"
+                color="destructive"
+                @click=${async () => {
+                    this.dispatchEvent(new Event("delete"));
+                    this.close();
+                }}
+            >
+                Löschen
+            </ui-button>
+        `;
     }
 
     show() {
