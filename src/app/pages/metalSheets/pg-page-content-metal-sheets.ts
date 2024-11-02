@@ -77,6 +77,19 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
                     this.requestUpdate();
                     this.updateStoreData(this.data);
                 }}
+                @delete=${async (
+                    ev: Event & { currentTarget: PGMetalSheetEntryDialog },
+                ) => {
+                    if (!this.data) return;
+
+                    this.data.data.table.data.splice(
+                        ev.currentTarget.tableIndex,
+                        1,
+                    );
+
+                    this.requestUpdate();
+                    this.updateStoreData(this.data);
+                }}
             ></pg-metal-sheet-entry-dialog>
         `;
     }
@@ -94,9 +107,11 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
         return html`${[...content]}`;
     }
 
+    // FIXME: Rerender table after drag not working correctly
     private renderTableBody() {
         if (!this.data) return html``;
 
+        console.debug(this.data.data.table.data);
         const content: TemplateResult<1>[] = [];
         for (let i = 0; i < this.data.data.table.data.length; i++) {
             const data = this.data.data.table.data[i];
@@ -146,6 +161,11 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
                     },
                 );
 
+                console.debug(
+                    "force and update after a drag",
+                    this.data.data.table.data,
+                );
+                this.requestUpdate();
                 this.updateStoreData(this.data);
             },
         });
