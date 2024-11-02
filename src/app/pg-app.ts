@@ -55,6 +55,9 @@ class PGApp extends LitElement {
     private initializeStores() {
         const store = PGApp.queryStore();
 
+        // NOTE: Always open the drawer on app start for now
+        store.setData("drawer", { open: true }, false);
+
         store.setData("drawerGroup", {}, true);
 
         store.setData("alertLists", [], true);
