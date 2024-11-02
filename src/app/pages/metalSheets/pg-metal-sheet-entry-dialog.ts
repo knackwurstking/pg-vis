@@ -38,7 +38,6 @@ class PGMetalSheetEntryDialog extends LitElement {
 
         return html`
             <ui-dialog
-                name="entry"
                 title="${this.tableIndex < 0 ? "Neuer Eintrag" : "Bearbeiten"}"
                 modal
                 inert
