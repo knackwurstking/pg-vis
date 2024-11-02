@@ -106,16 +106,11 @@ class PGImportDialog extends LitElement {
         input.click();
     }
 
-    private dialogTitle(): string {
-        if (!this.storeKey) return "";
-        return '"' + newListsStore(this.storeKey).title() + '"';
-    }
-
-    show() {
+    public show() {
         this.querySelector<UIDialog>("ui-dialog")!.show();
     }
 
-    close() {
+    public close() {
         this.querySelector<UIDialog>("ui-dialog")!.close();
     }
 }

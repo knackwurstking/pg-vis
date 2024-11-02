@@ -116,11 +116,11 @@ class PGMetalSheetEntryDialog extends LitElement {
         `;
     }
 
-    show() {
+    public show() {
         this.querySelector<UIDialog>("ui-dialog")!.show();
     }
 
-    close() {
+    public close() {
         this.querySelector<UIDialog>("ui-dialog")!.close();
     }
 }
