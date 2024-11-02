@@ -43,6 +43,7 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
                 <ui-button
                     variant="full"
                     color="primary"
+                    ripple
                     @click=${() => {
                         const dialog =
                             this.querySelector<PGMetalSheetEntryDialog>(
@@ -96,7 +97,9 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
         if (!this.data) return html``;
 
         const content: TemplateResult<1>[] = [];
-        for (const data of this.data.data.table.data) {
+        for (let i = 0; i < this.data.data.table.data.length; i++) {
+            const data = this.data.data.table.data[i];
+
             content.push(html`
                 <tr
                     style="cursor: pointer;"
@@ -107,6 +110,7 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
                             this.querySelector<PGMetalSheetEntryDialog>(
                                 `pg-metal-sheet-entry-dialog`,
                             )!;
+                        dialog.tableIndex = i;
                         dialog.entryData = data;
                         dialog.show();
                     }}
