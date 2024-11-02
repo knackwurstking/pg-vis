@@ -17,7 +17,7 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
     private cleanup = new CleanUp();
 
     protected render(): TemplateResult<1> {
-        this.renderAppBarTitle();
+        this.setAppBarTitle();
 
         return html`
             <div
@@ -77,7 +77,7 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
                     }
 
                     this.requestUpdate();
-                    this.storeTable(this.data);
+                    this.replaceInStore(this.data);
                 }}
                 @delete=${async (
                     ev: Event & { currentTarget: PGMetalSheetEntryDialog },
@@ -90,7 +90,7 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
                     );
 
                     this.requestUpdate();
-                    this.storeTable(this.data);
+                    this.replaceInStore(this.data);
                 }}
             ></pg-metal-sheet-entry-dialog>
 
@@ -129,17 +129,6 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
                 }}
             ></pg-metal-sheet-table-dialog>
         `;
-    }
-
-    private renderAppBarTitle() {
-        PGApp.queryAppBar()!.contentName("title")!.contentAt(0).innerText =
-            this.data !== undefined
-                ? newListsStore("metalSheets")
-                      .fileName(this.data)
-                      .split(".")
-                      .slice(0, -1)
-                      .join(".")
-                : "Bleck Liste";
     }
 
     private renderTableHeader() {
@@ -216,7 +205,7 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
                 );
 
                 this.requestUpdate();
-                this.storeTable(this.data);
+                this.replaceInStore(this.data);
             },
         });
     }
@@ -258,6 +247,17 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
         this.cleanup.run();
     }
 
+    private setAppBarTitle() {
+        PGApp.queryAppBar()!.contentName("title")!.contentAt(0).innerText =
+            this.data !== undefined
+                ? newListsStore("metalSheets")
+                      .fileName(this.data)
+                      .split(".")
+                      .slice(0, -1)
+                      .join(".")
+                : "Bleck Liste";
+    }
+
     private openTableDialog(data: {
         format: string;
         toolID: string;
@@ -274,17 +274,9 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
         dialog.show();
     }
 
-    private storeTable(list: MetalSheet) {
-        const store = PGApp.queryStore();
-
+    private replaceInStore(list: MetalSheet) {
         const listsStore = newListsStore("metalSheets");
-        const listKey = listsStore.listKey(list);
-
-        store.updateData("metalSheets", (data) => {
-            return data.map((dataList) =>
-                listsStore.listKey(dataList) === listKey ? list : dataList,
-            );
-        });
+        listsStore.replaceInStore(PGApp.queryStore(), list, list);
     }
 }
 export default PGPageContentMetalSheets;
