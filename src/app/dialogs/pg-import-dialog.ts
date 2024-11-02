@@ -91,8 +91,7 @@ class PGImportDialog extends LitElement {
                         return;
                     }
 
-                    listsStore.data.push(data);
-                    listsStore.updateStore(true);
+                    listsStore.addToStore(PGApp.queryStore(), [data], true);
                 };
 
                 reader.onerror = () => {

@@ -58,9 +58,8 @@ class PGDrawerItemImport extends UIDrawerGroupItem {
 
         const storeData = PGApp.queryStore().getData(this.storeKey);
         if (storeData === undefined) return;
-        listsStore.data = storeData;
 
-        for (const list of listsStore.data) {
+        for (const list of storeData) {
             const fileName = listsStore.fileName(list);
             zip.file(fileName, JSON.stringify(list, null, 4));
         }

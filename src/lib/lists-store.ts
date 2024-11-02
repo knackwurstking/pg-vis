@@ -1,5 +1,4 @@
-import PGApp from "../app/pg-app";
-import { AlertList, MetalSheet } from "../store-types";
+import { AlertList, MetalSheet, PGStore } from "../store-types";
 
 export interface ListsStoreData {
     alertLists: AlertList;
@@ -7,15 +6,6 @@ export interface ListsStoreData {
 }
 
 export class ListsStore<T extends keyof ListsStoreData> {
-    public data: ListsStoreData[T][] = [];
-
-    constructor(data?: ListsStoreData[T][]) {
-        if (!!data && !Array.isArray(data))
-            throw new Error("data not from type array");
-
-        this.data = data || [];
-    }
-
     key(): keyof ListsStoreData {
         return "" as keyof ListsStoreData;
     }
@@ -56,27 +46,60 @@ export class ListsStore<T extends keyof ListsStoreData> {
         return result;
     }
 
-    updateStore(sort?: boolean) {
-        const store = PGApp.queryStore();
+    replaceInStore(
+        store: PGStore,
+        newList: ListsStoreData[T],
+        oldList: ListsStoreData[T],
+    ) {
+        const newListKey = this.listKey(newList);
+        const oldListKey = this.listKey(oldList);
 
+        if (oldListKey !== newListKey) {
+            for (const list of store.getData(
+                this.key() as keyof ListsStoreData,
+            ) || []) {
+                if (this.listKey(list as any) === newListKey) {
+                    throw new Error(
+                        `Liste "${newListKey}" existiert bereits!"`,
+                    );
+                }
+            }
+        }
+
+        store.updateData(this.key() as keyof ListsStoreData, (data) => {
+            for (let i = 0; i < data.length; i++) {
+                if (this.listKey(data[i] as ListsStoreData[T]) === oldListKey) {
+                    data[i] = newList;
+                }
+            }
+
+            return data;
+        });
+    }
+
+    addToStore(store: PGStore, newData: ListsStoreData[T][], sort?: boolean) {
         const storeData = store.getData(this.key() as keyof ListsStoreData);
         if (storeData === undefined) {
             return;
         }
 
-        const filteredData = storeData.filter((storeList: any) => {
-            const data = this.data.find(
-                (list) => this.listKey(list) === this.listKey(storeList),
+        const filteredData = storeData.filter((storeList) => {
+            const data = newData.find(
+                (list) =>
+                    this.listKey(list) ===
+                    this.listKey(storeList as ListsStoreData[T]),
             );
 
             return data === undefined;
         });
 
-        const mergedData = [...filteredData, ...this.data];
+        const mergedData = [...filteredData, ...newData];
 
         store.setData(
             this.key() as keyof ListsStoreData,
-            (sort ? this.sort(mergedData as any[]) : mergedData) as any[],
+            (sort
+                ? this.sort(mergedData as ListsStoreData[T][])
+                : mergedData) as any[],
         );
     }
 }

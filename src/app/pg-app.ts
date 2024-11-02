@@ -299,7 +299,43 @@ class PGApp extends LitElement {
                     const toolID = ev.currentTarget.toolID;
                     const press = ev.currentTarget.press;
 
-                    // TODO: Validate and update
+                    const store = PGApp.queryStore();
+                    const newData = {
+                        format: format,
+                        toolID: toolID,
+                        data: {
+                            press: press,
+                            table: {
+                                header: [],
+                                data: [],
+                            },
+                        },
+                    };
+
+                    const listsStore = newListsStore("metalSheets");
+                    const newListKey = listsStore.listKey(newData);
+
+                    for (const list of store.getData("metalSheets") || []) {
+                        if (listsStore.listKey(list) === newListKey) {
+                            setTimeout(() => {
+                                const dialog =
+                                    this.querySelector<PGMetalSheetTableDialog>(
+                                        `pg-metal-sheet-table-dialog`,
+                                    )!;
+
+                                dialog.format = format;
+                                dialog.toolID = toolID;
+                                dialog.press = press;
+
+                                dialog.show();
+                            });
+
+                            alert(`Liste "${newListKey}" existiert bereits!"`);
+                            return;
+                        }
+                    }
+
+                    listsStore.addToStore(store, [newData], true);
                 }}
             ></pg-metal-sheet-table-dialog>
         `;

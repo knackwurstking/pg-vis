@@ -1,6 +1,7 @@
 import { Octokit } from "octokit";
 import PGApp from "../app/pg-app";
 import { ListsStoreData, newListsStore } from "./lists-store";
+import { AlertList, MetalSheet } from "../store-types";
 
 export async function importFromGist(
     storeKey: keyof ListsStoreData,
@@ -9,6 +10,7 @@ export async function importFromGist(
     try {
         const resp = await gist(gistID);
         const listsStore = newListsStore(storeKey);
+        const newData: (AlertList | MetalSheet)[] = [];
 
         for (const file of Object.values(resp.data.files || {})) {
             if (!file?.content) continue;
@@ -23,7 +25,7 @@ export async function importFromGist(
                 throw new Error(`ungültige Daten für "${listsStore.title()}"!`);
             }
 
-            listsStore.data.push(data);
+            newData.push(data);
         }
 
         const revision = await gistRevision(gistID);
@@ -31,7 +33,7 @@ export async function importFromGist(
         const store = PGApp.queryStore();
         store.setData(storeKey, []); // Clear data first
 
-        listsStore.updateStore(true);
+        listsStore.addToStore(store, newData, true);
         store.updateData("gist", (data) => {
             data[`${storeKey}`] = {
                 id: gistID,

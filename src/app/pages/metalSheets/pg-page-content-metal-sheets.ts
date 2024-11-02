@@ -106,50 +106,34 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
                 @submit=${(
                     ev: Event & { currentTarget: PGMetalSheetTableDialog },
                 ) => {
+                    if (!this.data) return;
+
                     const format = ev.currentTarget.format;
                     const toolID = ev.currentTarget.toolID;
                     const press = ev.currentTarget.press;
 
                     const store = PGApp.queryStore();
-
-                    if (!this.data) return;
                     const listsStore = newListsStore("metalSheets");
 
-                    const oldListKey = listsStore.listKey(this.data);
-                    const newListKey = listsStore.listKey({
-                        ...this.data,
-                        format: format,
-                        toolID: toolID,
-                        data: { ...this.data.data, press: press },
-                    });
+                    try {
+                        listsStore.replaceInStore(
+                            store,
+                            {
+                                ...this.data,
+                                format: format,
+                                toolID: toolID,
+                                data: { ...this.data.data, press: press },
+                            },
+                            this.data,
+                        );
+                    } catch (err) {
+                        setTimeout(() =>
+                            this.openTableDialog({ format, toolID, press }),
+                        );
 
-                    if (oldListKey !== newListKey) {
-                        for (const list of store.getData("metalSheets") || []) {
-                            if (listsStore.listKey(list) === newListKey) {
-                                setTimeout(() => this.openTableDialog());
-                                alert(
-                                    `Liste "${newListKey}" existiert bereits!"`,
-                                );
-                                return;
-                            }
-                        }
+                        alert(err);
+                        return;
                     }
-
-                    store.updateData("metalSheets", (data) => {
-                        if (!this.data) return data;
-
-                        for (const metalSheet of data) {
-                            if (listsStore.listKey(metalSheet) === oldListKey) {
-                                metalSheet.format = format;
-                                metalSheet.toolID = toolID;
-                                metalSheet.data.press = press;
-
-                                this.data = metalSheet;
-                            }
-                        }
-
-                        return data;
-                    });
                 }}
             ></pg-metal-sheet-table-dialog>
         `;
@@ -245,7 +229,15 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
         super.connectedCallback();
 
         // App Bar Events
-        const onClick = async () => this.openTableDialog();
+        const onClick = async () => {
+            if (!this.data) return;
+
+            this.openTableDialog({
+                format: this.data.format,
+                toolID: this.data.toolID,
+                press: this.data.data.press,
+            });
+        };
 
         const editButton = PGApp.queryAppBar()!
             .contentName("edit")!
@@ -263,21 +255,23 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
         this.cleanup.run();
     }
 
-    protected openTableDialog() {
-        if (!this.data) return;
-
+    private openTableDialog(data: {
+        format: string;
+        toolID: string;
+        press: number;
+    }) {
         const dialog = this.querySelector<PGMetalSheetTableDialog>(
             `pg-metal-sheet-table-dialog`,
         )!;
 
-        dialog.format = this.data.format;
-        dialog.toolID = this.data.toolID;
-        dialog.press = this.data.data.press;
+        dialog.format = data.format;
+        dialog.toolID = data.toolID;
+        dialog.press = data.press;
 
         dialog.show();
     }
 
-    protected storeTable(list: MetalSheet) {
+    private storeTable(list: MetalSheet) {
         const store = PGApp.queryStore();
 
         const listsStore = newListsStore("metalSheets");
