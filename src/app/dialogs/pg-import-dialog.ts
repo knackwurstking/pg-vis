@@ -16,11 +16,11 @@ class PGImportDialog extends LitElement {
 
     protected render(): TemplateResult<1> {
         return html`
-            <ui-dialog title="Import ${this.dialogTitle()}" modal inert>
+            <ui-dialog title="Import" modal inert>
                 <ui-flex-grid gap="0.5rem">
                     <ui-flex-grid-item>
                         <ui-label
-                            secondary="Zum Importieren einer Datei leer lassen"
+                            secondary="Zum Importieren von einer Datei leer lassen"
                         ></ui-label>
                     </ui-flex-grid-item>
 

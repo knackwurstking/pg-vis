@@ -37,7 +37,12 @@ class PGMetalSheetEntryDialog extends LitElement {
         }
 
         return html`
-            <ui-dialog name="entry" title="Eintrag Bearbeiten" modal inert>
+            <ui-dialog
+                name="entry"
+                title="${this.tableIndex < 0 ? "Neuer Eintrag" : "Bearbeiten"}"
+                modal
+                inert
+            >
                 <ui-flex-grid gap="0.25rem">
                     ${this.renderInputs()}
                 </ui-flex-grid>
