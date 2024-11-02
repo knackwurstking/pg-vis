@@ -4,7 +4,7 @@ import { html, PropertyValues, TemplateResult } from "lit";
 import { DirectiveResult } from "lit/async-directive.js";
 import { customElement } from "lit/decorators.js";
 import { Keyed, keyed } from "lit/directives/keyed.js";
-import { draggable, styles } from "ui";
+import { CleanUp, draggable, styles } from "ui";
 import { newListsStore } from "../../../lib/lists-store";
 import { MetalSheet } from "../../../store-types";
 import PGApp from "../../pg-app";
@@ -13,6 +13,8 @@ import PGMetalSheetEntryDialog from "./pg-metal-sheet-entry-dialog";
 
 @customElement("pg-page-content-metal-sheets")
 class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
+    private cleanup = new CleanUp();
+
     protected render(): TemplateResult<1> {
         PGApp.queryAppBar()!.contentName("title")!.contentAt(0).innerText =
             this.data !== undefined
@@ -180,6 +182,17 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
 
         this.style.overflow = "hidden";
         this.style.overflowY = "auto";
+    }
+
+    connectedCallback(): void {
+        super.connectedCallback();
+
+        // TODO: App Bar Events - "edit" table info
+    }
+
+    disconnectedCallback(): void {
+        super.disconnectedCallback();
+        this.cleanup.run();
     }
 
     protected updateStoreData(list: MetalSheet) {
