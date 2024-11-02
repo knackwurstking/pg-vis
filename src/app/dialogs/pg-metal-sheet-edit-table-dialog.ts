@@ -8,6 +8,9 @@ import { UIDialog, UIInput, UISelect } from "ui";
  */
 @customElement("pg-metal-sheet-edit-table-dialog")
 class PGMetalSheetEditTableDialog extends LitElement {
+    @property({ type: String, attribute: "title", reflect: true })
+    title: string = "";
+
     @property({ type: String, attribute: "format", reflect: true })
     format: string = "";
 
@@ -19,7 +22,7 @@ class PGMetalSheetEditTableDialog extends LitElement {
 
     protected render() {
         return html`
-            <ui-dialog title="Liste Bearbeiten" modal inert>
+            <ui-dialog title=${this.title} modal inert>
                 <ui-flex-grid gap="0.25rem">
                     <ui-flex-grid-item>
                         ${keyed(
