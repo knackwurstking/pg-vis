@@ -46,8 +46,6 @@ class PGDrawerItemGist extends UIDrawerGroupItem {
                             try {
                                 this.startSpinner();
 
-                                // TODO: Detect changes and only trigger a
-                                //       confirmation dialog if needed
                                 if (
                                     confirm(
                                         `Alle Ihre Änderungen gehen verloren!`,
