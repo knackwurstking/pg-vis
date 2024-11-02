@@ -20,6 +20,10 @@ class PGMetalSheetTableDialog extends LitElement {
     @property({ type: Number, attribute: "press", reflect: true })
     press: number = -1;
 
+    protected createRenderRoot(): HTMLElement | DocumentFragment {
+        return this;
+    }
+
     protected render() {
         return html`
             <ui-dialog title=${this.title} modal inert>

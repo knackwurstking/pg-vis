@@ -4,14 +4,13 @@ import { html, PropertyValues, TemplateResult } from "lit";
 import { DirectiveResult } from "lit/async-directive.js";
 import { customElement } from "lit/decorators.js";
 import { Keyed, keyed } from "lit/directives/keyed.js";
-import { CleanUp, draggable, styles } from "ui";
+import { CleanUp, draggable, styles, UIIconButton } from "ui";
 import { newListsStore } from "../../../lib/lists-store";
 import { MetalSheet } from "../../../store-types";
+import PGMetalSheetTableDialog from "../../dialogs/pg-metal-sheet-table-dialog";
 import PGApp from "../../pg-app";
 import PGPageContent from "../pg-page-content";
 import PGMetalSheetEntryDialog from "./pg-metal-sheet-entry-dialog";
-import PGMetalSheetEditTableDialog from "../../dialogs/pg-metal-sheet-table-dialog";
-import PGMetalSheetTableDialog from "../../dialogs/pg-metal-sheet-table-dialog";
 
 @customElement("pg-page-content-metal-sheets")
 class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
@@ -20,7 +19,11 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
     protected render(): TemplateResult<1> {
         PGApp.queryAppBar()!.contentName("title")!.contentAt(0).innerText =
             this.data !== undefined
-                ? newListsStore("metalSheets").fileName(this.data)
+                ? newListsStore("metalSheets")
+                      .fileName(this.data)
+                      .split(".")
+                      .slice(0, -1)
+                      .join(".")
                 : "Bleck Liste";
 
         return html`
@@ -81,7 +84,7 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
                     }
 
                     this.requestUpdate();
-                    this.updateStoreData(this.data);
+                    this.storeTable(this.data);
                 }}
                 @delete=${async (
                     ev: Event & { currentTarget: PGMetalSheetEntryDialog },
@@ -94,11 +97,12 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
                     );
 
                     this.requestUpdate();
-                    this.updateStoreData(this.data);
+                    this.storeTable(this.data);
                 }}
             ></pg-metal-sheet-entry-dialog>
 
             <pg-metal-sheet-table-dialog
+                title="Liste Bearbeiten"
                 @submit=${(
                     ev: Event & { currentTarget: PGMetalSheetTableDialog },
                 ) => {
@@ -106,7 +110,46 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
                     const toolID = ev.currentTarget.toolID;
                     const press = ev.currentTarget.press;
 
-                    // TODO: Validate and update
+                    const store = PGApp.queryStore();
+
+                    if (!this.data) return;
+                    const listsStore = newListsStore("metalSheets");
+
+                    const oldListKey = listsStore.listKey(this.data);
+                    const newListKey = listsStore.listKey({
+                        ...this.data,
+                        format: format,
+                        toolID: toolID,
+                        data: { ...this.data.data, press: press },
+                    });
+
+                    if (oldListKey !== newListKey) {
+                        for (const list of store.getData("metalSheets") || []) {
+                            if (listsStore.listKey(list) === newListKey) {
+                                setTimeout(() => this.openTableDialog());
+                                alert(
+                                    `Liste "${newListKey}" existiert bereits!"`,
+                                );
+                                return;
+                            }
+                        }
+                    }
+
+                    store.updateData("metalSheets", (data) => {
+                        if (!this.data) return data;
+
+                        for (const metalSheet of data) {
+                            if (listsStore.listKey(metalSheet) === oldListKey) {
+                                metalSheet.format = format;
+                                metalSheet.toolID = toolID;
+                                metalSheet.data.press = press;
+
+                                this.data = metalSheet;
+                            }
+                        }
+
+                        return data;
+                    });
                 }}
             ></pg-metal-sheet-table-dialog>
         `;
@@ -186,7 +229,7 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
                 );
 
                 this.requestUpdate();
-                this.updateStoreData(this.data);
+                this.storeTable(this.data);
             },
         });
     }
@@ -201,7 +244,18 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
     connectedCallback(): void {
         super.connectedCallback();
 
-        // TODO: App Bar Events - "edit" table info
+        // App Bar Events
+        const onClick = async () => this.openTableDialog();
+
+        const editButton = PGApp.queryAppBar()!
+            .contentName("edit")!
+            .contentAt<UIIconButton>(0);
+
+        editButton.addEventListener("click", onClick);
+
+        this.cleanup.add(() => {
+            editButton.removeEventListener("click", onClick);
+        });
     }
 
     disconnectedCallback(): void {
@@ -209,7 +263,21 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
         this.cleanup.run();
     }
 
-    protected updateStoreData(list: MetalSheet) {
+    protected openTableDialog() {
+        if (!this.data) return;
+
+        const dialog = this.querySelector<PGMetalSheetTableDialog>(
+            `pg-metal-sheet-table-dialog`,
+        )!;
+
+        dialog.format = this.data.format;
+        dialog.toolID = this.data.toolID;
+        dialog.press = this.data.data.press;
+
+        dialog.show();
+    }
+
+    protected storeTable(list: MetalSheet) {
         const store = PGApp.queryStore();
 
         const listsStore = newListsStore("metalSheets");
