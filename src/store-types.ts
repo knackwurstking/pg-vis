@@ -22,8 +22,8 @@ export interface PGStoreEvents {
     };
 
     alertLists: AlertList[];
-    // TODO: Store Keys for "metal-sheets"
     metalSheets: MetalSheet[];
+
     // TODO: Store Keys for "vis"
     vis: [];
     // TODO: Store Keys for "vis-bookmarks"
