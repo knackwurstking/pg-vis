@@ -3,6 +3,8 @@ import { customElement, property } from "lit/decorators.js";
 import { UIDialog, UIInput } from "ui";
 
 /**
+ * This dialog will reset all properties after each close dialog call
+ *
  * @fires submit
  */
 @customElement("pg-metal-sheet-entry-dialog")
@@ -25,12 +27,6 @@ class PGMetalSheetEntryDialog extends LitElement {
     }
 
     protected render() {
-        console.debug("Render the metal-sheet entry dialog", {
-            header: this.header,
-            entryData: this.entryData,
-            tableIndex: this.tableIndex,
-        }); // TODO: Remove this later
-
         if (this.header !== undefined) {
             // Prepare entry data,
             if (this.header.length > this.entryData.length)
@@ -42,7 +38,7 @@ class PGMetalSheetEntryDialog extends LitElement {
         return html`
             <ui-dialog name="entry" title="Eintrag Bearbeiten" modal inert>
                 <ui-flex-grid gap="0.25rem">
-                    ${this.renderHeaderInputs()}
+                    ${this.renderInputs()}
                 </ui-flex-grid>
 
                 <ui-button
@@ -69,15 +65,15 @@ class PGMetalSheetEntryDialog extends LitElement {
         `;
     }
 
-    private renderHeaderInputs() {
+    private renderInputs() {
         const content: TemplateResult<1>[] = [
-            ...(this.header || []).map(
-                (head, index) => html`
+            ...(this.header || []).map((head, index) => {
+                return html`
                     <ui-flex-grid-item>
                         <ui-input
                             title="${head}"
                             type="text"
-                            value="${this.entryData[index]}"
+                            value=${this.entryData[index]}
                             @change=${(
                                 ev: Event & { currentTarget: UIInput },
                             ) => {
@@ -85,8 +81,8 @@ class PGMetalSheetEntryDialog extends LitElement {
                             }}
                         ></ui-input>
                     </ui-flex-grid-item>
-                `,
-            ),
+                `;
+            }),
         ];
 
         return html`${content}`;
@@ -97,6 +93,12 @@ class PGMetalSheetEntryDialog extends LitElement {
     }
 
     close() {
+        setTimeout(() => {
+            // Reset component after each close
+            this.header = undefined;
+            this.entryData = [];
+            this.tableIndex = -1;
+        });
         this.querySelector<UIDialog>("ui-dialog")!.close();
     }
 }

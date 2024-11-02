@@ -49,6 +49,7 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
                             this.querySelector<PGMetalSheetEntryDialog>(
                                 `pg-metal-sheet-entry-dialog`,
                             )!;
+                        dialog.header = this.data?.data.table.header || [];
                         dialog.tableIndex = -1; // NOTE: -1 will create a new entry
                         dialog.entryData = [];
                         dialog.show();
@@ -59,8 +60,7 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
             </ui-flex-grid-row>
 
             <pg-metal-sheet-entry-dialog
-                header="${JSON.stringify(this.data?.data.table.header || [])}"
-                @submit=${(
+                @submit=${async (
                     ev: Event & { currentTarget: PGMetalSheetEntryDialog },
                 ) => {
                     if (!this.data) return;
@@ -74,6 +74,7 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
                             ev.currentTarget.entryData;
                     }
 
+                    this.requestUpdate();
                     this.updateStoreData(this.data);
                 }}
             ></pg-metal-sheet-entry-dialog>
@@ -110,8 +111,9 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
                             this.querySelector<PGMetalSheetEntryDialog>(
                                 `pg-metal-sheet-entry-dialog`,
                             )!;
-                        dialog.tableIndex = i;
+                        dialog.header = this.data?.data.table.header || [];
                         dialog.entryData = data;
+                        dialog.tableIndex = i;
                         dialog.show();
                     }}
                 >
