@@ -17,14 +17,7 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
     private cleanup = new CleanUp();
 
     protected render(): TemplateResult<1> {
-        PGApp.queryAppBar()!.contentName("title")!.contentAt(0).innerText =
-            this.data !== undefined
-                ? newListsStore("metalSheets")
-                      .fileName(this.data)
-                      .split(".")
-                      .slice(0, -1)
-                      .join(".")
-                : "Bleck Liste";
+        this.renderAppBarTitle();
 
         return html`
             <div
@@ -116,16 +109,15 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
                     const listsStore = newListsStore("metalSheets");
 
                     try {
-                        listsStore.replaceInStore(
-                            store,
-                            {
-                                ...this.data,
-                                format: format,
-                                toolID: toolID,
-                                data: { ...this.data.data, press: press },
-                            },
-                            this.data,
-                        );
+                        const newData: MetalSheet = {
+                            ...this.data,
+                            format: format,
+                            toolID: toolID,
+                            data: { ...this.data.data, press: press },
+                        };
+
+                        listsStore.replaceInStore(store, newData, this.data);
+                        this.data = newData;
                     } catch (err) {
                         setTimeout(() =>
                             this.openTableDialog({ format, toolID, press }),
@@ -137,6 +129,17 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
                 }}
             ></pg-metal-sheet-table-dialog>
         `;
+    }
+
+    private renderAppBarTitle() {
+        PGApp.queryAppBar()!.contentName("title")!.contentAt(0).innerText =
+            this.data !== undefined
+                ? newListsStore("metalSheets")
+                      .fileName(this.data)
+                      .split(".")
+                      .slice(0, -1)
+                      .join(".")
+                : "Bleck Liste";
     }
 
     private renderTableHeader() {
