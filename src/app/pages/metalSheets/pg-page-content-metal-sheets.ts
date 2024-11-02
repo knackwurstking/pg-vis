@@ -1,7 +1,9 @@
 import "./pg-metal-sheet-entry-dialog"; // Register component
 
 import { html, PropertyValues, TemplateResult } from "lit";
+import { DirectiveResult } from "lit/async-directive.js";
 import { customElement } from "lit/decorators.js";
+import { Keyed, keyed } from "lit/directives/keyed.js";
 import { draggable, styles } from "ui";
 import { newListsStore } from "../../../lib/lists-store";
 import { MetalSheet } from "../../../store-types";
@@ -107,40 +109,46 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
         return html`${[...content]}`;
     }
 
-    // FIXME: Rerender table after drag not working correctly
     private renderTableBody() {
         if (!this.data) return html``;
 
-        console.debug(this.data.data.table.data);
-        const content: TemplateResult<1>[] = [];
+        const content: DirectiveResult<typeof Keyed>[] = [];
         for (let i = 0; i < this.data.data.table.data.length; i++) {
             const data = this.data.data.table.data[i];
 
-            content.push(html`
-                <tr
-                    style="cursor: pointer;"
-                    role="button"
-                    data-json="${JSON.stringify(data)}"
-                    @click=${() => {
-                        const dialog =
-                            this.querySelector<PGMetalSheetEntryDialog>(
-                                `pg-metal-sheet-entry-dialog`,
-                            )!;
-                        dialog.header = this.data?.data.table.header || [];
-                        dialog.entryData = data;
-                        dialog.tableIndex = i;
-                        dialog.show();
-                    }}
-                >
-                    ${[
-                        ...data.map(
-                            (part) => html`
-                                <td style="text-align: center;">${part}</td>
-                            `,
-                        ),
-                    ]}
-                </tr>
-            `);
+            content.push(
+                keyed(
+                    data,
+                    html`
+                        <tr
+                            style="cursor: pointer;"
+                            role="button"
+                            data-json="${JSON.stringify(data)}"
+                            @click=${() => {
+                                const dialog =
+                                    this.querySelector<PGMetalSheetEntryDialog>(
+                                        `pg-metal-sheet-entry-dialog`,
+                                    )!;
+                                dialog.header =
+                                    this.data?.data.table.header || [];
+                                dialog.entryData = data;
+                                dialog.tableIndex = i;
+                                dialog.show();
+                            }}
+                        >
+                            ${[
+                                ...data.map(
+                                    (part) => html`
+                                        <td style="text-align: center;">
+                                            ${part}
+                                        </td>
+                                    `,
+                                ),
+                            ]}
+                        </tr>
+                    `,
+                ),
+            );
         }
 
         return html`${[...content]}`;
@@ -161,10 +169,6 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
                     },
                 );
 
-                console.debug(
-                    "force and update after a drag",
-                    this.data.data.table.data,
-                );
                 this.requestUpdate();
                 this.updateStoreData(this.data);
             },
