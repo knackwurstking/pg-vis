@@ -215,6 +215,20 @@ class PGApp extends LitElement {
                     title="Blech Listen"
                     data-fixed-items="3"
                     gap="0.25rem"
+                    ?open=${!!store.getData("drawerGroup")?.["metal-sheets"]
+                        ?.open}
+                    @fold=${() => {
+                        store.updateData(`drawerGroup`, (data) => {
+                            data["metal-sheets"] = { open: false };
+                            return data;
+                        });
+                    }}
+                    @unfold=${() => {
+                        store.updateData(`drawerGroup`, (data) => {
+                            data["metal-sheets"] = { open: true };
+                            return data;
+                        });
+                    }}
                 >
                     <!-- Fixed Item 1 -->
                     <pg-drawer-item-import
@@ -419,6 +433,7 @@ class PGApp extends LitElement {
                     const groupItem = new PGDrawerItem();
                     groupItem.storeKey = listsStore.key();
                     groupItem.primary = groupItem.storeListKey =
+                        (list.data.press >= 0 ? `[P${list.data.press}] ` : "") +
                         listsStore.listKey(list);
                     groupItem.secondary = `${list.data.table.data.length} Einträge`;
                     groupItem.allowDeletion = true;
