@@ -22,6 +22,7 @@ import {
     PGPageContentMetalSheets,
 } from "./pages";
 import PGDrawerItem from "./pg-drawer-item";
+import PGMetalSheetTableDialog from "./dialogs/pg-metal-sheet-table-dialog";
 
 @customElement("pg-app")
 class PGApp extends LitElement {
@@ -286,7 +287,21 @@ class PGApp extends LitElement {
     }
 
     private renderDialogs() {
-        return html` <pg-import-dialog></pg-import-dialog> `;
+        return html`
+            <pg-import-dialog></pg-import-dialog>
+
+            <pg-metal-sheet-table-dialog
+                @submit=${(
+                    ev: Event & { currentTarget: PGMetalSheetTableDialog },
+                ) => {
+                    const format = ev.currentTarget.format;
+                    const toolID = ev.currentTarget.toolID;
+                    const press = ev.currentTarget.press;
+
+                    // TODO: Validate and update
+                }}
+            ></pg-metal-sheet-table-dialog>
+        `;
     }
 
     protected updated(_changedProperties: PropertyValues): void {

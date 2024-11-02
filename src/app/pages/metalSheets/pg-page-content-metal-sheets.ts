@@ -10,6 +10,8 @@ import { MetalSheet } from "../../../store-types";
 import PGApp from "../../pg-app";
 import PGPageContent from "../pg-page-content";
 import PGMetalSheetEntryDialog from "./pg-metal-sheet-entry-dialog";
+import PGMetalSheetEditTableDialog from "../../dialogs/pg-metal-sheet-table-dialog";
+import PGMetalSheetTableDialog from "../../dialogs/pg-metal-sheet-table-dialog";
 
 @customElement("pg-page-content-metal-sheets")
 class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
@@ -95,6 +97,18 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
                     this.updateStoreData(this.data);
                 }}
             ></pg-metal-sheet-entry-dialog>
+
+            <pg-metal-sheet-table-dialog
+                @submit=${(
+                    ev: Event & { currentTarget: PGMetalSheetTableDialog },
+                ) => {
+                    const format = ev.currentTarget.format;
+                    const toolID = ev.currentTarget.toolID;
+                    const press = ev.currentTarget.press;
+
+                    // TODO: Validate and update
+                }}
+            ></pg-metal-sheet-table-dialog>
         `;
     }
 

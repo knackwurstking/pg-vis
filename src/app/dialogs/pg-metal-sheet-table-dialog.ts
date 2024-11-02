@@ -6,8 +6,8 @@ import { UIDialog, UIInput, UISelect } from "ui";
 /**
  * @fires submit
  */
-@customElement("pg-metal-sheet-edit-table-dialog")
-class PGMetalSheetEditTableDialog extends LitElement {
+@customElement("pg-metal-sheet-table-dialog")
+class PGMetalSheetTableDialog extends LitElement {
     @property({ type: String, attribute: "title", reflect: true })
     title: string = "";
 
@@ -164,4 +164,4 @@ class PGMetalSheetEditTableDialog extends LitElement {
     }
 }
 
-export default PGMetalSheetEditTableDialog;
+export default PGMetalSheetTableDialog;
