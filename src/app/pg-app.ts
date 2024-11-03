@@ -514,13 +514,9 @@ class PGApp extends LitElement {
                     appBar.contentName("edit")!.show();
                     break;
 
-                case "visData":
-                    appBar.contentName("edit")!.show();
+                case "vis":
+                    appBar.contentName("search")!.show();
                     break;
-
-                //case "product":
-                //    appBar.contentName("bookmark")!.show();
-                //    break;
             }
         });
     }
