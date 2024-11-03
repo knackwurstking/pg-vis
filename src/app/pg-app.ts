@@ -25,6 +25,7 @@ import {
     PGPageContentAlert,
     PGPageContentAlertLists,
     PGPageContentMetalSheets,
+    PGPageContentVis,
 } from "./pages";
 import PGDrawerItem from "./pg-drawer-item";
 
@@ -443,33 +444,36 @@ class PGApp extends LitElement {
         stack.registerPage("alertLists", () => {
             const page = new UIStackLayoutPage();
             page.name = "alertLists";
-
-            const content = new PGPageContentAlertLists();
-            page.appendChild(content);
+            page.appendChild(new PGPageContentAlertLists());
             return page;
         });
 
         stack.registerPage("metalSheets", () => {
             const page = new UIStackLayoutPage();
             page.name = "metalSheets";
-
-            const content = new PGPageContentMetalSheets();
-            page.appendChild(content);
+            page.appendChild(new PGPageContentMetalSheets());
             return page;
         });
+
+        stack.registerPage("vis", () => {
+            const page = new UIStackLayoutPage();
+            page.name = "vis";
+            page.appendChild(new PGPageContentVis());
+            return page;
+        });
+
+        // TODO: Register "vis-bookmarks" and "vis-data"
 
         // Sub pages
 
         stack.registerPage("alert", () => {
             const page = new UIStackLayoutPage();
             page.name = "alert";
-
-            const content = new PGPageContentAlert();
-            page.appendChild(content);
+            page.appendChild(new PGPageContentAlert());
             return page;
         });
 
-        // TODO: Register "vis", "product", "vis-bookmarks", "vis-data" and "info"
+        // TODO: Register "product" and "info"
     }
 
     private _handleStackLayoutChanges() {
