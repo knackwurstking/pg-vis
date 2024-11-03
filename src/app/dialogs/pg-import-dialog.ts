@@ -4,6 +4,7 @@ import { UIDialog, UIInput } from "ui";
 import { importFromGist } from "../../lib/gist";
 import { ListsStoreData, newListsStore } from "../../lib/lists-store";
 import PGApp from "../pg-app";
+import { keyed } from "lit/directives/keyed.js";
 
 @customElement("pg-import-dialog")
 class PGImportDialog extends LitElement {
@@ -25,11 +26,16 @@ class PGImportDialog extends LitElement {
                     </ui-flex-grid-item>
 
                     <ui-flex-grid-item>
-                        <ui-input
-                            name="gistID"
-                            type="text"
-                            title="Gist ID"
-                        ></ui-input>
+                        ${keyed(
+                            this.storeKey,
+                            html`
+                                <ui-input
+                                    name="gistID"
+                                    type="text"
+                                    title="Gist ID"
+                                ></ui-input>
+                            `,
+                        )}
                     </ui-flex-grid-item>
                 </ui-flex-grid>
 
