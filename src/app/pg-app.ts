@@ -322,12 +322,18 @@ class PGApp extends LitElement {
 
                 <ui-drawer-group name="vis" title="Vis" data-fixed-items="2">
                     <!-- Fixed Item 1 -->
-                    <!-- TODO: Import / Export -->
-                    <span class="placeholder"></span>
+                    <ui-drawer-group-item>
+                        <pg-drawer-item-import
+                            store-key="vis"
+                        ></pg-drawer-item-import>
+                    </ui-drawer-group-item>
 
                     <!-- Fixed Item 2 -->
-                    <!-- TODO: Gist -->
-                    <span class="placeholder"></span>
+                    <ui-drawer-group-item>
+                        <pg-drawer-item-gist
+                            store-key="vis"
+                        ></pg-drawer-item-gist>
+                    </ui-drawer-group-item>
                 </ui-drawer-group>
 
                 <ui-drawer-group
