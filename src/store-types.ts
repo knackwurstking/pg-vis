@@ -23,9 +23,8 @@ export interface PGStoreEvents {
 
     alertLists: AlertList[];
     metalSheets: MetalSheet[];
+    vis: Vis[];
 
-    // TODO: Store Keys for "vis"
-    vis: [];
     // TODO: Store Keys for "vis-bookmarks"
     visBookmarks: [];
     // TODO: Store Keys for "vis-data"
@@ -77,4 +76,17 @@ export interface MetalSheet {
             data: string[][];
         };
     };
+}
+
+export interface Vis {
+    title: string;
+    data: Product[];
+}
+
+export interface Product {
+    lotto: string;
+    name: string;
+    format: string;
+    thickness: number;
+    stamp: string;
 }
