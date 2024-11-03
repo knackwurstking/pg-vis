@@ -310,12 +310,31 @@ class PGApp extends LitElement {
             <pg-import-dialog></pg-import-dialog>
 
             <pg-metal-sheet-table-dialog
+                title="Neue Liste"
                 @submit=${(
                     ev: Event & { currentTarget: PGMetalSheetTableDialog },
                 ) => {
                     const format = ev.currentTarget.format;
                     const toolID = ev.currentTarget.toolID;
                     const press = ev.currentTarget.press;
+
+                    const reopenDialog = () => {
+                        const dialog =
+                            this.querySelector<PGMetalSheetTableDialog>(
+                                `pg-metal-sheet-table-dialog`,
+                            )!;
+
+                        dialog.format = format;
+                        dialog.toolID = toolID;
+                        dialog.press = press;
+
+                        dialog.show();
+                    };
+
+                    if (!format || !toolID) {
+                        setTimeout(reopenDialog);
+                        return;
+                    }
 
                     const store = PGApp.queryStore();
                     const newData = {
@@ -335,18 +354,7 @@ class PGApp extends LitElement {
 
                     for (const list of store.getData("metalSheets") || []) {
                         if (listsStore.listKey(list) === newListKey) {
-                            setTimeout(() => {
-                                const dialog =
-                                    this.querySelector<PGMetalSheetTableDialog>(
-                                        `pg-metal-sheet-table-dialog`,
-                                    )!;
-
-                                dialog.format = format;
-                                dialog.toolID = toolID;
-                                dialog.press = press;
-
-                                dialog.show();
-                            });
+                            setTimeout(reopenDialog);
 
                             alert(`Liste "${newListKey}" existiert bereits!"`);
                             return;
