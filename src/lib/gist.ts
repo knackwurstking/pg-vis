@@ -1,7 +1,7 @@
 import { Octokit } from "octokit";
 import PGApp from "../app/pg-app";
+import { AlertList, MetalSheet, Vis } from "../store-types";
 import { ListsStoreData, newListsStore } from "./lists-store";
-import { AlertList, MetalSheet } from "../store-types";
 
 export async function importFromGist(
     storeKey: keyof ListsStoreData,
@@ -10,7 +10,7 @@ export async function importFromGist(
     try {
         const resp = await gist(gistID);
         const listsStore = newListsStore(storeKey);
-        const newData: (AlertList | MetalSheet)[] = [];
+        const newData: (AlertList | MetalSheet | Vis)[] = [];
 
         for (const file of Object.values(resp.data.files || {})) {
             if (!file?.content) continue;
