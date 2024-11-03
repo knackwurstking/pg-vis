@@ -31,10 +31,10 @@ class PGPageContentAlertLists extends PGPageContent<AlertList> {
                 title="Alarmsuche (RegEx Mode)"
                 storage-key="${this.data?.title}"
                 ?active=${!!this.searchBar}
-                @change=${async (ev: Event) => {
-                    await this.filter(
-                        (ev.currentTarget as PGSearchBar).value(),
-                    );
+                @change=${async (
+                    ev: Event & { currentTarget: PGSearchBar },
+                ) => {
+                    await this.filter(ev.currentTarget.value());
                 }}
             ></pg-search-bar>
 
@@ -78,14 +78,12 @@ class PGPageContentAlertLists extends PGPageContent<AlertList> {
     }
 
     protected updated(_changedProperties: PropertyValues): void {
-        const pgSearchBar = this.querySelector<HTMLElement>(`pg-search-bar`)!;
+        const pgSearchBar = this.querySelector<PGSearchBar>(`pg-search-bar`)!;
         const container = this.querySelector<HTMLElement>(`div.container`)!;
 
         if (this.searchBar) {
             container.style.paddingTop = `calc(${pgSearchBar.clientHeight}px + var(--ui-spacing) * 2)`;
-            this.filter(
-                this.querySelector<PGSearchBar>(`pg-search-bar`)!.value(),
-            );
+            this.filter(pgSearchBar.value());
         } else {
             container.style.paddingTop = `0`;
             this.filter("");
