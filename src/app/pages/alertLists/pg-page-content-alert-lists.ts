@@ -44,7 +44,6 @@ class PGPageContentAlertLists extends PGPageContent<AlertList> {
                     width: "100%",
                     height: "100%",
                     overflow: "auto",
-                    scrollBehavior: "smooth",
                 } as CSSStyleDeclaration)}"
             >
                 <div
