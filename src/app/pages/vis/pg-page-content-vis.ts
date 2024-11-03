@@ -14,6 +14,17 @@ class PGPageContentVis extends PGPageContent<Vis> {
     private cleanup = new CleanUp();
 
     protected render() {
+        /* TODO:
+         *  - Check if "editable" is set to "true"
+         *
+         * NOTE:
+         *  Editable Mode:
+         *      - Enable the AppBar "add" button
+         *      - Add new products to the end of the list
+         *      - Product page with "edit" attribute
+         *      - This enables "delete" and "edit" button
+         */
+
         return html`
             <pg-search-bar
                 title="Productsuche (RegEx Mode)"
