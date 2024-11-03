@@ -1,4 +1,4 @@
-import { UIStore } from "ui";
+import { UIStore, UIThemeHandlerTheme } from "ui";
 
 export type PGStore = UIStore<PGStoreEvents>;
 
@@ -11,6 +11,10 @@ export type PGStackLayoutPage =
     | "alert";
 
 export interface PGStoreEvents {
+    theme: {
+        name: UIThemeHandlerTheme;
+    };
+
     drawer: { open: boolean };
     drawerGroup: {
         "alert-lists"?: {

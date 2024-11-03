@@ -13,6 +13,8 @@ import {
     UIDrawerGroupItem,
     UIStackLayout,
     UIStackLayoutPage,
+    UIThemeHandler,
+    UIThemeHandlerTheme,
 } from "ui";
 import { build, version } from "../constants";
 import { newListsStore } from "../lib/lists-store";
@@ -26,11 +28,14 @@ import {
 } from "./pages";
 import PGDrawerItem from "./pg-drawer-item";
 
-// TODO: Add a theme picker somewhere
 @customElement("pg-app")
 class PGApp extends LitElement {
     static queryStore(): PGStore {
         return document.querySelector<PGStore>("ui-store")!;
+    }
+
+    static queryThemeHandler(): UIThemeHandler {
+        return document.querySelector<UIThemeHandler>("ui-theme-handler")!;
     }
 
     static queryAppBar(): UIAppBar | null {
@@ -58,6 +63,8 @@ class PGApp extends LitElement {
 
     private _initializeStores() {
         const store = PGApp.queryStore();
+
+        store.setData("theme", { name: "original" }, true);
 
         // NOTE: Always open the drawer on app start for now
         store.setData("drawer", { open: true }, false);
@@ -162,29 +169,67 @@ class PGApp extends LitElement {
                 }}
             >
                 <ui-drawer-group name="app-info" no-fold>
-                    <ui-button
-                        style="${styles({
-                            display: "flex",
-                            justifyContent: "flex-start",
-                            marginBottom: "var(--ui-spacing)",
-                            padding: "0.25rem",
-                            fontSize: "0.85rem",
-                            textTransform: "none",
-                        } as CSSStyleDeclaration)}"
-                        variant="ghost"
-                        color="primary"
-                        ripple
-                        @click=${() => {
-                            // TODO: Open build info dialog
-                            // NOTE: Old version
-                            // const versionElement = this.querySelector("ui-button.version");
-                            // versionElement.ui.events.on("click", () => {
-                            //     utils.create.buildInfoDialog();
-                            // });
-                        }}
-                    >
-                        ${version} - [Build: ${build}]
-                    </ui-button>
+                    <ui-drawer-group-item>
+                        <ui-button
+                            style="${styles({
+                                display: "flex",
+                                justifyContent: "flex-start",
+                                marginBottom: "var(--ui-spacing)",
+                                padding: "0.25rem",
+                                fontSize: "0.85rem",
+                                textTransform: "none",
+                            } as CSSStyleDeclaration)}"
+                            variant="ghost"
+                            color="primary"
+                            ripple
+                            @click=${() => {
+                                // TODO: Open build info dialog
+                                // NOTE: Old version
+                                // const versionElement = this.querySelector("ui-button.version");
+                                // versionElement.ui.events.on("click", () => {
+                                //     utils.create.buildInfoDialog();
+                                // });
+                            }}
+                        >
+                            ${version} - [Build: ${build}]
+                        </ui-button>
+                    </ui-drawer-group-item>
+
+                    <ui-drawer-group-item>
+                        <ui-label primary="Theme">
+                            <select
+                                style="text-align: center;"
+                                @change=${(
+                                    ev: Event & {
+                                        currentTarget: HTMLSelectElement;
+                                    },
+                                ) => {
+                                    const selected = ev.currentTarget.children[
+                                        ev.currentTarget.selectedIndex
+                                    ] as HTMLOptionElement;
+
+                                    store.setData("theme", {
+                                        name: selected.value as UIThemeHandlerTheme,
+                                    });
+                                }}
+                            >
+                                <option
+                                    value="original"
+                                    ?selected=${store.getData("theme")?.name ===
+                                    "original"}
+                                >
+                                    Original
+                                </option>
+                                <option
+                                    value="gruvbox"
+                                    ?selected=${store.getData("theme")?.name ===
+                                    "gruvbox"}
+                                >
+                                    Gruvbox
+                                </option>
+                            </select>
+                        </ui-label>
+                    </ui-drawer-group-item>
                 </ui-drawer-group>
 
                 <ui-drawer-group
@@ -476,40 +521,49 @@ class PGApp extends LitElement {
 
     private _storeEventHandlers() {
         const store = PGApp.queryStore();
+
         store.addListener(
-            "alertLists",
+            "theme",
             (data) => {
-                const groupContainer = this.querySelector(
-                    `ui-drawer-group[name="alert-lists"]`,
-                )!;
-
-                const fixedItems = parseInt(
-                    groupContainer.getAttribute("data-fixed-items") || "0",
-                );
-
-                Array.from(groupContainer.children)
-                    .slice(fixedItems)
-                    .forEach((child) => groupContainer.removeChild(child));
-
-                const listsStore = newListsStore("alertLists");
-                data.forEach(async (list) => {
-                    const item = new UIDrawerGroupItem();
-                    groupContainer.appendChild(item);
-
-                    const groupItem = new PGDrawerItem();
-                    item.appendChild(groupItem);
-
-                    groupItem.storeKey = listsStore.key();
-
-                    groupItem.primary = groupItem.storeListKey =
-                        listsStore.listKey(list);
-
-                    groupItem.secondary = `${list.data.length} Einträge`;
-                    groupItem.allowDeletion = true;
-                });
+                const themeHandler = PGApp.queryThemeHandler();
+                themeHandler.theme = data.name;
             },
             true,
-        );
+        ),
+            store.addListener(
+                "alertLists",
+                (data) => {
+                    const groupContainer = this.querySelector(
+                        `ui-drawer-group[name="alert-lists"]`,
+                    )!;
+
+                    const fixedItems = parseInt(
+                        groupContainer.getAttribute("data-fixed-items") || "0",
+                    );
+
+                    Array.from(groupContainer.children)
+                        .slice(fixedItems)
+                        .forEach((child) => groupContainer.removeChild(child));
+
+                    const listsStore = newListsStore("alertLists");
+                    data.forEach(async (list) => {
+                        const item = new UIDrawerGroupItem();
+                        groupContainer.appendChild(item);
+
+                        const groupItem = new PGDrawerItem();
+                        item.appendChild(groupItem);
+
+                        groupItem.storeKey = listsStore.key();
+
+                        groupItem.primary = groupItem.storeListKey =
+                            listsStore.listKey(list);
+
+                        groupItem.secondary = `${list.data.length} Einträge`;
+                        groupItem.allowDeletion = true;
+                    });
+                },
+                true,
+            );
 
         store.addListener(
             "metalSheets",
