@@ -17,7 +17,7 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
     private cleanup = new CleanUp();
 
     protected render(): TemplateResult<1> {
-        this.setAppBarTitle();
+        this._setAppBarTitle();
 
         return html`
             <div
@@ -30,11 +30,11 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
                 <table>
                     <thead>
                         <tr>
-                            ${this.renderTableHeader()}
+                            ${this._renderTableHeader()}
                         </tr>
                     </thead>
                     <tbody>
-                        ${this.renderTableBody()}
+                        ${this._renderTableBody()}
                     </tbody>
                 </table>
             </div>
@@ -77,7 +77,7 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
                     }
 
                     this.requestUpdate();
-                    this.replaceInStore(this.data);
+                    this._replaceInStore(this.data);
                 }}
                 @delete=${async (
                     ev: Event & { currentTarget: PGMetalSheetEntryDialog },
@@ -90,7 +90,7 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
                     );
 
                     this.requestUpdate();
-                    this.replaceInStore(this.data);
+                    this._replaceInStore(this.data);
                 }}
             ></pg-metal-sheet-entry-dialog>
 
@@ -120,7 +120,7 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
                         this.data = newData;
                     } catch (err) {
                         setTimeout(() =>
-                            this.openTableDialog({ format, toolID, press }),
+                            this._openTableDialog({ format, toolID, press }),
                         );
 
                         alert(err);
@@ -131,7 +131,7 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
         `;
     }
 
-    private renderTableHeader() {
+    private _renderTableHeader() {
         if (!this.data) return html``;
 
         const content: TemplateResult<1>[] = [];
@@ -144,7 +144,7 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
         return html`${[...content]}`;
     }
 
-    private renderTableBody() {
+    private _renderTableBody() {
         if (!this.data) return html``;
 
         const content: DirectiveResult<typeof Keyed>[] = [];
@@ -205,7 +205,7 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
                 );
 
                 this.requestUpdate();
-                this.replaceInStore(this.data);
+                this._replaceInStore(this.data);
             },
         });
     }
@@ -224,7 +224,7 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
         const onClick = async () => {
             if (!this.data) return;
 
-            this.openTableDialog({
+            this._openTableDialog({
                 format: this.data.format,
                 toolID: this.data.toolID,
                 press: this.data.data.press,
@@ -247,7 +247,7 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
         this.cleanup.run();
     }
 
-    private setAppBarTitle() {
+    private _setAppBarTitle() {
         PGApp.queryAppBar()!.contentName("title")!.contentAt(0).innerText =
             this.data !== undefined
                 ? newListsStore("metalSheets")
@@ -258,7 +258,7 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
                 : "Bleck Liste";
     }
 
-    private openTableDialog(data: {
+    private _openTableDialog(data: {
         format: string;
         toolID: string;
         press: number;
@@ -274,7 +274,7 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
         dialog.show();
     }
 
-    private replaceInStore(list: MetalSheet) {
+    private _replaceInStore(list: MetalSheet) {
         const listsStore = newListsStore("metalSheets");
         listsStore.replaceInStore(PGApp.queryStore(), list, list);
     }
