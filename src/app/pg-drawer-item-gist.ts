@@ -3,6 +3,7 @@ import { CleanUp, html, styles, UIDrawerGroupItem, UISpinner } from "ui";
 import { importFromGist } from "../lib/gist";
 import { ListsStoreData, newListsStore } from "../lib/lists-store";
 import PGApp from "./pg-app";
+import { PropertyValues, TemplateResult } from "lit";
 
 @customElement("pg-drawer-item-gist")
 class PGDrawerItemGist extends UIDrawerGroupItem {
@@ -16,10 +17,6 @@ class PGDrawerItemGist extends UIDrawerGroupItem {
     gistID: string = "";
 
     protected cleanup = new CleanUp();
-
-    protected createRenderRoot(): HTMLElement | DocumentFragment {
-        return this;
-    }
 
     protected render() {
         return html`
@@ -111,11 +108,13 @@ class PGDrawerItemGist extends UIDrawerGroupItem {
     }
 
     public startSpinner() {
-        this.querySelector<UISpinner>("ui-spinner")!.style.display = "block";
+        this.shadowRoot!.querySelector<UISpinner>("ui-spinner")!.style.display =
+            "block";
     }
 
     public stopSpinner() {
-        this.querySelector<UISpinner>("ui-spinner")!.style.display = "none";
+        this.shadowRoot!.querySelector<UISpinner>("ui-spinner")!.style.display =
+            "none";
     }
 }
 

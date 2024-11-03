@@ -36,10 +36,6 @@ class PGDrawerItem extends UIDrawerGroupItem {
     @property({ type: Boolean, attribute: "allow-deletion", reflect: true })
     allowDeletion?: boolean;
 
-    protected createRenderRoot(): HTMLElement | DocumentFragment {
-        return this;
-    }
-
     protected render() {
         return html`
             <ui-flex-grid-row>
