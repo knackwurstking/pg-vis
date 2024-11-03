@@ -1,12 +1,12 @@
+import { LitElement } from "lit";
 import { customElement, property } from "lit/decorators.js";
-import { CleanUp, html, styles, UIDrawerGroupItem, UISpinner } from "ui";
+import { CleanUp, html, styles, UISpinner } from "ui";
 import { importFromGist } from "../lib/gist";
 import { ListsStoreData, newListsStore } from "../lib/lists-store";
 import PGApp from "./pg-app";
-import { PropertyValues, TemplateResult } from "lit";
 
 @customElement("pg-drawer-item-gist")
-class PGDrawerItemGist extends UIDrawerGroupItem {
+class PGDrawerItemGist extends LitElement {
     @property({ type: String, attribute: "store-key", reflect: true })
     storeKey?: keyof ListsStoreData;
 

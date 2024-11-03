@@ -1,9 +1,9 @@
-import { html } from "lit";
+import { html, LitElement } from "lit";
 import { customElement, property } from "lit/decorators.js";
-import { svg, UIDrawerGroupItem } from "ui";
+import { svg } from "ui";
+import { ListsStoreData, newListsStore } from "../lib/lists-store";
 import PGPageContent from "./pages/pg-page-content";
 import PGApp from "./pg-app";
-import { ListsStoreData, newListsStore } from "../lib/lists-store";
 
 /**
  * ```
@@ -17,7 +17,7 @@ import { ListsStoreData, newListsStore } from "../lib/lists-store";
  * ```
  */
 @customElement("pg-drawer-item")
-class PGDrawerItem extends UIDrawerGroupItem {
+class PGDrawerItem extends LitElement {
     @property({ type: String, attribute: "store-key", reflect: true })
     storeKey?: keyof ListsStoreData;
 

@@ -1,13 +1,13 @@
 import FileSaver from "file-saver";
 import JSZip from "jszip";
-import { html } from "lit";
+import { html, LitElement } from "lit";
 import { customElement, property } from "lit/decorators.js";
-import { svg, UIDrawerGroupItem } from "ui";
+import { svg } from "ui";
 import { ListsStoreData, newListsStore } from "../lib/lists-store";
 import PGApp from "./pg-app";
 
 @customElement("pg-drawer-item-import")
-class PGDrawerItemImport extends UIDrawerGroupItem {
+class PGDrawerItemImport extends LitElement {
     @property({ type: String, attribute: "store-key", reflect: true })
     storeKey?: keyof ListsStoreData;
 

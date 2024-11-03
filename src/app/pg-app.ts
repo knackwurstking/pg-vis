@@ -10,6 +10,7 @@ import {
     svg,
     UIAppBar,
     UIDrawer,
+    UIDrawerGroupItem,
     UIStackLayout,
     UIStackLayoutPage,
 } from "ui";
@@ -17,13 +18,13 @@ import { build, version } from "../constants";
 import { newListsStore } from "../lib/lists-store";
 import { PGStackLayoutPage, PGStore } from "../store-types";
 import PGImportDialog from "./dialogs/pg-import-dialog";
+import PGMetalSheetTableDialog from "./dialogs/pg-metal-sheet-table-dialog";
 import {
     PGPageContentAlert,
     PGPageContentAlertLists,
     PGPageContentMetalSheets,
 } from "./pages";
 import PGDrawerItem from "./pg-drawer-item";
-import PGMetalSheetTableDialog from "./dialogs/pg-metal-sheet-table-dialog";
 
 @customElement("pg-app")
 class PGApp extends LitElement {
@@ -205,14 +206,18 @@ class PGApp extends LitElement {
                     }}
                 >
                     <!-- Fixed Item 1 -->
-                    <pg-drawer-item-import
-                        store-key="alertLists"
-                    ></pg-drawer-item-import>
+                    <ui-drawer-group-item>
+                        <pg-drawer-item-import
+                            store-key="alertLists"
+                        ></pg-drawer-item-import>
+                    </ui-drawer-group-item>
 
                     <!-- Fixed Item 2 -->
-                    <pg-drawer-item-gist
-                        store-key="alertLists"
-                    ></pg-drawer-item-gist>
+                    <ui-drawer-group-item>
+                        <pg-drawer-item-gist
+                            store-key="alertLists"
+                        ></pg-drawer-item-gist>
+                    </ui-drawer-group-item>
                 </ui-drawer-group>
 
                 <ui-drawer-group
@@ -236,14 +241,18 @@ class PGApp extends LitElement {
                     }}
                 >
                     <!-- Fixed Item 1 -->
-                    <pg-drawer-item-import
-                        store-key="metalSheets"
-                    ></pg-drawer-item-import>
+                    <ui-drawer-group-item>
+                        <pg-drawer-item-import
+                            store-key="metalSheets"
+                        ></pg-drawer-item-import>
+                    </ui-drawer-group-item>
 
                     <!-- Fixed Item 2 -->
-                    <pg-drawer-item-gist
-                        store-key="metalSheets"
-                    ></pg-drawer-item-gist>
+                    <ui-drawer-group-item>
+                        <pg-drawer-item-gist
+                            store-key="metalSheets"
+                        ></pg-drawer-item-gist>
+                    </ui-drawer-group-item>
 
                     <!-- Fixed Item 3 -->
                     <ui-drawer-group-item>
@@ -482,13 +491,19 @@ class PGApp extends LitElement {
 
                 const listsStore = newListsStore("alertLists");
                 data.forEach(async (list) => {
+                    const item = new UIDrawerGroupItem();
+                    groupContainer.appendChild(item);
+
                     const groupItem = new PGDrawerItem();
+                    item.appendChild(groupItem);
+
                     groupItem.storeKey = listsStore.key();
+
                     groupItem.primary = groupItem.storeListKey =
                         listsStore.listKey(list);
+
                     groupItem.secondary = `${list.data.length} Einträge`;
                     groupItem.allowDeletion = true;
-                    groupContainer.appendChild(groupItem);
                 });
             },
             true,
@@ -511,7 +526,12 @@ class PGApp extends LitElement {
 
                 const listsStore = newListsStore("metalSheets");
                 data.forEach(async (list) => {
+                    const item = new UIDrawerGroupItem();
+                    groupContainer.appendChild(item);
+
                     const groupItem = new PGDrawerItem();
+                    item.appendChild(groupItem);
+
                     groupItem.storeKey = listsStore.key();
 
                     groupItem.primary =
@@ -521,7 +541,6 @@ class PGApp extends LitElement {
                     groupItem.storeListKey = listsStore.listKey(list);
                     groupItem.secondary = `${list.data.table.data.length} Einträge`;
                     groupItem.allowDeletion = true;
-                    groupContainer.appendChild(groupItem);
                 });
             },
             true,
