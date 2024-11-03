@@ -26,6 +26,7 @@ import {
 } from "./pages";
 import PGDrawerItem from "./pg-drawer-item";
 
+// TODO: Add a theme picker somewhere
 @customElement("pg-app")
 class PGApp extends LitElement {
     static queryStore(): PGStore {
