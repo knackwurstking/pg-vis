@@ -468,6 +468,8 @@ class PGApp extends LitElement {
             page.appendChild(content);
             return page;
         });
+
+        // TODO: Register "vis", "product", "vis-bookmarks", "vis-data" and "info"
     }
 
     private _handleStackLayoutChanges() {
