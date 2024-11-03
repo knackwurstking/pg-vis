@@ -95,7 +95,7 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
             ></pg-metal-sheet-entry-dialog>
 
             <pg-metal-sheet-table-dialog
-                title="Liste Bearbeiten"
+                title="Bearbeiten"
                 @submit=${(
                     ev: Event & { currentTarget: PGMetalSheetTableDialog },
                 ) => {
