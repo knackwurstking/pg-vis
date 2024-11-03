@@ -1,8 +1,9 @@
-import { AlertList, MetalSheet, PGStore } from "../store-types";
+import { AlertList, MetalSheet, PGStore, Vis } from "../store-types";
 
 export interface ListsStoreData {
     alertLists: AlertList;
     metalSheets: MetalSheet;
+    vis: Vis;
 }
 
 export class ListsStore<T extends keyof ListsStoreData> {
@@ -222,6 +223,57 @@ export class MetalSheetsStore extends ListsStore<"metalSheets"> {
                 for (const s of part) {
                     if (typeof s !== "string") return null;
                 }
+            }
+        }
+
+        return list;
+    }
+}
+
+export class VisStore extends ListsStore<"vis"> {
+    key(): keyof ListsStoreData {
+        return "vis";
+    }
+
+    listKey(list: Vis): string {
+        return `${list.title}`;
+    }
+
+    title(): string {
+        return "Vis Listen";
+    }
+
+    fileName(list: Vis): string {
+        return `Vis Liste - ${super.fileName(list)}`;
+    }
+
+    zipFileName(): string {
+        return `${this.title()} - ${super.zipFileName()}`;
+    }
+
+    validate(list: any): Vis | null {
+        if (typeof list === "string") {
+            try {
+                list = JSON.parse(list);
+            } catch (err) {
+                console.error(err);
+                return null;
+            }
+        }
+
+        if (typeof list.title !== "string" || !Array.isArray(list.data))
+            return null;
+
+        for (const product of list.data) {
+            if (typeof product !== "object") return null;
+            if (
+                !("lotto" in product) ||
+                !("name" in product) ||
+                !("format" in product) ||
+                !("thickness" in product) ||
+                !("stamp" in product)
+            ) {
+                return null;
             }
         }
 

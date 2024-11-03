@@ -66,6 +66,7 @@ class PGApp extends LitElement {
 
         store.setData("alertLists", [], true);
         store.setData("metalSheets", [], true);
+        store.setData("vis", [], true);
 
         store.setData("gist", {}, true);
     }
@@ -546,133 +547,40 @@ class PGApp extends LitElement {
             },
             true,
         );
+
+        store.addListener(
+            "vis",
+            (data) => {
+                const groupContainer = this.querySelector(
+                    `ui-drawer-group[name="vis"]`,
+                )!;
+
+                const fixedItems = parseInt(
+                    groupContainer.getAttribute("data-fixed-items") || "0",
+                );
+
+                Array.from(groupContainer.children)
+                    .slice(fixedItems)
+                    .forEach((child) => groupContainer.removeChild(child));
+
+                const listsStore = newListsStore("vis");
+                data.forEach(async (list) => {
+                    const item = new UIDrawerGroupItem();
+                    groupContainer.appendChild(item);
+
+                    const groupItem = new PGDrawerItem();
+                    item.appendChild(groupItem);
+
+                    groupItem.storeKey = listsStore.key();
+                    groupItem.primary = listsStore.listKey(list);
+                    groupItem.storeListKey = listsStore.listKey(list);
+                    groupItem.secondary = `${list.data.length} Einträge`;
+                    groupItem.allowDeletion = true;
+                });
+            },
+            true,
+        );
     }
 }
 
 export default PGApp;
-
-//export class _PGApp extends HTMLElement {
-//    constructor() {
-//        super();
-//
-//        this.cleanup = new CleanUp();
-//
-//        /** @type {PGStore} */
-//        this.uiStore = null;
-//
-//        /** @type {import("ui").UIStackLayout} */
-//        this.stackLayout = null;
-//
-//        /** @type {import("./components/pg-app-bar").PGAppBar} */
-//        this.pgAppBar = null;
-//
-//        /** @type {import("./components/pg-drawer").PGDrawer} */
-//        this.pgDrawer = null;
-//
-//        this.render();
-//    }
-//
-//    render() {
-//        this.uiStore = this.querySelector("ui-store");
-//        this.stackLayout = this.querySelector("ui-stack-layout");
-//        this.pgAppBar = this.querySelector("pg-app-bar");
-//        this.pgDrawer = this.querySelector("pg-drawer");
-//
-//        this.createStore();
-//        this.createStackLayout();
-//    }
-//
-//    connectedCallback() {
-//        this.pgDrawer.ui.open = true;
-//
-//        this.cleanup.add(
-//            this.uiStore.ui.on("share", this.onShare.bind(this), true),
-//        );
-//
-//        this.setupNoPage();
-//
-//        this.handleVersion();
-//    }
-//
-//    disconnectedCallback() {
-//        this.cleanup.run();
-//    }
-//
-//    handleVersion() {
-//        const localVersion = localStorage.getItem("pg-vis:version");
-//        if (localVersion !== version) {
-//            localStorage.setItem("pg-vis:version", version);
-//            console.log(
-//                `Updated from "${localVersion}" to version "${version}"`,
-//            );
-//        }
-//
-//        const localBuild = parseInt(
-//            localStorage.getItem("pg-vis:build") || "0",
-//        );
-//        if (localBuild !== build) {
-//            localStorage.setItem("pg-vis:build", build.toString());
-//        }
-//    }
-//
-//    /** @private */
-//    createStore() {
-//        this.uiStore.ui.set("alertLists", [], true);
-//        this.uiStore.ui.set("metalSheetLists", [], true);
-//        this.uiStore.ui.set("vis", [], true);
-//
-//        this.uiStore.ui.set(
-//            "visLists",
-//            [
-//                {
-//                    name: "Presse 0",
-//                    allowDeletion: false,
-//                    data: [],
-//                },
-//                {
-//                    name: "Presse 2",
-//                    allowDeletion: false,
-//                    data: [],
-//                },
-//                {
-//                    name: "Presse 3",
-//                    allowDeletion: false,
-//                    data: [],
-//                },
-//                {
-//                    name: "Presse 4",
-//                    allowDeletion: false,
-//                    data: [],
-//                },
-//                {
-//                    name: "Presse 5",
-//                    allowDeletion: false,
-//                    data: [],
-//                },
-//            ],
-//            true,
-//        );
-//
-//        this.uiStore.ui.set("visData", [], true);
-//
-//        this.uiStore.ui.set("gist", {}, true);
-//
-//        this.uiStore.ui.set("appBarTitle", "", false);
-//        this.uiStore.ui.set("edit", null, false);
-//        this.uiStore.ui.set("share", null, false);
-//        this.uiStore.ui.set("search", { active: false }, false);
-//        this.uiStore.ui.set("bookmark", { active: false }, false);
-//    }
-//
-//    /**
-//     * @private
-//     * @param {ShareData} data
-//     */
-//    async onShare(data) {
-//        if (data !== null) {
-//            this.pgAppBar.items.share.ui.show();
-//        } else {
-//            this.pgAppBar.items.share.ui.hide();
-//        }
-//    }
-//}
