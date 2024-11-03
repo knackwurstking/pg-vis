@@ -246,8 +246,26 @@ class PGApp extends LitElement {
                     ></pg-drawer-item-gist>
 
                     <!-- Fixed Item 3 -->
-                    <!-- TODO: Create new table -->
-                    <span class="placeholder"></span>
+                    <ui-drawer-group-item>
+                        <ui-button
+                            variant="full"
+                            color="secondary"
+                            @click=${() => {
+                                const dialog =
+                                    this.querySelector<PGMetalSheetTableDialog>(
+                                        `pg-metal-sheet-table-dialog`,
+                                    )!;
+
+                                dialog.format = "";
+                                dialog.toolID = "";
+                                dialog.press = -1;
+
+                                dialog.show();
+                            }}
+                        >
+                            Neue Liste
+                        </ui-button>
+                    </ui-drawer-group-item>
                 </ui-drawer-group>
 
                 <ui-drawer-group name="vis" title="Vis" data-fixed-items="2">
