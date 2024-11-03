@@ -289,6 +289,8 @@ export function newListsStore<T extends keyof ListsStoreData>(
             return new AlertListsStore() as ListsStore<T>;
         case "metalSheets":
             return new MetalSheetsStore() as ListsStore<T>;
+        case "vis":
+            return new VisStore() as ListsStore<T>;
         default:
             throw new Error(`unknown "${key}"`);
     }
