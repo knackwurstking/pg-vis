@@ -105,6 +105,13 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
                     const toolID = ev.currentTarget.toolID;
                     const press = ev.currentTarget.press;
 
+                    if (!format || !toolID) {
+                        setTimeout(() =>
+                            this._openTableDialog({ format, toolID, press }),
+                        );
+                        return;
+                    }
+
                     const store = PGApp.queryStore();
                     const listsStore = newListsStore("metalSheets");
 
