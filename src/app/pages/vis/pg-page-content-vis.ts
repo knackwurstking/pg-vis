@@ -2,7 +2,7 @@ import { customElement, property } from "lit/decorators.js";
 import PGPageContent from "../pg-page-content";
 import { html, PropertyValues } from "lit";
 import { Vis } from "../../../store-types";
-import PGSearchBar from "../../../components/pg-search-bar";
+import PGSearchBar from "../../components/pg-search-bar";
 import { CleanUp, styles, UIIconButton } from "ui";
 import PGApp from "../../pg-app";
 

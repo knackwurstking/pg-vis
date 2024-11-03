@@ -1,5 +1,3 @@
-import "./pg-metal-sheet-entry-dialog"; // Register component
-
 import { html, PropertyValues, TemplateResult } from "lit";
 import { DirectiveResult } from "lit/async-directive.js";
 import { customElement } from "lit/decorators.js";
@@ -10,7 +8,7 @@ import { MetalSheet } from "../../../store-types";
 import PGMetalSheetTableDialog from "../../dialogs/pg-metal-sheet-table-dialog";
 import PGApp from "../../pg-app";
 import PGPageContent from "../pg-page-content";
-import PGMetalSheetEntryDialog from "./pg-metal-sheet-entry-dialog";
+import PGMetalSheetEntryDialog from "../../dialogs/pg-metal-sheet-entry-dialog";
 
 @customElement("pg-page-content-metal-sheets")
 class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {

@@ -1,7 +1,7 @@
 import { html, PropertyValues, TemplateResult } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { CleanUp, styles, UIIconButton } from "ui";
-import PGSearchBar from "../../../components/pg-search-bar";
+import PGSearchBar from "../../components/pg-search-bar";
 import { newListsStore } from "../../../lib/lists-store";
 import { queryTargetFromElementPath } from "../../../lib/query-utils";
 import { AlertList } from "../../../store-types";

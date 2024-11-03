@@ -1,8 +1,3 @@
-import "./dialogs/pg-import-dialog"; // Register "pg-import-dialog"
-import "./dialogs/pg-metal-sheet-table-dialog"; // Register component
-import "./pg-drawer-item-gist"; // Register "pg-drawer-item-gist"
-import "./pg-drawer-item-import"; // Register "pg-drawer-item-import"
-
 import { html, LitElement, PropertyValues } from "lit";
 import { customElement } from "lit/decorators.js";
 import {
