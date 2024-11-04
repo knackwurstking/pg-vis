@@ -6,7 +6,7 @@ import PGSearchBar from "../../components/pg-search-bar";
 import PGApp from "../../pg-app";
 import PGPageContent from "../pg-page-content";
 import PGVisListItem from "./pg-vis-list-item";
-import PGAlertListItem from "../alertLists/pg-alert-list-item";
+import { newListsStore } from "../../../lib/lists-store";
 
 @customElement("pg-page-content-vis")
 class PGPageContentVis extends PGPageContent<Vis> {
@@ -16,6 +16,11 @@ class PGPageContentVis extends PGPageContent<Vis> {
     private cleanup = new CleanUp();
 
     protected render() {
+        PGApp.queryAppBar()!.contentName("title")!.contentAt(0).innerText =
+            this.data !== undefined
+                ? newListsStore("vis").listKey(this.data)
+                : "Vis";
+
         /* TODO:
          *  - Check if "editable" is set to "true"
          *
