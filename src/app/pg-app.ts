@@ -20,6 +20,7 @@ import {
     PGPageContentAlert,
     PGPageContentAlertLists,
     PGPageContentMetalSheets,
+    PGPageContentProduct,
     PGPageContentVis,
 } from "./pages";
 import PGDrawerItem from "./pg-drawer-item";
@@ -489,6 +490,13 @@ class PGApp extends LitElement {
             const page = new UIStackLayoutPage();
             page.name = "alert";
             page.appendChild(new PGPageContentAlert());
+            return page;
+        });
+
+        stack.registerPage("product", () => {
+            const page = new UIStackLayoutPage();
+            page.name = "product";
+            page.append(new PGPageContentProduct());
             return page;
         });
 
