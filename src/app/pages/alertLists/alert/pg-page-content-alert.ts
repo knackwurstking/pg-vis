@@ -17,7 +17,7 @@ class PGPageContentAlert extends PGPageContent<Alert> {
                 } as CSSStyleDeclaration)}"
             >
                 <ui-flex-grid gap="0.25rem">
-                    <ui-flex-grid-item flex="0">
+                    <ui-flex-grid-item>
                         ${this.data !== undefined
                             ? html`<pg-alert-list-item
                                   data=${JSON.stringify(this.data)}
