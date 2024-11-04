@@ -320,7 +320,25 @@ class PGApp extends LitElement {
                     </ui-drawer-group-item>
                 </ui-drawer-group>
 
-                <ui-drawer-group name="vis" title="Vis" data-fixed-items="2">
+                <ui-drawer-group
+                    name="vis"
+                    title="Vis"
+                    data-fixed-items="2"
+                    gap="0.25rem"
+                    ?open=${!!store.getData("drawerGroup")?.["vis"]?.open}
+                    @fold=${() => {
+                        store.updateData(`drawerGroup`, (data) => {
+                            data["vis"] = { open: false };
+                            return data;
+                        });
+                    }}
+                    @unfold=${() => {
+                        store.updateData(`drawerGroup`, (data) => {
+                            data["vis"] = { open: true };
+                            return data;
+                        });
+                    }}
+                >
                     <!-- Fixed Item 1 -->
                     <ui-drawer-group-item>
                         <pg-drawer-item-import

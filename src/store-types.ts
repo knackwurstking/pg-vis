@@ -23,6 +23,9 @@ export interface PGStoreEvents {
         "metal-sheets"?: {
             open: boolean;
         };
+        vis?: {
+            open: boolean;
+        };
     };
 
     alertLists: AlertList[];
