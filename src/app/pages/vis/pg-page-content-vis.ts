@@ -1,10 +1,12 @@
-import { customElement, property } from "lit/decorators.js";
-import PGPageContent from "../pg-page-content";
 import { html, PropertyValues } from "lit";
+import { customElement, property } from "lit/decorators.js";
+import { CleanUp, styles, UIIconButton } from "ui";
 import { Vis } from "../../../store-types";
 import PGSearchBar from "../../components/pg-search-bar";
-import { CleanUp, styles, UIIconButton } from "ui";
 import PGApp from "../../pg-app";
+import PGPageContent from "../pg-page-content";
+import PGVisListItem from "./pg-vis-list-item";
+import PGAlertListItem from "../alertLists/pg-alert-list-item";
 
 @customElement("pg-page-content-vis")
 class PGPageContentVis extends PGPageContent<Vis> {
@@ -70,7 +72,19 @@ class PGPageContentVis extends PGPageContent<Vis> {
     }
 
     protected firstUpdated(_changedProperties: PropertyValues): void {
-        // TODO: Render items to the ".list" here...
+        setTimeout(async () => {
+            if (this.data === undefined) return;
+
+            const container = this.querySelector(`.list`)!;
+            this.data.data.forEach(async (product) => {
+                setTimeout(async () => {
+                    const item = new PGVisListItem();
+                    item.style.cursor = "pointer";
+                    item.data = product;
+                    container.appendChild(item);
+                });
+            });
+        });
     }
 
     connectedCallback(): void {
@@ -98,8 +112,24 @@ class PGPageContentVis extends PGPageContent<Vis> {
         this.cleanup.run();
     }
 
-    async filter(value: string) {
-        throw new Error("Method not implemented."); // TODO: ...
+    public async filter(value: string) {
+        const container = this.querySelector(`.list`)!;
+        const regex: RegExp = PGSearchBar.generateRegExp(value);
+
+        let searchString: string;
+        for (const child of [...container.children] as PGVisListItem[]) {
+            if (child.data === undefined) continue;
+
+            setTimeout(async () => {
+                searchString = `${child.data!.lotto} ${child.data!.name} ${child.data!.format} ${child.data!.stamp} ${child.data!.thickness}`;
+
+                if (regex.test(searchString)) {
+                    child.style.display = "block";
+                } else {
+                    child.style.display = "none";
+                }
+            });
+        }
     }
 }
 
