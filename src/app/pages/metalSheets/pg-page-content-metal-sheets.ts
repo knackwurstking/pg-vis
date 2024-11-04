@@ -15,7 +15,10 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
     private cleanup = new CleanUp();
 
     protected render(): TemplateResult<1> {
-        this._setAppBarTitle();
+        PGApp.queryAppBar()!.contentName("title")!.contentAt(0).innerText =
+            this.data !== undefined
+                ? newListsStore("metalSheets").listKey(this.data)
+                : "Bleck Liste";
 
         return html`
             <div
@@ -250,17 +253,6 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
     disconnectedCallback(): void {
         super.disconnectedCallback();
         this.cleanup.run();
-    }
-
-    private _setAppBarTitle() {
-        PGApp.queryAppBar()!.contentName("title")!.contentAt(0).innerText =
-            this.data !== undefined
-                ? newListsStore("metalSheets")
-                      .fileName(this.data)
-                      .split(".")
-                      .slice(0, -1)
-                      .join(".")
-                : "Bleck Liste";
     }
 
     private _openTableDialog(data: {
