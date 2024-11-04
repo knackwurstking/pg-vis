@@ -56,8 +56,6 @@ class PGPageContentVis extends PGPageContent<Vis> {
                 <div
                     class="list"
                     @click=${async (ev: Event) => {
-                        // TODO: Get the "pg-vis-list-item" from target
-                        //       elements path
                         if (!(ev.target instanceof Element)) return;
 
                         const target =
