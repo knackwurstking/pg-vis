@@ -2,7 +2,9 @@ import { html } from "lit";
 import { styles } from "ui";
 import { Product } from "../../../../store-types";
 import PGPageContent from "../../pg-page-content";
+import { customElement } from "lit/decorators.js";
 
+@customElement("pg-page-contents-product")
 class PGPageContentProduct extends PGPageContent<Product> {
     protected render() {
         return html`
@@ -13,8 +15,22 @@ class PGPageContentProduct extends PGPageContent<Product> {
                     height: "100%",
                     overflow: "auto",
                 } as CSSStyleDeclaration)}"
-            ></div>
-        `; // TODO: Continue here...
+            >
+                <ui-flex-grid gap="0.25rem">
+                    <ui-flex-grid-item>
+                        ${this.data !== undefined
+                            ? html`<pg-vis-list-item
+                                  data=${JSON.stringify(this.data)}
+                              ></pg-vis-list-item>`
+                            : ""}
+                    </ui-flex-grid-item>
+
+                    <ui-flex-grid-item>
+                        <!-- TODO: Vis data here -->
+                    </ui-flex-grid-item>
+                </ui-flex-grid>
+            </div>
+        `;
     }
 }
 
