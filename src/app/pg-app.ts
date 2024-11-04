@@ -55,10 +55,10 @@ class PGApp extends LitElement {
 
     constructor() {
         super();
-        this._initializeStores();
+        this.initializeStores();
     }
 
-    private _initializeStores() {
+    private initializeStores() {
         const store = PGApp.queryStore();
 
         store.setData("theme", { name: "original" }, true);
@@ -85,12 +85,12 @@ class PGApp extends LitElement {
                 <ui-stack-layout></ui-stack-layout>
             </div>
 
-            ${this._renderAppBar()} ${this._renderDrawer()}
-            ${this._renderDialogs()}
+            ${this.renderAppBar()} ${this.renderDrawer()}
+            ${this.renderDialogs()}
         `;
     }
 
-    private _renderAppBar() {
+    private renderAppBar() {
         return html`
             <ui-app-bar position="top">
                 <ui-app-bar-item name="menu" slot="left">
@@ -152,7 +152,7 @@ class PGApp extends LitElement {
         `;
     }
 
-    private _renderDrawer() {
+    private renderDrawer() {
         const store = PGApp.queryStore();
 
         return html`
@@ -382,7 +382,7 @@ class PGApp extends LitElement {
         `;
     }
 
-    private _renderDialogs() {
+    private renderDialogs() {
         return html`
             <pg-import-dialog></pg-import-dialog>
 
@@ -451,12 +451,12 @@ class PGApp extends LitElement {
         this.style.bottom = "0";
         this.style.left = "0";
 
-        this._registerPages();
-        this._handleStackLayoutChanges();
-        this._storeEventHandlers();
+        this.registerPages();
+        this.handleStackLayoutChanges();
+        this.storeEventHandlers();
     }
 
-    private _registerPages() {
+    private registerPages() {
         const stack = PGApp.queryStackLayout()!;
 
         // Main pages
@@ -503,7 +503,7 @@ class PGApp extends LitElement {
         // TODO: Register "product", "vis-data-edit"
     }
 
-    private _handleStackLayoutChanges() {
+    private handleStackLayoutChanges() {
         const stack = PGApp.queryStackLayout()!;
         const appBar = PGApp.queryAppBar()!;
         const drawer = PGApp.queryDrawer()!;
@@ -548,7 +548,7 @@ class PGApp extends LitElement {
         });
     }
 
-    private _storeEventHandlers() {
+    private storeEventHandlers() {
         const store = PGApp.queryStore();
 
         store.addListener(

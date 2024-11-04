@@ -65,7 +65,7 @@ class PGMetalSheetTableDialog extends LitElement {
                     </ui-flex-grid-item>
 
                     <ui-flex-grid-item>
-                        ${this._renderPressSelect()}
+                        ${this.renderPressSelect()}
                     </ui-flex-grid-item>
                 </ui-flex-grid>
 
@@ -93,7 +93,7 @@ class PGMetalSheetTableDialog extends LitElement {
         `;
     }
 
-    private _renderPressSelect() {
+    private renderPressSelect() {
         return keyed(
             this.press,
             html`

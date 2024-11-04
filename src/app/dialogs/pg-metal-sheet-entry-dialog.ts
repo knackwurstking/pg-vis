@@ -43,10 +43,10 @@ class PGMetalSheetEntryDialog extends LitElement {
                 inert
             >
                 <ui-flex-grid gap="0.25rem">
-                    ${this._renderInputs()}
+                    ${this.renderInputs()}
                 </ui-flex-grid>
 
-                ${this._renderDeleteAction()}
+                ${this.renderDeleteAction()}
 
                 <ui-button
                     slot="actions"
@@ -72,7 +72,7 @@ class PGMetalSheetEntryDialog extends LitElement {
         `;
     }
 
-    private _renderInputs() {
+    private renderInputs() {
         const content: DirectiveResult<typeof Keyed>[] = [
             ...(this.header || []).map((head, index) => {
                 return keyed(
@@ -99,7 +99,7 @@ class PGMetalSheetEntryDialog extends LitElement {
         return html`${content}`;
     }
 
-    private _renderDeleteAction() {
+    private renderDeleteAction() {
         if (this.tableIndex < 0) return html``;
         return html`
             <ui-button

@@ -31,11 +31,11 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
                 <table>
                     <thead>
                         <tr>
-                            ${this._renderTableHeader()}
+                            ${this.renderTableHeader()}
                         </tr>
                     </thead>
                     <tbody>
-                        ${this._renderTableBody()}
+                        ${this.renderTableBody()}
                     </tbody>
                 </table>
             </div>
@@ -78,7 +78,7 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
                     }
 
                     this.requestUpdate();
-                    this._replaceInStore(this.data);
+                    this.replaceInStore(this.data);
                 }}
                 @delete=${async (
                     ev: Event & { currentTarget: PGMetalSheetEntryDialog },
@@ -91,7 +91,7 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
                     );
 
                     this.requestUpdate();
-                    this._replaceInStore(this.data);
+                    this.replaceInStore(this.data);
                 }}
             ></pg-metal-sheet-entry-dialog>
 
@@ -108,7 +108,7 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
 
                     if (!format || !toolID) {
                         setTimeout(() =>
-                            this._openTableDialog({ format, toolID, press }),
+                            this.openTableDialog({ format, toolID, press }),
                         );
                         return;
                     }
@@ -128,7 +128,7 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
                         this.data = newData;
                     } catch (err) {
                         setTimeout(() =>
-                            this._openTableDialog({ format, toolID, press }),
+                            this.openTableDialog({ format, toolID, press }),
                         );
 
                         alert(err);
@@ -139,7 +139,7 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
         `;
     }
 
-    private _renderTableHeader() {
+    private renderTableHeader() {
         if (!this.data) return html``;
 
         const content: TemplateResult<1>[] = [];
@@ -152,7 +152,7 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
         return html`${[...content]}`;
     }
 
-    private _renderTableBody() {
+    private renderTableBody() {
         if (!this.data) return html``;
 
         const content: DirectiveResult<typeof Keyed>[] = [];
@@ -213,7 +213,7 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
                 );
 
                 this.requestUpdate();
-                this._replaceInStore(this.data);
+                this.replaceInStore(this.data);
             },
         });
     }
@@ -232,7 +232,7 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
         const onClick = async () => {
             if (!this.data) return;
 
-            this._openTableDialog({
+            this.openTableDialog({
                 format: this.data.format,
                 toolID: this.data.toolID,
                 press: this.data.data.press,
@@ -255,7 +255,7 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
         this.cleanup.run();
     }
 
-    private _openTableDialog(data: {
+    private openTableDialog(data: {
         format: string;
         toolID: string;
         press: number;
@@ -271,7 +271,7 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
         dialog.show();
     }
 
-    private _replaceInStore(list: MetalSheet) {
+    private replaceInStore(list: MetalSheet) {
         const listsStore = newListsStore("metalSheets");
         listsStore.replaceInStore(PGApp.queryStore(), list, list);
     }
