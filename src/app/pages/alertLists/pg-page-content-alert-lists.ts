@@ -91,17 +91,22 @@ class PGPageContentAlertLists extends PGPageContent<AlertList> {
     }
 
     protected firstUpdated(_changedProperties: PropertyValues): void {
-        // Render Items
+        setTimeout(async () => {
+            if (this.data === undefined) return;
 
-        const container = this.querySelector(`.list`)!;
-        if (this.data !== undefined) {
+            // Render Items
+
+            const container = this.querySelector(`.list`)!;
+
             this.data.data.forEach(async (alert) => {
-                const item = new PGAlertListItem();
-                item.data = alert;
-                item.ripple = true;
-                container.appendChild(item);
+                setTimeout(async () => {
+                    const item = new PGAlertListItem();
+                    item.style.cursor = "pointer";
+                    item.data = alert;
+                    container.appendChild(item);
+                });
             });
-        }
+        });
     }
 
     connectedCallback(): void {
@@ -137,11 +142,10 @@ class PGPageContentAlertLists extends PGPageContent<AlertList> {
         let searchString: string;
         let from: number;
         let to: number;
-        for (const child of [...container.children]) {
-            if (!(child instanceof PGAlertListItem)) continue;
+        for (const child of [...container.children] as PGAlertListItem[]) {
             if (child.data === undefined) continue;
 
-            ((child: PGAlertListItem) => {
+            setTimeout(async () => {
                 from = Math.min(child.data!.from, child.data!.to);
                 to = Math.max(child.data!.from, child.data!.to);
                 alertNumberStrings = [];
@@ -155,7 +159,7 @@ class PGPageContentAlertLists extends PGPageContent<AlertList> {
                 } else {
                     child.style.display = "none";
                 }
-            })(child);
+            });
         }
     }
 }
