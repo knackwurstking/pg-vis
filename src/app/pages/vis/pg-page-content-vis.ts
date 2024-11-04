@@ -1,12 +1,13 @@
 import { html, PropertyValues } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { CleanUp, styles, UIIconButton } from "ui";
-import { Vis } from "../../../store-types";
+import { Product, Vis } from "../../../store-types";
 import PGSearchBar from "../../components/pg-search-bar";
 import PGApp from "../../pg-app";
 import PGPageContent from "../pg-page-content";
 import PGVisListItem from "./pg-vis-list-item";
 import { newListsStore } from "../../../lib/lists-store";
+import { queryTargetFromElementPath } from "../../../lib/query-utils";
 
 @customElement("pg-page-content-vis")
 class PGPageContentVis extends PGPageContent<Vis> {
@@ -57,6 +58,28 @@ class PGPageContentVis extends PGPageContent<Vis> {
                     @click=${async (ev: Event) => {
                         // TODO: Get the "pg-vis-list-item" from target
                         //       elements path
+                        if (!(ev.target instanceof Element)) return;
+
+                        const target =
+                            queryTargetFromElementPath<PGVisListItem>(
+                                ev.target,
+                                "pg-vis-list-item",
+                            );
+                        if (target === null) return;
+
+                        PGApp.queryStackLayout()!.setPage(
+                            "product",
+                            (page) => {
+                                const content = page.children[0] as
+                                    | PGPageContent<Product>
+                                    | undefined;
+
+                                if (content !== undefined) {
+                                    content.data = target.data;
+                                }
+                            },
+                            true,
+                        );
                     }}
                 ></div>
             </div>

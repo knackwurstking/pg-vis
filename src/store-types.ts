@@ -6,6 +6,7 @@ export type PGStackLayoutPage =
     | "alertLists"
     | "metalSheets"
     | "vis"
+    | "product"
     | "visBookmarks"
     | "visData"
     | "alert";
