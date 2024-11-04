@@ -4,7 +4,7 @@ import { CleanUp, styles, UIIconButton } from "ui";
 import PGSearchBar from "../../components/pg-search-bar";
 import { newListsStore } from "../../../lib/lists-store";
 import { queryTargetFromElementPath } from "../../../lib/query-utils";
-import { AlertList } from "../../../store-types";
+import { Alert, AlertList } from "../../../store-types";
 import PGApp from "../../pg-app";
 import PGPageContent from "../pg-page-content";
 import PGAlertListItem from "./pg-alert-list-item";
@@ -49,7 +49,7 @@ class PGPageContentAlertLists extends PGPageContent<AlertList> {
                 <div
                     class="list"
                     @click=${async (ev: MouseEvent): Promise<void> => {
-                        if (!(ev?.target instanceof Element)) return;
+                        if (!(ev.target instanceof Element)) return;
 
                         const target =
                             queryTargetFromElementPath<PGAlertListItem>(
@@ -62,7 +62,7 @@ class PGPageContentAlertLists extends PGPageContent<AlertList> {
                             "alert",
                             (page): void => {
                                 const content = page.children[0] as
-                                    | PGPageContent<any>
+                                    | PGPageContent<Alert>
                                     | undefined;
 
                                 if (content !== undefined) {
