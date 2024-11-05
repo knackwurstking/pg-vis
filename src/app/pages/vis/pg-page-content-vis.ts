@@ -22,6 +22,10 @@ class PGPageContentVis extends PGPageContent<Vis> {
                 ? newListsStore("vis").listKey(this.data)
                 : "Vis";
 
+        /* TODO:
+         *  - Add some special flakes marker
+         */
+
         return html`
             <pg-search-bar
                 title="Productsuche (RegEx Mode)"
