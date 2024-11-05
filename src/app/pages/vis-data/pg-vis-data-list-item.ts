@@ -1,4 +1,4 @@
-import { html, LitElement } from "lit";
+import { html, LitElement, PropertyValues } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { VisDataEntry } from "../../../store-types";
 
@@ -6,6 +6,9 @@ import { VisDataEntry } from "../../../store-types";
 class PGVisDataListItem extends LitElement {
     @property({ type: Object, attribute: "data", reflect: true })
     data?: VisDataEntry;
+
+    @property({ type: Boolean, attribute: "show-filter", reflect: true })
+    showFilter?: boolean;
 
     protected createRenderRoot(): HTMLElement | DocumentFragment {
         this.style.display = "block";
@@ -20,7 +23,33 @@ class PGVisDataListItem extends LitElement {
     }
 
     protected render() {
-        return html``; // TODO: ...
+        if (this.data === undefined) return html``;
+
+        return html`
+            <ui-flex-grid gap="0.25rem">
+                ${this.data.key !== null
+                    ? html`
+                          <ui-flex-grid-item>
+                              <ui-primary wght="650"
+                                  >${this.data.key}</ui-primary
+                              >
+                          </ui-flex-grid-item>
+                      `
+                    : ""}
+
+                <ui-flex-grid-item>
+                    <ui-text name="value" mono="1">${this.data.value}</ui-text>
+                </ui-flex-grid-item>
+            </ui-flex-grid>
+        `; // TODO: Adding filter tags to the top or bottom, only if `this.showFilter` is set
+    }
+
+    protected updated(_changedProperties: PropertyValues): void {
+        this.querySelector(`ui-text[name="value"]`)!.innerHTML = (
+            this.data?.value || ""
+        )
+            .replaceAll("\n", "<br/>")
+            .replaceAll(" ", "&nbsp;");
     }
 }
 
