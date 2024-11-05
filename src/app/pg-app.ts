@@ -153,9 +153,9 @@ class PGApp extends LitElement {
                     </ui-icon-button>
                 </ui-app-bar-item>
 
-                <ui-app-bar-item name="bookmark" slot="right" hidden>
+                <ui-app-bar-item name="trash" slot="right" hidden>
                     <ui-icon-button ripple ghost>
-                        ${svg.smoothieLineIcons.bookmark}
+                        ${svg.smoothieLineIcons.trash}
                     </ui-icon-button>
                 </ui-app-bar-item>
             </ui-app-bar>
@@ -638,6 +638,10 @@ class PGApp extends LitElement {
 
                 case "vis":
                     appBar.contentName("search")!.show();
+                    break;
+
+                case "visDataEdit":
+                    appBar.contentName("trash")!.show();
                     break;
             }
         });

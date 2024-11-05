@@ -1,6 +1,6 @@
 import { html, PropertyValues } from "lit";
 import { customElement, property } from "lit/decorators.js";
-import { UIInput } from "ui";
+import { CleanUp, UIIconButton, UIInput } from "ui";
 import { newListsStore } from "../../../../lib/lists-store";
 import { VisDataEntry } from "../../../../store-types";
 import PGApp from "../../../pg-app";
@@ -15,6 +15,8 @@ export class PGPageContentVisDataEdit extends PGPageContent<VisDataEntry> {
     entryIndex?: number;
 
     private modified: boolean = false;
+    private deleteEntry: boolean = false;
+    private cleanup = new CleanUp();
 
     protected render() {
         if (
@@ -143,11 +145,14 @@ export class PGPageContentVisDataEdit extends PGPageContent<VisDataEntry> {
                 const listsStore = newListsStore("visData");
                 for (const list of data) {
                     if (listsStore.listKey(list) === this.listKey) {
-                        if (this.entryIndex < 0) {
-                            list.data.unshift(this.data);
-                        } else {
-                            list.data[this.entryIndex] = this.data;
+                        if (this.deleteEntry) {
+                            if (this.entryIndex > -1)
+                                list.data.splice(this.entryIndex, 1);
+                            break;
                         }
+
+                        if (this.entryIndex < 0) list.data.unshift(this.data);
+                        else list.data[this.entryIndex] = this.data;
 
                         break;
                     }
@@ -156,6 +161,35 @@ export class PGPageContentVisDataEdit extends PGPageContent<VisDataEntry> {
                 return data;
             });
         });
+    }
+
+    connectedCallback(): void {
+        super.connectedCallback();
+
+        const onTrashClick = () => {
+            if (!confirm(`Möchten Sie diesen Eintrag wirklich löschen?`)) {
+                return;
+            }
+
+            this.modified = true;
+            this.deleteEntry = true;
+            PGApp.queryStackLayout()!.goBack();
+        };
+
+        const trashButton = PGApp.queryAppBar()!
+            .contentName("trash")!
+            .contentAt<UIIconButton>(0);
+
+        trashButton.addEventListener("click", onTrashClick);
+
+        this.cleanup.add(() => {
+            trashButton.removeEventListener("click", onTrashClick);
+        });
+    }
+
+    disconnectedCallback(): void {
+        super.disconnectedCallback();
+        this.cleanup.run();
     }
 }
 
