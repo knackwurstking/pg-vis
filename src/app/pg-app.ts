@@ -387,6 +387,20 @@ class PGApp extends LitElement {
                     <!-- TODO: Create new -->
                     <span class="placeholder"></span>
                 </ui-drawer-group>
+
+                <ui-drawer-group
+                    name="special"
+                    title="Spezial"
+                    data-fixed-items="2"
+                >
+                    <!-- Fixed Item 1 -->
+                    <!-- TODO: Import/Export -->
+                    <span class="placeholder"></span>
+
+                    <!-- Fixed Item 2 -->
+                    <!-- TODO: Gist -->
+                    <span class="placeholder"></span>
+                </ui-drawer-group>
             </ui-drawer>
         `;
     }
