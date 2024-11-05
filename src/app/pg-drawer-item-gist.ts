@@ -18,10 +18,6 @@ class PGDrawerItemGist extends LitElement {
 
     protected cleanup = new CleanUp();
 
-    protected createRenderRoot(): HTMLElement | DocumentFragment {
-        return this;
-    }
-
     protected render() {
         return html`
             <ui-flex-grid>

@@ -11,10 +11,6 @@ class PGDrawerItemImport extends LitElement {
     @property({ type: String, attribute: "store-key", reflect: true })
     storeKey?: keyof ListsStoreData;
 
-    protected createRenderRoot(): HTMLElement | DocumentFragment {
-        return this;
-    }
-
     protected render() {
         return html`
             <ui-flex-grid-row gap="0.25rem">
