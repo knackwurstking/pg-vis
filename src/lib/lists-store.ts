@@ -1,9 +1,10 @@
-import { AlertList, MetalSheet, PGStore, Vis } from "../store-types";
+import { AlertList, MetalSheet, PGStore, Vis, VisData } from "../store-types";
 
 export interface ListsStoreData {
     alertLists: AlertList;
     metalSheets: MetalSheet;
     vis: Vis;
+    visData: VisData;
 }
 
 export class ListsStore<T extends keyof ListsStoreData> {
@@ -281,6 +282,34 @@ export class VisStore extends ListsStore<"vis"> {
     }
 }
 
+export class VisDataStore extends ListsStore<"visData"> {
+    key(): keyof ListsStoreData {
+        return "visData";
+    }
+
+    listKey(list: VisData): string {
+        return `${list.title}`; // TODO: ...
+    }
+
+    title(): string {
+        return "Vis Data";
+    }
+
+    fileName(list: VisData): string {
+        return `Vis Data - ${super.fileName(list)}`;
+    }
+
+    zipFileName(): string {
+        return `${this.title()} - ${super.zipFileName()}`;
+    }
+
+    validate(list: any): VisData | null {
+        // TODO: ...
+
+        return null;
+    }
+}
+
 export function newListsStore<T extends keyof ListsStoreData>(
     key: T,
 ): ListsStore<T> {
@@ -291,6 +320,8 @@ export function newListsStore<T extends keyof ListsStoreData>(
             return new MetalSheetsStore() as ListsStore<T>;
         case "vis":
             return new VisStore() as ListsStore<T>;
+        case "visData":
+            return new VisDataStore() as ListsStore<T>;
         default:
             throw new Error(`unknown "${key}"`);
     }

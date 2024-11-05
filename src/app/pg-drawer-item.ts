@@ -108,6 +108,7 @@ class PGDrawerItem extends LitElement {
             case "alertLists":
             case "metalSheets":
             case "vis":
+            case "visData":
                 if (
                     confirm(
                         `Möchten Sie "${this.storeListKey}" wirklich löschen?`,

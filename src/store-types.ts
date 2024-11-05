@@ -32,11 +32,10 @@ export interface PGStoreEvents {
     alertLists: AlertList[];
     metalSheets: MetalSheet[];
     vis: Vis[];
+    visData: VisData[];
 
     // TODO: Store Keys for "vis-bookmarks"
     visBookmarks: [];
-    // TODO: Store Keys for "vis-data"
-    visData: [];
 
     gist: {
         [key: string]: {
@@ -97,4 +96,8 @@ export interface Product {
     format: string;
     thickness: number;
     stamp: string;
+}
+
+export interface VisData {
+    // TODO: ...
 }
