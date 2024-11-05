@@ -9,7 +9,8 @@ export type PGStackLayoutPage =
     | "vis"
     | "product"
     | "visBookmarks"
-    | "visData";
+    | "visData"
+    | "visDataEdit";
 
 export interface PGStoreEvents {
     theme: {

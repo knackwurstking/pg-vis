@@ -36,12 +36,60 @@ class PGVisDataListItem extends LitElement {
                           </ui-flex-grid-item>
                       `
                     : ""}
+                ${this.renderFilterTags()}
 
                 <ui-flex-grid-item>
                     <ui-text name="value" mono="1">${this.data.value}</ui-text>
                 </ui-flex-grid-item>
             </ui-flex-grid>
-        `; // TODO: Adding filter tags to the top or bottom, only if `this.showFilter` is set
+        `;
+    }
+
+    private renderFilterTags() {
+        if (this.data === undefined || !this.showFilter) return html``;
+
+        const content = [];
+
+        if (this.data.lotto !== null) {
+            content.push(html`
+                <ui-flex-grid-item flex="0">
+                    <code>${this.data.lotto}</code>
+                </ui-flex-grid-item>
+            `);
+        }
+
+        if (this.data.format !== null) {
+            content.push(html`
+                <ui-flex-grid-item flex="0">
+                    <code>${this.data.format}</code>
+                </ui-flex-grid-item>
+            `);
+        }
+
+        if (this.data.stamp !== null) {
+            content.push(html`
+                <ui-flex-grid-item flex="0">
+                    <code>${this.data.stamp}</code>
+                </ui-flex-grid-item>
+            `);
+        }
+
+        if (this.data.thickness !== null) {
+            content.push(html`
+                <ui-flex-grid-item flex="0">
+                    <code>${this.data.thickness}</code>
+                </ui-flex-grid-item>
+            `);
+        }
+
+        return html`
+            <ui-flex-grid gap="0">
+                ${content.length > 0
+                    ? html`<ui-secondary>Filter</ui-secondary>`
+                    : ""}
+                <ui-flex-grid-row gap="0.25rem"> ${content} </ui-flex-grid-row>
+            </ui-flex-grid>
+        `;
     }
 
     protected updated(_changedProperties: PropertyValues): void {

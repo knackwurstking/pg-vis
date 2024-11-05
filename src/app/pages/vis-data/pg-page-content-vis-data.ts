@@ -2,7 +2,8 @@ import { html, PropertyValues } from "lit";
 import { customElement } from "lit/decorators.js";
 import { styles } from "ui";
 import { newListsStore } from "../../../lib/lists-store";
-import { VisData } from "../../../store-types";
+import { queryTargetFromElementPath } from "../../../lib/query-utils";
+import { VisData, VisDataEntry } from "../../../store-types";
 import PGApp from "../../pg-app";
 import PGPageContent from "../pg-page-content";
 import PGVisDataListItem from "./pg-vis-data-list-item";
@@ -38,6 +39,30 @@ export class PGPageContentVisData extends PGPageContent<VisData> {
                             height: "100%",
                             overflow: "auto",
                         } as CSSStyleDeclaration)}"
+                        @click=${async (ev: Event) => {
+                            if (!(ev.target instanceof Element)) return;
+
+                            const target =
+                                queryTargetFromElementPath<PGVisDataListItem>(
+                                    ev.target,
+                                    "pg-vis-data-list-item",
+                                );
+                            if (target === null) return;
+
+                            PGApp.queryStackLayout()!.setPage(
+                                "visDataEdit",
+                                (page) => {
+                                    const content = page.children[0] as
+                                        | PGPageContent<VisDataEntry>
+                                        | undefined;
+
+                                    if (content !== undefined) {
+                                        content.data = target.data;
+                                    }
+                                },
+                                true,
+                            );
+                        }}
                     ></div>
                 </ui-flex-grid-item>
             </ui-flex-grid>
@@ -45,8 +70,6 @@ export class PGPageContentVisData extends PGPageContent<VisData> {
     }
 
     protected firstUpdated(_changedProperties: PropertyValues): void {
-        this.classList.add("is-debug");
-
         setTimeout(() => {
             if (this.data === undefined) return;
 
@@ -55,7 +78,9 @@ export class PGPageContentVisData extends PGPageContent<VisData> {
                 setTimeout(() => {
                     const item = new PGVisDataListItem();
                     item.style.cursor = "pointer";
+                    item.role = "button";
                     item.data = entry;
+                    item.showFilter = true;
                     container.appendChild(item);
                 });
             });

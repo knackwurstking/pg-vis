@@ -30,6 +30,7 @@ import {
     PGPageContentProduct,
     PGPageContentVis,
     PGPageContentVisData,
+    PGPageContentVisDataEdit,
 } from "./pages";
 import PGDrawerItem from "./pg-drawer-item";
 
@@ -584,6 +585,13 @@ class PGApp extends LitElement {
             const page = new UIStackLayoutPage();
             page.name = "product";
             page.append(new PGPageContentProduct());
+            return page;
+        });
+
+        stack.registerPage("visDataEdit", () => {
+            const page = new UIStackLayoutPage();
+            page.name = "visDataEdit";
+            page.append(new PGPageContentVisDataEdit());
             return page;
         });
 
