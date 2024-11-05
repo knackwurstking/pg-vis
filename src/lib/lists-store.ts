@@ -288,7 +288,7 @@ export class VisDataStore extends ListsStore<"visData"> {
     }
 
     listKey(list: VisData): string {
-        return `${list.title}`; // TODO: ...
+        return `${list.title}`;
     }
 
     title(): string {

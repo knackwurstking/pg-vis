@@ -99,5 +99,15 @@ export interface Product {
 }
 
 export interface VisData {
-    // TODO: ...
+    title: string;
+    data: VisDataEntry[];
+}
+
+export interface VisDataEntry {
+    key: string;
+    value: string;
+    lotto: null | string;
+    format: null | string;
+    thickness: null | string;
+    stamp: null | string;
 }
