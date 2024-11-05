@@ -358,8 +358,16 @@ class PGApp extends LitElement {
                 <ui-drawer-group
                     name="vis-bookmarks"
                     title="Vis Bookmarks"
-                    data-fixed-items="0"
-                ></ui-drawer-group>
+                    data-fixed-items="2"
+                >
+                    <!-- Fixed Item 1 -->
+                    <!-- TODO: Import / Export -->
+                    <span class="placeholder"></span>
+
+                    <!-- Fixed Item 1 -->
+                    <!-- TODO: "Neue Liste" -->
+                    <span class="placeholder"></span>
+                </ui-drawer-group>
 
                 <ui-drawer-group
                     name="vis-data"
