@@ -304,7 +304,29 @@ export class VisDataStore extends ListsStore<"visData"> {
     }
 
     validate(list: any): VisData | null {
-        // TODO: ...
+        if (typeof list.title !== "string" || typeof list.data !== "object")
+            return null;
+
+        for (const part of list.data) {
+            if (typeof part.key !== "string" || typeof part.value !== "string")
+                return null;
+
+            if (typeof part.lotto !== "string" && part.lotto !== null) {
+                return null;
+            }
+
+            if (typeof part.format !== "string" && part.format !== null) {
+                return null;
+            }
+
+            if (typeof part.thickness !== "string" && part.thickness !== null) {
+                return null;
+            }
+
+            if (typeof part.stamp !== "string" && part.stamp !== null) {
+                return null;
+            }
+        }
 
         return null;
     }
