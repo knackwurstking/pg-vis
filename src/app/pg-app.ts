@@ -428,7 +428,7 @@ class PGApp extends LitElement {
                     </ui-drawer-group-item>
 
                     <!-- Fixed Item 3 -->
-                    <!-- TODO: Create new -->
+                    <!-- TODO: Create new, Continue here... -->
                     <span class="placeholder"></span>
                 </ui-drawer-group>
 
@@ -638,6 +638,10 @@ class PGApp extends LitElement {
 
                 case "vis":
                     appBar.contentName("search")!.show();
+                    break;
+
+                case "visData":
+                    appBar.contentName("edit")!.show();
                     break;
 
                 case "visDataEdit":

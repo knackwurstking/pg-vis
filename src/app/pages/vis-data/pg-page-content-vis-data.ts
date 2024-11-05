@@ -1,6 +1,6 @@
 import { html } from "lit";
 import { customElement } from "lit/decorators.js";
-import { CleanUp, styles } from "ui";
+import { CleanUp, styles, UIIconButton } from "ui";
 import { newListsStore } from "../../../lib/lists-store";
 import { queryTargetFromElementPath } from "../../../lib/query-utils";
 import { VisData } from "../../../store-types";
@@ -9,12 +9,14 @@ import PGPageContent from "../pg-page-content";
 import PGVisDataListItem from "./pg-vis-data-list-item";
 import PGPageContentVisDataEdit from "./vis-data-edit/pg-page-content-vis-data-edit";
 import { keyed } from "lit/directives/keyed.js";
+import PGVisDataDialog from "../../dialogs/pg-vis-data-dialog";
 
 @customElement("pg-page-content-vis-data")
 export class PGPageContentVisData extends PGPageContent<VisData> {
     private cleanup = new CleanUp();
 
     protected render() {
+        console.debug("render....");
         PGApp.queryAppBar()!.contentName("title")!.contentAt(0).innerText =
             this.data !== undefined
                 ? newListsStore("visData").listKey(this.data)
@@ -110,6 +112,8 @@ export class PGPageContentVisData extends PGPageContent<VisData> {
                     </div>
                 </ui-flex-grid-item>
             </ui-flex-grid>
+
+            ${this.renderDialog()}
         `;
     }
 
@@ -131,8 +135,50 @@ export class PGPageContentVisData extends PGPageContent<VisData> {
         return html`${content}`;
     }
 
+    private renderDialog() {
+        return html`
+            <pg-vis-data-dialog
+                title="${this.data?.title || ""}"
+                @submit=${(ev: Event & { currentTarget: PGVisDataDialog }) => {
+                    if (this.data === undefined) return;
+
+                    const oldData = { ...this.data };
+                    this.data.title = ev.currentTarget.title;
+                    newListsStore("visData").replaceInStore(
+                        PGApp.queryStore(),
+                        { ...this.data },
+                        oldData,
+                    );
+                }}
+            ></pg-vis-data-dialog>
+        `;
+    }
+
     connectedCallback(): void {
         super.connectedCallback();
+
+        // App Bar: "edit"
+
+        const onEditClick = () => {
+            if (this.data === undefined) return;
+
+            const dialog =
+                this.querySelector<PGVisDataDialog>(`pg-vis-data-dialog`)!;
+
+            dialog.show();
+        };
+
+        const editButton = PGApp.queryAppBar()!
+            .contentName("edit")!
+            .contentAt<UIIconButton>(0);
+
+        editButton.addEventListener("click", onEditClick);
+
+        this.cleanup.add(() => {
+            editButton.removeEventListener("click", onEditClick);
+        });
+
+        // Re-Render if "visData" changes
 
         const listsStore = newListsStore("visData");
         const store = PGApp.queryStore();
@@ -143,7 +189,6 @@ export class PGPageContentVisData extends PGPageContent<VisData> {
                         listsStore.listKey(list) ===
                         listsStore.listKey(this.data!)
                     ) {
-                        console.debug("update...");
                         this.data = list;
                         return;
                     }
