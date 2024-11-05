@@ -309,7 +309,6 @@ export class VisDataStore extends ListsStore<"visData"> {
             return null;
 
         for (const part of list.data) {
-            console.debug(part);
             if (typeof part.key !== "string" && part.key !== null) return null;
 
             if (typeof part.value !== "string") return null;
