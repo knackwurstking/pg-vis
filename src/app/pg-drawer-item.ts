@@ -61,7 +61,6 @@ class PGDrawerItem extends LitElement {
                               style="height: 100%"
                               color="destructive"
                               ghost
-                              ripple
                               @click=${async (): Promise<void> => {
                                   await this.deleteStoreData();
                               }}
