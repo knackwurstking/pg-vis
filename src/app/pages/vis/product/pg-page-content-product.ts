@@ -7,6 +7,8 @@ import PGPageContent from "../../pg-page-content";
 @customElement("pg-page-contents-product")
 class PGPageContentProduct extends PGPageContent<Product> {
     /* TODO:
+     *  Bookmarks:
+     *      - Add this product to a bookmarks list (per dialog or html select)
      *  Edit Mode:
      *      - Checkbox label: "is flakes product"
      *      - Setup flakes product using a template for P4 / P5 or P0
