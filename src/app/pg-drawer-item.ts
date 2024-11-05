@@ -41,6 +41,7 @@ class PGDrawerItem extends LitElement {
             <ui-flex-grid-row>
                 <ui-flex-grid-item>
                     <ui-label
+                        role="button"
                         style="cursor: pointer;"
                         primary="${this.primary || ""}"
                         secondary="${this.secondary || ""}"
