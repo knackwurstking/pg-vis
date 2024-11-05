@@ -1,8 +1,8 @@
 import { html } from "lit";
+import { customElement } from "lit/decorators.js";
 import { styles } from "ui";
 import { Product } from "../../../../store-types";
 import PGPageContent from "../../pg-page-content";
-import { customElement } from "lit/decorators.js";
 
 @customElement("pg-page-contents-product")
 class PGPageContentProduct extends PGPageContent<Product> {

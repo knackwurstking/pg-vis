@@ -1,13 +1,13 @@
 import { html, PropertyValues } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { CleanUp, styles, UIIconButton } from "ui";
+import { newListsStore } from "../../../lib/lists-store";
+import { queryTargetFromElementPath } from "../../../lib/query-utils";
 import { Product, Vis } from "../../../store-types";
 import PGSearchBar from "../../components/pg-search-bar";
 import PGApp from "../../pg-app";
 import PGPageContent from "../pg-page-content";
 import PGVisListItem from "./pg-vis-list-item";
-import { newListsStore } from "../../../lib/lists-store";
-import { queryTargetFromElementPath } from "../../../lib/query-utils";
 
 @customElement("pg-page-content-vis")
 class PGPageContentVis extends PGPageContent<Vis> {
