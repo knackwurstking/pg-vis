@@ -509,7 +509,7 @@ class PGApp extends LitElement {
             return page;
         });
 
-        // TODO: Register "product", "vis-data-edit"
+        // TODO: Register "vis-data-edit"
     }
 
     private handleStackLayoutChanges() {
@@ -672,6 +672,8 @@ class PGApp extends LitElement {
             },
             true,
         );
+
+        // TODO: Handle "visData"
     }
 }
 
