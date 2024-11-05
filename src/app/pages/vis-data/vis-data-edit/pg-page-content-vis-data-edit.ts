@@ -130,25 +130,25 @@ export class PGPageContentVisDataEdit extends PGPageContent<VisDataEntry> {
         const cleanup = stack.events.addListener("change", () => {
             cleanup();
 
-            if (
-                !this.modified ||
-                this.data === undefined ||
-                this.listKey === undefined ||
-                this.entryIndex === undefined
-            ) {
-                return;
-            }
-
-            console.debug(
-                "Handle stack layout change after editing vis data entry",
-            );
-
             store.updateData("visData", (data) => {
+                if (
+                    !this.modified ||
+                    this.data === undefined ||
+                    this.listKey === undefined ||
+                    this.entryIndex === undefined
+                ) {
+                    return data;
+                }
+
                 const listsStore = newListsStore("visData");
                 for (const list of data) {
-                    if (listsStore.listKey(list) === this.listKey!) {
-                        console.debug("update");
-                        list.data[this.entryIndex!] = this.data!;
+                    if (listsStore.listKey(list) === this.listKey) {
+                        if (this.entryIndex < 0) {
+                            list.data.unshift(this.data);
+                        } else {
+                            list.data[this.entryIndex] = this.data;
+                        }
+
                         break;
                     }
                 }

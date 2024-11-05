@@ -33,9 +33,9 @@ class PGVisDataListItem extends LitElement {
                 ${this.data.key !== null
                     ? html`
                           <ui-flex-grid-item>
-                              <ui-primary wght="650"
-                                  >${this.data.key}</ui-primary
-                              >
+                              <ui-primary wght="650">
+                                  ${this.data.key}
+                              </ui-primary>
                           </ui-flex-grid-item>
                       `
                     : ""}
@@ -92,7 +92,8 @@ class PGVisDataListItem extends LitElement {
                     : ""}
                 <ui-flex-grid-row gap="0.25rem"> ${content} </ui-flex-grid-row>
             </ui-flex-grid>
-            <br />
+
+            ${content.length > 0 ? html`<br />` : ""}
         `;
     }
 

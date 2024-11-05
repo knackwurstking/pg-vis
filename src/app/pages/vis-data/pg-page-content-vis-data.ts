@@ -29,6 +29,34 @@ export class PGPageContentVisData extends PGPageContent<VisData> {
                             style="text-wrap: nowrap;"
                             variant="full"
                             color="primary"
+                            @click=${() => {
+                                PGApp.queryStackLayout()!.setPage(
+                                    "visDataEdit",
+                                    (page) => {
+                                        const content = page.children[0] as
+                                            | PGPageContentVisDataEdit
+                                            | undefined;
+
+                                        if (content !== undefined) {
+                                            content.data = {
+                                                key: null,
+                                                value: "",
+                                                lotto: null,
+                                                format: null,
+                                                stamp: null,
+                                                thickness: null,
+                                            };
+
+                                            content.listKey = newListsStore(
+                                                "visData",
+                                            ).listKey(this.data!);
+
+                                            content.entryIndex = -1;
+                                        }
+                                    },
+                                    true,
+                                );
+                            }}
                         >
                             Neuer Eintrag
                         </ui-button>
@@ -101,44 +129,6 @@ export class PGPageContentVisData extends PGPageContent<VisData> {
         });
 
         return html`${content}`;
-
-        //setTimeout(() => {
-        //    if (this.data === undefined) return;
-
-        //    const container = this.querySelector(`.list`)!;
-
-        //    const childsToKick: Element[] = [];
-        //    let currentIndex: number = -1;
-        //    [...container.children].forEach((child, index) => {
-        //        if (!(child instanceof PGVisDataListItem)) return;
-        //        if (this.data!.data[index] === undefined) {
-        //            childsToKick.push(child);
-        //            return;
-        //        }
-        //        currentIndex = index;
-
-        //        setTimeout(() => {
-        //            child.data = this.data!.data[index];
-        //            child.entryIndex = index;
-        //            child.showFilter = true;
-        //        });
-        //    });
-
-        //    childsToKick.forEach((child) => container.removeChild(child));
-
-        //    currentIndex++;
-        //    this.data.data.slice(currentIndex).forEach((entry, index) => {
-        //        setTimeout(() => {
-        //            const item = new PGVisDataListItem();
-        //            item.style.cursor = "pointer";
-        //            item.role = "button";
-        //            item.data = entry;
-        //            item.entryIndex = index;
-        //            item.showFilter = true;
-        //            container.appendChild(item);
-        //        });
-        //    });
-        //});
     }
 
     connectedCallback(): void {
