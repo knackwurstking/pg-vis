@@ -304,7 +304,6 @@ export class VisDataStore extends ListsStore<"visData"> {
     }
 
     validate(list: any): VisData | null {
-        console.debug(list);
         if (typeof list.title !== "string" || !Array.isArray(list.data))
             return null;
 
