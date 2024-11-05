@@ -91,15 +91,15 @@ class PGPageContentAlertLists extends PGPageContent<AlertList> {
     }
 
     protected firstUpdated(_changedProperties: PropertyValues): void {
-        setTimeout(async () => {
+        setTimeout(() => {
             if (this.data === undefined) return;
 
             // Render Items
 
             const container = this.querySelector(`.list`)!;
 
-            this.data.data.forEach(async (alert) => {
-                setTimeout(async () => {
+            this.data.data.forEach((alert) => {
+                setTimeout(() => {
                     const item = new PGAlertListItem();
                     item.style.cursor = "pointer";
                     item.data = alert;
@@ -145,7 +145,7 @@ class PGPageContentAlertLists extends PGPageContent<AlertList> {
         for (const child of [...container.children] as PGAlertListItem[]) {
             if (child.data === undefined) continue;
 
-            setTimeout(async () => {
+            setTimeout(() => {
                 from = Math.min(child.data!.from, child.data!.to);
                 to = Math.max(child.data!.from, child.data!.to);
                 alertNumberStrings = [];

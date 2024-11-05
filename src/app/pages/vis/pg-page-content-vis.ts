@@ -91,12 +91,12 @@ class PGPageContentVis extends PGPageContent<Vis> {
     }
 
     protected firstUpdated(_changedProperties: PropertyValues): void {
-        setTimeout(async () => {
+        setTimeout(() => {
             if (this.data === undefined) return;
 
             const container = this.querySelector(`.list`)!;
-            this.data.data.forEach(async (product) => {
-                setTimeout(async () => {
+            this.data.data.forEach((product) => {
+                setTimeout(() => {
                     const item = new PGVisListItem();
                     item.style.cursor = "pointer";
                     item.data = product;
@@ -139,7 +139,7 @@ class PGPageContentVis extends PGPageContent<Vis> {
         for (const child of [...container.children] as PGVisListItem[]) {
             if (child.data === undefined) continue;
 
-            setTimeout(async () => {
+            setTimeout(() => {
                 searchString = `${child.data!.lotto} ${child.data!.name} ${child.data!.format} ${child.data!.stamp} ${child.data!.thickness}`;
 
                 if (regex.test(searchString)) {
