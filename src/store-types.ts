@@ -113,10 +113,10 @@ export interface VisData {
 }
 
 export interface VisDataEntry {
-    key: string;
+    key: string | null;
     value: string;
-    lotto: null | string;
-    format: null | string;
-    thickness: null | string;
-    stamp: null | string;
+    lotto: string | null;
+    format: string | null;
+    thickness: string | null;
+    stamp: string | null;
 }
