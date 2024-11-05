@@ -27,6 +27,15 @@ export interface PGStoreEvents {
         vis?: {
             open: boolean;
         };
+        "vis-bookmarks"?: {
+            open: boolean;
+        };
+        "vis-data"?: {
+            open: boolean;
+        };
+        special?: {
+            open: boolean;
+        };
     };
 
     alertLists: AlertList[];

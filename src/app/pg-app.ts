@@ -22,6 +22,7 @@ import {
     PGPageContentMetalSheets,
     PGPageContentProduct,
     PGPageContentVis,
+    PGPageContentVisData,
 } from "./pages";
 import PGDrawerItem from "./pg-drawer-item";
 
@@ -359,6 +360,21 @@ class PGApp extends LitElement {
                     name="vis-bookmarks"
                     title="Vis Bookmarks"
                     data-fixed-items="2"
+                    gap="0.25rem"
+                    ?open=${!!store.getData("drawerGroup")?.["vis-bookmarks"]
+                        ?.open}
+                    @fold=${() => {
+                        store.updateData(`drawerGroup`, (data) => {
+                            data["vis-bookmarks"] = { open: false };
+                            return data;
+                        });
+                    }}
+                    @unfold=${() => {
+                        store.updateData(`drawerGroup`, (data) => {
+                            data["vis-bookmarks"] = { open: true };
+                            return data;
+                        });
+                    }}
                 >
                     <!-- Fixed Item 1 -->
                     <!-- TODO: Import / Export -->
@@ -373,15 +389,34 @@ class PGApp extends LitElement {
                     name="vis-data"
                     title="Vis Data"
                     data-fixed-items="3"
+                    gap="0.25rem"
+                    ?open=${!!store.getData("drawerGroup")?.["vis-data"]?.open}
+                    @fold=${() => {
+                        store.updateData(`drawerGroup`, (data) => {
+                            data["vis-data"] = { open: false };
+                            return data;
+                        });
+                    }}
+                    @unfold=${() => {
+                        store.updateData(`drawerGroup`, (data) => {
+                            data["vis-data"] = { open: true };
+                            return data;
+                        });
+                    }}
                 >
                     <!-- Fixed Item 1 -->
-                    <pg-drawer-item-import
-                        store-key="vis-data"
-                    ></pg-drawer-item-import>
+                    <ui-drawer-group-item>
+                        <pg-drawer-item-import
+                            store-key="visData"
+                        ></pg-drawer-item-import>
+                    </ui-drawer-group-item>
 
                     <!-- Fixed Item 2 -->
-                    <!-- TODO: Gist -->
-                    <span class="placeholder"></span>
+                    <ui-drawer-group-item>
+                        <pg-drawer-item-gist
+                            store-key="visData"
+                        ></pg-drawer-item-gist>
+                    </ui-drawer-group-item>
 
                     <!-- Fixed Item 3 -->
                     <!-- TODO: Create new -->
@@ -392,6 +427,20 @@ class PGApp extends LitElement {
                     name="special"
                     title="Spezial"
                     data-fixed-items="2"
+                    gap="0.25rem"
+                    ?open=${!!store.getData("drawerGroup")?.["special"]?.open}
+                    @fold=${() => {
+                        store.updateData(`drawerGroup`, (data) => {
+                            data["special"] = { open: false };
+                            return data;
+                        });
+                    }}
+                    @unfold=${() => {
+                        store.updateData(`drawerGroup`, (data) => {
+                            data["special"] = { open: true };
+                            return data;
+                        });
+                    }}
                 >
                     <!-- Fixed Item 1 -->
                     <!-- TODO: Import/Export -->
@@ -505,7 +554,14 @@ class PGApp extends LitElement {
             return page;
         });
 
-        // TODO: Register "vis-bookmarks" and "vis-data"
+        stack.registerPage("visData", () => {
+            const page = new UIStackLayoutPage();
+            page.name = "visData";
+            page.appendChild(new PGPageContentVisData());
+            return page;
+        });
+
+        // TODO: Register "vis-bookmarks"
 
         // Sub pages
 
