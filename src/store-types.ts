@@ -4,12 +4,12 @@ export type PGStore = UIStore<PGStoreEvents>;
 
 export type PGStackLayoutPage =
     | "alertLists"
+    | "alert"
     | "metalSheets"
     | "vis"
     | "product"
     | "visBookmarks"
-    | "visData"
-    | "alert";
+    | "visData";
 
 export interface PGStoreEvents {
     theme: {
