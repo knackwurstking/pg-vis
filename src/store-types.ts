@@ -89,10 +89,6 @@ export interface MetalSheet {
 export interface Vis {
     title: string;
     data: Product[];
-    /**
-     * Need to be set manually in json file
-     */
-    editable?: boolean;
 }
 
 export interface Product {
