@@ -8,6 +8,9 @@ import { UIDialog, UIInput, UISelect } from "ui";
  */
 @customElement("pg-metal-sheet-table-dialog")
 class PGMetalSheetTableDialog extends LitElement {
+    /**
+     * NOTE: This is for the dialog title
+     */
     @property({ type: String, attribute: "title", reflect: true })
     title: string = "";
 
