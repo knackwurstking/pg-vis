@@ -102,6 +102,7 @@ class PGPageContentAlertLists extends PGPageContent<AlertList> {
                 setTimeout(() => {
                     const item = new PGAlertListItem();
                     item.style.cursor = "pointer";
+                    item.role = "button";
                     item.data = alert;
                     container.appendChild(item);
                 });

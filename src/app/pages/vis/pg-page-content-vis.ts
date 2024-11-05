@@ -99,6 +99,7 @@ class PGPageContentVis extends PGPageContent<Vis> {
                 setTimeout(() => {
                     const item = new PGVisListItem();
                     item.style.cursor = "pointer";
+                    item.role = "button";
                     item.data = product;
                     container.appendChild(item);
                 });
