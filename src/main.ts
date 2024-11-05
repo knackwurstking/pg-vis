@@ -7,6 +7,7 @@ import "./app/dialogs/pg-metal-sheet-table-dialog"; // Register component
 import "./app/pg-app"; // Register "pg-app"
 import "./app/pg-drawer-item-gist"; // Register "pg-drawer-item-gist"
 import "./app/pg-drawer-item-import"; // Register "pg-drawer-item-import"
+import "./app/pages/vis-data/pg-vis-data-list-item"; // Register component
 
 import { registerSW } from "virtual:pwa-register";
 import { version } from "./constants";

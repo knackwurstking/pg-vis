@@ -7,6 +7,9 @@ class PGVisDataListItem extends LitElement {
     @property({ type: Object, attribute: "data", reflect: true })
     data?: VisDataEntry;
 
+    @property({ type: Number, attribute: "entry-index", reflect: true })
+    entryIndex?: number;
+
     @property({ type: Boolean, attribute: "show-filter", reflect: true })
     showFilter?: boolean;
 
@@ -89,6 +92,7 @@ class PGVisDataListItem extends LitElement {
                     : ""}
                 <ui-flex-grid-row gap="0.25rem"> ${content} </ui-flex-grid-row>
             </ui-flex-grid>
+            <br />
         `;
     }
 
