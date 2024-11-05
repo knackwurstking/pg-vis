@@ -12,8 +12,15 @@ import {
     UIThemeHandlerTheme,
 } from "ui";
 import { build, version } from "../constants";
-import { newListsStore } from "../lib/lists-store";
-import { PGStackLayoutPage, PGStore } from "../store-types";
+import { ListsStoreData, newListsStore } from "../lib/lists-store";
+import {
+    AlertList,
+    MetalSheet,
+    PGStackLayoutPage,
+    PGStore,
+    Vis,
+    VisData,
+} from "../store-types";
 import PGImportDialog from "./dialogs/pg-import-dialog";
 import PGMetalSheetTableDialog from "./dialogs/pg-metal-sheet-table-dialog";
 import {
@@ -231,21 +238,21 @@ class PGApp extends LitElement {
                 </ui-drawer-group>
 
                 <ui-drawer-group
-                    name="alert-lists"
+                    name="alertLists"
                     title="Alarm Listen"
                     data-fixed-items="2"
                     gap="0.25rem"
-                    ?open=${!!store.getData("drawerGroup")?.["alert-lists"]
+                    ?open=${!!store.getData("drawerGroup")?.["alertLists"]
                         ?.open}
                     @fold=${() => {
                         store.updateData(`drawerGroup`, (data) => {
-                            data["alert-lists"] = { open: false };
+                            data["alertLists"] = { open: false };
                             return data;
                         });
                     }}
                     @unfold=${() => {
                         store.updateData(`drawerGroup`, (data) => {
-                            data["alert-lists"] = { open: true };
+                            data["alertLists"] = { open: true };
                             return data;
                         });
                     }}
@@ -266,21 +273,21 @@ class PGApp extends LitElement {
                 </ui-drawer-group>
 
                 <ui-drawer-group
-                    name="metal-sheets"
+                    name="metalSheets"
                     title="Blech Listen"
                     data-fixed-items="3"
                     gap="0.25rem"
-                    ?open=${!!store.getData("drawerGroup")?.["metal-sheets"]
+                    ?open=${!!store.getData("drawerGroup")?.["metalSheets"]
                         ?.open}
                     @fold=${() => {
                         store.updateData(`drawerGroup`, (data) => {
-                            data["metal-sheets"] = { open: false };
+                            data["metalSheets"] = { open: false };
                             return data;
                         });
                     }}
                     @unfold=${() => {
                         store.updateData(`drawerGroup`, (data) => {
-                            data["metal-sheets"] = { open: true };
+                            data["metalSheets"] = { open: true };
                             return data;
                         });
                     }}
@@ -357,21 +364,21 @@ class PGApp extends LitElement {
                 </ui-drawer-group>
 
                 <ui-drawer-group
-                    name="vis-bookmarks"
+                    name="visBookmarks"
                     title="Vis Bookmarks"
                     data-fixed-items="2"
                     gap="0.25rem"
-                    ?open=${!!store.getData("drawerGroup")?.["vis-bookmarks"]
+                    ?open=${!!store.getData("drawerGroup")?.["visBookmarks"]
                         ?.open}
                     @fold=${() => {
                         store.updateData(`drawerGroup`, (data) => {
-                            data["vis-bookmarks"] = { open: false };
+                            data["visBookmarks"] = { open: false };
                             return data;
                         });
                     }}
                     @unfold=${() => {
                         store.updateData(`drawerGroup`, (data) => {
-                            data["vis-bookmarks"] = { open: true };
+                            data["visBookmarks"] = { open: true };
                             return data;
                         });
                     }}
@@ -386,20 +393,20 @@ class PGApp extends LitElement {
                 </ui-drawer-group>
 
                 <ui-drawer-group
-                    name="vis-data"
+                    name="visData"
                     title="Vis Data"
                     data-fixed-items="3"
                     gap="0.25rem"
-                    ?open=${!!store.getData("drawerGroup")?.["vis-data"]?.open}
+                    ?open=${!!store.getData("drawerGroup")?.["visData"]?.open}
                     @fold=${() => {
                         store.updateData(`drawerGroup`, (data) => {
-                            data["vis-data"] = { open: false };
+                            data["visData"] = { open: false };
                             return data;
                         });
                     }}
                     @unfold=${() => {
                         store.updateData(`drawerGroup`, (data) => {
-                            data["vis-data"] = { open: true };
+                            data["visData"] = { open: true };
                             return data;
                         });
                     }}
@@ -637,84 +644,23 @@ class PGApp extends LitElement {
                 themeHandler.theme = data.name;
             },
             true,
-        ),
-            store.addListener(
-                "alertLists",
-                (data) => {
-                    const groupContainer = this.querySelector(
-                        `ui-drawer-group[name="alert-lists"]`,
-                    )!;
-
-                    const fixedItems = parseInt(
-                        groupContainer.getAttribute("data-fixed-items") || "0",
-                    );
-
-                    Array.from(groupContainer.children)
-                        .slice(fixedItems)
-                        .forEach((child) => groupContainer.removeChild(child));
-
-                    const listsStore = newListsStore("alertLists");
-                    data.forEach(async (list) => {
-                        const item = new UIDrawerGroupItem();
-                        groupContainer.appendChild(item);
-
-                        const groupItem = new PGDrawerItem();
-                        item.appendChild(groupItem);
-
-                        groupItem.storeKey = listsStore.key();
-
-                        groupItem.primary = groupItem.storeListKey =
-                            listsStore.listKey(list);
-
-                        groupItem.secondary = `${list.data.length} Einträge`;
-                        groupItem.allowDeletion = true;
-                    });
-                },
-                true,
-            );
-
-        store.addListener(
-            "metalSheets",
-            (data) => {
-                const groupContainer = this.querySelector(
-                    `ui-drawer-group[name="metal-sheets"]`,
-                )!;
-
-                const fixedItems = parseInt(
-                    groupContainer.getAttribute("data-fixed-items") || "0",
-                );
-
-                Array.from(groupContainer.children)
-                    .slice(fixedItems)
-                    .forEach((child) => groupContainer.removeChild(child));
-
-                const listsStore = newListsStore("metalSheets");
-                data.forEach(async (list) => {
-                    const item = new UIDrawerGroupItem();
-                    groupContainer.appendChild(item);
-
-                    const groupItem = new PGDrawerItem();
-                    item.appendChild(groupItem);
-
-                    groupItem.storeKey = listsStore.key();
-
-                    groupItem.primary =
-                        (list.data.press >= 0 ? `[P${list.data.press}] ` : "") +
-                        listsStore.listKey(list);
-
-                    groupItem.storeListKey = listsStore.listKey(list);
-                    groupItem.secondary = `${list.data.table.data.length} Einträge`;
-                    groupItem.allowDeletion = true;
-                });
-            },
-            true,
         );
 
+        this.drawerGroupItemsRendering(store, "alertLists");
+        this.drawerGroupItemsRendering(store, "metalSheets");
+        this.drawerGroupItemsRendering(store, "vis");
+        this.drawerGroupItemsRendering(store, "visData");
+    }
+
+    private drawerGroupItemsRendering(
+        store: PGStore,
+        storeKey: keyof ListsStoreData,
+    ) {
         store.addListener(
-            "vis",
+            storeKey,
             (data) => {
                 const groupContainer = this.querySelector(
-                    `ui-drawer-group[name="vis"]`,
+                    `ui-drawer-group[name="${storeKey}"]`,
                 )!;
 
                 const fixedItems = parseInt(
@@ -725,7 +671,7 @@ class PGApp extends LitElement {
                     .slice(fixedItems)
                     .forEach((child) => groupContainer.removeChild(child));
 
-                const listsStore = newListsStore("vis");
+                const listsStore = newListsStore(storeKey);
                 data.forEach(async (list) => {
                     const item = new UIDrawerGroupItem();
                     groupContainer.appendChild(item);
@@ -734,16 +680,28 @@ class PGApp extends LitElement {
                     item.appendChild(groupItem);
 
                     groupItem.storeKey = listsStore.key();
+                    groupItem.storeListKey = listsStore.listKey(list);
                     groupItem.primary = listsStore.listKey(list);
-                    groupItem.storeListKey = listsStore.listKey(list);
-                    groupItem.secondary = `${list.data.length} Einträge`;
+
+                    switch (storeKey) {
+                        case "metalSheets":
+                            ((list: MetalSheet) => {
+                                groupItem.primary =
+                                    (list.data.press >= 0
+                                        ? `[P${list.data.press}] `
+                                        : "") + listsStore.listKey(list);
+                                groupItem.secondary = `${(list as MetalSheet).data.table.data.length}`;
+                            })(list as MetalSheet);
+                            break;
+                        default:
+                            groupItem.secondary = `${(list as AlertList | Vis | VisData).data.length} Einträge`;
+                    }
+
                     groupItem.allowDeletion = true;
                 });
             },
             true,
         );
-
-        // TODO: Handle "visData"
     }
 }
 

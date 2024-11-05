@@ -18,19 +18,19 @@ export interface PGStoreEvents {
 
     drawer: { open: boolean };
     drawerGroup: {
-        "alert-lists"?: {
+        alertLists?: {
             open: boolean;
         };
-        "metal-sheets"?: {
+        metalSheets?: {
             open: boolean;
         };
         vis?: {
             open: boolean;
         };
-        "vis-bookmarks"?: {
+        visBookmarks?: {
             open: boolean;
         };
-        "vis-data"?: {
+        visData?: {
             open: boolean;
         };
         special?: {
