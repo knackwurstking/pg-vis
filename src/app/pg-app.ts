@@ -23,6 +23,7 @@ import {
 } from "../store-types";
 import PGImportDialog from "./dialogs/pg-import-dialog";
 import PGMetalSheetTableDialog from "./dialogs/pg-metal-sheet-table-dialog";
+import PGVisDataDialog from "./dialogs/pg-vis-data-dialog";
 import {
     PGPageContentAlert,
     PGPageContentAlertLists,
@@ -33,7 +34,6 @@ import {
     PGPageContentVisDataEdit,
 } from "./pages";
 import PGDrawerItem from "./pg-drawer-item";
-import PGVisDataDialog from "./dialogs/pg-vis-data-dialog";
 
 @customElement("pg-app")
 class PGApp extends LitElement {
@@ -439,6 +439,7 @@ class PGApp extends LitElement {
                             color="secondary"
                             @click=${() => {
                                 const dialog = PGApp.queryVisDataDialog()!;
+                                dialog.invalidTitle = false;
                                 dialog.title = "";
                                 dialog.show();
                             }}
@@ -557,8 +558,11 @@ class PGApp extends LitElement {
                         );
                     } catch (err) {
                         alert(err);
-                        const dialog = PGApp.queryVisDataDialog()!;
-                        dialog.show();
+                        setTimeout(() => {
+                            const dialog = PGApp.queryVisDataDialog()!;
+                            dialog.invalidTitle = true;
+                            dialog.show();
+                        });
                     }
                 }}
             >
