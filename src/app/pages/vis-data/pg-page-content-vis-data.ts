@@ -1,15 +1,15 @@
 import { html } from "lit";
 import { customElement } from "lit/decorators.js";
+import { keyed } from "lit/directives/keyed.js";
 import { CleanUp, styles, UIIconButton } from "ui";
 import { newListsStore } from "../../../lib/lists-store";
 import { queryTargetFromElementPath } from "../../../lib/query-utils";
 import { VisData } from "../../../store-types";
+import PGVisDataDialog from "../../dialogs/pg-vis-data-dialog";
 import PGApp from "../../pg-app";
 import PGPageContent from "../pg-page-content";
 import PGVisDataListItem from "./pg-vis-data-list-item";
 import PGPageContentVisDataEdit from "./vis-data-edit/pg-page-content-vis-data-edit";
-import { keyed } from "lit/directives/keyed.js";
-import PGVisDataDialog from "../../dialogs/pg-vis-data-dialog";
 
 @customElement("pg-page-content-vis-data")
 export class PGPageContentVisData extends PGPageContent<VisData> {
@@ -138,7 +138,6 @@ export class PGPageContentVisData extends PGPageContent<VisData> {
     private renderDialog() {
         return html`
             <pg-vis-data-dialog
-                title="${this.data?.title || ""}"
                 @submit=${(ev: Event & { currentTarget: PGVisDataDialog }) => {
                     if (this.data === undefined) return;
 
@@ -153,8 +152,11 @@ export class PGPageContentVisData extends PGPageContent<VisData> {
                         );
                     } catch (err) {
                         alert(err);
-                        const dialog = ev.currentTarget;
-                        dialog.show();
+                        setTimeout(() => {
+                            const dialog = ev.currentTarget;
+                            dialog.invalidTitle = true;
+                            dialog.show();
+                        });
                     }
                 }}
             ></pg-vis-data-dialog>
@@ -171,6 +173,9 @@ export class PGPageContentVisData extends PGPageContent<VisData> {
 
             const dialog =
                 this.querySelector<PGVisDataDialog>(`pg-vis-data-dialog`)!;
+
+            dialog.invalidTitle = false;
+            dialog.title = this.data.title;
 
             dialog.show();
         };
