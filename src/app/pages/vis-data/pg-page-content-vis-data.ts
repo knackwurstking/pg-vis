@@ -144,11 +144,18 @@ export class PGPageContentVisData extends PGPageContent<VisData> {
 
                     const oldData = { ...this.data };
                     this.data.title = ev.currentTarget.title;
-                    newListsStore("visData").replaceInStore(
-                        PGApp.queryStore(),
-                        { ...this.data },
-                        oldData,
-                    );
+
+                    try {
+                        newListsStore("visData").replaceInStore(
+                            PGApp.queryStore(),
+                            { ...this.data },
+                            oldData,
+                        );
+                    } catch (err) {
+                        alert(err);
+                        const dialog = ev.currentTarget;
+                        dialog.show();
+                    }
                 }}
             ></pg-vis-data-dialog>
         `;
