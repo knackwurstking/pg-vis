@@ -14,6 +14,9 @@ class PGVisDataDialog extends LitElement {
     @property({ type: String, attribute: "title", reflect: true })
     title: string = "";
 
+    @property({ type: Boolean, attribute: "invalid-title", reflect: true })
+    invalidTitle?: boolean;
+
     protected createRenderRoot(): HTMLElement | DocumentFragment {
         return this;
     }
@@ -30,6 +33,7 @@ class PGVisDataDialog extends LitElement {
                                     title="Name"
                                     type="text"
                                     value="${this.title}"
+                                    ?invalid=${this.invalidTitle}
                                     @change=${(
                                         ev: Event & { currentTarget: UIInput },
                                     ) => {
