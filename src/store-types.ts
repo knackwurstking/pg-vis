@@ -10,7 +10,8 @@ export type PGStackLayoutPage =
     | "product"
     | "visBookmarks"
     | "visData"
-    | "visDataEdit";
+    | "visDataEdit"
+    | "special";
 
 export interface PGStoreEvents {
     theme: {
@@ -46,6 +47,9 @@ export interface PGStoreEvents {
 
     // TODO: Store Keys for "vis-bookmarks"
     visBookmarks: [];
+
+    // TODO: Store Keys for "special" - ex: flakes
+    special: [];
 
     gist: {
         [key: string]: {
