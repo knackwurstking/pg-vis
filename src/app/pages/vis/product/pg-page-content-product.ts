@@ -1,5 +1,7 @@
-import { html, TemplateResult } from "lit";
+import { html } from "lit";
+import { DirectiveResult } from "lit/async-directive.js";
 import { customElement } from "lit/decorators.js";
+import { Keyed, keyed } from "lit/directives/keyed.js";
 import { styles } from "ui";
 import { Product } from "../../../../store-types";
 import PGApp from "../../../pg-app";
@@ -34,9 +36,7 @@ class PGPageContentProduct extends PGPageContent<Product> {
                             : ""}
                     </ui-flex-grid-item>
 
-                    <ui-flex-grid-item>
-                        ${this.renderData()}
-                    </ui-flex-grid-item>
+                    ${this.renderData()}
                 </ui-flex-grid>
             </div>
         `;
@@ -48,16 +48,35 @@ class PGPageContentProduct extends PGPageContent<Product> {
         const visData = PGApp.queryStore().getData("visData");
         if (visData === undefined) return html``;
 
-        const content: TemplateResult<1>[] = [];
+        const content: DirectiveResult<typeof Keyed>[] = [];
         for (const list of visData) {
-            // TODO: Add (`list.title`) title element to content
+            // TODO: Only push this heading if a data entry exists for this product
+            content.push(
+                keyed(
+                    list.title,
+                    html`
+                        <ui-flex-grid-item>
+                            <ui-heading level="4">${list.title}</ui-heading>
+                        </ui-flex-grid-item>
+                    `,
+                ),
+            );
             for (const _entry of list.data) {
                 // TODO: Check filter and create element, add to content
             }
         }
 
-        return html`${content}`;
+        return html`
+            <ui-flex-grid direction="column" align="center" gap="0.25rem">
+                ${content}
+            </ui-flex-grid>
+        `;
     }
+
+    //protected firstUpdated(_changedProperties: PropertyValues): void {
+    //    super.firstUpdated(_changedProperties);
+    //    this.classList.add("is-debug");
+    //}
 }
 
 export default PGPageContentProduct;
