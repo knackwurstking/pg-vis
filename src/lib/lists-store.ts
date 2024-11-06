@@ -48,6 +48,9 @@ export class ListsStore<T extends keyof ListsStoreData> {
         return result;
     }
 
+    /**
+     * @throws exists error
+     */
     replaceInStore(
         store: PGStore,
         newList: ListsStoreData[T],
@@ -79,10 +82,28 @@ export class ListsStore<T extends keyof ListsStoreData> {
         });
     }
 
+    /**
+     * @throws exists error
+     */
     addToStore(store: PGStore, newData: ListsStoreData[T][], sort?: boolean) {
         const storeData = store.getData(this.key() as keyof ListsStoreData);
         if (storeData === undefined) {
             return;
+        }
+
+        for (const newList of newData) {
+            const newListKey = this.listKey(newList as ListsStoreData[T]);
+            const existingData = storeData.find((list) => {
+                if (this.listKey(list as ListsStoreData[T]) === newListKey) {
+                    return true;
+                }
+
+                return false;
+            });
+
+            if (existingData !== undefined) {
+                throw new Error(`Liste "${newListKey}" existiert bereits!"`);
+            }
         }
 
         const filteredData = storeData.filter((storeList) => {
