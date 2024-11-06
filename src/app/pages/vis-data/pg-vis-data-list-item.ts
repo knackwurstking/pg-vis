@@ -42,7 +42,9 @@ class PGVisDataListItem extends LitElement {
                 ${this.renderFilterTags()}
 
                 <ui-flex-grid-item>
-                    <ui-text name="value" mono="1">${this.data.value}</ui-text>
+                    <ui-text name="value" mono="1">
+                        ${this.data.value}
+                    </ui-text>
                 </ui-flex-grid-item>
             </ui-flex-grid>
         `;

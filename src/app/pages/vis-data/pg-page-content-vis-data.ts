@@ -23,97 +23,112 @@ export class PGPageContentVisData extends PGPageContent<VisData> {
                 : "Vis Data";
 
         return html`
-            <ui-flex-grid gap="0.25rem">
-                <ui-flex-grid-row justify="flex-end" gap="0.25rem">
-                    <ui-flex-grid-item flex="0">
-                        <ui-button
-                            name="new-entry"
-                            style="text-wrap: nowrap;"
-                            variant="full"
-                            color="primary"
-                            @click=${() => {
-                                PGApp.queryStackLayout()!.setPage(
-                                    "visDataEdit",
-                                    (page) => {
-                                        const content = page.children[0] as
-                                            | PGPageContentVisDataEdit
-                                            | undefined;
-
-                                        if (content !== undefined) {
-                                            content.data = {
-                                                key: null,
-                                                value: "",
-                                                lotto: null,
-                                                format: null,
-                                                stamp: null,
-                                                thickness: null,
-                                            };
-
-                                            content.listKey = newListsStore(
-                                                "visData",
-                                            ).listKey(this.data!);
-
-                                            content.entryIndex = -1;
-                                        }
-                                    },
-                                    true,
-                                );
-                            }}
-                        >
-                            Neuer Eintrag
-                        </ui-button>
-                    </ui-flex-grid-item>
-                </ui-flex-grid-row>
-
-                <ui-flex-grid-item>
-                    <div
-                        class="list no-scrollbar"
-                        style="${styles({
-                            width: "100%",
-                            height: "100%",
-                            overflow: "auto",
-                        } as CSSStyleDeclaration)}"
-                        @click=${async (ev: Event) => {
-                            if (
-                                !(ev.target instanceof Element) ||
-                                this.data === undefined
-                            )
-                                return;
-
-                            const target =
-                                queryTargetFromElementPath<PGVisDataListItem>(
-                                    ev.target,
-                                    "pg-vis-data-list-item",
-                                );
-                            if (target === null) return;
-
-                            PGApp.queryStackLayout()!.setPage(
-                                "visDataEdit",
-                                (page) => {
-                                    const content = page.children[0] as
-                                        | PGPageContentVisDataEdit
-                                        | undefined;
-
-                                    if (content !== undefined) {
-                                        content.data = target.data;
-
-                                        content.listKey = newListsStore(
-                                            "visData",
-                                        ).listKey(this.data!);
-
-                                        content.entryIndex = target.entryIndex;
-                                    }
-                                },
-                                true,
-                            );
-                        }}
-                    >
-                        ${this.renderData()}
-                    </div>
-                </ui-flex-grid-item>
-            </ui-flex-grid>
+            <div
+                class="container no-scrollbar"
+                style="width: 100%; height: 100%; overflow: auto;"
+            >
+                <ui-flex-grid gap="0.25rem">
+                    ${this.renderActions()} ${this.renderContent()}
+                </ui-flex-grid>
+            </div>
 
             ${this.renderDialog()}
+        `;
+    }
+
+    private renderActions() {
+        const newEntry = async () => {
+            PGApp.queryStackLayout()!.setPage(
+                "visDataEdit",
+                (page) => {
+                    const content = page.children[0] as
+                        | PGPageContentVisDataEdit
+                        | undefined;
+
+                    if (content !== undefined) {
+                        content.data = {
+                            key: null,
+                            value: "",
+                            lotto: null,
+                            format: null,
+                            stamp: null,
+                            thickness: null,
+                        };
+
+                        content.listKey = newListsStore("visData").listKey(
+                            this.data!,
+                        );
+
+                        content.entryIndex = -1;
+                    }
+                },
+                true,
+            );
+        };
+
+        return html`
+            <ui-flex-grid-row justify="flex-end" gap="0.25rem">
+                <ui-flex-grid-item flex="0">
+                    <ui-button
+                        name="new-entry"
+                        style="text-wrap: nowrap;"
+                        variant="full"
+                        color="primary"
+                        @click=${newEntry}
+                    >
+                        Neuer Eintrag
+                    </ui-button>
+                </ui-flex-grid-item>
+            </ui-flex-grid-row>
+        `;
+    }
+
+    private renderContent() {
+        const handleClick = async (ev: Event) => {
+            if (!(ev.target instanceof Element) || this.data === undefined)
+                return;
+
+            const target = queryTargetFromElementPath<PGVisDataListItem>(
+                ev.target,
+                "pg-vis-data-list-item",
+            );
+            if (target === null) return;
+
+            PGApp.queryStackLayout()!.setPage(
+                "visDataEdit",
+                (page) => {
+                    const content = page.children[0] as
+                        | PGPageContentVisDataEdit
+                        | undefined;
+
+                    if (content !== undefined) {
+                        content.data = target.data;
+
+                        content.listKey = newListsStore("visData").listKey(
+                            this.data!,
+                        );
+
+                        content.entryIndex = target.entryIndex;
+                    }
+                },
+                true,
+            );
+        };
+
+        return html`
+            <ui-flex-grid-item>
+                <div
+                    class="list no-scrollbar"
+                    style="${styles({
+                        width: "100%",
+                        height: "100%",
+                        overflow: "auto",
+                    } as CSSStyleDeclaration)}"
+                    @click=${handleClick}
+                >
+                    ${this.renderData()}
+                </div>
+            </ui-flex-grid-item>
         `;
     }
 
@@ -136,30 +151,32 @@ export class PGPageContentVisData extends PGPageContent<VisData> {
     }
 
     private renderDialog() {
+        const submit = async (
+            ev: Event & { currentTarget: PGVisDataDialog },
+        ) => {
+            if (this.data === undefined) return;
+
+            const oldData = { ...this.data };
+            this.data.title = ev.currentTarget.title;
+
+            try {
+                newListsStore("visData").replaceInStore(
+                    PGApp.queryStore(),
+                    { ...this.data },
+                    oldData,
+                );
+            } catch (err) {
+                alert(err);
+                setTimeout(() => {
+                    const dialog = ev.currentTarget;
+                    dialog.invalidTitle = true;
+                    dialog.show();
+                });
+            }
+        };
+
         return html`
-            <pg-vis-data-dialog
-                @submit=${(ev: Event & { currentTarget: PGVisDataDialog }) => {
-                    if (this.data === undefined) return;
-
-                    const oldData = { ...this.data };
-                    this.data.title = ev.currentTarget.title;
-
-                    try {
-                        newListsStore("visData").replaceInStore(
-                            PGApp.queryStore(),
-                            { ...this.data },
-                            oldData,
-                        );
-                    } catch (err) {
-                        alert(err);
-                        setTimeout(() => {
-                            const dialog = ev.currentTarget;
-                            dialog.invalidTitle = true;
-                            dialog.show();
-                        });
-                    }
-                }}
-            ></pg-vis-data-dialog>
+            <pg-vis-data-dialog @submit=${submit}></pg-vis-data-dialog>
         `;
     }
 
