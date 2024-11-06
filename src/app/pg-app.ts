@@ -33,6 +33,7 @@ import {
     PGPageContentVisDataEdit,
 } from "./pages";
 import PGDrawerItem from "./pg-drawer-item";
+import PGVisDataDialog from "./dialogs/pg-vis-data-dialog";
 
 @customElement("pg-app")
 class PGApp extends LitElement {
@@ -60,6 +61,10 @@ class PGApp extends LitElement {
 
     static queryImportDialog(): PGImportDialog | null {
         return document.querySelector<PGImportDialog>(`pg-import-dialog`);
+    }
+
+    static queryVisDataDialog(): PGVisDataDialog | null {
+        return document.querySelector<PGVisDataDialog>(`pg-vis-data-dialog`);
     }
 
     constructor() {
@@ -428,8 +433,19 @@ class PGApp extends LitElement {
                     </ui-drawer-group-item>
 
                     <!-- Fixed Item 3 -->
-                    <!-- TODO: Create new, Continue here... -->
-                    <span class="placeholder"></span>
+                    <ui-drawer-group-item>
+                        <ui-button
+                            variant="full"
+                            color="secondary"
+                            @click=${() => {
+                                const dialog = PGApp.queryVisDataDialog()!;
+                                dialog.title = "";
+                                dialog.show();
+                            }}
+                        >
+                            Neue Liste
+                        </ui-button>
+                    </ui-drawer-group-item>
                 </ui-drawer-group>
 
                 <ui-drawer-group
@@ -522,6 +538,31 @@ class PGApp extends LitElement {
                     listsStore.addToStore(store, [], true);
                 }}
             ></pg-metal-sheet-table-dialog>
+
+            <pg-vis-data-dialog
+                @submit=${(ev: Event & { currentTarget: PGVisDataDialog }) => {
+                    const title = ev.currentTarget.title;
+                    const listsStore = newListsStore("visData");
+
+                    try {
+                        listsStore.addToStore(
+                            PGApp.queryStore(),
+                            [
+                                {
+                                    title: title,
+                                    data: [],
+                                },
+                            ],
+                            true,
+                        );
+                    } catch (err) {
+                        alert(err);
+                        const dialog = PGApp.queryVisDataDialog()!;
+                        dialog.show();
+                    }
+                }}
+            >
+            </pg-vis-data-dialog>
         `;
     }
 
