@@ -635,8 +635,6 @@ class PGApp extends LitElement {
             page.append(new PGPageContentVisDataEdit());
             return page;
         });
-
-        // TODO: Register "vis-data-edit"
     }
 
     private handleStackLayoutChanges() {
