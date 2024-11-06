@@ -750,7 +750,7 @@ class PGApp extends LitElement {
                                     (list.data.press >= 0
                                         ? `[P${list.data.press}] `
                                         : "") + listsStore.listKey(list);
-                                groupItem.secondary = `${(list as MetalSheet).data.table.data.length}`;
+                                groupItem.secondary = `${(list as MetalSheet).data.table.data.length} Einträge`;
                             })(list as MetalSheet);
                             break;
                         default:

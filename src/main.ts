@@ -1,14 +1,5 @@
 import "../node_modules/ui/lib/css/main.css";
-
-import "./app/components/pg-search-bar"; // Register "pg-search-bar"
-import "./app/dialogs/pg-import-dialog"; // Register "pg-import-dialog"
-import "./app/dialogs/pg-metal-sheet-entry-dialog"; // Register component
-import "./app/dialogs/pg-metal-sheet-table-dialog"; // Register component
-import "./app/dialogs/pg-vis-data-dialog"; // Register component
-import "./app/pg-app"; // Register "pg-app"
-import "./app/pg-drawer-item-gist"; // Register "pg-drawer-item-gist"
-import "./app/pg-drawer-item-import"; // Register "pg-drawer-item-import"
-import "./app/pages/vis-data/pg-vis-data-list-item"; // Register component
+import "./app";
 
 import { registerSW } from "virtual:pwa-register";
 import { version } from "./constants";
