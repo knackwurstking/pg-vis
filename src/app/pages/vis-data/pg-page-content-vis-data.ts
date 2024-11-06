@@ -16,7 +16,6 @@ export class PGPageContentVisData extends PGPageContent<VisData> {
     private cleanup = new CleanUp();
 
     protected render() {
-        console.debug("render....");
         PGApp.queryAppBar()!.contentName("title")!.contentAt(0).innerText =
             this.data !== undefined
                 ? newListsStore("visData").listKey(this.data)
