@@ -78,7 +78,7 @@ class PGPageContentProduct extends PGPageContent<Product> {
                             list.title,
                             html`
                                 <ui-flex-grid-item>
-                                    <ui-heading level="4">
+                                    <ui-heading level="3">
                                         ${list.title}
                                     </ui-heading>
                                 </ui-flex-grid-item>
@@ -102,9 +102,8 @@ class PGPageContentProduct extends PGPageContent<Product> {
             hasHeading = false;
         }
 
-        // TODO: This needs some styling
         return html`
-            <ui-flex-grid direction="column" align="center" gap="0.25rem">
+            <ui-flex-grid direction="column" gap="0.25rem">
                 ${content}
             </ui-flex-grid>
         `;
