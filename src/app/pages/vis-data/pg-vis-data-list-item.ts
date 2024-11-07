@@ -7,6 +7,9 @@ class PGVisDataListItem extends LitElement {
     @property({ type: Object, attribute: "data", reflect: true })
     data?: VisDataEntry;
 
+    /**
+     * I need this `entryIndex` to for the "pg-page-content-vis-data"
+     */
     @property({ type: Number, attribute: "entry-index", reflect: true })
     entryIndex?: number;
 
