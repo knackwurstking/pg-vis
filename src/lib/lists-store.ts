@@ -1,39 +1,47 @@
-import { AlertList, MetalSheet, PGStore, Vis, VisData } from "../store-types";
+import {
+    AlertList,
+    Bookmarks,
+    MetalSheet,
+    PGStore,
+    Vis,
+    VisData,
+} from "../store-types";
 
 export interface ListsStoreData {
     alertLists: AlertList;
     metalSheets: MetalSheet;
     vis: Vis;
     visData: VisData;
+    visBookmarks: Bookmarks;
 }
 
 export class ListsStore<T extends keyof ListsStoreData> {
-    key(): keyof ListsStoreData {
+    public key(): keyof ListsStoreData {
         return "" as keyof ListsStoreData;
     }
 
-    listKey(list: ListsStoreData[T]): string {
+    public listKey(list: ListsStoreData[T]): string {
         if ("title" in list) return list.title as string;
         return "unknown";
     }
 
-    title(): string {
+    public title(): string {
         return "";
     }
 
-    fileName(list: ListsStoreData[T]): string {
+    public fileName(list: ListsStoreData[T]): string {
         return `${this.listKey(list)}.json`;
     }
 
-    zipFileName(): string {
+    public zipFileName(): string {
         return `${new Date().getTime()}.zip`;
     }
 
-    validate(list: any): ListsStoreData[T] | null {
+    public validate(list: any): ListsStoreData[T] | null {
         return list;
     }
 
-    sort(data: ListsStoreData[T][]): ListsStoreData[T][] {
+    public sort(data: ListsStoreData[T][]): ListsStoreData[T][] {
         const result: ListsStoreData[T][] = [];
 
         const keys = data.map((list) => `${this.listKey(list)}`).sort();
@@ -51,7 +59,7 @@ export class ListsStore<T extends keyof ListsStoreData> {
     /**
      * @throws exists error
      */
-    replaceInStore(
+    public replaceInStore(
         store: PGStore,
         newList: ListsStoreData[T],
         oldList: ListsStoreData[T],
@@ -85,7 +93,11 @@ export class ListsStore<T extends keyof ListsStoreData> {
     /**
      * @throws exists error
      */
-    addToStore(store: PGStore, newData: ListsStoreData[T][], sort?: boolean) {
+    public addToStore(
+        store: PGStore,
+        newData: ListsStoreData[T][],
+        sort?: boolean,
+    ) {
         const storeData = store.getData(this.key() as keyof ListsStoreData);
         if (storeData === undefined) {
             return;
@@ -128,27 +140,27 @@ export class ListsStore<T extends keyof ListsStoreData> {
 }
 
 export class AlertListsStore extends ListsStore<"alertLists"> {
-    key(): keyof ListsStoreData {
+    public key(): keyof ListsStoreData {
         return "alertLists";
     }
 
-    listKey(list: AlertList): string {
+    public listKey(list: AlertList): string {
         return list.title;
     }
 
-    title(): string {
+    public title(): string {
         return "Alarm Listen";
     }
 
-    fileName(list: AlertList): string {
+    public fileName(list: AlertList): string {
         return `Alarm Liste - ${super.fileName(list)}`;
     }
 
-    zipFileName(): string {
+    public zipFileName(): string {
         return `${this.title()} - ${super.zipFileName()}`;
     }
 
-    validate(list: any): AlertList | null {
+    public validate(list: any): AlertList | null {
         if (typeof list?.title !== "string") return null;
         if (!("data" in list)) return null;
         if (!Array.isArray(list.data)) return null;
@@ -191,27 +203,27 @@ export class AlertListsStore extends ListsStore<"alertLists"> {
 }
 
 export class MetalSheetsStore extends ListsStore<"metalSheets"> {
-    key(): keyof ListsStoreData {
+    public key(): keyof ListsStoreData {
         return "metalSheets";
     }
 
-    listKey(list: MetalSheet): string {
+    public listKey(list: MetalSheet): string {
         return `${list.format} ${list.toolID}`;
     }
 
-    title(): string {
+    public title(): string {
         return "Blech Listen";
     }
 
-    fileName(list: MetalSheet): string {
+    public fileName(list: MetalSheet): string {
         return `Blech Liste - ${super.fileName(list)}`;
     }
 
-    zipFileName(): string {
+    public zipFileName(): string {
         return `${this.title()} - ${super.zipFileName()}`;
     }
 
-    validate(list: any): MetalSheet | null {
+    public validate(list: any): MetalSheet | null {
         if (typeof list.format !== "string") return null;
 
         if (!list.toolID) list.toolID = "";
@@ -253,31 +265,33 @@ export class MetalSheetsStore extends ListsStore<"metalSheets"> {
 }
 
 export class VisStore extends ListsStore<"vis"> {
-    key(): keyof ListsStoreData {
+    public key(): keyof ListsStoreData {
         return "vis";
     }
 
-    listKey(list: Vis): string {
+    public listKey(list: Vis): string {
         return `${list.title}`;
     }
 
-    title(): string {
+    public title(): string {
         return "Vis Listen";
     }
 
-    fileName(list: Vis): string {
+    public fileName(list: Vis): string {
         return `Vis Liste - ${super.fileName(list)}`;
     }
 
-    zipFileName(): string {
+    public zipFileName(): string {
         return `${this.title()} - ${super.zipFileName()}`;
     }
 
-    validate(list: any): Vis | null {
+    // TODO: Check for date, or set one
+    public validate(list: any): Vis | null {
         if (typeof list === "string") {
             try {
                 list = JSON.parse(list);
             } catch (err) {
+                // TODO: Parse text file and create data
                 console.error(err);
                 return null;
             }
@@ -303,28 +317,32 @@ export class VisStore extends ListsStore<"vis"> {
     }
 }
 
+export class VisBookmarksStore extends ListsStore<"visBookmarks"> {
+    // TODO: ...
+}
+
 export class VisDataStore extends ListsStore<"visData"> {
-    key(): keyof ListsStoreData {
+    public key(): keyof ListsStoreData {
         return "visData";
     }
 
-    listKey(list: VisData): string {
+    public listKey(list: VisData): string {
         return `${list.title}`;
     }
 
-    title(): string {
+    public title(): string {
         return "Vis Data";
     }
 
-    fileName(list: VisData): string {
+    public fileName(list: VisData): string {
         return `Vis Data - ${super.fileName(list)}`;
     }
 
-    zipFileName(): string {
+    public zipFileName(): string {
         return `${this.title()} - ${super.zipFileName()}`;
     }
 
-    validate(list: any): VisData | null {
+    public validate(list: any): VisData | null {
         if (typeof list.title !== "string" || !Array.isArray(list.data))
             return null;
 
@@ -356,12 +374,19 @@ export function newListsStore<T extends keyof ListsStoreData>(
     switch (key) {
         case "alertLists":
             return new AlertListsStore() as ListsStore<T>;
+
         case "metalSheets":
             return new MetalSheetsStore() as ListsStore<T>;
+
         case "vis":
             return new VisStore() as ListsStore<T>;
+
+        case "visBookmarks":
+            return new VisBookmarksStore() as ListsStore<T>;
+
         case "visData":
             return new VisDataStore() as ListsStore<T>;
+
         default:
             throw new Error(`unknown "${key}"`);
     }
