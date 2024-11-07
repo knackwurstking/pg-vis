@@ -102,6 +102,7 @@ class PGPageContentProduct extends PGPageContent<Product> {
             hasHeading = false;
         }
 
+        // TODO: This needs some styling
         return html`
             <ui-flex-grid direction="column" align="center" gap="0.25rem">
                 ${content}
