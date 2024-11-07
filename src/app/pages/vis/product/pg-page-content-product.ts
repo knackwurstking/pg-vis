@@ -48,22 +48,58 @@ class PGPageContentProduct extends PGPageContent<Product> {
         const visData = PGApp.queryStore().getData("visData");
         if (visData === undefined) return html``;
 
+        let entryIndex = -1;
         const content: DirectiveResult<typeof Keyed>[] = [];
         for (const list of visData) {
-            // TODO: Only push this heading if a data entry exists for this product
-            content.push(
-                keyed(
-                    list.title,
-                    html`
-                        <ui-flex-grid-item>
-                            <ui-heading level="4">${list.title}</ui-heading>
-                        </ui-flex-grid-item>
-                    `,
-                ),
-            );
-            for (const _entry of list.data) {
-                // TODO: Check filter and create element, add to content
+            entryIndex++;
+
+            let hasHeading = false;
+            for (const entry of list.data) {
+                if (!this.isLotto(entry.lotto, this.data.lotto)) {
+                    continue;
+                }
+
+                if (!this.isFormat(entry.format, this.data.format)) {
+                    continue;
+                }
+
+                if (!this.isStamp(entry.stamp, this.data.stamp)) {
+                    continue;
+                }
+
+                if (!this.isThickness(entry.thickness, this.data.thickness)) {
+                    continue;
+                }
+
+                if (!hasHeading) {
+                    hasHeading = true;
+                    content.push(
+                        keyed(
+                            list.title,
+                            html`
+                                <ui-flex-grid-item>
+                                    <ui-heading level="4">
+                                        ${list.title}
+                                    </ui-heading>
+                                </ui-flex-grid-item>
+                            `,
+                        ),
+                    );
+                }
+
+                content.push(
+                    keyed(
+                        entry,
+                        html`
+                            <pg-vis-data-list-item
+                                data="${JSON.stringify(entry)}"
+                                entry-index=${entryIndex}
+                            ></pg-vis-data-list-item>
+                        `,
+                    ),
+                );
             }
+            hasHeading = false;
         }
 
         return html`
@@ -73,10 +109,29 @@ class PGPageContentProduct extends PGPageContent<Product> {
         `;
     }
 
-    //protected firstUpdated(_changedProperties: PropertyValues): void {
-    //    super.firstUpdated(_changedProperties);
-    //    this.classList.add("is-debug");
-    //}
+    private isLotto(match: string | null, lotto: string): boolean {
+        if (match === null) return true;
+
+        return new RegExp(match, "i").test(lotto);
+    }
+
+    private isFormat(match: string | null, format: string) {
+        if (match === null) return true;
+
+        return new RegExp(match, "i").test(format);
+    }
+
+    private isStamp(match: string | null, stamp: string) {
+        if (match === null) return true;
+
+        return new RegExp(match, "i").test(stamp);
+    }
+
+    private isThickness(match: string | null, thickness: number) {
+        if (match === null) return true;
+
+        return new RegExp(match, "i").test(thickness.toString());
+    }
 }
 
 export default PGPageContentProduct;
