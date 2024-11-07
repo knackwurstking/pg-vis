@@ -62,7 +62,6 @@ class PGImportDialog extends LitElement {
                         if (gistID === "") await this.importFromFile();
                         else await importFromGist(this.storeKey, gistID);
 
-                        // NOTE: Pages would not update if data changes here
                         const stack = PGApp.queryStackLayout()!;
                         stack.clearStack();
 
