@@ -44,9 +44,7 @@ export interface PGStoreEvents {
     metalSheets: MetalSheet[];
     vis: Vis[];
     visData: VisData[];
-
-    // TODO: Store Keys for "vis-bookmarks"
-    visBookmarks: [];
+    visBookmarks: Bookmarks[];
 
     // TODO: Store Keys for "special" - ex: flakes
     special: [];
@@ -57,19 +55,6 @@ export interface PGStoreEvents {
             revision: number;
         };
     };
-
-    // NOTE: This was the old store
-    //alertLists: PGStore_AlertList[];
-    //metalSheetLists: PGStore_MetalSheetList[];
-    //vis: PGStore_Vis[];
-    //visLists: PGStore_VisList[];
-    //visData: PGStore_VisData[];
-    //gist: PGStore_Gist;
-    //appBarTitle: string;
-    //edit: PGStore_Edit | null;
-    //share: (() => ShareData) | null;
-    //search: PGStore_Search;
-    //bookmark: PGStore_Bookmark;
 }
 
 export interface AlertList {
@@ -100,6 +85,10 @@ export interface MetalSheet {
 }
 
 export interface Vis {
+    /**
+     * Needed for vis bookmarks
+     */
+    date: number;
     title: string;
     data: Product[];
 }
@@ -124,4 +113,10 @@ export interface VisDataEntry {
     format: string | null;
     thickness: string | null;
     stamp: string | null;
+}
+
+export interface Bookmarks {
+    title: string;
+    allowDeletion: boolean;
+    data: Product[];
 }
