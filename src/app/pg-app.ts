@@ -69,7 +69,7 @@ class PGApp extends LitElement {
 
     static queryVisBookmarksDialog(): PGVisBookmarksDialog | null {
         return document.querySelector<PGVisBookmarksDialog>(
-            `pg-vis-data-dialog`,
+            `pg-vis-bookmarks-dialog`,
         );
     }
 
