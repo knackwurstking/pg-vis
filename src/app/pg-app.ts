@@ -21,9 +21,11 @@ import {
     Vis,
     VisData,
 } from "../store-types";
-import PGImportDialog from "./dialogs/pg-import-dialog";
-import PGMetalSheetTableDialog from "./dialogs/pg-metal-sheet-table-dialog";
-import PGVisDataDialog from "./dialogs/pg-vis-data-dialog";
+import {
+    PGImportDialog,
+    PGMetalSheetTableDialog,
+    PGVisDataDialog,
+} from "./dialogs";
 import {
     PGPageContentAlert,
     PGPageContentAlertLists,
@@ -85,6 +87,7 @@ class PGApp extends LitElement {
         store.setData("alertLists", [], true);
         store.setData("metalSheets", [], true);
         store.setData("vis", [], true);
+        store.setData("visBookmarks", [], true);
         store.setData("visData", [], true);
 
         store.setData("gist", {}, true);
@@ -391,8 +394,17 @@ class PGApp extends LitElement {
                     }}
                 >
                     <!-- Fixed Item 1 -->
-                    <!-- TODO: "Neue Liste" -->
-                    <span class="placeholder"></span>
+                    <ui-drawer-group-item>
+                        <ui-button
+                            variant="full"
+                            color="secondary"
+                            @click=${() => {
+                                // TODO: Open dialog for new list creation
+                            }}
+                        >
+                            Neue Liste
+                        </ui-button>
+                    </ui-drawer-group-item>
                 </ui-drawer-group>
 
                 <ui-drawer-group
@@ -563,6 +575,8 @@ class PGApp extends LitElement {
                 }}
             >
             </pg-vis-data-dialog>
+
+            <!-- TODO: Create vis bookmarks dialog -->
         `;
     }
 
