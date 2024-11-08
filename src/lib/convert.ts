@@ -1,5 +1,23 @@
 import { Product, Vis } from "../store-types";
 
+export function fixFormatString(format: string): string {
+    try {
+        const formatSplit = format.split(/[xX]/i);
+        if (formatSplit.length > 2) return format;
+
+        const wSuffix = formatSplit[0].match(/[0-9]+(.*)/i)?.[1] || "";
+        const hSuffix = formatSplit[1].match(/[0-9]+(.*)/i)?.[1] || "";
+
+        const w = parseInt(formatSplit[0], 10);
+        const h = parseInt(formatSplit[1], 10);
+        format = w > h ? `${w}${wSuffix}X${h}${hSuffix}` : `${h}${wSuffix}X${w}${hSuffix}`;
+    } catch (err) {
+        console.warn(`Fix product format "${format}": ${err}`);
+    }
+
+    return format;
+}
+
 export function toVis(dataString: string): Vis | null {
     /** @type {PGStore_Vis} */
     const vis: Vis = (() => {
@@ -38,11 +56,11 @@ export function toVis(dataString: string): Vis | null {
             throw new Error(`product name not found in "${line}"`);
         }
 
-        // TODO: Fix formats like: 120x60 & 60x120
         product.format = lineTabSplit[2] || "";
         if (product.format === "") {
             throw new Error(`product format not found in "${line}"`);
         }
+        product.format = fixFormatString(product.format);
 
         product.thickness = parseInt(lineTabSplit[3] || "-1", 10);
         if (product.thickness === -1) {
