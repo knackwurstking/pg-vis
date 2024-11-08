@@ -6,6 +6,7 @@ import {
     Vis,
     VisData,
 } from "../store-types";
+import * as convert from "./convert";
 
 export interface ListsStoreData {
     alertLists: AlertList;
@@ -34,7 +35,7 @@ export class ListsStore<T extends keyof ListsStoreData> {
     }
 
     public zipFileName(): string {
-        return `${new Date().getTime()}.zip`;
+        return `${this.title()} - ${new Date().getTime()}.zip`;
     }
 
     public validate(list: any): ListsStoreData[T] | null {
@@ -156,10 +157,6 @@ export class AlertListsStore extends ListsStore<"alertLists"> {
         return `Alarm Liste - ${super.fileName(list)}`;
     }
 
-    public zipFileName(): string {
-        return `${this.title()} - ${super.zipFileName()}`;
-    }
-
     public validate(list: any): AlertList | null {
         if (typeof list?.title !== "string") return null;
         if (!("data" in list)) return null;
@@ -217,10 +214,6 @@ export class MetalSheetsStore extends ListsStore<"metalSheets"> {
 
     public fileName(list: MetalSheet): string {
         return `Blech Liste - ${super.fileName(list)}`;
-    }
-
-    public zipFileName(): string {
-        return `${this.title()} - ${super.zipFileName()}`;
     }
 
     public validate(list: any): MetalSheet | null {
@@ -281,20 +274,17 @@ export class VisStore extends ListsStore<"vis"> {
         return `Vis Liste - ${super.fileName(list)}`;
     }
 
-    public zipFileName(): string {
-        return `${this.title()} - ${super.zipFileName()}`;
-    }
-
-    // TODO: Check for date, or set one
     public validate(list: any): Vis | null {
         if (typeof list === "string") {
             try {
                 list = JSON.parse(list);
             } catch (err) {
-                // TODO: Parse text file and create data
-                console.error(err);
-                return null;
+                return convert.toVis(list);
             }
+        }
+
+        if (typeof list.date !== "number" || list.date <= 0) {
+            list.date = new Date().getTime();
         }
 
         if (typeof list.title !== "string" || !Array.isArray(list.data))
@@ -318,7 +308,21 @@ export class VisStore extends ListsStore<"vis"> {
 }
 
 export class VisBookmarksStore extends ListsStore<"visBookmarks"> {
-    // TODO: ...
+    public key(): keyof ListsStoreData {
+        return "visBookmarks";
+    }
+
+    public listKey(list: Bookmarks): string {
+        return `${list.title}`;
+    }
+
+    public title(): string {
+        return "Vis Bookmarks";
+    }
+
+    public fileName(list: Bookmarks): string {
+        return `Vis Bookmarks - ${super.fileName(list)}`;
+    }
 }
 
 export class VisDataStore extends ListsStore<"visData"> {
@@ -336,10 +340,6 @@ export class VisDataStore extends ListsStore<"visData"> {
 
     public fileName(list: VisData): string {
         return `Vis Data - ${super.fileName(list)}`;
-    }
-
-    public zipFileName(): string {
-        return `${this.title()} - ${super.zipFileName()}`;
     }
 
     public validate(list: any): VisData | null {
