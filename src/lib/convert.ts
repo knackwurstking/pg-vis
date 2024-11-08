@@ -38,6 +38,7 @@ export function toVis(dataString: string): Vis | null {
             throw new Error(`product name not found in "${line}"`);
         }
 
+        // TODO: Fix formats like: 120x60 & 60x120
         product.format = lineTabSplit[2] || "";
         if (product.format === "") {
             throw new Error(`product format not found in "${line}"`);
