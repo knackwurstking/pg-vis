@@ -271,7 +271,7 @@ export class VisStore extends ListsStore<"vis"> {
     }
 
     public title(): string {
-        return "Vis Listen";
+        return "Vis";
     }
 
     public fileName(list: Vis): string {
@@ -283,12 +283,7 @@ export class VisStore extends ListsStore<"vis"> {
         try {
             list = super.validate(dataString);
         } catch {
-            try {
-                return convert.toVis(list);
-            } catch (err) {
-                alert(`Parsing failed: ${err}`);
-                return null;
-            }
+            return convert.toVis(dataString);
         }
 
         if (typeof list.date !== "number" || list.date <= 0) {

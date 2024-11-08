@@ -90,7 +90,15 @@ class PGImportDialog extends LitElement {
                     if (this.storeKey === undefined) return;
 
                     const listsStore = newListsStore(this.storeKey);
-                    const data = listsStore.validate(reader.result);
+
+                    let data: any;
+                    try {
+                        data = listsStore.validate(reader.result);
+                    } catch (err) {
+                        alert(err);
+                        return;
+                    }
+
                     if (data === null) {
                         alert(`Ungültige Daten für "${listsStore.title()}"!`);
                         return;
