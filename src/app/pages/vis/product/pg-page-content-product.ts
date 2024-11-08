@@ -2,9 +2,10 @@ import { html } from "lit";
 import { DirectiveResult } from "lit/async-directive.js";
 import { customElement } from "lit/decorators.js";
 import { Keyed, keyed } from "lit/directives/keyed.js";
-import { styles } from "ui";
+
 import { PGPageContent } from "../..";
 import { PGApp } from "../../..";
+
 import { Product } from "../../../../store-types";
 
 @customElement("pg-page-contents-product")
@@ -19,14 +20,7 @@ class PGPageContentProduct extends PGPageContent<Product> {
 
     protected render() {
         return html`
-            <div
-                class="container no-scrollbar"
-                style="${styles({
-                    width: "100%",
-                    height: "100%",
-                    overflow: "auto",
-                } as CSSStyleDeclaration)}"
-            >
+            <div class="container no-scrollbar" style="width: 100%; height: 100%; overflow: auto;">
                 <ui-flex-grid gap="0.25rem">
                     <ui-flex-grid-item>
                         ${this.data !== undefined
@@ -78,9 +72,7 @@ class PGPageContentProduct extends PGPageContent<Product> {
                             list.title,
                             html`
                                 <ui-flex-grid-item>
-                                    <ui-heading level="3">
-                                        ${list.title}
-                                    </ui-heading>
+                                    <ui-heading level="3"> ${list.title} </ui-heading>
                                 </ui-flex-grid-item>
                             `,
                         ),
@@ -102,11 +94,7 @@ class PGPageContentProduct extends PGPageContent<Product> {
             hasHeading = false;
         }
 
-        return html`
-            <ui-flex-grid direction="column" gap="0.25rem">
-                ${content}
-            </ui-flex-grid>
-        `;
+        return html` <ui-flex-grid direction="column" gap="0.25rem"> ${content} </ui-flex-grid> `;
     }
 
     private isLotto(match: string | null, lotto: string): boolean {
