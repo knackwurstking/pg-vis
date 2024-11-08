@@ -33,6 +33,7 @@ import {
     PGPageContentMetalSheets,
     PGPageContentProduct,
     PGPageContentVis,
+    PGPageContentVisBookmarks,
     PGPageContentVisData,
     PGPageContentVisDataEdit,
 } from "./pages";
@@ -653,14 +654,19 @@ class PGApp extends LitElement {
             return page;
         });
 
+        stack.registerPage("visBookmarks", () => {
+            const page = new UIStackLayoutPage();
+            page.name = "visBookmarks";
+            page.appendChild(new PGPageContentVisBookmarks());
+            return page;
+        });
+
         stack.registerPage("visData", () => {
             const page = new UIStackLayoutPage();
             page.name = "visData";
             page.appendChild(new PGPageContentVisData());
             return page;
         });
-
-        // TODO: Register "vis-bookmarks"
 
         // Sub pages
 
