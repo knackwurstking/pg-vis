@@ -28,13 +28,7 @@ class PGImportDialog extends LitElement {
                     <ui-flex-grid-item>
                         ${keyed(
                             this.storeKey,
-                            html`
-                                <ui-input
-                                    name="gistID"
-                                    type="text"
-                                    title="Gist ID"
-                                ></ui-input>
-                            `,
+                            html` <ui-input name="gistID" type="text" title="Gist ID"></ui-input> `,
                         )}
                     </ui-flex-grid-item>
                 </ui-flex-grid>
@@ -104,7 +98,12 @@ class PGImportDialog extends LitElement {
                         return;
                     }
 
-                    listsStore.addToStore(PGApp.queryStore(), [data], true);
+                    try {
+                        listsStore.addToStore(PGApp.queryStore(), [data], true);
+                    } catch (err) {
+                        alert(err);
+                        return;
+                    }
                 };
 
                 reader.onerror = () => {
