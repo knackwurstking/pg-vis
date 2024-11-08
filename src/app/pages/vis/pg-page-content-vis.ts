@@ -20,7 +20,7 @@ class PGPageContentVis extends PGPageContent<Vis> {
         PGApp.queryAppBar()!.contentName("title")!.contentAt(0).innerText =
             this.data !== undefined
                 ? newListsStore("vis").listKey(this.data)
-                : "Vis";
+                : newListsStore("vis").title();
 
         /* TODO:
          *  - Add some special flakes marker

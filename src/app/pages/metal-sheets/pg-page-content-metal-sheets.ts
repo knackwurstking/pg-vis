@@ -20,7 +20,7 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
         PGApp.queryAppBar()!.contentName("title")!.contentAt(0).innerText =
             this.data !== undefined
                 ? newListsStore("metalSheets").listKey(this.data)
-                : "Bleck Liste";
+                : newListsStore("metalSheets").title();
 
         return html`
             <div
