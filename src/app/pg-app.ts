@@ -406,7 +406,10 @@ class PGApp extends LitElement {
                             variant="full"
                             color="secondary"
                             @click=${() => {
-                                // TODO: Open dialog for new list creation
+                                const dialog = PGApp.queryVisBookmarksDialog()!;
+                                dialog.title = "";
+                                dialog.invalidTitle = false;
+                                dialog.show();
                             }}
                         >
                             Neue Liste
