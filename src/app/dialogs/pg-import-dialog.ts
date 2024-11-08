@@ -1,10 +1,10 @@
 import { html, LitElement, TemplateResult } from "lit";
 import { customElement, property } from "lit/decorators.js";
+import { keyed } from "lit/directives/keyed.js";
 import { UIDialog, UIInput } from "ui";
+import { PGApp } from "..";
 import { importFromGist } from "../../lib/gist";
 import { ListsStoreData, newListsStore } from "../../lib/lists-store";
-import PGApp from "../pg-app";
-import { keyed } from "lit/directives/keyed.js";
 
 @customElement("pg-import-dialog")
 class PGImportDialog extends LitElement {

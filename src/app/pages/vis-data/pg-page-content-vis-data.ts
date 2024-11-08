@@ -2,14 +2,13 @@ import { html } from "lit";
 import { customElement } from "lit/decorators.js";
 import { keyed } from "lit/directives/keyed.js";
 import { CleanUp, styles, UIIconButton } from "ui";
+import { PGPageContentVisDataEdit, PGVisDataListItem } from ".";
+import { PGPageContent } from "..";
+import { PGApp } from "../..";
 import { newListsStore } from "../../../lib/lists-store";
 import { queryTargetFromElementPath } from "../../../lib/query-utils";
 import { VisData } from "../../../store-types";
-import PGVisDataDialog from "../../dialogs/pg-vis-data-dialog";
-import PGApp from "../../pg-app";
-import PGPageContent from "../pg-page-content";
-import PGVisDataListItem from "./pg-vis-data-list-item";
-import PGPageContentVisDataEdit from "./vis-data-edit/pg-page-content-vis-data-edit";
+import { PGVisDataDialog } from "../../dialogs";
 
 @customElement("pg-page-content-vis-data")
 export class PGPageContentVisData extends PGPageContent<VisData> {

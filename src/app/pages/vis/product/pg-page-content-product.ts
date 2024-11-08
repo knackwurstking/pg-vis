@@ -3,9 +3,9 @@ import { DirectiveResult } from "lit/async-directive.js";
 import { customElement } from "lit/decorators.js";
 import { Keyed, keyed } from "lit/directives/keyed.js";
 import { styles } from "ui";
+import { PGPageContent } from "../..";
+import { PGApp } from "../../..";
 import { Product } from "../../../../store-types";
-import PGApp from "../../../pg-app";
-import PGPageContent from "../../pg-page-content";
 
 @customElement("pg-page-contents-product")
 class PGPageContentProduct extends PGPageContent<Product> {

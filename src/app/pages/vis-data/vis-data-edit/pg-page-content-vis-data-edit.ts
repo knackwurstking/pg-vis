@@ -1,10 +1,10 @@
 import { html, PropertyValues } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { CleanUp, UIIconButton, UIInput } from "ui";
+import { PGPageContent } from "../..";
+import { PGApp } from "../../..";
 import { newListsStore } from "../../../../lib/lists-store";
 import { VisDataEntry } from "../../../../store-types";
-import PGApp from "../../../pg-app";
-import PGPageContent from "../../pg-page-content";
 
 @customElement("pg-page-content-vis-data-edit")
 export class PGPageContentVisDataEdit extends PGPageContent<VisDataEntry> {

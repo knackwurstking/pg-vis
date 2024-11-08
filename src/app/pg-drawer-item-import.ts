@@ -3,8 +3,8 @@ import JSZip from "jszip";
 import { html, LitElement } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { svg } from "ui";
+import { PGApp } from ".";
 import { ListsStoreData, newListsStore } from "../lib/lists-store";
-import PGApp from "./pg-app";
 
 @customElement("pg-drawer-item-import")
 class PGDrawerItemImport extends LitElement {
