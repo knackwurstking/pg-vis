@@ -3,10 +3,7 @@ import PGApp from "../app/pg-app";
 import { AlertList, MetalSheet, Vis } from "../store-types";
 import { ListsStoreData, newListsStore } from "./lists-store";
 
-export async function importFromGist(
-    storeKey: keyof ListsStoreData,
-    gistID: string,
-) {
+export async function importFromGist(storeKey: keyof ListsStoreData, gistID: string) {
     try {
         const resp = await gist(gistID);
         const listsStore = newListsStore(storeKey);
@@ -15,13 +12,9 @@ export async function importFromGist(
         for (const file of Object.values(resp.data.files || {})) {
             if (!file?.content) continue;
 
-            const content = JSON.parse(file.content);
-            const data = listsStore.validate(content);
+            const data = listsStore.validate(file.content);
             if (data === null) {
-                console.error(
-                    `Invalid data for "${listsStore.title()}":`,
-                    content,
-                );
+                console.error(`Invalid data for "${listsStore.title()}":`, file.content);
                 throw new Error(`ungültige Daten für "${listsStore.title()}"!`);
             }
 
