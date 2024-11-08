@@ -10,7 +10,7 @@ import { Product } from "../../../../store-types";
 
 @customElement("pg-page-contents-product")
 class PGPageContentProduct extends PGPageContent<Product> {
-    /* TODO:
+    /* TODO: ...
      *  Bookmarks:
      *      - Add this product to a bookmarks list (per dialog or html select)
      *  Edit Mode:

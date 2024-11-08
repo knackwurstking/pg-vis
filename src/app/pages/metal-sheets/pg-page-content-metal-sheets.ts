@@ -7,10 +7,7 @@ import { PGPageContent } from "..";
 import { PGApp } from "../..";
 import { newListsStore } from "../../../lib/lists-store";
 import { MetalSheet } from "../../../store-types";
-import {
-    PGMetalSheetEntryDialog,
-    PGMetalSheetTableDialog,
-} from "../../dialogs";
+import { PGMetalSheetEntryDialog, PGMetalSheetTableDialog } from "../../dialogs";
 
 @customElement("pg-page-content-metal-sheets")
 class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
@@ -50,12 +47,11 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
                     color="primary"
                     ripple
                     @click=${() => {
-                        const dialog =
-                            this.querySelector<PGMetalSheetEntryDialog>(
-                                `pg-metal-sheet-entry-dialog`,
-                            )!;
+                        const dialog = this.querySelector<PGMetalSheetEntryDialog>(
+                            `pg-metal-sheet-entry-dialog`,
+                        )!;
                         dialog.header = this.data?.data.table.header || [];
-                        dialog.tableIndex = -1; // NOTE: -1 will create a new entry
+                        dialog.tableIndex = -1; // -1 will create a new entry
                         dialog.entryData = [];
                         dialog.show();
                     }}
@@ -65,15 +61,11 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
             </ui-flex-grid-row>
 
             <pg-metal-sheet-entry-dialog
-                @submit=${async (
-                    ev: Event & { currentTarget: PGMetalSheetEntryDialog },
-                ) => {
+                @submit=${async (ev: Event & { currentTarget: PGMetalSheetEntryDialog }) => {
                     if (!this.data) return;
 
                     if (ev.currentTarget.tableIndex < 0) {
-                        this.data.data.table.data.push(
-                            ev.currentTarget.entryData,
-                        );
+                        this.data.data.table.data.push(ev.currentTarget.entryData);
                     } else {
                         this.data.data.table.data[ev.currentTarget.tableIndex] =
                             ev.currentTarget.entryData;
@@ -82,15 +74,10 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
                     this.requestUpdate();
                     this.replaceInStore(this.data);
                 }}
-                @delete=${async (
-                    ev: Event & { currentTarget: PGMetalSheetEntryDialog },
-                ) => {
+                @delete=${async (ev: Event & { currentTarget: PGMetalSheetEntryDialog }) => {
                     if (!this.data) return;
 
-                    this.data.data.table.data.splice(
-                        ev.currentTarget.tableIndex,
-                        1,
-                    );
+                    this.data.data.table.data.splice(ev.currentTarget.tableIndex, 1);
 
                     this.requestUpdate();
                     this.replaceInStore(this.data);
@@ -99,9 +86,7 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
 
             <pg-metal-sheet-table-dialog
                 title="Bearbeiten"
-                @submit=${(
-                    ev: Event & { currentTarget: PGMetalSheetTableDialog },
-                ) => {
+                @submit=${(ev: Event & { currentTarget: PGMetalSheetTableDialog }) => {
                     if (!this.data) return;
 
                     const format = ev.currentTarget.format;
@@ -109,9 +94,7 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
                     const press = ev.currentTarget.press;
 
                     if (!format || !toolID) {
-                        setTimeout(() =>
-                            this.openTableDialog({ format, toolID, press }),
-                        );
+                        setTimeout(() => this.openTableDialog({ format, toolID, press }));
                         return;
                     }
 
@@ -129,9 +112,7 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
                         listsStore.replaceInStore(store, newData, this.data);
                         this.data = newData;
                     } catch (err) {
-                        setTimeout(() =>
-                            this.openTableDialog({ format, toolID, press }),
-                        );
+                        setTimeout(() => this.openTableDialog({ format, toolID, press }));
 
                         alert(err);
                         return;
@@ -146,9 +127,7 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
 
         const content: TemplateResult<1>[] = [];
         for (const title of this.data.data.table.header) {
-            content.push(html`
-                <th style="text-align: center; text-wrap: pretty;">${title}</th>
-            `);
+            content.push(html` <th style="text-align: center; text-wrap: pretty;">${title}</th> `);
         }
 
         return html`${[...content]}`;
@@ -170,12 +149,10 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
                             role="button"
                             data-json="${JSON.stringify(data)}"
                             @click=${() => {
-                                const dialog =
-                                    this.querySelector<PGMetalSheetEntryDialog>(
-                                        `pg-metal-sheet-entry-dialog`,
-                                    )!;
-                                dialog.header =
-                                    this.data?.data.table.header || [];
+                                const dialog = this.querySelector<PGMetalSheetEntryDialog>(
+                                    `pg-metal-sheet-entry-dialog`,
+                                )!;
+                                dialog.header = this.data?.data.table.header || [];
                                 dialog.entryData = data;
                                 dialog.tableIndex = i;
                                 dialog.show();
@@ -183,11 +160,7 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
                         >
                             ${[
                                 ...data.map(
-                                    (part) => html`
-                                        <td style="text-align: center;">
-                                            ${part}
-                                        </td>
-                                    `,
+                                    (part) => html` <td style="text-align: center;">${part}</td> `,
                                 ),
                             ]}
                         </tr>
@@ -204,15 +177,12 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
         draggable.createMobile(body, {
             onDragEnd: () => {
                 if (!this.data) return;
-                this.data.data.table.data = Array.from(body.children).map(
-                    (child) => {
-                        const data = child.getAttribute("data-json");
-                        if (!data)
-                            throw new Error(`missing attribute "data-json"`);
+                this.data.data.table.data = Array.from(body.children).map((child) => {
+                    const data = child.getAttribute("data-json");
+                    if (!data) throw new Error(`missing attribute "data-json"`);
 
-                        return JSON.parse(data);
-                    },
-                );
+                    return JSON.parse(data);
+                });
 
                 this.requestUpdate();
                 this.replaceInStore(this.data);
@@ -241,9 +211,7 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
             });
         };
 
-        const editButton = PGApp.queryAppBar()!
-            .contentName("edit")!
-            .contentAt<UIIconButton>(0);
+        const editButton = PGApp.queryAppBar()!.contentName("edit")!.contentAt<UIIconButton>(0);
 
         editButton.addEventListener("click", onClick);
 
@@ -257,14 +225,8 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
         this.cleanup.run();
     }
 
-    private openTableDialog(data: {
-        format: string;
-        toolID: string;
-        press: number;
-    }) {
-        const dialog = this.querySelector<PGMetalSheetTableDialog>(
-            `pg-metal-sheet-table-dialog`,
-        )!;
+    private openTableDialog(data: { format: string; toolID: string; press: number }) {
+        const dialog = this.querySelector<PGMetalSheetTableDialog>(`pg-metal-sheet-table-dialog`)!;
 
         dialog.format = data.format;
         dialog.toolID = data.toolID;

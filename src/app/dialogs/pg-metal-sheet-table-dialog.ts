@@ -9,7 +9,7 @@ import { UIDialog, UIInput, UISelect } from "ui";
 @customElement("pg-metal-sheet-table-dialog")
 class PGMetalSheetTableDialog extends LitElement {
     /**
-     * NOTE: This is for the dialog title
+     * This is for the dialog title
      */
     @property({ type: String, attribute: "title", reflect: true })
     title: string = "";
@@ -39,9 +39,7 @@ class PGMetalSheetTableDialog extends LitElement {
                                     type="text"
                                     title="Format"
                                     value=${this.format}
-                                    @change=${(
-                                        ev: Event & { currentTarget: UIInput },
-                                    ) => {
+                                    @change=${(ev: Event & { currentTarget: UIInput }) => {
                                         this.format = ev.currentTarget.value;
                                     }}
                                 ></ui-input>
@@ -57,9 +55,7 @@ class PGMetalSheetTableDialog extends LitElement {
                                     type="text"
                                     title="Unterteil ID"
                                     value=${this.toolID}
-                                    @change=${(
-                                        ev: Event & { currentTarget: UIInput },
-                                    ) => {
+                                    @change=${(ev: Event & { currentTarget: UIInput }) => {
                                         this.toolID = ev.currentTarget.value;
                                     }}
                                 ></ui-input>
@@ -67,9 +63,7 @@ class PGMetalSheetTableDialog extends LitElement {
                         )}
                     </ui-flex-grid-item>
 
-                    <ui-flex-grid-item>
-                        ${this.renderPressSelect()}
-                    </ui-flex-grid-item>
+                    <ui-flex-grid-item> ${this.renderPressSelect()} </ui-flex-grid-item>
                 </ui-flex-grid>
 
                 <ui-button
@@ -115,45 +109,27 @@ class PGMetalSheetTableDialog extends LitElement {
                             this.press = parseInt(selected.value, 10);
                         }}
                     >
-                        <ui-select-option
-                            value="-1"
-                            ?selected=${this.press === -1}
-                        >
+                        <ui-select-option value="-1" ?selected=${this.press === -1}>
                             -
                         </ui-select-option>
 
-                        <ui-select-option
-                            value="0"
-                            ?selected=${this.press === 0}
-                        >
+                        <ui-select-option value="0" ?selected=${this.press === 0}>
                             0
                         </ui-select-option>
 
-                        <ui-select-option
-                            value="2"
-                            ?selected=${this.press === 2}
-                        >
+                        <ui-select-option value="2" ?selected=${this.press === 2}>
                             2
                         </ui-select-option>
 
-                        <ui-select-option
-                            value="3"
-                            ?selected=${this.press === 3}
-                        >
+                        <ui-select-option value="3" ?selected=${this.press === 3}>
                             3
                         </ui-select-option>
 
-                        <ui-select-option
-                            value="4"
-                            ?selected=${this.press === 4}
-                        >
+                        <ui-select-option value="4" ?selected=${this.press === 4}>
                             4
                         </ui-select-option>
 
-                        <ui-select-option
-                            value="5"
-                            ?selected=${this.press === 5}
-                        >
+                        <ui-select-option value="5" ?selected=${this.press === 5}>
                             5
                         </ui-select-option>
                     </ui-select>

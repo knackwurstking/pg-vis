@@ -26,9 +26,7 @@ class PGDrawerItemGist extends LitElement {
         return html`
             <ui-flex-grid>
                 <ui-flex-grid-item direction="column" align="flex-start">
-                    <ui-text mono="1" size="0.85rem"
-                        >${this.gistID || html`???`}</ui-text
-                    >
+                    <ui-text mono="1" size="0.85rem">${this.gistID || html`???`}</ui-text>
                     <ui-text mono="1" size="0.95rem">
                         <ui-text mono="0" size="0.75rem">REVISION:</ui-text>
                         ${this.revision}
@@ -47,17 +45,9 @@ class PGDrawerItemGist extends LitElement {
                             try {
                                 this.startSpinner();
 
-                                if (
-                                    confirm(
-                                        `Alle Ihre Änderungen gehen verloren!`,
-                                    )
-                                ) {
-                                    await importFromGist(
-                                        this.storeKey,
-                                        this.gistID,
-                                    );
+                                if (confirm(`Alle Ihre Änderungen gehen verloren!`)) {
+                                    await importFromGist(this.storeKey, this.gistID);
 
-                                    // NOTE: Pages would not update if data changes here
                                     const stack = PGApp.queryStackLayout()!;
                                     stack.clearStack();
                                 }
@@ -112,13 +102,11 @@ class PGDrawerItemGist extends LitElement {
     }
 
     public startSpinner() {
-        this.shadowRoot!.querySelector<UISpinner>("ui-spinner")!.style.display =
-            "block";
+        this.shadowRoot!.querySelector<UISpinner>("ui-spinner")!.style.display = "block";
     }
 
     public stopSpinner() {
-        this.shadowRoot!.querySelector<UISpinner>("ui-spinner")!.style.display =
-            "none";
+        this.shadowRoot!.querySelector<UISpinner>("ui-spinner")!.style.display = "none";
     }
 }
 

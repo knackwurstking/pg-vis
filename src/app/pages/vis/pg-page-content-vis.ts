@@ -22,18 +22,14 @@ class PGPageContentVis extends PGPageContent<Vis> {
                 ? newListsStore("vis").listKey(this.data)
                 : newListsStore("vis").title();
 
-        /* TODO:
-         *  - Add some special flakes marker
-         */
+        // TODO: - Add some special flakes marker
 
         return html`
             <pg-search-bar
                 title="Productsuche (RegEx Mode)"
                 storage-key="${this.data?.title}"
                 ?active=${!!this.searchBar}
-                @change=${async (
-                    ev: Event & { currentTarget: PGSearchBar },
-                ) => {
+                @change=${async (ev: Event & { currentTarget: PGSearchBar }) => {
                     await this.filter(ev.currentTarget.value());
                 }}
             ></pg-search-bar>
@@ -51,11 +47,10 @@ class PGPageContentVis extends PGPageContent<Vis> {
                     @click=${async (ev: Event) => {
                         if (!(ev.target instanceof Element)) return;
 
-                        const target =
-                            queryTargetFromElementPath<PGVisListItem>(
-                                ev.target,
-                                "pg-vis-list-item",
-                            );
+                        const target = queryTargetFromElementPath<PGVisListItem>(
+                            ev.target,
+                            "pg-vis-list-item",
+                        );
                         if (target === null) return;
 
                         PGApp.queryStackLayout()!.setPage(
@@ -116,15 +111,11 @@ class PGPageContentVis extends PGPageContent<Vis> {
 
         const onClick = async () => (this.searchBar = !this.searchBar);
 
-        const appBarSearchButton = appBar
-            .contentName("search")!
-            .contentAt<UIIconButton>(0);
+        const appBarSearchButton = appBar.contentName("search")!.contentAt<UIIconButton>(0);
 
         appBarSearchButton.addEventListener("click", onClick);
 
-        this.cleanup.add(() =>
-            appBarSearchButton.removeEventListener("click", onClick),
-        );
+        this.cleanup.add(() => appBarSearchButton.removeEventListener("click", onClick));
     }
 
     disconnectedCallback(): void {
