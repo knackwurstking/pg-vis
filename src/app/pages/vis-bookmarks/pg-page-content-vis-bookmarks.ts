@@ -67,8 +67,10 @@ class PGPageContentVisBookmarks extends PGPageContent<Bookmarks> {
 
     private productFromStore(store: PGStore, product: Product): Product {
         const productKey = `${product.lotto} ${product.name}`
+
         for (const list of this.sortVisLists(store.getData("vis") || [])) {
             console.debug(`Search list "${list.title}" for the product key "${productKey}"`)
+
             for (const listProduct of list.data) {
                 if (`${listProduct.lotto} ${listProduct.name}` === productKey) {
                     console.debug(`Found "${productKey}" in "${list.title}"`)
