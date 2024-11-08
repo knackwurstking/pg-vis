@@ -373,7 +373,7 @@ class PGApp extends LitElement {
                 <ui-drawer-group
                     name="visBookmarks"
                     title="Vis Bookmarks"
-                    data-fixed-items="2"
+                    data-fixed-items="1"
                     gap="0.25rem"
                     ?open=${!!store.getData("drawerGroup")?.["visBookmarks"]
                         ?.open}
@@ -390,10 +390,6 @@ class PGApp extends LitElement {
                         });
                     }}
                 >
-                    <!-- Fixed Item 1 -->
-                    <!-- TODO: Import / Export -->
-                    <span class="placeholder"></span>
-
                     <!-- Fixed Item 1 -->
                     <!-- TODO: "Neue Liste" -->
                     <span class="placeholder"></span>
@@ -709,6 +705,7 @@ class PGApp extends LitElement {
         this.drawerGroupItemsRendering(store, "alertLists");
         this.drawerGroupItemsRendering(store, "metalSheets");
         this.drawerGroupItemsRendering(store, "vis");
+        this.drawerGroupItemsRendering(store, "visBookmarks");
         this.drawerGroupItemsRendering(store, "visData");
     }
 
