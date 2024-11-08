@@ -38,8 +38,8 @@ export class ListsStore<T extends keyof ListsStoreData> {
         return `${this.title()} - ${new Date().getTime()}.zip`;
     }
 
-    public validate(list: any): ListsStoreData[T] | null {
-        return list;
+    public validate(dataString: string): any | null {
+        return JSON.parse(dataString);
     }
 
     public sort(data: ListsStoreData[T][]): ListsStoreData[T][] {
@@ -157,7 +157,9 @@ export class AlertListsStore extends ListsStore<"alertLists"> {
         return `Alarm Liste - ${super.fileName(list)}`;
     }
 
-    public validate(list: any): AlertList | null {
+    public validate(dataString: any): AlertList | null {
+        const list = super.validate(dataString);
+
         if (typeof list?.title !== "string") return null;
         if (!("data" in list)) return null;
         if (!Array.isArray(list.data)) return null;
@@ -216,7 +218,9 @@ export class MetalSheetsStore extends ListsStore<"metalSheets"> {
         return `Blech Liste - ${super.fileName(list)}`;
     }
 
-    public validate(list: any): MetalSheet | null {
+    public validate(dataString: string): MetalSheet | null {
+        const list = super.validate(dataString);
+
         if (typeof list.format !== "string") return null;
 
         if (!list.toolID) list.toolID = "";
@@ -274,12 +278,16 @@ export class VisStore extends ListsStore<"vis"> {
         return `Vis Liste - ${super.fileName(list)}`;
     }
 
-    public validate(list: any): Vis | null {
-        if (typeof list === "string") {
+    public validate(dataString: string): Vis | null {
+        let list: any;
+        try {
+            list = super.validate(dataString);
+        } catch {
             try {
-                list = JSON.parse(list);
-            } catch (err) {
                 return convert.toVis(list);
+            } catch (err) {
+                alert(`Parsing failed: ${err}`);
+                return null;
             }
         }
 
@@ -342,7 +350,9 @@ export class VisDataStore extends ListsStore<"visData"> {
         return `Vis Data - ${super.fileName(list)}`;
     }
 
-    public validate(list: any): VisData | null {
+    public validate(dataString: string): VisData | null {
+        const list = super.validate(dataString);
+
         if (typeof list.title !== "string" || !Array.isArray(list.data))
             return null;
 
