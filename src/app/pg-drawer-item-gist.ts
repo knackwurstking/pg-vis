@@ -102,11 +102,11 @@ class PGDrawerItemGist extends LitElement {
     }
 
     public startSpinner() {
-        this.shadowRoot!.querySelector<UISpinner>("ui-spinner")!.style.display = "block";
+        this.querySelector<UISpinner>("ui-spinner")!.style.display = "block";
     }
 
     public stopSpinner() {
-        this.shadowRoot!.querySelector<UISpinner>("ui-spinner")!.style.display = "none";
+        this.querySelector<UISpinner>("ui-spinner")!.style.display = "none";
     }
 }
 
