@@ -1,9 +1,9 @@
 import { customElement } from "lit/decorators.js";
-import { PGPageContent } from "..";
-import { Bookmarks } from "../../../store-types";
 import { html } from "ui";
+import { PGPageContent } from "..";
 import { PGApp } from "../..";
 import { newListsStore } from "../../../lib/lists-store";
+import { Bookmarks } from "../../../store-types";
 
 @customElement("pg-page-content-vis-bookmarks")
 class PGPageContentVisBookmarks extends PGPageContent<Bookmarks> {
@@ -13,7 +13,18 @@ class PGPageContentVisBookmarks extends PGPageContent<Bookmarks> {
                 ? newListsStore("visBookmarks").listKey(this.data)
                 : newListsStore("visBookmarks").title();
 
-        return html``; // TODO: Continue here...
+        return html`
+            <div
+                class="container no-scrollbar"
+                style="width: 100%; height: 100%; overflow: auto;"
+            >
+                ${this.renderData()}
+            </div>
+        `;
+    }
+
+    private renderData() {
+        return html``; // TODO: Iter data, but check "vis" store first
     }
 }
 
