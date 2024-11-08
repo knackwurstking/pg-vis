@@ -24,6 +24,7 @@ import {
 import {
     PGImportDialog,
     PGMetalSheetTableDialog,
+    PGVisBookmarksDialog,
     PGVisDataDialog,
 } from "./dialogs";
 import {
@@ -63,6 +64,12 @@ class PGApp extends LitElement {
 
     static queryImportDialog(): PGImportDialog | null {
         return document.querySelector<PGImportDialog>(`pg-import-dialog`);
+    }
+
+    static queryVisBookmarksDialog(): PGVisBookmarksDialog | null {
+        return document.querySelector<PGVisBookmarksDialog>(
+            `pg-vis-data-dialog`,
+        );
     }
 
     static queryVisDataDialog(): PGVisDataDialog | null {
@@ -576,7 +583,32 @@ class PGApp extends LitElement {
             >
             </pg-vis-data-dialog>
 
-            <!-- TODO: Create vis bookmarks dialog -->
+            <pg-vis-bookmarks-dialog
+                @submit=${(
+                    ev: Event & { currentTarget: PGVisBookmarksDialog },
+                ) => {
+                    const title = ev.currentTarget.title;
+                    const listsStore = newListsStore("visBookmarks");
+
+                    try {
+                        listsStore.addToStore(PGApp.queryStore(), [
+                            {
+                                title: title,
+                                allowDeletion: true,
+                                data: [],
+                            },
+                        ]);
+                    } catch (err) {
+                        alert(err);
+                        setTimeout(() => {
+                            const dialog = PGApp.queryVisBookmarksDialog()!;
+                            dialog.invalidTitle = true;
+                            dialog.show();
+                        });
+                    }
+                }}
+            >
+            </pg-vis-bookmarks-dialog>
         `;
     }
 
