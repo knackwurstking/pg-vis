@@ -1,6 +1,6 @@
 import { html, LitElement } from "lit";
 import { customElement, property } from "lit/decorators.js";
-import { svg } from "ui";
+import { svg, UILabel } from "ui";
 import { PGApp } from ".";
 import { ListsStoreData, newListsStore } from "../lib/lists-store";
 import { PGPageContent } from "./pages";
@@ -41,6 +41,8 @@ class PGDrawerItem extends LitElement {
     }
 
     protected render() {
+        let lock = false;
+
         return html`
             <ui-flex-grid-row>
                 <ui-flex-grid-item>
@@ -50,8 +52,15 @@ class PGDrawerItem extends LitElement {
                         primary="${this.primary || ""}"
                         secondary="${this.secondary || ""}"
                         @click=${async (): Promise<void> => {
-                            await this.setStackLayoutPage();
-                            PGApp.queryDrawer()!.open = false;
+                            if (lock) return;
+                            lock = true;
+
+                            try {
+                                await this.setStackLayoutPage();
+                                PGApp.queryDrawer()!.open = false;
+                            } finally {
+                                lock = false;
+                            }
                         }}
                     ></ui-label>
                 </ui-flex-grid-item>
@@ -67,7 +76,14 @@ class PGDrawerItem extends LitElement {
                               color="destructive"
                               ghost
                               @click=${async (): Promise<void> => {
-                                  await this.deleteStoreData();
+                                  if (lock) return;
+                                  lock = true;
+
+                                  try {
+                                      await this.deleteStoreData();
+                                  } finally {
+                                      lock = false;
+                                  }
                               }}
                           >
                               ${svg.smoothieLineIcons.trash}
@@ -83,19 +99,15 @@ class PGDrawerItem extends LitElement {
 
         const listsStore = newListsStore(this.storeKey);
         const storeData = PGApp.queryStore().getData(this.storeKey);
-        const data = storeData?.find(
-            (list) => listsStore.listKey(list) === this.storeListKey,
-        );
+        const data = storeData?.find((list) => listsStore.listKey(list) === this.storeListKey);
 
         if (data === undefined) {
-            throw new Error(
-                `Data undefined for "${this.storeListKey}" in "${this.storeKey}"`,
-            );
+            throw new Error(`Data undefined for "${this.storeListKey}" in "${this.storeKey}"`);
         }
 
         const stack = PGApp.queryStackLayout()!;
         stack.clearStack();
-        stack.setPage(this.storeKey, async (page) => {
+        stack.setPage(this.storeKey!, async (page) => {
             const content = page.children[0] as PGPageContent<any> | undefined;
             if (content !== undefined) {
                 content.data = data;
@@ -114,16 +126,11 @@ class PGDrawerItem extends LitElement {
             case "vis":
             case "visBookmarks":
             case "visData":
-                if (
-                    confirm(
-                        `Möchten Sie "${this.storeListKey}" wirklich löschen?`,
-                    )
-                ) {
+                if (confirm(`Möchten Sie "${this.storeListKey}" wirklich löschen?`)) {
                     const listsStore = newListsStore(this.storeKey);
                     PGApp.queryStore().updateData(this.storeKey, (data) => {
                         return data.filter(
-                            (list) =>
-                                listsStore.listKey(list) !== this.storeListKey,
+                            (list) => listsStore.listKey(list) !== this.storeListKey,
                         ) as any[];
                     });
                 }
