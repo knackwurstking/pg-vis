@@ -1,6 +1,7 @@
 import { html, PropertyValues } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { CleanUp, UIIconButton, UIInput } from "ui";
+
 import { PGPageContent } from "../..";
 import { PGApp } from "../../..";
 import { newListsStore } from "../../../../lib/lists-store";
@@ -28,10 +29,7 @@ export class PGPageContentVisDataEdit extends PGPageContent<VisDataEntry> {
         }
 
         return html`
-            <div
-                class="container no-scrollbar"
-                style="width: 100%; height: 100%; overflow: auto;"
-            >
+            <div class="container no-scrollbar" style="width: 100%; height: 100%; overflow: auto;">
                 <ui-flex-grid gap="0.25rem">
                     <ui-flex-grid-item>
                         <ui-input
@@ -39,9 +37,7 @@ export class PGPageContentVisDataEdit extends PGPageContent<VisDataEntry> {
                             title="Key (Optional)"
                             type="text"
                             value=${this.data.key || ""}
-                            @change=${async (
-                                ev: Event & { currentTarget: UIInput },
-                            ) => {
+                            @change=${async (ev: Event & { currentTarget: UIInput }) => {
                                 this.data!.key = ev.currentTarget.value || null;
                                 this.modified = true;
                             }}
@@ -55,9 +51,7 @@ export class PGPageContentVisDataEdit extends PGPageContent<VisDataEntry> {
                             type="text"
                             value=${this.data.value || ""}
                             rows="10"
-                            @change=${async (
-                                ev: Event & { currentTarget: UIInput },
-                            ) => {
+                            @change=${async (ev: Event & { currentTarget: UIInput }) => {
                                 this.data!.value = ev.currentTarget.value;
                                 this.modified = true;
                             }}
@@ -70,11 +64,8 @@ export class PGPageContentVisDataEdit extends PGPageContent<VisDataEntry> {
                             title="Lotto (Filter, Optional)"
                             type="text"
                             value=${this.data.lotto || ""}
-                            @change=${async (
-                                ev: Event & { currentTarget: UIInput },
-                            ) => {
-                                this.data!.lotto =
-                                    ev.currentTarget.value || null;
+                            @change=${async (ev: Event & { currentTarget: UIInput }) => {
+                                this.data!.lotto = ev.currentTarget.value || null;
                                 this.modified = true;
                             }}
                         ></ui-input>
@@ -86,11 +77,8 @@ export class PGPageContentVisDataEdit extends PGPageContent<VisDataEntry> {
                             title="Format (Filter, Optional)"
                             type="text"
                             value=${this.data.format || ""}
-                            @change=${async (
-                                ev: Event & { currentTarget: UIInput },
-                            ) => {
-                                this.data!.format =
-                                    ev.currentTarget.value || null;
+                            @change=${async (ev: Event & { currentTarget: UIInput }) => {
+                                this.data!.format = ev.currentTarget.value || null;
                                 this.modified = true;
                             }}
                         ></ui-input>
@@ -102,11 +90,8 @@ export class PGPageContentVisDataEdit extends PGPageContent<VisDataEntry> {
                             title="Stempel (Filter, Optional)"
                             type="text"
                             value=${this.data.stamp || ""}
-                            @change=${async (
-                                ev: Event & { currentTarget: UIInput },
-                            ) => {
-                                this.data!.stamp =
-                                    ev.currentTarget.value || null;
+                            @change=${async (ev: Event & { currentTarget: UIInput }) => {
+                                this.data!.stamp = ev.currentTarget.value || null;
                                 this.modified = true;
                             }}
                         ></ui-input>
@@ -118,11 +103,8 @@ export class PGPageContentVisDataEdit extends PGPageContent<VisDataEntry> {
                             title="Stärke (Filter, Optional)"
                             type="number"
                             value=${this.data.thickness || ""}
-                            @change=${async (
-                                ev: Event & { currentTarget: UIInput },
-                            ) => {
-                                this.data!.thickness =
-                                    ev.currentTarget.value || null;
+                            @change=${async (ev: Event & { currentTarget: UIInput }) => {
+                                this.data!.thickness = ev.currentTarget.value || null;
                                 this.modified = true;
                             }}
                         ></ui-input>
@@ -154,8 +136,7 @@ export class PGPageContentVisDataEdit extends PGPageContent<VisDataEntry> {
                 for (const list of data) {
                     if (listsStore.listKey(list) === this.listKey) {
                         if (this.deleteEntry) {
-                            if (this.entryIndex > -1)
-                                list.data.splice(this.entryIndex, 1);
+                            if (this.entryIndex > -1) list.data.splice(this.entryIndex, 1);
                             break;
                         }
 
@@ -184,9 +165,7 @@ export class PGPageContentVisDataEdit extends PGPageContent<VisDataEntry> {
             PGApp.queryStackLayout()!.goBack();
         };
 
-        const trashButton = PGApp.queryAppBar()!
-            .contentName("trash")!
-            .contentAt<UIIconButton>(0);
+        const trashButton = PGApp.queryAppBar()!.contentName("trash")!.contentAt<UIIconButton>(0);
 
         trashButton.addEventListener("click", onTrashClick);
 

@@ -1,5 +1,6 @@
 import { html, LitElement } from "lit";
 import { customElement, property } from "lit/decorators.js";
+
 import { Alert } from "../../../store-types";
 
 @customElement("pg-alert-list-item")

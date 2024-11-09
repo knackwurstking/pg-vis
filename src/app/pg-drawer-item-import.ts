@@ -3,6 +3,7 @@ import JSZip from "jszip";
 import { html, LitElement } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { svg } from "ui";
+
 import { PGApp } from ".";
 import { ListsStoreData, newListsStore } from "../lib/lists-store";
 
@@ -33,10 +34,7 @@ class PGDrawerItemImport extends LitElement {
                     </ui-button>
                 </ui-flex-grid-item>
 
-                <ui-flex-grid-item
-                    class="flex align-center justify-center"
-                    flex="0"
-                >
+                <ui-flex-grid-item class="flex align-center justify-center" flex="0">
                     <ui-icon-button
                         style="width: 2.5rem; height: 2.5rem;"
                         ghost
@@ -64,10 +62,7 @@ class PGDrawerItemImport extends LitElement {
             zip.file(fileName, JSON.stringify(list, null, 4));
         }
 
-        FileSaver.saveAs(
-            await zip.generateAsync({ type: "blob" }),
-            listsStore.zipFileName(),
-        );
+        FileSaver.saveAs(await zip.generateAsync({ type: "blob" }), listsStore.zipFileName());
     }
 }
 

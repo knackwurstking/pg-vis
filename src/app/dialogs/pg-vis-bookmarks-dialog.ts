@@ -34,9 +34,7 @@ class PGVisBookmarksDialog extends LitElement {
                                     type="text"
                                     value="${this.title}"
                                     ?invalid=${this.invalidTitle}
-                                    @change=${(
-                                        ev: Event & { currentTarget: UIInput },
-                                    ) => {
+                                    @change=${(ev: Event & { currentTarget: UIInput }) => {
                                         this.title = ev.currentTarget.value;
                                     }}
                                 >

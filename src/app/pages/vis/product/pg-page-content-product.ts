@@ -5,7 +5,6 @@ import { Keyed, keyed } from "lit/directives/keyed.js";
 
 import { PGPageContent } from "../..";
 import { PGApp } from "../../..";
-
 import { Product } from "../../../../store-types";
 
 @customElement("pg-page-contents-product")

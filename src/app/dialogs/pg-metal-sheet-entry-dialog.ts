@@ -31,20 +31,12 @@ class PGMetalSheetEntryDialog extends LitElement {
         if (this.header !== undefined) {
             // Prepare entry data,
             if (this.header.length > this.entryData.length)
-                this.entryData = this.header.map(
-                    (_, index) => this.entryData[index] || "",
-                );
+                this.entryData = this.header.map((_, index) => this.entryData[index] || "");
         }
 
         return html`
-            <ui-dialog
-                title="${this.tableIndex < 0 ? "Neuer Eintrag" : "Bearbeiten"}"
-                modal
-                inert
-            >
-                <ui-flex-grid gap="0.25rem">
-                    ${this.renderInputs()}
-                </ui-flex-grid>
+            <ui-dialog title="${this.tableIndex < 0 ? "Neuer Eintrag" : "Bearbeiten"}" modal inert>
+                <ui-flex-grid gap="0.25rem"> ${this.renderInputs()} </ui-flex-grid>
 
                 ${this.renderDeleteAction()}
 
@@ -83,11 +75,8 @@ class PGMetalSheetEntryDialog extends LitElement {
                                 title="${head}"
                                 type="text"
                                 value=${this.entryData[index]}
-                                @change=${(
-                                    ev: Event & { currentTarget: UIInput },
-                                ) => {
-                                    this.entryData[index] =
-                                        ev.currentTarget.value;
+                                @change=${(ev: Event & { currentTarget: UIInput }) => {
+                                    this.entryData[index] = ev.currentTarget.value;
                                 }}
                             ></ui-input>
                         </ui-flex-grid-item>

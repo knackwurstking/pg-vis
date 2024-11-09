@@ -1,6 +1,7 @@
 import { html, PropertyValues, TemplateResult } from "lit";
 import { customElement } from "lit/decorators.js";
 import { styles } from "ui";
+
 import { PGPageContent } from "../..";
 import { Alert } from "../../../../store-types";
 
@@ -26,10 +27,7 @@ class PGPageContentAlert extends PGPageContent<Alert> {
                     </ui-flex-grid-item>
 
                     <ui-flex-grid-item>
-                        <p
-                            class="description"
-                            style="padding: var(--ui-spacing);"
-                        ></p>
+                        <p class="description" style="padding: var(--ui-spacing);"></p>
                     </ui-flex-grid-item>
                 </ui-flex-grid>
             </div>

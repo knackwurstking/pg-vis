@@ -63,9 +63,7 @@ class PGSearchBar extends LitElement {
     }
 
     public value(): string {
-        return (
-            this.shadowRoot?.querySelector<UISearch>("ui-search")?.value || ""
-        );
+        return this.shadowRoot?.querySelector<UISearch>("ui-search")?.value || "";
     }
 }
 

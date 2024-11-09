@@ -1,6 +1,7 @@
 import { html, LitElement } from "lit";
 import { customElement, property } from "lit/decorators.js";
-import { svg, UILabel } from "ui";
+import { svg } from "ui";
+
 import { PGApp } from ".";
 import { ListsStoreData, newListsStore } from "../lib/lists-store";
 import { PGPageContent } from "./pages";

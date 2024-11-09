@@ -1,11 +1,4 @@
-import {
-    AlertList,
-    Bookmarks,
-    MetalSheet,
-    PGStore,
-    Vis,
-    VisData,
-} from "../store-types";
+import { AlertList, Bookmarks, MetalSheet, PGStore, Vis, VisData } from "../store-types";
 import * as convert from "./convert";
 
 export interface ListsStoreData {
@@ -48,9 +41,7 @@ export class ListsStore<T extends keyof ListsStoreData> {
         const keys = data.map((list) => `${this.listKey(list)}`).sort();
 
         for (const key of keys) {
-            const keyData = data.find(
-                (list) => `${this.listKey(list)}` === key,
-            );
+            const keyData = data.find((list) => `${this.listKey(list)}` === key);
             if (keyData !== undefined) result.push(keyData);
         }
 
@@ -60,22 +51,14 @@ export class ListsStore<T extends keyof ListsStoreData> {
     /**
      * @throws exists error
      */
-    public replaceInStore(
-        store: PGStore,
-        newList: ListsStoreData[T],
-        oldList: ListsStoreData[T],
-    ) {
+    public replaceInStore(store: PGStore, newList: ListsStoreData[T], oldList: ListsStoreData[T]) {
         const newListKey = this.listKey(newList);
         const oldListKey = this.listKey(oldList);
 
         if (oldListKey !== newListKey) {
-            for (const list of store.getData(
-                this.key() as keyof ListsStoreData,
-            ) || []) {
+            for (const list of store.getData(this.key() as keyof ListsStoreData) || []) {
                 if (this.listKey(list as any) === newListKey) {
-                    throw new Error(
-                        `Liste "${newListKey}" existiert bereits!"`,
-                    );
+                    throw new Error(`Liste "${newListKey}" existiert bereits!"`);
                 }
             }
         }
@@ -94,11 +77,7 @@ export class ListsStore<T extends keyof ListsStoreData> {
     /**
      * @throws exists error
      */
-    public addToStore(
-        store: PGStore,
-        newData: ListsStoreData[T][],
-        sort?: boolean,
-    ) {
+    public addToStore(store: PGStore, newData: ListsStoreData[T][], sort?: boolean) {
         const storeData = store.getData(this.key() as keyof ListsStoreData);
         if (storeData === undefined) {
             return;
@@ -121,9 +100,7 @@ export class ListsStore<T extends keyof ListsStoreData> {
 
         const filteredData = storeData.filter((storeList) => {
             const data = newData.find(
-                (list) =>
-                    this.listKey(list) ===
-                    this.listKey(storeList as ListsStoreData[T]),
+                (list) => this.listKey(list) === this.listKey(storeList as ListsStoreData[T]),
             );
 
             return data === undefined;
@@ -133,9 +110,7 @@ export class ListsStore<T extends keyof ListsStoreData> {
 
         store.setData(
             this.key() as keyof ListsStoreData,
-            (sort
-                ? this.sort(mergedData as ListsStoreData[T][])
-                : mergedData) as any[],
+            (sort ? this.sort(mergedData as ListsStoreData[T][]) : mergedData) as any[],
         );
     }
 }
@@ -165,14 +140,7 @@ export class AlertListsStore extends ListsStore<"alertLists"> {
         if (!Array.isArray(list.data)) return null;
 
         for (const part of list.data) {
-            if (
-                !(
-                    "from" in part &&
-                    "to" in part &&
-                    "alert" in part &&
-                    "desc" in part
-                )
-            ) {
+            if (!("from" in part && "to" in part && "alert" in part && "desc" in part)) {
                 return null;
             }
 
@@ -184,15 +152,11 @@ export class AlertListsStore extends ListsStore<"alertLists"> {
                 return null;
             }
 
-            if (typeof part.desc === "string")
-                part.desc = part.desc.split("\n");
+            if (typeof part.desc === "string") part.desc = part.desc.split("\n");
 
             if (!Array.isArray(part.desc)) return null;
 
-            if (
-                (part.desc as any[]).filter((line) => typeof line !== "string")
-                    .length > 0
-            ) {
+            if ((part.desc as any[]).filter((line) => typeof line !== "string").length > 0) {
                 return null;
             }
         }
@@ -239,10 +203,7 @@ export class MetalSheetsStore extends ListsStore<"metalSheets"> {
             if (!("header" in list.data.table)) return null;
             if (!("data" in list.data.table)) return null;
 
-            if (
-                !Array.isArray(list.data.table.header) ||
-                !Array.isArray(list.data.table.data)
-            ) {
+            if (!Array.isArray(list.data.table.header) || !Array.isArray(list.data.table.data)) {
                 return null;
             }
 
@@ -290,8 +251,7 @@ export class VisStore extends ListsStore<"vis"> {
             list.date = new Date().getTime();
         }
 
-        if (typeof list.title !== "string" || !Array.isArray(list.data))
-            return null;
+        if (typeof list.title !== "string" || !Array.isArray(list.data)) return null;
 
         for (const product of list.data) {
             if (typeof product !== "object") return null;
@@ -348,34 +308,27 @@ export class VisDataStore extends ListsStore<"visData"> {
     public validate(dataString: string): VisData | null {
         const list = super.validate(dataString);
 
-        if (typeof list.title !== "string" || !Array.isArray(list.data))
-            return null;
+        if (typeof list.title !== "string" || !Array.isArray(list.data)) return null;
 
         for (const part of list.data) {
             if (typeof part.key !== "string" && part.key !== null) return null;
 
             if (typeof part.value !== "string") return null;
 
-            if (typeof part.lotto !== "string" && part.lotto !== null)
-                return null;
+            if (typeof part.lotto !== "string" && part.lotto !== null) return null;
 
-            if (typeof part.format !== "string" && part.format !== null)
-                return null;
+            if (typeof part.format !== "string" && part.format !== null) return null;
 
-            if (typeof part.thickness !== "string" && part.thickness !== null)
-                return null;
+            if (typeof part.thickness !== "string" && part.thickness !== null) return null;
 
-            if (typeof part.stamp !== "string" && part.stamp !== null)
-                return null;
+            if (typeof part.stamp !== "string" && part.stamp !== null) return null;
         }
 
         return list;
     }
 }
 
-export function newListsStore<T extends keyof ListsStoreData>(
-    key: T,
-): ListsStore<T> {
+export function newListsStore<T extends keyof ListsStoreData>(key: T): ListsStore<T> {
     switch (key) {
         case "alertLists":
             return new AlertListsStore() as ListsStore<T>;

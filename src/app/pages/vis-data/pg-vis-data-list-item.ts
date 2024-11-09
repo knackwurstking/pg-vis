@@ -1,5 +1,6 @@
 import { html, LitElement, PropertyValues } from "lit";
 import { customElement, property } from "lit/decorators.js";
+
 import { VisDataEntry } from "../../../store-types";
 
 @customElement("pg-vis-data-list-item")
@@ -36,9 +37,7 @@ class PGVisDataListItem extends LitElement {
                 ${this.data.key !== null
                     ? html`
                           <ui-flex-grid-item>
-                              <ui-primary wght="650">
-                                  ${this.data.key}
-                              </ui-primary>
+                              <ui-primary wght="650"> ${this.data.key} </ui-primary>
                           </ui-flex-grid-item>
                       `
                     : ""}
@@ -90,9 +89,7 @@ class PGVisDataListItem extends LitElement {
 
         return html`
             <ui-flex-grid gap="0">
-                ${content.length > 0
-                    ? html`<ui-secondary>Filter</ui-secondary>`
-                    : ""}
+                ${content.length > 0 ? html`<ui-secondary>Filter</ui-secondary>` : ""}
                 <ui-flex-grid-row gap="0.25rem"> ${content} </ui-flex-grid-row>
             </ui-flex-grid>
 
@@ -101,9 +98,7 @@ class PGVisDataListItem extends LitElement {
     }
 
     protected updated(_changedProperties: PropertyValues): void {
-        this.querySelector(`ui-text[name="value"]`)!.innerHTML = (
-            this.data?.value || ""
-        )
+        this.querySelector(`ui-text[name="value"]`)!.innerHTML = (this.data?.value || "")
             .replaceAll("\n", "<br/>")
             .replaceAll(" ", "&nbsp;");
     }
