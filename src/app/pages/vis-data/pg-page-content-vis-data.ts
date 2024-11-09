@@ -1,4 +1,4 @@
-import { html } from "lit";
+import { html, PropertyValues } from "lit";
 import { customElement } from "lit/decorators.js";
 import { DirectiveResult } from "lit/directive.js";
 import { Keyed, keyed } from "lit/directives/keyed.js";
@@ -142,33 +142,27 @@ export class PGPageContentVisData extends PGPageContent<VisData> {
         return html` <pg-vis-data-dialog @submit=${submit}></pg-vis-data-dialog> `;
     }
 
-    protected firstUpdated() {
-        if (this.data !== undefined) {
-            this.createContentFromData(this.data);
-        }
-    }
-
-    private createContentFromData(data: VisData) {
-        this.data = data;
-
-        this.content = [];
-        this.data.data.forEach(async (entry, index) => {
-            setTimeout(() => {
-                this.content.push(
-                    keyed(
-                        entry,
-                        html`<pg-vis-data-list-item
-                            style="cursor: pointer;"
-                            data="${JSON.stringify(entry)}"
-                            entry-index=${index}
-                            show-filter
-                        ></pg-vis-data-list-item>`,
-                    ),
-                );
+    protected updated(changedProperties: PropertyValues): void {
+        if (changedProperties.has("data")) {
+            this.content = [];
+            (this.data?.data || []).forEach(async (entry, index) => {
+                setTimeout(() => {
+                    this.content.push(
+                        keyed(
+                            entry,
+                            html`<pg-vis-data-list-item
+                                style="cursor: pointer;"
+                                data="${JSON.stringify(entry)}"
+                                entry-index=${index}
+                                show-filter
+                            ></pg-vis-data-list-item>`,
+                        ),
+                    );
+                });
             });
-        });
 
-        setTimeout(() => this.requestUpdate());
+            setTimeout(() => this.requestUpdate());
+        }
     }
 
     connectedCallback(): void {
@@ -203,7 +197,7 @@ export class PGPageContentVisData extends PGPageContent<VisData> {
             store.addListener("visData", (data) => {
                 for (const list of data) {
                     if (listsStore.listKey(list) === listsStore.listKey(this.data!)) {
-                        return this.createContentFromData(list);
+                        this.data = list;
                     }
                 }
             }),
