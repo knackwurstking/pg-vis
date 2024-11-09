@@ -8,6 +8,8 @@ import { newListsStore } from "../../../lib/lists-store";
 import { queryTargetFromElementPath } from "../../../lib/query-utils";
 import { Alert, AlertList } from "../../../store-types";
 import { PGSearchBar } from "../../components";
+import { DirectiveResult } from "lit/async-directive.js";
+import { keyed, Keyed } from "lit/directives/keyed.js";
 
 @customElement("pg-page-content-alert-lists")
 class PGPageContentAlertLists extends PGPageContent<AlertList> {
@@ -15,6 +17,7 @@ class PGPageContentAlertLists extends PGPageContent<AlertList> {
     searchBar?: boolean;
 
     private cleanup = new CleanUp();
+    private content: DirectiveResult<typeof Keyed>[] = [];
 
     public querySearchBar(): PGSearchBar | null {
         return this.querySelector<PGSearchBar>(`pg-search-bar`);
@@ -31,9 +34,7 @@ class PGPageContentAlertLists extends PGPageContent<AlertList> {
                 title="Alarmsuche (RegEx Mode)"
                 storage-key="${this.data?.title}"
                 ?active=${!!this.searchBar}
-                @change=${async (
-                    ev: Event & { currentTarget: PGSearchBar },
-                ) => {
+                @change=${async (ev: Event & { currentTarget: PGSearchBar }) => {
                     await this.filter(ev.currentTarget.value());
                 }}
             ></pg-search-bar>
@@ -51,11 +52,10 @@ class PGPageContentAlertLists extends PGPageContent<AlertList> {
                     @click=${async (ev: MouseEvent): Promise<void> => {
                         if (!(ev.target instanceof Element)) return;
 
-                        const target =
-                            queryTargetFromElementPath<PGAlertListItem>(
-                                ev.target,
-                                `pg-alert-list-item`,
-                            );
+                        const target = queryTargetFromElementPath<PGAlertListItem>(
+                            ev.target,
+                            `pg-alert-list-item`,
+                        );
                         if (target === null) return;
 
                         PGApp.queryStackLayout()!.setPage(
@@ -72,12 +72,14 @@ class PGPageContentAlertLists extends PGPageContent<AlertList> {
                             true,
                         );
                     }}
-                ></div>
+                >
+                    ${this.content}
+                </div>
             </div>
         `;
     }
 
-    protected updated(_changedProperties: PropertyValues): void {
+    protected updated(changedProperties: PropertyValues): void {
         const pgSearchBar = this.querySelector<PGSearchBar>(`pg-search-bar`)!;
         const container = this.querySelector<HTMLElement>(`div.container`)!;
 
@@ -88,26 +90,28 @@ class PGPageContentAlertLists extends PGPageContent<AlertList> {
             container.style.paddingTop = `0`;
             this.filter("");
         }
-    }
 
-    protected firstUpdated(_changedProperties: PropertyValues): void {
-        setTimeout(() => {
-            if (this.data === undefined) return;
-
-            // Render Items
-
-            const container = this.querySelector(`.list`)!;
-
-            this.data.data.forEach((alert) => {
-                setTimeout(() => {
-                    const item = new PGAlertListItem();
-                    item.style.cursor = "pointer";
-                    item.role = "button";
-                    item.data = alert;
-                    container.appendChild(item);
+        if (changedProperties.has("data")) {
+            setTimeout(() => {
+                this.content = [];
+                (this.data?.data || []).forEach(async (alert) => {
+                    setTimeout(() => {
+                        this.content.push(
+                            keyed(
+                                alert,
+                                html`<pg-alert-list-item
+                                    role="button"
+                                    style="cursor: pointer;"
+                                    data=${JSON.stringify(alert)}
+                                ></pg-alert-list-item>`,
+                            ),
+                        );
+                    });
                 });
+
+                setTimeout(() => this.requestUpdate());
             });
-        });
+        }
     }
 
     connectedCallback(): void {
@@ -119,15 +123,11 @@ class PGPageContentAlertLists extends PGPageContent<AlertList> {
 
         const onClick = async () => (this.searchBar = !this.searchBar);
 
-        const appBarSearchButton = appBar
-            .contentName("search")!
-            .contentAt<UIIconButton>(0);
+        const appBarSearchButton = appBar.contentName("search")!.contentAt<UIIconButton>(0);
 
         appBarSearchButton.addEventListener("click", onClick);
 
-        this.cleanup.add(() =>
-            appBarSearchButton.removeEventListener("click", onClick),
-        );
+        this.cleanup.add(() => appBarSearchButton.removeEventListener("click", onClick));
     }
 
     disconnectedCallback(): void {

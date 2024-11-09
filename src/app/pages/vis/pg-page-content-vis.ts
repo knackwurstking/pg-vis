@@ -8,6 +8,8 @@ import { newListsStore } from "../../../lib/lists-store";
 import { queryTargetFromElementPath } from "../../../lib/query-utils";
 import { Product, Vis } from "../../../store-types";
 import { PGSearchBar } from "../../components";
+import { DirectiveResult } from "lit/async-directive.js";
+import { keyed, Keyed } from "lit/directives/keyed.js";
 
 @customElement("pg-page-content-vis")
 class PGPageContentVis extends PGPageContent<Vis> {
@@ -15,6 +17,7 @@ class PGPageContentVis extends PGPageContent<Vis> {
     searchBar?: boolean;
 
     private cleanup = new CleanUp();
+    private content: DirectiveResult<typeof Keyed>[] = [];
 
     protected render() {
         PGApp.queryAppBar()!.contentName("title")!.contentAt(0).innerText =
@@ -67,12 +70,14 @@ class PGPageContentVis extends PGPageContent<Vis> {
                             true,
                         );
                     }}
-                ></div>
+                >
+                    ${this.content}
+                </div>
             </div>
         `;
     }
 
-    protected updated(_changedProperties: PropertyValues): void {
+    protected updated(changedProperties: PropertyValues): void {
         const pgSearchBar = this.querySelector<PGSearchBar>(`pg-search-bar`)!;
         const container = this.querySelector<HTMLElement>(`div.container`)!;
 
@@ -83,23 +88,28 @@ class PGPageContentVis extends PGPageContent<Vis> {
             container.style.paddingTop = `0`;
             this.filter("");
         }
-    }
 
-    protected firstUpdated(_changedProperties: PropertyValues): void {
-        setTimeout(() => {
-            if (this.data === undefined) return;
-
-            const container = this.querySelector(`.list`)!;
-            this.data.data.forEach((product) => {
-                setTimeout(() => {
-                    const item = new PGVisListItem();
-                    item.style.cursor = "pointer";
-                    item.role = "button";
-                    item.data = product;
-                    container.appendChild(item);
+        if (changedProperties.has("data")) {
+            setTimeout(() => {
+                this.content = [];
+                (this.data?.data || []).forEach(async (product) => {
+                    setTimeout(() => {
+                        this.content.push(
+                            keyed(
+                                product,
+                                html`<pg-vis-list-item
+                                    role="button"
+                                    style="cursor: pointer;"
+                                    data=${JSON.stringify(product)}
+                                ></pg-vis-list-item>`,
+                            ),
+                        );
+                    });
                 });
+
+                setTimeout(() => this.requestUpdate());
             });
-        });
+        }
     }
 
     connectedCallback(): void {

@@ -144,24 +144,26 @@ export class PGPageContentVisData extends PGPageContent<VisData> {
 
     protected updated(changedProperties: PropertyValues): void {
         if (changedProperties.has("data")) {
-            this.content = [];
-            (this.data?.data || []).forEach(async (entry, index) => {
-                setTimeout(() => {
-                    this.content.push(
-                        keyed(
-                            entry,
-                            html`<pg-vis-data-list-item
-                                style="cursor: pointer;"
-                                data="${JSON.stringify(entry)}"
-                                entry-index=${index}
-                                show-filter
-                            ></pg-vis-data-list-item>`,
-                        ),
-                    );
+            setTimeout(() => {
+                this.content = [];
+                (this.data?.data || []).forEach(async (entry, index) => {
+                    setTimeout(() => {
+                        this.content.push(
+                            keyed(
+                                entry,
+                                html`<pg-vis-data-list-item
+                                    style="cursor: pointer;"
+                                    data="${JSON.stringify(entry)}"
+                                    entry-index=${index}
+                                    show-filter
+                                ></pg-vis-data-list-item>`,
+                            ),
+                        );
+                    });
                 });
-            });
 
-            setTimeout(() => this.requestUpdate());
+                setTimeout(() => this.requestUpdate());
+            });
         }
     }
 
