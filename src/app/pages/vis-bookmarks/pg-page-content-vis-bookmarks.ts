@@ -1,7 +1,7 @@
-import { customElement } from "lit/decorators.js";
-import { Keyed, keyed } from "lit/directives/keyed.js";
 import { PropertyValues } from "lit";
 import { DirectiveResult } from "lit/async-directive.js";
+import { customElement } from "lit/decorators.js";
+import { Keyed, keyed } from "lit/directives/keyed.js";
 import { html } from "ui";
 
 import { PGPageContent, PGVisListItem } from "..";

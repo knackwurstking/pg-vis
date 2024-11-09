@@ -1,5 +1,6 @@
 import { html, LitElement } from "lit";
 import { customElement, property } from "lit/decorators.js";
+
 import { Product } from "../../../store-types";
 
 @customElement("pg-vis-list-item")
