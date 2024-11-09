@@ -1,18 +1,20 @@
 import { html } from "lit";
 import { customElement } from "lit/decorators.js";
-import { keyed } from "lit/directives/keyed.js";
-import { CleanUp, styles, UIIconButton } from "ui";
+import { DirectiveResult } from "lit/directive.js";
+import { Keyed, keyed } from "lit/directives/keyed.js";
+import { CleanUp, UIIconButton } from "ui";
+
 import { PGPageContentVisDataEdit, PGVisDataListItem } from ".";
 import { PGPageContent } from "..";
-import { PGApp } from "../..";
+import { PGApp, PGVisDataDialog } from "../..";
 import { newListsStore } from "../../../lib/lists-store";
 import { queryTargetFromElementPath } from "../../../lib/query-utils";
 import { VisData } from "../../../store-types";
-import { PGVisDataDialog } from "../../dialogs";
 
 @customElement("pg-page-content-vis-data")
 export class PGPageContentVisData extends PGPageContent<VisData> {
     private cleanup = new CleanUp();
+    private content: DirectiveResult<typeof Keyed>[] = [];
 
     protected render() {
         PGApp.queryAppBar()!.contentName("title")!.contentAt(0).innerText =
@@ -21,10 +23,7 @@ export class PGPageContentVisData extends PGPageContent<VisData> {
                 : newListsStore("visData").title();
 
         return html`
-            <div
-                class="container no-scrollbar"
-                style="width: 100%; height: 100%; overflow: auto;"
-            >
+            <div class="container no-scrollbar" style="width: 100%; height: 100%; overflow: auto;">
                 <ui-flex-grid gap="0.25rem">
                     ${this.renderActions()} ${this.renderContent()}
                 </ui-flex-grid>
@@ -39,9 +38,7 @@ export class PGPageContentVisData extends PGPageContent<VisData> {
             PGApp.queryStackLayout()!.setPage(
                 "visDataEdit",
                 (page) => {
-                    const content = page.children[0] as
-                        | PGPageContentVisDataEdit
-                        | undefined;
+                    const content = page.children[0] as PGPageContentVisDataEdit | undefined;
 
                     if (content !== undefined) {
                         content.data = {
@@ -53,9 +50,7 @@ export class PGPageContentVisData extends PGPageContent<VisData> {
                             thickness: null,
                         };
 
-                        content.listKey = newListsStore("visData").listKey(
-                            this.data!,
-                        );
+                        content.listKey = newListsStore("visData").listKey(this.data!);
 
                         content.entryIndex = -1;
                     }
@@ -83,8 +78,7 @@ export class PGPageContentVisData extends PGPageContent<VisData> {
 
     private renderContent() {
         const handleClick = async (ev: Event) => {
-            if (!(ev.target instanceof Element) || this.data === undefined)
-                return;
+            if (!(ev.target instanceof Element) || this.data === undefined) return;
 
             const target = queryTargetFromElementPath<PGVisDataListItem>(
                 ev.target,
@@ -95,16 +89,12 @@ export class PGPageContentVisData extends PGPageContent<VisData> {
             PGApp.queryStackLayout()!.setPage(
                 "visDataEdit",
                 (page) => {
-                    const content = page.children[0] as
-                        | PGPageContentVisDataEdit
-                        | undefined;
+                    const content = page.children[0] as PGPageContentVisDataEdit | undefined;
 
                     if (content !== undefined) {
                         content.data = target.data;
 
-                        content.listKey = newListsStore("visData").listKey(
-                            this.data!,
-                        );
+                        content.listKey = newListsStore("visData").listKey(this.data!);
 
                         content.entryIndex = target.entryIndex;
                     }
@@ -117,41 +107,17 @@ export class PGPageContentVisData extends PGPageContent<VisData> {
             <ui-flex-grid-item>
                 <div
                     class="list no-scrollbar"
-                    style="${styles({
-                        width: "100%",
-                        height: "100%",
-                        overflow: "auto",
-                    } as CSSStyleDeclaration)}"
+                    style="width: 100%; height: 100%; overflow: auto;"
                     @click=${handleClick}
                 >
-                    ${this.renderData()}
+                    ${this.content}
                 </div>
             </ui-flex-grid-item>
         `;
     }
 
-    private renderData() {
-        if (this.data === undefined) return html``;
-
-        const content = this.data.data.map((entry, index) => {
-            return keyed(
-                entry,
-                html`<pg-vis-data-list-item
-                    style="cursor: pointer;"
-                    data="${JSON.stringify(entry)}"
-                    entry-index=${index}
-                    show-filter
-                ></pg-vis-data-list-item>`,
-            );
-        });
-
-        return html`${content}`;
-    }
-
     private renderDialog() {
-        const submit = async (
-            ev: Event & { currentTarget: PGVisDataDialog },
-        ) => {
+        const submit = async (ev: Event & { currentTarget: PGVisDataDialog }) => {
             if (this.data === undefined) return;
 
             const oldData = { ...this.data };
@@ -173,9 +139,36 @@ export class PGPageContentVisData extends PGPageContent<VisData> {
             }
         };
 
-        return html`
-            <pg-vis-data-dialog @submit=${submit}></pg-vis-data-dialog>
-        `;
+        return html` <pg-vis-data-dialog @submit=${submit}></pg-vis-data-dialog> `;
+    }
+
+    protected firstUpdated() {
+        if (this.data !== undefined) {
+            this.createContentFromData(this.data);
+        }
+    }
+
+    private createContentFromData(data: VisData) {
+        this.data = data;
+
+        this.content = [];
+        this.data.data.forEach(async (entry, index) => {
+            setTimeout(() => {
+                this.content.push(
+                    keyed(
+                        entry,
+                        html`<pg-vis-data-list-item
+                            style="cursor: pointer;"
+                            data="${JSON.stringify(entry)}"
+                            entry-index=${index}
+                            show-filter
+                        ></pg-vis-data-list-item>`,
+                    ),
+                );
+            });
+        });
+
+        setTimeout(() => this.requestUpdate());
     }
 
     connectedCallback(): void {
@@ -186,8 +179,7 @@ export class PGPageContentVisData extends PGPageContent<VisData> {
         const onEditClick = () => {
             if (this.data === undefined) return;
 
-            const dialog =
-                this.querySelector<PGVisDataDialog>(`pg-vis-data-dialog`)!;
+            const dialog = this.querySelector<PGVisDataDialog>(`pg-vis-data-dialog`)!;
 
             dialog.invalidTitle = false;
             dialog.title = this.data.title;
@@ -195,9 +187,7 @@ export class PGPageContentVisData extends PGPageContent<VisData> {
             dialog.show();
         };
 
-        const editButton = PGApp.queryAppBar()!
-            .contentName("edit")!
-            .contentAt<UIIconButton>(0);
+        const editButton = PGApp.queryAppBar()!.contentName("edit")!.contentAt<UIIconButton>(0);
 
         editButton.addEventListener("click", onEditClick);
 
@@ -212,12 +202,8 @@ export class PGPageContentVisData extends PGPageContent<VisData> {
         this.cleanup.add(
             store.addListener("visData", (data) => {
                 for (const list of data) {
-                    if (
-                        listsStore.listKey(list) ===
-                        listsStore.listKey(this.data!)
-                    ) {
-                        this.data = list;
-                        return;
+                    if (listsStore.listKey(list) === listsStore.listKey(this.data!)) {
+                        return this.createContentFromData(list);
                     }
                 }
             }),
