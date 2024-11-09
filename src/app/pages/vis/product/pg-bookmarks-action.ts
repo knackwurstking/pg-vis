@@ -3,7 +3,7 @@ import { customElement } from "lit/decorators.js";
 
 @customElement("pg-bookmarks-action")
 class PGBookmarksAction extends LitElement {
-    // TODO: Continue here...
+    // TODO: Bookmarks select, just like youtube
 }
 
 export default PGBookmarksAction;
