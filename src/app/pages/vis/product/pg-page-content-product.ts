@@ -30,6 +30,21 @@ class PGPageContentProduct extends PGPageContent<Product> {
                             : ""}
                     </ui-flex-grid-item>
 
+                    <ui-flex-grid-row
+                        class="is-debug"
+                        justify="space-between"
+                        wrap="warp"
+                        gap="0.25rem"
+                    >
+                        <ui-flex-grid-item flex="0">
+                            <pg-flakes-action></pg-flakes-action>
+                        </ui-flex-grid-item>
+
+                        <ui-flex-grid-item flex="0">
+                            <pg-bookmarks-action></pg-bookmarks-action>
+                        </ui-flex-grid-item>
+                    </ui-flex-grid-row>
+
                     ${this.renderData()}
                 </ui-flex-grid>
             </div>
