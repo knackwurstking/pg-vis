@@ -7,8 +7,8 @@ import { CleanUp, styles, UIIconButton } from "ui";
 import { PGAlertListItem } from ".";
 import { PGPageContent } from "..";
 import { PGApp, PGSearchBar } from "../..";
-import { newListsStore } from "../../../lib/lists-store";
 import { queryTargetFromElementPath } from "../../../lib/query-utils";
+import * as utils from "../../../lib/utils";
 import { Alert, AlertList } from "../../../store-types";
 
 @customElement("pg-page-content-alert-lists")
@@ -26,8 +26,8 @@ class PGPageContentAlertLists extends PGPageContent<AlertList> {
     protected render(): TemplateResult<1> {
         PGApp.queryAppBar()!.contentName("title")!.contentAt(0).innerText =
             this.data !== undefined
-                ? newListsStore("alertLists").listKey(this.data)
-                : newListsStore("alertLists").title();
+                ? utils.listsStore("alertLists").listKey(this.data)
+                : utils.listsStore("alertLists").title();
 
         return html`
             <pg-search-bar

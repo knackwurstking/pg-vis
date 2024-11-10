@@ -5,7 +5,8 @@ import { UIDialog, UIInput } from "ui";
 
 import { PGApp } from "..";
 import { importFromGist } from "../../lib/gist";
-import { ListsStoreData, newListsStore } from "../../lib/lists-store";
+import { ListsStoreData } from "../../lib/lists-store";
+import * as utils from "../../lib/utils";
 
 @customElement("pg-import-dialog")
 class PGImportDialog extends LitElement {
@@ -84,7 +85,7 @@ class PGImportDialog extends LitElement {
                     if (typeof reader.result !== "string") return;
                     if (this.storeKey === undefined) return;
 
-                    const listsStore = newListsStore(this.storeKey);
+                    const listsStore = utils.listsStore(this.storeKey);
 
                     let data: any;
                     try {

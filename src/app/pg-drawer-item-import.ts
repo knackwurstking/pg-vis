@@ -5,7 +5,8 @@ import { customElement, property } from "lit/decorators.js";
 import { svg } from "ui";
 
 import { PGApp } from ".";
-import { ListsStoreData, newListsStore } from "../lib/lists-store";
+import { ListsStoreData } from "../lib/lists-store";
+import * as utils from "../lib/utils";
 
 @customElement("pg-drawer-item-import")
 class PGDrawerItemImport extends LitElement {
@@ -52,7 +53,7 @@ class PGDrawerItemImport extends LitElement {
         if (!this.storeKey) return;
 
         const zip = new JSZip();
-        const listsStore = newListsStore(this.storeKey);
+        const listsStore = utils.listsStore(this.storeKey);
 
         const storeData = PGApp.queryStore().getData(this.storeKey);
         if (storeData === undefined) return;

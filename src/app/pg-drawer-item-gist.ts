@@ -4,7 +4,8 @@ import { CleanUp, html, styles, UISpinner } from "ui";
 
 import { PGApp } from ".";
 import { importFromGist } from "../lib/gist";
-import { ListsStoreData, newListsStore } from "../lib/lists-store";
+import { ListsStoreData } from "../lib/lists-store";
+import * as utils from "../lib/utils";
 
 @customElement("pg-drawer-item-gist")
 class PGDrawerItemGist extends LitElement {
@@ -85,7 +86,7 @@ class PGDrawerItemGist extends LitElement {
                 "gist",
                 (data) => {
                     if (!this.storeKey) return;
-                    const listsStore = newListsStore(this.storeKey);
+                    const listsStore = utils.listsStore(this.storeKey);
                     const part = data[listsStore.key()];
                     if (part !== undefined) {
                         this.gistID = part.id;

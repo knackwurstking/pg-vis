@@ -5,8 +5,8 @@ import { CleanUp, styles, UIIconButton } from "ui";
 import { PGVisListItem } from ".";
 import { PGPageContent } from "..";
 import { PGApp, PGSearchBar } from "../..";
-import { newListsStore } from "../../../lib/lists-store";
 import { queryTargetFromElementPath } from "../../../lib/query-utils";
+import * as utils from "../../../lib/utils";
 import { Product, Vis } from "../../../store-types";
 
 @customElement("pg-page-content-vis")
@@ -19,8 +19,8 @@ class PGPageContentVis extends PGPageContent<Vis> {
     protected render() {
         PGApp.queryAppBar()!.contentName("title")!.contentAt(0).innerText =
             this.data !== undefined
-                ? newListsStore("vis").listKey(this.data)
-                : newListsStore("vis").title();
+                ? utils.listsStore("vis").listKey(this.data)
+                : utils.listsStore("vis").title();
 
         // TODO: - Add some special flakes marker
 

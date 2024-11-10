@@ -3,7 +3,8 @@ import { customElement, property } from "lit/decorators.js";
 import { svg } from "ui";
 
 import { PGApp } from ".";
-import { ListsStoreData, newListsStore } from "../lib/lists-store";
+import { ListsStoreData } from "../lib/lists-store";
+import * as utils from "../lib/utils";
 import { PGPageContent } from "./pages";
 
 /**
@@ -98,7 +99,7 @@ class PGDrawerItem extends LitElement {
     protected async setStackLayoutPage() {
         if (!this.storeKey) return;
 
-        const listsStore = newListsStore(this.storeKey);
+        const listsStore = utils.listsStore(this.storeKey);
         const storeData = PGApp.queryStore().getData(this.storeKey);
         const data = storeData?.find((list) => listsStore.listKey(list) === this.storeListKey);
 
@@ -128,7 +129,7 @@ class PGDrawerItem extends LitElement {
             case "visBookmarks":
             case "visData":
                 if (confirm(`Möchten Sie "${this.storeListKey}" wirklich löschen?`)) {
-                    const listsStore = newListsStore(this.storeKey);
+                    const listsStore = utils.listsStore(this.storeKey);
                     PGApp.queryStore().updateData(this.storeKey, (data) => {
                         return data.filter(
                             (list) => listsStore.listKey(list) !== this.storeListKey,

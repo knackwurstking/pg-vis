@@ -1,0 +1,52 @@
+import { AlertList } from "../../store-types";
+import { ListsStore, ListsStoreData } from "./base";
+
+export class AlertListsStore extends ListsStore<"alertLists"> {
+    public key(): keyof ListsStoreData {
+        return "alertLists";
+    }
+
+    public listKey(list: AlertList): string {
+        return list.title;
+    }
+
+    public title(): string {
+        return "Alarm Listen";
+    }
+
+    public fileName(list: AlertList): string {
+        return `Alarm Liste - ${super.fileName(list)}`;
+    }
+
+    public validate(dataString: any): AlertList | null {
+        const list = super.validate(dataString);
+
+        if (typeof list?.title !== "string") return null;
+        if (!("data" in list)) return null;
+        if (!Array.isArray(list.data)) return null;
+
+        for (const part of list.data) {
+            if (!("from" in part && "to" in part && "alert" in part && "desc" in part)) {
+                return null;
+            }
+
+            if (
+                typeof part.from !== "number" ||
+                typeof part.to !== "number" ||
+                typeof part.alert !== "string"
+            ) {
+                return null;
+            }
+
+            if (typeof part.desc === "string") part.desc = part.desc.split("\n");
+
+            if (!Array.isArray(part.desc)) return null;
+
+            if ((part.desc as any[]).filter((line) => typeof line !== "string").length > 0) {
+                return null;
+            }
+        }
+
+        return list;
+    }
+}

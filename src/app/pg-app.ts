@@ -12,7 +12,8 @@ import {
     UIThemeHandlerTheme,
 } from "ui";
 import { build, version } from "../constants";
-import { ListsStoreData, newListsStore } from "../lib/lists-store";
+import { ListsStoreData } from "../lib/lists-store";
+import * as utils from "../lib/utils";
 import { AlertList, MetalSheet, PGStackLayoutPage, PGStore, Vis, VisData } from "../store-types";
 import {
     PGBookmarkSelectDialog,
@@ -531,7 +532,7 @@ class PGApp extends LitElement {
                         },
                     };
 
-                    const listsStore = newListsStore("metalSheets");
+                    const listsStore = utils.listsStore("metalSheets");
                     const newListKey = listsStore.listKey(newData);
 
                     for (const list of store.getData("metalSheets") || []) {
@@ -550,7 +551,7 @@ class PGApp extends LitElement {
             <pg-vis-data-dialog
                 @submit=${(ev: Event & { currentTarget: PGVisDataDialog }) => {
                     const title = ev.currentTarget.title;
-                    const listsStore = newListsStore("visData");
+                    const listsStore = utils.listsStore("visData");
 
                     try {
                         listsStore.addToStore(
@@ -578,7 +579,7 @@ class PGApp extends LitElement {
             <pg-vis-bookmarks-dialog
                 @submit=${(ev: Event & { currentTarget: PGVisBookmarksDialog }) => {
                     const title = ev.currentTarget.title;
-                    const listsStore = newListsStore("visBookmarks");
+                    const listsStore = utils.listsStore("visBookmarks");
 
                     try {
                         listsStore.addToStore(PGApp.queryStore(), [
@@ -763,7 +764,7 @@ class PGApp extends LitElement {
                     .slice(fixedItems)
                     .forEach((child) => groupContainer.removeChild(child));
 
-                const listsStore = newListsStore(storeKey);
+                const listsStore = utils.listsStore(storeKey);
                 data.forEach(async (list) => {
                     const item = new UIDrawerGroupItem();
                     groupContainer.appendChild(item);

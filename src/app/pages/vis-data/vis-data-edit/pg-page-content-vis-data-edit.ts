@@ -4,7 +4,7 @@ import { CleanUp, UIIconButton, UIInput } from "ui";
 
 import { PGPageContent } from "../..";
 import { PGApp } from "../../..";
-import { newListsStore } from "../../../../lib/lists-store";
+import * as utils from "../../../../lib/utils";
 import { VisDataEntry } from "../../../../store-types";
 
 @customElement("pg-page-content-vis-data-edit")
@@ -132,7 +132,7 @@ export class PGPageContentVisDataEdit extends PGPageContent<VisDataEntry> {
                     return data;
                 }
 
-                const listsStore = newListsStore("visData");
+                const listsStore = utils.listsStore("visData");
                 for (const list of data) {
                     if (listsStore.listKey(list) === this.listKey) {
                         if (this.deleteEntry) {
