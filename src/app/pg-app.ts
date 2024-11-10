@@ -13,14 +13,7 @@ import {
 } from "ui";
 import { build, version } from "../constants";
 import { ListsStoreData, newListsStore } from "../lib/lists-store";
-import {
-    AlertList,
-    MetalSheet,
-    PGStackLayoutPage,
-    PGStore,
-    Vis,
-    VisData,
-} from "../store-types";
+import { AlertList, MetalSheet, PGStackLayoutPage, PGStore, Vis, VisData } from "../store-types";
 import {
     PGImportDialog,
     PGMetalSheetTableDialog,
@@ -58,9 +51,7 @@ class PGApp extends LitElement {
     }
 
     static queryStackLayout(): UIStackLayout<PGStackLayoutPage> | null {
-        return document.querySelector<UIStackLayout<PGStackLayoutPage>>(
-            "ui-stack-layout",
-        );
+        return document.querySelector<UIStackLayout<PGStackLayoutPage>>("ui-stack-layout");
     }
 
     static queryImportDialog(): PGImportDialog | null {
@@ -68,9 +59,7 @@ class PGApp extends LitElement {
     }
 
     static queryVisBookmarksDialog(): PGVisBookmarksDialog | null {
-        return document.querySelector<PGVisBookmarksDialog>(
-            `pg-vis-bookmarks-dialog`,
-        );
+        return document.querySelector<PGVisBookmarksDialog>(`pg-vis-bookmarks-dialog`);
     }
 
     static queryVisDataDialog(): PGVisDataDialog | null {
@@ -95,7 +84,37 @@ class PGApp extends LitElement {
         store.setData("alertLists", [], true);
         store.setData("metalSheets", [], true);
         store.setData("vis", [], true);
-        store.setData("visBookmarks", [], true);
+        store.setData(
+            "visBookmarks",
+            [
+                {
+                    allowDeletion: true,
+                    title: "A really long title for bookmarks here... P0",
+                    data: [],
+                },
+                {
+                    allowDeletion: true,
+                    title: "P2",
+                    data: [],
+                },
+                {
+                    allowDeletion: true,
+                    title: "P3",
+                    data: [],
+                },
+                {
+                    allowDeletion: true,
+                    title: "P4",
+                    data: [],
+                },
+                {
+                    allowDeletion: true,
+                    title: "P5",
+                    data: [],
+                },
+            ],
+            false,
+        ); // NOTE: Dummy Data
         store.setData("visData", [], true);
 
         store.setData("gist", {}, true);
@@ -111,8 +130,7 @@ class PGApp extends LitElement {
                 <ui-stack-layout></ui-stack-layout>
             </div>
 
-            ${this.renderAppBar()} ${this.renderDrawer()}
-            ${this.renderDialogs()}
+            ${this.renderAppBar()} ${this.renderDrawer()} ${this.renderDialogs()}
         `;
     }
 
@@ -146,33 +164,23 @@ class PGApp extends LitElement {
                 </ui-app-bar-item>
 
                 <ui-app-bar-item name="title" slot="center">
-                    <ui-heading style="white-space: nowrap;">
-                        PG: Vis
-                    </ui-heading>
+                    <ui-heading style="white-space: nowrap;"> PG: Vis </ui-heading>
                 </ui-app-bar-item>
 
                 <ui-app-bar-item name="edit" slot="right" hidden>
-                    <ui-icon-button ripple ghost>
-                        ${svg.smoothieLineIcons.pen}
-                    </ui-icon-button>
+                    <ui-icon-button ripple ghost> ${svg.smoothieLineIcons.pen} </ui-icon-button>
                 </ui-app-bar-item>
 
                 <ui-app-bar-item name="share" slot="right" hidden>
-                    <ui-icon-button ripple ghost>
-                        ${svg.smoothieLineIcons.share}
-                    </ui-icon-button>
+                    <ui-icon-button ripple ghost> ${svg.smoothieLineIcons.share} </ui-icon-button>
                 </ui-app-bar-item>
 
                 <ui-app-bar-item name="search" slot="right" hidden>
-                    <ui-icon-button ripple ghost>
-                        ${svg.smoothieLineIcons.search}
-                    </ui-icon-button>
+                    <ui-icon-button ripple ghost> ${svg.smoothieLineIcons.search} </ui-icon-button>
                 </ui-app-bar-item>
 
                 <ui-app-bar-item name="trash" slot="right" hidden>
-                    <ui-icon-button ripple ghost>
-                        ${svg.smoothieLineIcons.trash}
-                    </ui-icon-button>
+                    <ui-icon-button ripple ghost> ${svg.smoothieLineIcons.trash} </ui-icon-button>
                 </ui-app-bar-item>
             </ui-app-bar>
         `;
@@ -238,15 +246,13 @@ class PGApp extends LitElement {
                             >
                                 <option
                                     value="original"
-                                    ?selected=${store.getData("theme")?.name ===
-                                    "original"}
+                                    ?selected=${store.getData("theme")?.name === "original"}
                                 >
                                     Original
                                 </option>
                                 <option
                                     value="gruvbox"
-                                    ?selected=${store.getData("theme")?.name ===
-                                    "gruvbox"}
+                                    ?selected=${store.getData("theme")?.name === "gruvbox"}
                                 >
                                     Gruvbox
                                 </option>
@@ -260,8 +266,7 @@ class PGApp extends LitElement {
                     title="Alarm Listen"
                     data-fixed-items="2"
                     gap="0.25rem"
-                    ?open=${!!store.getData("drawerGroup")?.["alertLists"]
-                        ?.open}
+                    ?open=${!!store.getData("drawerGroup")?.["alertLists"]?.open}
                     @fold=${() => {
                         store.updateData(`drawerGroup`, (data) => {
                             data["alertLists"] = { open: false };
@@ -277,16 +282,12 @@ class PGApp extends LitElement {
                 >
                     <!-- Fixed Item 1 -->
                     <ui-drawer-group-item>
-                        <pg-drawer-item-import
-                            store-key="alertLists"
-                        ></pg-drawer-item-import>
+                        <pg-drawer-item-import store-key="alertLists"></pg-drawer-item-import>
                     </ui-drawer-group-item>
 
                     <!-- Fixed Item 2 -->
                     <ui-drawer-group-item>
-                        <pg-drawer-item-gist
-                            store-key="alertLists"
-                        ></pg-drawer-item-gist>
+                        <pg-drawer-item-gist store-key="alertLists"></pg-drawer-item-gist>
                     </ui-drawer-group-item>
                 </ui-drawer-group>
 
@@ -295,8 +296,7 @@ class PGApp extends LitElement {
                     title="Blech Listen"
                     data-fixed-items="3"
                     gap="0.25rem"
-                    ?open=${!!store.getData("drawerGroup")?.["metalSheets"]
-                        ?.open}
+                    ?open=${!!store.getData("drawerGroup")?.["metalSheets"]?.open}
                     @fold=${() => {
                         store.updateData(`drawerGroup`, (data) => {
                             data["metalSheets"] = { open: false };
@@ -312,16 +312,12 @@ class PGApp extends LitElement {
                 >
                     <!-- Fixed Item 1 -->
                     <ui-drawer-group-item>
-                        <pg-drawer-item-import
-                            store-key="metalSheets"
-                        ></pg-drawer-item-import>
+                        <pg-drawer-item-import store-key="metalSheets"></pg-drawer-item-import>
                     </ui-drawer-group-item>
 
                     <!-- Fixed Item 2 -->
                     <ui-drawer-group-item>
-                        <pg-drawer-item-gist
-                            store-key="metalSheets"
-                        ></pg-drawer-item-gist>
+                        <pg-drawer-item-gist store-key="metalSheets"></pg-drawer-item-gist>
                     </ui-drawer-group-item>
 
                     <!-- Fixed Item 3 -->
@@ -330,10 +326,9 @@ class PGApp extends LitElement {
                             variant="full"
                             color="secondary"
                             @click=${() => {
-                                const dialog =
-                                    this.querySelector<PGMetalSheetTableDialog>(
-                                        `pg-metal-sheet-table-dialog`,
-                                    )!;
+                                const dialog = this.querySelector<PGMetalSheetTableDialog>(
+                                    `pg-metal-sheet-table-dialog`,
+                                )!;
 
                                 dialog.format = "";
                                 dialog.toolID = "";
@@ -368,16 +363,12 @@ class PGApp extends LitElement {
                 >
                     <!-- Fixed Item 1 -->
                     <ui-drawer-group-item>
-                        <pg-drawer-item-import
-                            store-key="vis"
-                        ></pg-drawer-item-import>
+                        <pg-drawer-item-import store-key="vis"></pg-drawer-item-import>
                     </ui-drawer-group-item>
 
                     <!-- Fixed Item 2 -->
                     <ui-drawer-group-item>
-                        <pg-drawer-item-gist
-                            store-key="vis"
-                        ></pg-drawer-item-gist>
+                        <pg-drawer-item-gist store-key="vis"></pg-drawer-item-gist>
                     </ui-drawer-group-item>
                 </ui-drawer-group>
 
@@ -386,8 +377,7 @@ class PGApp extends LitElement {
                     title="Vis Bookmarks"
                     data-fixed-items="1"
                     gap="0.25rem"
-                    ?open=${!!store.getData("drawerGroup")?.["visBookmarks"]
-                        ?.open}
+                    ?open=${!!store.getData("drawerGroup")?.["visBookmarks"]?.open}
                     @fold=${() => {
                         store.updateData(`drawerGroup`, (data) => {
                             data["visBookmarks"] = { open: false };
@@ -439,16 +429,12 @@ class PGApp extends LitElement {
                 >
                     <!-- Fixed Item 1 -->
                     <ui-drawer-group-item>
-                        <pg-drawer-item-import
-                            store-key="visData"
-                        ></pg-drawer-item-import>
+                        <pg-drawer-item-import store-key="visData"></pg-drawer-item-import>
                     </ui-drawer-group-item>
 
                     <!-- Fixed Item 2 -->
                     <ui-drawer-group-item>
-                        <pg-drawer-item-gist
-                            store-key="visData"
-                        ></pg-drawer-item-gist>
+                        <pg-drawer-item-gist store-key="visData"></pg-drawer-item-gist>
                     </ui-drawer-group-item>
 
                     <!-- Fixed Item 3 -->
@@ -505,18 +491,15 @@ class PGApp extends LitElement {
 
             <pg-metal-sheet-table-dialog
                 title="Neue Liste"
-                @submit=${(
-                    ev: Event & { currentTarget: PGMetalSheetTableDialog },
-                ) => {
+                @submit=${(ev: Event & { currentTarget: PGMetalSheetTableDialog }) => {
                     const format = ev.currentTarget.format;
                     const toolID = ev.currentTarget.toolID;
                     const press = ev.currentTarget.press;
 
                     const reopenDialog = () => {
-                        const dialog =
-                            this.querySelector<PGMetalSheetTableDialog>(
-                                `pg-metal-sheet-table-dialog`,
-                            )!;
+                        const dialog = this.querySelector<PGMetalSheetTableDialog>(
+                            `pg-metal-sheet-table-dialog`,
+                        )!;
 
                         dialog.format = format;
                         dialog.toolID = toolID;
@@ -588,9 +571,7 @@ class PGApp extends LitElement {
             </pg-vis-data-dialog>
 
             <pg-vis-bookmarks-dialog
-                @submit=${(
-                    ev: Event & { currentTarget: PGVisBookmarksDialog },
-                ) => {
+                @submit=${(ev: Event & { currentTarget: PGVisBookmarksDialog }) => {
                     const title = ev.currentTarget.title;
                     const listsStore = newListsStore("visBookmarks");
 
@@ -714,8 +695,7 @@ class PGApp extends LitElement {
             });
 
             if (current === null) {
-                appBar.contentName("title")!.contentAt(0)!.innerText =
-                    "PG: Vis";
+                appBar.contentName("title")!.contentAt(0)!.innerText = "PG: Vis";
 
                 drawer.open = true;
                 return;
@@ -764,20 +744,13 @@ class PGApp extends LitElement {
         this.drawerGroupItemsRendering(store, "visData");
     }
 
-    private drawerGroupItemsRendering(
-        store: PGStore,
-        storeKey: keyof ListsStoreData,
-    ) {
+    private drawerGroupItemsRendering(store: PGStore, storeKey: keyof ListsStoreData) {
         store.addListener(
             storeKey,
             (data) => {
-                const groupContainer = this.querySelector(
-                    `ui-drawer-group[name="${storeKey}"]`,
-                )!;
+                const groupContainer = this.querySelector(`ui-drawer-group[name="${storeKey}"]`)!;
 
-                const fixedItems = parseInt(
-                    groupContainer.getAttribute("data-fixed-items") || "0",
-                );
+                const fixedItems = parseInt(groupContainer.getAttribute("data-fixed-items") || "0");
 
                 Array.from(groupContainer.children)
                     .slice(fixedItems)
@@ -799,9 +772,8 @@ class PGApp extends LitElement {
                         case "metalSheets":
                             ((list: MetalSheet) => {
                                 groupItem.primary =
-                                    (list.data.press >= 0
-                                        ? `[P${list.data.press}] `
-                                        : "") + listsStore.listKey(list);
+                                    (list.data.press >= 0 ? `[P${list.data.press}] ` : "") +
+                                    listsStore.listKey(list);
                                 groupItem.secondary = `${(list as MetalSheet).data.table.data.length} Einträge`;
                             })(list as MetalSheet);
                             break;

@@ -22,11 +22,17 @@ class PGBookmarkDialog extends LitElement {
         };
 
         return html`
-            <ui-dialog modal inert>
+            <ui-dialog title="Bookmark" modal inert>
                 <ui-flex-grid gap="0.25rem">
                     <ui-flex-grid-row justify="flex-end">
                         <ui-flex-grid-item flex="0">
-                            <ui-button variant="full" color="secondary" @click=${newList}>
+                            <ui-button
+                                style="text-wrap: nowrap;"
+                                variant="full"
+                                color="secondary"
+                                ripple
+                                @click=${newList}
+                            >
                                 Neue Liste
                             </ui-button>
                         </ui-flex-grid-item>
@@ -34,6 +40,15 @@ class PGBookmarkDialog extends LitElement {
 
                     ${this.renderChecklists(store)}
                 </ui-flex-grid>
+
+                <ui-button
+                    slot="actions"
+                    variant="full"
+                    color="primary"
+                    @click=${async () => this.close()}
+                >
+                    OK
+                </ui-button>
             </ui-dialog>
         `;
     }
@@ -53,18 +68,24 @@ class PGBookmarkDialog extends LitElement {
                 keyed(
                     list,
                     html`
-                        <ui-label primary="${list.title}" ripple>
-                            <ui-check
-                                ?checked=${this.isBookmark(list)}
-                                @click=${() => toggleBookmark(list)}
-                            ></ui-check>
-                        </ui-label>
+                        <ui-flex-grid-item>
+                            <ui-label primary="${list.title}" ripple>
+                                <ui-check
+                                    ?checked=${this.isBookmark(list)}
+                                    @click=${() => toggleBookmark(list)}
+                                ></ui-check>
+                            </ui-label>
+                        </ui-flex-grid-item>
                     `,
                 ),
             );
         }
 
-        return `<ui-flex-grid-item>${content}</ui-flex-grid-item>`;
+        return html`
+            <ui-flex-grid-item>
+                <ui-flex-grid gap="0.25rem">${content}</ui-flex-grid>
+            </ui-flex-grid-item>
+        `;
     }
 
     public isBookmark(bookmarks: Bookmarks): boolean {
@@ -72,7 +93,7 @@ class PGBookmarkDialog extends LitElement {
 
         const productKey = `${this.product.lotto} ${this.product.name}`;
         return (
-            bookmarks.data.find((product) => `${product.lotto} ${product.name}` === productKey) ===
+            bookmarks.data.find((product) => `${product.lotto} ${product.name}` === productKey) !==
             undefined
         );
     }

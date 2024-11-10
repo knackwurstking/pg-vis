@@ -26,9 +26,9 @@ class PGBookmarksAction extends LitElement {
                 Speichern
             </ui-button>
 
-            <ui-bookmark-dialog
+            <pg-bookmark-dialog
                 product="${JSON.stringify(this.product) || ""}"
-            ></ui-bookmark-dialog>
+            ></pg-bookmark-dialog>
         `;
     }
 }
