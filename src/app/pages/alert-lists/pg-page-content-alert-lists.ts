@@ -5,10 +5,11 @@ import { keyed, Keyed } from "lit/directives/keyed.js";
 import { CleanUp, styles, UIIconButton } from "ui";
 
 import { PGAlertListItem } from ".";
-import { PGPageContent } from "..";
-import { PGApp, PGSearchBar } from "../..";
 import * as lib from "../../../lib";
 import { Alert, AlertList } from "../../../store-types";
+import { PGSearchBar } from "../../components";
+import PGApp from "../../pg-app";
+import PGPageContent from "../pg-page-content";
 
 @customElement("pg-page-content-alert-lists")
 class PGPageContentAlertLists extends PGPageContent<AlertList> {

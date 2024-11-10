@@ -3,10 +3,11 @@ import { customElement, property } from "lit/decorators.js";
 import { CleanUp, styles, UIIconButton } from "ui";
 
 import { PGVisListItem } from ".";
-import { PGPageContent } from "..";
-import { PGApp, PGSearchBar } from "../..";
 import * as lib from "../../../lib";
 import { Product, Vis } from "../../../store-types";
+import { PGSearchBar } from "../../components";
+import PGApp from "../../pg-app";
+import PGPageContent from "../pg-page-content";
 
 @customElement("pg-page-content-vis")
 class PGPageContentVis extends PGPageContent<Vis> {

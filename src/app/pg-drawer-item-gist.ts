@@ -2,8 +2,8 @@ import { LitElement } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { CleanUp, html, styles, UISpinner } from "ui";
 
-import { PGApp } from ".";
 import * as lib from "../lib/";
+import PGApp from "./pg-app";
 
 @customElement("pg-drawer-item-gist")
 class PGDrawerItemGist extends LitElement {

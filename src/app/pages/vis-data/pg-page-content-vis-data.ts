@@ -5,10 +5,11 @@ import { Keyed, keyed } from "lit/directives/keyed.js";
 import { CleanUp, UIIconButton } from "ui";
 
 import { PGPageContentVisDataEdit, PGVisDataListItem } from ".";
-import { PGPageContent } from "..";
-import { PGApp, PGVisDataDialog } from "../..";
 import * as lib from "../../../lib";
 import { VisData } from "../../../store-types";
+import { PGVisDataDialog } from "../../dialogs";
+import PGApp from "../../pg-app";
+import PGPageContent from "../pg-page-content";
 
 @customElement("pg-page-content-vis-data")
 export class PGPageContentVisData extends PGPageContent<VisData> {

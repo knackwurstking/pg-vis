@@ -5,9 +5,10 @@ import { Keyed, keyed } from "lit/directives/keyed.js";
 import { CleanUp, draggable, styles, UIIconButton } from "ui";
 
 import { PGPageContent } from "..";
-import { PGApp, PGMetalSheetEntryDialog, PGMetalSheetTableDialog } from "../..";
 import * as lib from "../../../lib";
 import { MetalSheet } from "../../../store-types";
+import { PGMetalSheetEntryDialog, PGMetalSheetTableDialog } from "../../dialogs";
+import PGApp from "../../pg-app";
 
 @customElement("pg-page-content-metal-sheets")
 class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {

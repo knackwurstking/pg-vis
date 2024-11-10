@@ -5,9 +5,9 @@ import { Keyed, keyed } from "lit/directives/keyed.js";
 import { html } from "ui";
 
 import { PGPageContent, PGVisListItem } from "..";
-import { PGApp } from "../..";
 import * as lib from "../../../lib";
 import { Bookmarks, PGStore, Product, Vis } from "../../../store-types";
+import PGApp from "../../pg-app";
 
 @customElement("pg-page-content-vis-bookmarks")
 class PGPageContentVisBookmarks extends PGPageContent<Bookmarks> {

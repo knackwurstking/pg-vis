@@ -3,9 +3,10 @@ import { customElement } from "lit/decorators.js";
 
 import { nothing } from "lit";
 import { UIFlexGridItem } from "ui";
-import { PGPageContent, PGVisDataListItem } from "../..";
-import { PGApp } from "../../..";
 import { Product } from "../../../../store-types";
+import PGApp from "../../../pg-app";
+import PGPageContent from "../../pg-page-content";
+import { PGVisDataListItem } from "../../vis-data";
 
 @customElement("pg-page-contents-product")
 class PGPageContentProduct extends PGPageContent<Product> {
