@@ -40,7 +40,9 @@ class PGPageContentProduct extends PGPageContent<Product> {
                         </ui-flex-grid-item>
 
                         <ui-flex-grid-item flex="0">
-                            <pg-bookmarks-action></pg-bookmarks-action>
+                            <pg-bookmarks-action
+                                product="${JSON.stringify(this.data) || ""}"
+                            ></pg-bookmarks-action>
                         </ui-flex-grid-item>
                     </ui-flex-grid-row>
 
