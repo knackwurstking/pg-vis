@@ -38,7 +38,7 @@ class PGBookmarkDialog extends LitElement {
                         </ui-flex-grid-item>
                     </ui-flex-grid-row>
 
-                    ${this.renderChecklists(store)}
+                    <ui-flex-grid-item>${this.renderChecklists(store)}</ui-flex-grid-item>
                 </ui-flex-grid>
 
                 <ui-button
@@ -81,11 +81,7 @@ class PGBookmarkDialog extends LitElement {
             );
         }
 
-        return html`
-            <ui-flex-grid-item>
-                <ui-flex-grid gap="0.25rem">${content}</ui-flex-grid>
-            </ui-flex-grid-item>
-        `;
+        return html`<ui-flex-grid gap="0.25rem">${content}</ui-flex-grid>`;
     }
 
     public isBookmark(bookmarks: Bookmarks): boolean {
