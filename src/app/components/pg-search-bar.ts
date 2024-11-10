@@ -15,7 +15,14 @@ class PGSearchBar extends LitElement {
 
     static generateRegExp(value: string): RegExp {
         const regexSplit: string[] = value.split(" ").filter((v) => v !== "");
-        return new RegExp("(?=.*" + regexSplit.join(")(?=.*") + ")", "i");
+        return new RegExp(
+            "(?=.*" +
+                regexSplit
+                    .map((part) => part.replace(/[()]/g, "\\$&")) // $& means the whole matched string
+                    .join(")(?=.*") +
+                ")",
+            "i",
+        );
     }
 
     static get styles() {
