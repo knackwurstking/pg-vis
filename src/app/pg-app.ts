@@ -15,6 +15,7 @@ import { build, version } from "../constants";
 import { ListsStoreData, newListsStore } from "../lib/lists-store";
 import { AlertList, MetalSheet, PGStackLayoutPage, PGStore, Vis, VisData } from "../store-types";
 import {
+    PGBookmarkSelectDialog,
     PGImportDialog,
     PGMetalSheetTableDialog,
     PGVisBookmarksDialog,
@@ -60,6 +61,10 @@ class PGApp extends LitElement {
 
     static queryVisBookmarksDialog(): PGVisBookmarksDialog | null {
         return document.querySelector<PGVisBookmarksDialog>(`pg-vis-bookmarks-dialog`);
+    }
+
+    static queryBookmarkSelectDialog(): PGBookmarkSelectDialog | null {
+        return document.querySelector<PGBookmarkSelectDialog>(`pg-bookmark-select-dialog`);
     }
 
     static queryVisDataDialog(): PGVisDataDialog | null {
@@ -594,6 +599,8 @@ class PGApp extends LitElement {
                 }}
             >
             </pg-vis-bookmarks-dialog>
+
+            <pg-bookmark-select-dialog></pg-bookmark-select-dialog>
         `;
     }
 

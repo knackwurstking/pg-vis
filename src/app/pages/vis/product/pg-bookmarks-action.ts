@@ -2,7 +2,7 @@ import { html, LitElement } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { svg } from "ui";
 import { Product } from "../../../../store-types";
-import { PGBookmarkSelectDialog } from "../../../dialogs";
+import PGApp from "../../../pg-app";
 
 @customElement("pg-bookmarks-action")
 class PGBookmarksAction extends LitElement {
@@ -16,7 +16,8 @@ class PGBookmarksAction extends LitElement {
     protected render() {
         const buttonClick = () => {
             if (this.product === undefined) return;
-            const dialog = this.querySelector<PGBookmarkSelectDialog>(`pg-bookmark-select-dialog`)!;
+            const dialog = PGApp.queryBookmarkSelectDialog()!;
+            dialog.product = this.product;
             dialog.show();
         };
 
@@ -25,10 +26,6 @@ class PGBookmarksAction extends LitElement {
                 <ui-svg style="width: 2rem;">${svg.smoothieLineIcons.bookmark}</ui-svg>
                 Speichern
             </ui-button>
-
-            <pg-bookmark-select-dialog
-                product="${JSON.stringify(this.product) || ""}"
-            ></pg-bookmark-select-dialog>
         `;
     }
 }
