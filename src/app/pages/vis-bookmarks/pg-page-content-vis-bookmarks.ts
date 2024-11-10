@@ -6,8 +6,7 @@ import { html } from "ui";
 
 import { PGPageContent, PGVisListItem } from "..";
 import { PGApp } from "../..";
-import { queryTargetFromElementPath } from "../../../lib/query-utils";
-import * as utils from "../../../lib/utils";
+import * as lib from "../../../lib";
 import { Bookmarks, PGStore, Product, Vis } from "../../../store-types";
 
 @customElement("pg-page-content-vis-bookmarks")
@@ -17,13 +16,16 @@ class PGPageContentVisBookmarks extends PGPageContent<Bookmarks> {
     protected render() {
         PGApp.queryAppBar()!.contentName("title")!.contentAt(0).innerText =
             this.data !== undefined
-                ? utils.listsStore("visBookmarks").listKey(this.data)
-                : utils.listsStore("visBookmarks").title();
+                ? lib.listsStore("visBookmarks").listKey(this.data)
+                : lib.listsStore("visBookmarks").title();
 
         const listClickHandler = (ev: Event & { currentTarget: HTMLElement }) => {
             if (!(ev.target instanceof Element)) return;
 
-            const target = queryTargetFromElementPath<PGVisListItem>(ev.target, "pg-vis-list-item");
+            const target = lib.queryTargetFromElementPath<PGVisListItem>(
+                ev.target,
+                "pg-vis-list-item",
+            );
             if (target === null) return;
 
             PGApp.queryStackLayout()!.setPage(

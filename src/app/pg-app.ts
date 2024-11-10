@@ -12,8 +12,7 @@ import {
     UIThemeHandlerTheme,
 } from "ui";
 import { build, version } from "../constants";
-import { ListsStoreData } from "../lib/lists-store";
-import * as utils from "../lib/utils";
+import * as lib from "../lib";
 import { AlertList, MetalSheet, PGStackLayoutPage, PGStore, Vis, VisData } from "../store-types";
 import {
     PGBookmarkSelectDialog,
@@ -532,7 +531,7 @@ class PGApp extends LitElement {
                         },
                     };
 
-                    const listsStore = utils.listsStore("metalSheets");
+                    const listsStore = lib.listsStore("metalSheets");
                     const newListKey = listsStore.listKey(newData);
 
                     for (const list of store.getData("metalSheets") || []) {
@@ -551,7 +550,7 @@ class PGApp extends LitElement {
             <pg-vis-data-dialog
                 @submit=${(ev: Event & { currentTarget: PGVisDataDialog }) => {
                     const title = ev.currentTarget.title;
-                    const listsStore = utils.listsStore("visData");
+                    const listsStore = lib.listsStore("visData");
 
                     try {
                         listsStore.addToStore(
@@ -579,7 +578,7 @@ class PGApp extends LitElement {
             <pg-vis-bookmarks-dialog
                 @submit=${(ev: Event & { currentTarget: PGVisBookmarksDialog }) => {
                     const title = ev.currentTarget.title;
-                    const listsStore = utils.listsStore("visBookmarks");
+                    const listsStore = lib.listsStore("visBookmarks");
 
                     try {
                         listsStore.addToStore(PGApp.queryStore(), [
@@ -752,7 +751,7 @@ class PGApp extends LitElement {
         this.drawerGroupItemsRendering(store, "visData");
     }
 
-    private drawerGroupItemsRendering(store: PGStore, storeKey: keyof ListsStoreData) {
+    private drawerGroupItemsRendering(store: PGStore, storeKey: keyof lib.ListsStoreData) {
         store.addListener(
             storeKey,
             (data) => {
@@ -764,7 +763,7 @@ class PGApp extends LitElement {
                     .slice(fixedItems)
                     .forEach((child) => groupContainer.removeChild(child));
 
-                const listsStore = utils.listsStore(storeKey);
+                const listsStore = lib.listsStore(storeKey);
                 data.forEach(async (list) => {
                     const item = new UIDrawerGroupItem();
                     groupContainer.appendChild(item);

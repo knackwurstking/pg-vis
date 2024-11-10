@@ -6,7 +6,7 @@ import { CleanUp, draggable, styles, UIIconButton } from "ui";
 
 import { PGPageContent } from "..";
 import { PGApp, PGMetalSheetEntryDialog, PGMetalSheetTableDialog } from "../..";
-import * as utils from "../../../lib/utils";
+import * as lib from "../../../lib";
 import { MetalSheet } from "../../../store-types";
 
 @customElement("pg-page-content-metal-sheets")
@@ -16,8 +16,8 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
     protected render(): TemplateResult<1> {
         PGApp.queryAppBar()!.contentName("title")!.contentAt(0).innerText =
             this.data !== undefined
-                ? utils.listsStore("metalSheets").listKey(this.data)
-                : utils.listsStore("metalSheets").title();
+                ? lib.listsStore("metalSheets").listKey(this.data)
+                : lib.listsStore("metalSheets").title();
 
         return html`
             <div
@@ -99,7 +99,7 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
                     }
 
                     const store = PGApp.queryStore();
-                    const listsStore = utils.listsStore("metalSheets");
+                    const listsStore = lib.listsStore("metalSheets");
 
                     try {
                         const newData: MetalSheet = {
@@ -236,7 +236,7 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
     }
 
     private replaceInStore(list: MetalSheet) {
-        const listsStore = utils.listsStore("metalSheets");
+        const listsStore = lib.listsStore("metalSheets");
         listsStore.replaceInStore(PGApp.queryStore(), list, list);
     }
 }

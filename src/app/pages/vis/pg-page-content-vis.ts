@@ -5,8 +5,7 @@ import { CleanUp, styles, UIIconButton } from "ui";
 import { PGVisListItem } from ".";
 import { PGPageContent } from "..";
 import { PGApp, PGSearchBar } from "../..";
-import { queryTargetFromElementPath } from "../../../lib/query-utils";
-import * as utils from "../../../lib/utils";
+import * as lib from "../../../lib";
 import { Product, Vis } from "../../../store-types";
 
 @customElement("pg-page-content-vis")
@@ -19,8 +18,8 @@ class PGPageContentVis extends PGPageContent<Vis> {
     protected render() {
         PGApp.queryAppBar()!.contentName("title")!.contentAt(0).innerText =
             this.data !== undefined
-                ? utils.listsStore("vis").listKey(this.data)
-                : utils.listsStore("vis").title();
+                ? lib.listsStore("vis").listKey(this.data)
+                : lib.listsStore("vis").title();
 
         // TODO: - Add some special flakes marker
 
@@ -47,7 +46,7 @@ class PGPageContentVis extends PGPageContent<Vis> {
                     @click=${async (ev: Event) => {
                         if (!(ev.target instanceof Element)) return;
 
-                        const target = queryTargetFromElementPath<PGVisListItem>(
+                        const target = lib.queryTargetFromElementPath<PGVisListItem>(
                             ev.target,
                             "pg-vis-list-item",
                         );

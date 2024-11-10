@@ -4,14 +4,12 @@ import { keyed } from "lit/directives/keyed.js";
 import { UIDialog, UIInput } from "ui";
 
 import { PGApp } from "..";
-import { importFromGist } from "../../lib/gist";
-import { ListsStoreData } from "../../lib/lists-store";
-import * as utils from "../../lib/utils";
+import * as lib from "../../lib";
 
 @customElement("pg-import-dialog")
 class PGImportDialog extends LitElement {
     @property({ type: String, attribute: "store-key", reflect: true })
-    storeKey?: keyof ListsStoreData;
+    storeKey?: keyof lib.ListsStoreData;
 
     protected createRenderRoot(): HTMLElement | DocumentFragment {
         return this;
@@ -56,7 +54,7 @@ class PGImportDialog extends LitElement {
                         )!.value;
 
                         if (gistID === "") await this.importFromFile();
-                        else await importFromGist(this.storeKey, gistID);
+                        else await lib.importFromGist(this.storeKey, gistID);
 
                         const stack = PGApp.queryStackLayout()!;
                         stack.clearStack();
@@ -85,7 +83,7 @@ class PGImportDialog extends LitElement {
                     if (typeof reader.result !== "string") return;
                     if (this.storeKey === undefined) return;
 
-                    const listsStore = utils.listsStore(this.storeKey);
+                    const listsStore = lib.listsStore(this.storeKey);
 
                     let data: any;
                     try {

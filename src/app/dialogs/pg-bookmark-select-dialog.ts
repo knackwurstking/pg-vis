@@ -2,7 +2,7 @@ import { html, LitElement } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { keyed } from "lit/directives/keyed.js";
 import { CleanUp, UIDialog } from "ui";
-import * as utils from "../../lib/utils";
+import * as lib from "../../lib";
 import { Bookmarks, PGStore, Product } from "../../store-types";
 import PGApp from "../pg-app";
 
@@ -67,14 +67,14 @@ class PGBookmarkSelectDialog extends LitElement {
         const toggleBookmark = (list: Bookmarks) => {
             if (this.product === undefined) return;
 
-            const productKey = utils.productKey(this.product);
-            utils.listsStore("visBookmarks").replaceInStore(
+            const productKey = lib.productKey(this.product);
+            lib.listsStore("visBookmarks").replaceInStore(
                 PGApp.queryStore(),
                 {
                     ...list,
                     data: this.isBookmark(list)
                         ? list.data.filter((bookmarkProduct) => {
-                              return utils.productKey(bookmarkProduct) !== productKey;
+                              return lib.productKey(bookmarkProduct) !== productKey;
                           })
                         : [...list.data, this.product],
                 },
@@ -118,9 +118,9 @@ class PGBookmarkSelectDialog extends LitElement {
     public isBookmark(bookmarks: Bookmarks): boolean {
         if (this.product === undefined) return false;
 
-        const productKey = utils.productKey(this.product);
+        const productKey = lib.productKey(this.product);
         return (
-            bookmarks.data.find((product) => utils.productKey(product) === productKey) !== undefined
+            bookmarks.data.find((product) => lib.productKey(product) === productKey) !== undefined
         );
     }
 

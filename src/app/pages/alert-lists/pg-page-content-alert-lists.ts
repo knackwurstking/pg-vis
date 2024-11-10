@@ -7,8 +7,7 @@ import { CleanUp, styles, UIIconButton } from "ui";
 import { PGAlertListItem } from ".";
 import { PGPageContent } from "..";
 import { PGApp, PGSearchBar } from "../..";
-import { queryTargetFromElementPath } from "../../../lib/query-utils";
-import * as utils from "../../../lib/utils";
+import * as lib from "../../../lib";
 import { Alert, AlertList } from "../../../store-types";
 
 @customElement("pg-page-content-alert-lists")
@@ -26,8 +25,8 @@ class PGPageContentAlertLists extends PGPageContent<AlertList> {
     protected render(): TemplateResult<1> {
         PGApp.queryAppBar()!.contentName("title")!.contentAt(0).innerText =
             this.data !== undefined
-                ? utils.listsStore("alertLists").listKey(this.data)
-                : utils.listsStore("alertLists").title();
+                ? lib.listsStore("alertLists").listKey(this.data)
+                : lib.listsStore("alertLists").title();
 
         return html`
             <pg-search-bar
@@ -52,7 +51,7 @@ class PGPageContentAlertLists extends PGPageContent<AlertList> {
                     @click=${async (ev: MouseEvent): Promise<void> => {
                         if (!(ev.target instanceof Element)) return;
 
-                        const target = queryTargetFromElementPath<PGAlertListItem>(
+                        const target = lib.queryTargetFromElementPath<PGAlertListItem>(
                             ev.target,
                             `pg-alert-list-item`,
                         );

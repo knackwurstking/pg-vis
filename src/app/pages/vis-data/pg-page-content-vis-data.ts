@@ -7,8 +7,7 @@ import { CleanUp, UIIconButton } from "ui";
 import { PGPageContentVisDataEdit, PGVisDataListItem } from ".";
 import { PGPageContent } from "..";
 import { PGApp, PGVisDataDialog } from "../..";
-import { queryTargetFromElementPath } from "../../../lib/query-utils";
-import * as utils from "../../../lib/utils";
+import * as lib from "../../../lib";
 import { VisData } from "../../../store-types";
 
 @customElement("pg-page-content-vis-data")
@@ -19,8 +18,8 @@ export class PGPageContentVisData extends PGPageContent<VisData> {
     protected render() {
         PGApp.queryAppBar()!.contentName("title")!.contentAt(0).innerText =
             this.data !== undefined
-                ? utils.listsStore("visData").listKey(this.data)
-                : utils.listsStore("visData").title();
+                ? lib.listsStore("visData").listKey(this.data)
+                : lib.listsStore("visData").title();
 
         return html`
             <div class="container no-scrollbar" style="width: 100%; height: 100%; overflow: auto;">
@@ -50,7 +49,7 @@ export class PGPageContentVisData extends PGPageContent<VisData> {
                             thickness: null,
                         };
 
-                        content.listKey = utils.listsStore("visData").listKey(this.data!);
+                        content.listKey = lib.listsStore("visData").listKey(this.data!);
 
                         content.entryIndex = -1;
                     }
@@ -80,7 +79,7 @@ export class PGPageContentVisData extends PGPageContent<VisData> {
         const handleClick = async (ev: Event) => {
             if (!(ev.target instanceof Element) || this.data === undefined) return;
 
-            const target = queryTargetFromElementPath<PGVisDataListItem>(
+            const target = lib.queryTargetFromElementPath<PGVisDataListItem>(
                 ev.target,
                 "pg-vis-data-list-item",
             );
@@ -94,7 +93,7 @@ export class PGPageContentVisData extends PGPageContent<VisData> {
                     if (content !== undefined) {
                         content.data = target.data;
 
-                        content.listKey = utils.listsStore("visData").listKey(this.data!);
+                        content.listKey = lib.listsStore("visData").listKey(this.data!);
 
                         content.entryIndex = target.entryIndex;
                     }
@@ -124,9 +123,11 @@ export class PGPageContentVisData extends PGPageContent<VisData> {
             this.data.title = ev.currentTarget.title;
 
             try {
-                utils
-                    .listsStore("visData")
-                    .replaceInStore(PGApp.queryStore(), { ...this.data }, oldData);
+                lib.listsStore("visData").replaceInStore(
+                    PGApp.queryStore(),
+                    { ...this.data },
+                    oldData,
+                );
             } catch (err) {
                 alert(err);
                 setTimeout(() => {
@@ -191,7 +192,7 @@ export class PGPageContentVisData extends PGPageContent<VisData> {
 
         // Re-Render if "visData" changes
 
-        const listsStore = utils.listsStore("visData");
+        const listsStore = lib.listsStore("visData");
         const store = PGApp.queryStore();
         this.cleanup.add(
             store.addListener("visData", (data) => {

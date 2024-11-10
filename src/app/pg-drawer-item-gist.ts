@@ -3,14 +3,12 @@ import { customElement, property } from "lit/decorators.js";
 import { CleanUp, html, styles, UISpinner } from "ui";
 
 import { PGApp } from ".";
-import { importFromGist } from "../lib/gist";
-import { ListsStoreData } from "../lib/lists-store";
-import * as utils from "../lib/utils";
+import * as lib from "../lib/";
 
 @customElement("pg-drawer-item-gist")
 class PGDrawerItemGist extends LitElement {
     @property({ type: String, attribute: "store-key", reflect: true })
-    storeKey?: keyof ListsStoreData;
+    storeKey?: keyof lib.ListsStoreData;
 
     @property({ type: Number, attribute: false, reflect: true })
     revision: number = 0;
@@ -48,7 +46,7 @@ class PGDrawerItemGist extends LitElement {
                                 this.startSpinner();
 
                                 if (confirm(`Alle Ihre Änderungen gehen verloren!`)) {
-                                    await importFromGist(this.storeKey, this.gistID);
+                                    await lib.importFromGist(this.storeKey, this.gistID);
 
                                     const stack = PGApp.queryStackLayout()!;
                                     stack.clearStack();
@@ -86,7 +84,7 @@ class PGDrawerItemGist extends LitElement {
                 "gist",
                 (data) => {
                     if (!this.storeKey) return;
-                    const listsStore = utils.listsStore(this.storeKey);
+                    const listsStore = lib.listsStore(this.storeKey);
                     const part = data[listsStore.key()];
                     if (part !== undefined) {
                         this.gistID = part.id;

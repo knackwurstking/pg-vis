@@ -1,5 +1,5 @@
-import { convert } from "../..";
 import { Vis } from "../../store-types";
+import * as convert from "../convert";
 import { ListsStore, ListsStoreData } from "./base";
 
 export class VisStore extends ListsStore<"vis"> {

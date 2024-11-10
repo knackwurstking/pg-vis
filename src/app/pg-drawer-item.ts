@@ -3,8 +3,7 @@ import { customElement, property } from "lit/decorators.js";
 import { svg } from "ui";
 
 import { PGApp } from ".";
-import { ListsStoreData } from "../lib/lists-store";
-import * as utils from "../lib/utils";
+import * as lib from "../lib";
 import { PGPageContent } from "./pages";
 
 /**
@@ -21,7 +20,7 @@ import { PGPageContent } from "./pages";
 @customElement("pg-drawer-item")
 class PGDrawerItem extends LitElement {
     @property({ type: String, attribute: "store-key", reflect: true })
-    storeKey?: keyof ListsStoreData;
+    storeKey?: keyof lib.ListsStoreData;
 
     /**
      * Entry to access, or delete, from the global ui-store element
@@ -99,7 +98,7 @@ class PGDrawerItem extends LitElement {
     protected async setStackLayoutPage() {
         if (!this.storeKey) return;
 
-        const listsStore = utils.listsStore(this.storeKey);
+        const listsStore = lib.listsStore(this.storeKey);
         const storeData = PGApp.queryStore().getData(this.storeKey);
         const data = storeData?.find((list) => listsStore.listKey(list) === this.storeListKey);
 
@@ -129,7 +128,7 @@ class PGDrawerItem extends LitElement {
             case "visBookmarks":
             case "visData":
                 if (confirm(`Möchten Sie "${this.storeListKey}" wirklich löschen?`)) {
-                    const listsStore = utils.listsStore(this.storeKey);
+                    const listsStore = lib.listsStore(this.storeKey);
                     PGApp.queryStore().updateData(this.storeKey, (data) => {
                         return data.filter(
                             (list) => listsStore.listKey(list) !== this.storeListKey,
