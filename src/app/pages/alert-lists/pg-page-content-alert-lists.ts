@@ -31,7 +31,7 @@ class PGPageContentAlertLists extends PGPageContent<AlertList> {
 
         return html`
             <pg-search-bar
-                title="Alarmsuche (RegEx Mode)"
+                title="Alarmsuche"
                 storage-key="${this.data?.title}"
                 ?active=${!!this.searchBar}
                 @change=${async (ev: Event & { currentTarget: PGSearchBar }) => {

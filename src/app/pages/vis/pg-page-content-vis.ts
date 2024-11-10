@@ -26,7 +26,7 @@ class PGPageContentVis extends PGPageContent<Vis> {
 
         return html`
             <pg-search-bar
-                title="Productsuche (RegEx Mode)"
+                title="Produktsuche"
                 storage-key="${this.data?.title}"
                 ?active=${!!this.searchBar}
                 @change=${async (ev: Event & { currentTarget: PGSearchBar }) => {
