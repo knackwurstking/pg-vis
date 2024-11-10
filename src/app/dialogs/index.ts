@@ -1,4 +1,4 @@
-export { default as PGBookmarkDialog } from "./pg-bookmark-dialog";
+export { default as PGBookmarkSelectDialog } from "./pg-bookmark-select-dialog";
 export { default as PGImportDialog } from "./pg-import-dialog";
 export { default as PGMetalSheetEntryDialog } from "./pg-metal-sheet-entry-dialog";
 export { default as PGMetalSheetTableDialog } from "./pg-metal-sheet-table-dialog";

@@ -5,8 +5,8 @@ import { CleanUp, UIDialog } from "ui";
 import { Bookmarks, PGStore, Product } from "../../store-types";
 import PGApp from "../pg-app";
 
-@customElement("pg-bookmark-dialog")
-class PGBookmarkDialog extends LitElement {
+@customElement("pg-bookmark-select-dialog")
+class PGBookmarkSelectDialog extends LitElement {
     @property({ type: Object, attribute: "product", reflect: false })
     product?: Product;
 
@@ -125,4 +125,4 @@ class PGBookmarkDialog extends LitElement {
     }
 }
 
-export default PGBookmarkDialog;
+export default PGBookmarkSelectDialog;
