@@ -1,7 +1,7 @@
 import { html, LitElement } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { keyed } from "lit/directives/keyed.js";
-import { UIDialog } from "ui";
+import { CleanUp, UIDialog } from "ui";
 import { Bookmarks, PGStore, Product } from "../../store-types";
 import PGApp from "../pg-app";
 
@@ -9,6 +9,8 @@ import PGApp from "../pg-app";
 class PGBookmarkDialog extends LitElement {
     @property({ type: Object, attribute: "product", reflect: false })
     product?: Product;
+
+    private cleanup = new CleanUp();
 
     protected createRenderRoot(): HTMLElement | DocumentFragment {
         return this;
@@ -18,14 +20,17 @@ class PGBookmarkDialog extends LitElement {
         const store = PGApp.queryStore();
 
         const newList = () => {
-            // TODO: Create a new bookmarks list (dialog)
+            const dialog = PGApp.queryVisBookmarksDialog()!;
+            dialog.title = "";
+            dialog.invalidTitle = false;
+            dialog.show();
         };
 
         return html`
             <ui-dialog title="Bookmark" modal inert>
                 <ui-flex-grid gap="0.25rem">
                     <ui-flex-grid-row justify="flex-end">
-                        <ui-flex-grid-item flex="0">
+                        <ui-flex-grid-item flex="1">
                             <ui-button
                                 style="text-wrap: nowrap;"
                                 variant="full"
@@ -59,7 +64,13 @@ class PGBookmarkDialog extends LitElement {
         const bookmarksData = store.getData("visBookmarks") || [];
 
         const toggleBookmark = (list: Bookmarks) => {
-            // TODO: Add/Remove to/from bookmarks store
+            if (this.isBookmark(list)) {
+                // TODO:: Remove from list
+            } else {
+                // TODO: Add to list
+            }
+
+            // TODO: Update "visBookmarks" store
         };
 
         const content = [];
@@ -82,6 +93,17 @@ class PGBookmarkDialog extends LitElement {
         }
 
         return html`<ui-flex-grid gap="0.25rem">${content}</ui-flex-grid>`;
+    }
+
+    connectedCallback(): void {
+        super.connectedCallback();
+        const store = PGApp.queryStore();
+        this.cleanup.add(store.addListener("visBookmarks", () => this.requestUpdate()));
+    }
+
+    disconnectedCallback(): void {
+        super.disconnectedCallback();
+        this.cleanup.run();
     }
 
     public isBookmark(bookmarks: Bookmarks): boolean {
