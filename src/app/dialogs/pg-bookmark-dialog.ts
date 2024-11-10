@@ -17,12 +17,20 @@ class PGBookmarkDialog extends LitElement {
     protected render() {
         const store = PGApp.queryStore();
 
+        const newList = () => {
+            // TODO: Create a new bookmarks list (dialog)
+        };
+
         return html`
             <ui-dialog modal inert>
                 <ui-flex-grid gap="0.25rem">
-                    <ui-flex-grid-item flex="0">
-                        <!-- TODO: Add new bookmarks list (dialog) here -->
-                    </ui-flex-grid-item>
+                    <ui-flex-grid-row justify="flex-end">
+                        <ui-flex-grid-item flex="0">
+                            <ui-button variant="full" color="secondary" @click=${newList}>
+                                Neue Liste
+                            </ui-button>
+                        </ui-flex-grid-item>
+                    </ui-flex-grid-row>
 
                     ${this.renderChecklists(store)}
                 </ui-flex-grid>
