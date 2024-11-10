@@ -1,9 +1,9 @@
-import { html } from "lit";
-import { DirectiveResult } from "lit/async-directive.js";
+import { html, PropertyValues } from "lit";
 import { customElement } from "lit/decorators.js";
-import { Keyed, keyed } from "lit/directives/keyed.js";
 
-import { PGPageContent } from "../..";
+import { nothing } from "lit";
+import { UIFlexGridItem } from "ui";
+import { PGPageContent, PGVisDataListItem } from "../..";
 import { PGApp } from "../../..";
 import { Product } from "../../../../store-types";
 
@@ -41,71 +41,69 @@ class PGPageContentProduct extends PGPageContent<Product> {
                         </ui-flex-grid-item>
                     </ui-flex-grid-row>
 
-                    ${this.renderData()}
+                    <ui-flex-grid class="list" direction="column" gap="0.25rem">
+                        ${nothing}
+                    </ui-flex-grid>
                 </ui-flex-grid>
             </div>
         `;
     }
 
-    private renderData() {
+    protected updated(changedProperties: PropertyValues): void {
+        if (changedProperties.has("data")) {
+            this.updateContent();
+        }
+    }
+
+    // TODO: Render this data like the vis page component
+    private updateContent() {
         if (this.data === undefined) return html``;
 
         const visData = PGApp.queryStore().getData("visData");
         if (visData === undefined) return html``;
 
+        const container = this.querySelector(`.list`)!;
+
         let entryIndex = -1;
-        const content: DirectiveResult<typeof Keyed>[] = [];
         for (const list of visData) {
             entryIndex++;
 
             let hasHeading = false;
             for (const entry of list.data) {
-                if (!this.isLotto(entry.lotto, this.data.lotto)) {
-                    continue;
-                }
+                setTimeout(() => {
+                    if (!this.isLotto(entry.lotto, this.data!.lotto)) {
+                        return;
+                    }
 
-                if (!this.isFormat(entry.format, this.data.format)) {
-                    continue;
-                }
+                    if (!this.isFormat(entry.format, this.data!.format)) {
+                        return;
+                    }
 
-                if (!this.isStamp(entry.stamp, this.data.stamp)) {
-                    continue;
-                }
+                    if (!this.isStamp(entry.stamp, this.data!.stamp)) {
+                        return;
+                    }
 
-                if (!this.isThickness(entry.thickness, this.data.thickness)) {
-                    continue;
-                }
+                    if (!this.isThickness(entry.thickness, this.data!.thickness)) {
+                        return;
+                    }
 
-                if (!hasHeading) {
-                    hasHeading = true;
-                    content.push(
-                        keyed(
-                            list.title,
-                            html`
-                                <ui-flex-grid-item>
-                                    <ui-heading level="3"> ${list.title} </ui-heading>
-                                </ui-flex-grid-item>
-                            `,
-                        ),
-                    );
-                }
+                    if (!hasHeading) {
+                        hasHeading = true;
+                        const item = new UIFlexGridItem();
+                        item.innerHTML = `
+                            <ui-heading level="3"> ${list.title} </ui-heading>
+                        `;
+                        container.appendChild(item);
+                    }
 
-                content.push(
-                    keyed(
-                        entry,
-                        html`
-                            <pg-vis-data-list-item
-                                data="${JSON.stringify(entry)}"
-                                entry-index=${entryIndex}
-                            ></pg-vis-data-list-item>
-                        `,
-                    ),
-                );
+                    const item = new PGVisDataListItem();
+                    item.data = entry;
+                    item.entryIndex = entryIndex;
+                    container.appendChild(item);
+                });
             }
             hasHeading = false;
         }
-
-        return html` <ui-flex-grid direction="column" gap="0.25rem"> ${content} </ui-flex-grid> `;
     }
 
     private isLotto(match: string | null, lotto: string): boolean {
