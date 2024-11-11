@@ -9,12 +9,6 @@ import { PGPageContentVisDataEdit, PGVisDataListItem } from "../../vis-data";
 
 @customElement("pg-page-contents-product")
 class PGPageContentProduct extends PGPageContent<Product> {
-    /* TODO: ...
-     *  Edit Mode:
-     *      - Checkbox label: "is flakes product"
-     *      - Setup flakes product using a template for P4 / P5 or P0
-     */
-
     protected render() {
         const handleListClick = (ev: Event) => {
             if (!(ev.target instanceof Element) || this.data === undefined) return;
