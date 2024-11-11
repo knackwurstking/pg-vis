@@ -52,16 +52,19 @@ class PGDrawerItem extends LitElement {
                         style="cursor: pointer;"
                         primary="${this.primary || ""}"
                         secondary="${this.secondary || ""}"
+                        ripple
                         @click=${async (): Promise<void> => {
                             if (lock) return;
                             lock = true;
 
-                            try {
-                                await this.setStackLayoutPage();
-                                PGApp.queryDrawer()!.open = false;
-                            } finally {
-                                lock = false;
-                            }
+                            setTimeout(async () => {
+                                try {
+                                    await this.setStackLayoutPage();
+                                    PGApp.queryDrawer()!.open = false;
+                                } finally {
+                                    lock = false;
+                                }
+                            });
                         }}
                     ></ui-label>
                 </ui-flex-grid-item>
@@ -76,15 +79,18 @@ class PGDrawerItem extends LitElement {
                               style="height: 100%"
                               color="destructive"
                               ghost
+                              ripple
                               @click=${async (): Promise<void> => {
                                   if (lock) return;
                                   lock = true;
 
-                                  try {
-                                      await this.deleteStoreData();
-                                  } finally {
-                                      lock = false;
-                                  }
+                                  setTimeout(async () => {
+                                      try {
+                                          await this.deleteStoreData();
+                                      } finally {
+                                          lock = false;
+                                      }
+                                  });
                               }}
                           >
                               ${svg.smoothieLineIcons.trash}
