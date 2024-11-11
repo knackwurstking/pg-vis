@@ -89,37 +89,7 @@ class PGApp extends LitElement {
         store.setData("alertLists", [], true);
         store.setData("metalSheets", [], true);
         store.setData("vis", [], true);
-        store.setData(
-            "visBookmarks",
-            [
-                {
-                    allowDeletion: true,
-                    title: "A really long title for bookmarks here... P0",
-                    data: [],
-                },
-                {
-                    allowDeletion: true,
-                    title: "P2",
-                    data: [],
-                },
-                {
-                    allowDeletion: true,
-                    title: "P3",
-                    data: [],
-                },
-                {
-                    allowDeletion: true,
-                    title: "P4",
-                    data: [],
-                },
-                {
-                    allowDeletion: true,
-                    title: "P5",
-                    data: [],
-                },
-            ],
-            false,
-        ); // NOTE: Dummy Data
+        store.setData("visBookmarks", [], false);
         store.setData("visData", [], true);
 
         store.setData("gist", {}, true);
@@ -581,13 +551,17 @@ class PGApp extends LitElement {
                     const listsStore = lib.listsStore("visBookmarks");
 
                     try {
-                        listsStore.addToStore(PGApp.queryStore(), [
-                            {
-                                title: title,
-                                allowDeletion: true,
-                                data: [],
-                            },
-                        ]);
+                        listsStore.addToStore(
+                            PGApp.queryStore(),
+                            [
+                                {
+                                    title: title,
+                                    allowDeletion: true,
+                                    data: [],
+                                },
+                            ],
+                            true,
+                        );
                     } catch (err) {
                         alert(err);
                         setTimeout(() => {
