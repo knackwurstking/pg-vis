@@ -3,6 +3,7 @@ import { customElement, property } from "lit/decorators.js";
 
 import { VisDataEntry } from "../../../store-types";
 
+// TODO: Handle list item click event if property "enable-vis-data-edit-page" is set
 @customElement("pg-vis-data-list-item")
 class PGVisDataListItem extends LitElement {
     @property({ type: Object, attribute: "data", reflect: true })

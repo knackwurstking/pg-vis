@@ -3,6 +3,7 @@ import { customElement, property } from "lit/decorators.js";
 
 import { Product } from "../../../store-types";
 
+// TODO: Handle list item click event if property "enable-product-page" is set
 @customElement("pg-vis-list-item")
 class PGVisListItem extends LitElement {
     @property({ type: Object, attribute: "data", reflect: true })

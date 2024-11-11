@@ -3,6 +3,7 @@ import { customElement, property } from "lit/decorators.js";
 
 import { Alert } from "../../../store-types";
 
+// TODO: Handle list item click event if property "enable-alert-page" is set
 @customElement("pg-alert-list-item")
 class PGAlertListItem extends LitElement {
     @property({ type: Object, attribute: "data", reflect: false })
