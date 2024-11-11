@@ -2,12 +2,12 @@ import { html, nothing, PropertyValues } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { CleanUp, styles, UIIconButton } from "ui";
 
-import { PGVisListItem } from ".";
-import * as lib from "../../../lib";
-import { Product, Vis } from "../../../store-types";
-import { PGSearchBar } from "../../components";
-import PGApp from "../../pg-app";
-import PGPageContent from "../pg-page-content";
+import * as lib from "../../../../lib";
+import { Product, Vis } from "../../../../store-types";
+import { PGSearchBar } from "../../../components";
+import { PGVisListItem } from "../../../list-items";
+import PGApp from "../../../pg-app";
+import PGPageContent from "../../pg-page-content";
 
 @customElement("pg-page-content-vis")
 class PGPageContentVis extends PGPageContent<Vis> {

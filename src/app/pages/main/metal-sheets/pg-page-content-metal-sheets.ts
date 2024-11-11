@@ -4,11 +4,11 @@ import { customElement } from "lit/decorators.js";
 import { Keyed, keyed } from "lit/directives/keyed.js";
 import { CleanUp, draggable, styles, UIIconButton } from "ui";
 
-import { PGPageContent } from "..";
-import * as lib from "../../../lib";
-import { MetalSheet } from "../../../store-types";
-import { PGMetalSheetEntryDialog, PGMetalSheetTableDialog } from "../../dialogs";
-import PGApp from "../../pg-app";
+import * as lib from "../../../../lib";
+import { MetalSheet } from "../../../../store-types";
+import { PGMetalSheetEntryDialog, PGMetalSheetTableDialog } from "../../../dialogs";
+import PGApp from "../../../pg-app";
+import PGPageContent from "../../pg-page-content";
 
 @customElement("pg-page-content-metal-sheets")
 class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {

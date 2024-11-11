@@ -2,6 +2,7 @@ import { html, LitElement } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { keyed } from "lit/directives/keyed.js";
 import { CleanUp, UIDialog } from "ui";
+
 import * as lib from "../../lib";
 import { Bookmarks, PGStore, Product } from "../../store-types";
 import PGApp from "../pg-app";

@@ -1,6 +1,7 @@
 import { html, LitElement } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { svg } from "ui";
+
 import { Product } from "../../../../store-types";
 import PGApp from "../../../pg-app";
 

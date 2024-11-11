@@ -1,11 +1,13 @@
 import { html, nothing, PropertyValues } from "lit";
 import { customElement } from "lit/decorators.js";
 import { UIFlexGridItem } from "ui";
+
 import * as lib from "../../../../lib";
 import { Product } from "../../../../store-types";
+import { PGVisDataListItem } from "../../../list-items";
 import PGApp from "../../../pg-app";
 import PGPageContent from "../../pg-page-content";
-import { PGPageContentVisDataEdit, PGVisDataListItem } from "../../vis-data";
+import { PGPageContentVisDataEdit } from "../../sub";
 
 @customElement("pg-page-contents-product")
 class PGPageContentProduct extends PGPageContent<Product> {

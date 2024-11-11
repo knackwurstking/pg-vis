@@ -4,10 +4,11 @@ import { customElement } from "lit/decorators.js";
 import { Keyed, keyed } from "lit/directives/keyed.js";
 import { html } from "ui";
 
-import { PGPageContent, PGVisListItem } from "..";
-import * as lib from "../../../lib";
-import { Bookmarks, PGStore, Product, Vis } from "../../../store-types";
-import PGApp from "../../pg-app";
+import * as lib from "../../../../lib";
+import { Bookmarks, PGStore, Product, Vis } from "../../../../store-types";
+import { PGVisListItem } from "../../../list-items";
+import PGApp from "../../../pg-app";
+import PGPageContent from "../../pg-page-content";
 
 @customElement("pg-page-content-vis-bookmarks")
 class PGPageContentVisBookmarks extends PGPageContent<Bookmarks> {
