@@ -89,7 +89,7 @@ class PGApp extends LitElement {
         store.setData("alertLists", [], true);
         store.setData("metalSheets", [], true);
         store.setData("vis", [], true);
-        store.setData("visBookmarks", [], false);
+        store.setData("visBookmarks", [], true);
         store.setData("visData", [], true);
 
         store.setData("gist", {}, true);
