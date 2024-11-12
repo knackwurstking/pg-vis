@@ -5,7 +5,6 @@ import { Alert } from "../../store-types";
 import { PGPageContent } from "../pages";
 import PGApp from "../pg-app";
 
-// TODO: Handle list item click event if property "enable-alert-page" is set
 @customElement("pg-alert-list-item")
 class PGAlertListItem extends LitElement {
     @property({ type: Object, attribute: "data", reflect: false })
