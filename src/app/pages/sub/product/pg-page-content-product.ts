@@ -91,7 +91,6 @@ class PGPageContentProduct extends PGPageContent<Product> {
                     item.entryIndex = entryIndex;
                     item.listKey = listKey;
                     item.route = true;
-                    item.setAttribute("data-listKey", listKey);
                     container.appendChild(item);
                 });
             }
