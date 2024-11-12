@@ -7,35 +7,10 @@ import { Product } from "../../../../store-types";
 import { PGVisDataListItem } from "../../../list-items";
 import PGApp from "../../../pg-app";
 import PGPageContent from "../../pg-page-content";
-import { PGPageContentVisDataEdit } from "../../sub";
 
 @customElement("pg-page-contents-product")
 class PGPageContentProduct extends PGPageContent<Product> {
     protected render() {
-        const handleListClick = (ev: Event) => {
-            if (!(ev.target instanceof Element) || this.data === undefined) return;
-
-            const target = lib.queryTargetFromElementPath<PGVisDataListItem>(
-                ev.target,
-                "pg-vis-data-list-item",
-            );
-            if (target === null) return;
-
-            PGApp.queryStackLayout()!.setPage(
-                "visDataEdit",
-                (page) => {
-                    const content = page.children[0] as PGPageContentVisDataEdit | undefined;
-
-                    if (content !== undefined) {
-                        content.data = target.data;
-                        content.listKey = target.getAttribute("data-listKey") || undefined;
-                        content.entryIndex = target.entryIndex;
-                    }
-                },
-                true,
-            );
-        };
-
         return html`
             <div class="container no-scrollbar" style="width: 100%; height: 100%; overflow: auto;">
                 <ui-flex-grid gap="0.25rem">
@@ -55,12 +30,7 @@ class PGPageContentProduct extends PGPageContent<Product> {
                         </ui-flex-grid-item>
                     </ui-flex-grid-row>
 
-                    <ui-flex-grid
-                        class="list"
-                        direction="column"
-                        gap="0.25rem"
-                        @click=${handleListClick}
-                    >
+                    <ui-flex-grid class="list" direction="column" gap="0.25rem">
                         ${nothing}
                     </ui-flex-grid>
                 </ui-flex-grid>
@@ -117,10 +87,10 @@ class PGPageContentProduct extends PGPageContent<Product> {
                     }
 
                     const item = new PGVisDataListItem();
-                    item.style.cursor = "pointer";
-                    item.role = "button";
                     item.data = entry;
                     item.entryIndex = entryIndex;
+                    item.listKey = listKey;
+                    item.route = true;
                     item.setAttribute("data-listKey", listKey);
                     container.appendChild(item);
                 });

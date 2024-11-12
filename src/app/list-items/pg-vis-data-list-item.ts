@@ -2,12 +2,19 @@ import { html, LitElement, PropertyValues } from "lit";
 import { customElement, property } from "lit/decorators.js";
 
 import { VisDataEntry } from "../../store-types";
+import { PGPageContentVisDataEdit } from "../pages";
+import PGApp from "../pg-app";
 
-// TODO: Handle list item click event if property "enable-vis-data-edit-page" is set
 @customElement("pg-vis-data-list-item")
 class PGVisDataListItem extends LitElement {
     @property({ type: Object, attribute: "data", reflect: true })
     data?: VisDataEntry;
+
+    @property({ type: Boolean, attribute: "route", reflect: true })
+    route?: boolean;
+
+    @property({ type: String, attribute: "list-key", reflect: true })
+    listKey?: string;
 
     /**
      * I need this `entryIndex` to for the "pg-page-content-vis-data"
@@ -102,6 +109,32 @@ class PGVisDataListItem extends LitElement {
         this.querySelector(`ui-text[name="value"]`)!.innerHTML = (this.data?.value || "")
             .replaceAll("\n", "<br/>")
             .replaceAll(" ", "&nbsp;");
+
+        const clickHandler = () => {
+            PGApp.queryStackLayout()!.setPage(
+                "visDataEdit",
+                (page) => {
+                    const content = page.children[0] as PGPageContentVisDataEdit | undefined;
+
+                    if (content !== undefined) {
+                        content.data = this.data;
+                        content.listKey = this.listKey;
+                        content.entryIndex = this.entryIndex;
+                    }
+                },
+                true,
+            );
+        };
+
+        if (this.route) {
+            this.addEventListener("click", clickHandler);
+            this.role = "button";
+            this.style.cursor = "pointer";
+        } else {
+            this.removeEventListener("click", clickHandler);
+            this.role = null;
+            this.style.cursor = "default";
+        }
     }
 }
 

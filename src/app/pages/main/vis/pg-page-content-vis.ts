@@ -3,7 +3,7 @@ import { customElement, property } from "lit/decorators.js";
 import { CleanUp, styles, UIIconButton } from "ui";
 
 import * as lib from "../../../../lib";
-import { Product, Vis } from "../../../../store-types";
+import { Vis } from "../../../../store-types";
 import { PGSearchBar } from "../../../components";
 import { PGVisListItem } from "../../../list-items";
 import PGApp from "../../../pg-app";
@@ -42,34 +42,7 @@ class PGPageContentVis extends PGPageContent<Vis> {
                     overflow: "auto",
                 } as CSSStyleDeclaration)}"
             >
-                <div
-                    class="list"
-                    @click=${async (ev: Event) => {
-                        if (!(ev.target instanceof Element)) return;
-
-                        const target = lib.queryTargetFromElementPath<PGVisListItem>(
-                            ev.target,
-                            "pg-vis-list-item",
-                        );
-                        if (target === null) return;
-
-                        PGApp.queryStackLayout()!.setPage(
-                            "product",
-                            (page) => {
-                                const content = page.children[0] as
-                                    | PGPageContent<Product>
-                                    | undefined;
-
-                                if (content !== undefined) {
-                                    content.data = target.data;
-                                }
-                            },
-                            true,
-                        );
-                    }}
-                >
-                    ${nothing}
-                </div>
+                <div class="list">${nothing}</div>
             </div>
         `;
     }
@@ -99,9 +72,8 @@ class PGPageContentVis extends PGPageContent<Vis> {
         for (const product of this.data?.data || []) {
             setTimeout(() => {
                 const item = new PGVisListItem();
-                item.role = "button";
-                item.style.cursor = "pointer";
                 item.data = product;
+                item.route = true;
                 container.appendChild(item);
             });
         }

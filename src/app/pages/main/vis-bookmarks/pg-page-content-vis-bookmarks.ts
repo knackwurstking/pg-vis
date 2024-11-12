@@ -6,7 +6,6 @@ import { html } from "ui";
 
 import * as lib from "../../../../lib";
 import { Bookmarks, PGStore, Product, Vis } from "../../../../store-types";
-import { PGVisListItem } from "../../../list-items";
 import PGApp from "../../../pg-app";
 import PGPageContent from "../../pg-page-content";
 
@@ -20,30 +19,9 @@ class PGPageContentVisBookmarks extends PGPageContent<Bookmarks> {
                 ? lib.listsStore("visBookmarks").listKey(this.data)
                 : lib.listsStore("visBookmarks").title();
 
-        const listClickHandler = (ev: Event & { currentTarget: HTMLElement }) => {
-            if (!(ev.target instanceof Element)) return;
-
-            const target = lib.queryTargetFromElementPath<PGVisListItem>(
-                ev.target,
-                "pg-vis-list-item",
-            );
-            if (target === null) return;
-
-            PGApp.queryStackLayout()!.setPage(
-                "product",
-                (page) => {
-                    const content = page.children[0] as PGPageContent<Product> | undefined;
-                    if (content !== undefined) {
-                        content.data = target.data;
-                    }
-                },
-                true,
-            );
-        };
-
         return html`
             <div class="container no-scrollbar" style="width: 100%; height: 100%; overflow: auto;">
-                <div class="list" @click=${listClickHandler}>${this.content}</div>
+                <div class="list">${this.content}</div>
             </div>
         `;
     }
@@ -63,6 +41,7 @@ class PGPageContentVisBookmarks extends PGPageContent<Bookmarks> {
                                     role="button"
                                     style="cursor: pointer;"
                                     data="${JSON.stringify(product)}"
+                                    route
                                 ></pg-vis-list-item>`,
                             ),
                         );

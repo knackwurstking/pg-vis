@@ -7,7 +7,6 @@ import { CleanUp, UIIconButton } from "ui";
 import * as lib from "../../../../lib";
 import { VisData } from "../../../../store-types";
 import { PGVisDataDialog } from "../../../dialogs";
-import { PGVisDataListItem } from "../../../list-items";
 import PGApp from "../../../pg-app";
 import PGPageContent from "../../pg-page-content";
 import { PGPageContentVisDataEdit } from "../../sub";
@@ -78,39 +77,9 @@ export class PGPageContentVisData extends PGPageContent<VisData> {
     }
 
     private renderContent() {
-        const handleClick = async (ev: Event) => {
-            if (!(ev.target instanceof Element) || this.data === undefined) return;
-
-            const target = lib.queryTargetFromElementPath<PGVisDataListItem>(
-                ev.target,
-                "pg-vis-data-list-item",
-            );
-            if (target === null) return;
-
-            PGApp.queryStackLayout()!.setPage(
-                "visDataEdit",
-                (page) => {
-                    const content = page.children[0] as PGPageContentVisDataEdit | undefined;
-
-                    if (content !== undefined) {
-                        content.data = target.data;
-
-                        content.listKey = lib.listsStore("visData").listKey(this.data!);
-
-                        content.entryIndex = target.entryIndex;
-                    }
-                },
-                true,
-            );
-        };
-
         return html`
             <ui-flex-grid-item>
-                <div
-                    class="list no-scrollbar"
-                    style="width: 100%; height: 100%; overflow: auto;"
-                    @click=${handleClick}
-                >
+                <div class="list no-scrollbar" style="width: 100%; height: 100%; overflow: auto;">
                     ${this.content}
                 </div>
             </ui-flex-grid-item>
@@ -145,27 +114,32 @@ export class PGPageContentVisData extends PGPageContent<VisData> {
 
     protected updated(changedProperties: PropertyValues): void {
         if (changedProperties.has("data")) {
-            setTimeout(() => {
-                this.content = [];
-                (this.data?.data || []).forEach(async (entry, index) => {
-                    setTimeout(() => {
-                        this.content.push(
-                            keyed(
-                                entry,
-                                html`<pg-vis-data-list-item
-                                    style="cursor: pointer;"
-                                    data="${JSON.stringify(entry)}"
-                                    entry-index=${index}
-                                    show-filter
-                                ></pg-vis-data-list-item>`,
-                            ),
-                        );
-                    });
-                });
-
-                setTimeout(() => this.requestUpdate());
-            });
+            setTimeout(() => this.updateContent());
         }
+    }
+
+    private updateContent() {
+        this.content = [];
+        (this.data?.data || []).forEach(async (entry, index) => {
+            setTimeout(() => {
+                this.content.push(
+                    keyed(
+                        entry,
+                        html`<pg-vis-data-list-item
+                            style="cursor: pointer;"
+                            data="${JSON.stringify(entry)}"
+                            list-key="${this.data !== undefined
+                                ? lib.listsStore("visData").listKey(this.data)
+                                : ""}"
+                            entry-index=${index}
+                            route
+                        ></pg-vis-data-list-item>`,
+                    ),
+                );
+            });
+        });
+
+        setTimeout(() => this.requestUpdate());
     }
 
     connectedCallback(): void {

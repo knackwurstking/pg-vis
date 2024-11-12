@@ -1,13 +1,17 @@
-import { html, LitElement } from "lit";
+import { html, LitElement, PropertyValues } from "lit";
 import { customElement, property } from "lit/decorators.js";
 
 import { Product } from "../../store-types";
+import { PGPageContent } from "../pages";
+import PGApp from "../pg-app";
 
-// TODO: Handle list item click event if property "enable-product-page" is set
 @customElement("pg-vis-list-item")
 class PGVisListItem extends LitElement {
     @property({ type: Object, attribute: "data", reflect: true })
     data?: Product;
+
+    @property({ type: Boolean, attribute: "route", reflect: true })
+    route?: boolean;
 
     protected createRenderRoot(): HTMLElement | DocumentFragment {
         this.style.display = "block";
@@ -56,6 +60,32 @@ class PGVisListItem extends LitElement {
                 </ui-flex-grid-row>
             </ui-flex-grid>
         `;
+    }
+
+    protected updated(_changedProperties: PropertyValues): void {
+        const clickHandler = () => {
+            PGApp.queryStackLayout()!.setPage(
+                "product",
+                (page) => {
+                    const content = page.children[0] as PGPageContent<Product> | undefined;
+
+                    if (content !== undefined) {
+                        content.data = this.data;
+                    }
+                },
+                true,
+            );
+        };
+
+        if (this.route) {
+            this.addEventListener("click", clickHandler);
+            this.role = "button";
+            this.style.cursor = "pointer";
+        } else {
+            this.removeEventListener("click", clickHandler);
+            this.role = null;
+            this.style.cursor = "default";
+        }
     }
 }
 

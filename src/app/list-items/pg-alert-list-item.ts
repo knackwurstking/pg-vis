@@ -10,6 +10,9 @@ class PGAlertListItem extends LitElement {
     @property({ type: Object, attribute: "data", reflect: false })
     data?: Alert;
 
+    @property({ type: Boolean, attribute: "route", reflect: true })
+    route?: boolean;
+
     protected createRenderRoot(): HTMLElement | DocumentFragment {
         this.classList.add("flex");
         this.classList.add("row");
@@ -43,11 +46,11 @@ class PGAlertListItem extends LitElement {
         `;
     }
 
-    protected firstUpdated(_changedProperties: PropertyValues): void {
-        this.addEventListener("click", () => {
+    protected updated(_changedProperties: PropertyValues): void {
+        const clickHandler = () => {
             PGApp.queryStackLayout()!.setPage(
                 "alert",
-                (page): void => {
+                (page) => {
                     const content = page.children[0] as PGPageContent<Alert> | undefined;
 
                     if (content !== undefined) {
@@ -56,7 +59,17 @@ class PGAlertListItem extends LitElement {
                 },
                 true,
             );
-        });
+        };
+
+        if (this.route) {
+            this.addEventListener("click", clickHandler);
+            this.role = "button";
+            this.style.cursor = "pointer";
+        } else {
+            this.removeEventListener("click", clickHandler);
+            this.role = null;
+            this.style.cursor = "default";
+        }
     }
 }
 

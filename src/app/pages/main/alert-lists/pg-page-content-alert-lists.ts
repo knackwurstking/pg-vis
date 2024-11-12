@@ -65,26 +65,27 @@ class PGPageContentAlertLists extends PGPageContent<AlertList> {
         }
 
         if (changedProperties.has("data")) {
-            setTimeout(() => {
-                this.content = [];
-                (this.data?.data || []).forEach(async (alert) => {
-                    setTimeout(() => {
-                        this.content.push(
-                            keyed(
-                                alert,
-                                html`<pg-alert-list-item
-                                    role="button"
-                                    style="cursor: pointer;"
-                                    data=${JSON.stringify(alert)}
-                                ></pg-alert-list-item>`,
-                            ),
-                        );
-                    });
-                });
-
-                setTimeout(() => this.requestUpdate());
-            });
+            setTimeout(() => this.updateContent());
         }
+    }
+
+    private updateContent() {
+        this.content = [];
+        (this.data?.data || []).forEach(async (alert) => {
+            setTimeout(() => {
+                this.content.push(
+                    keyed(
+                        alert,
+                        html`<pg-alert-list-item
+                            data=${JSON.stringify(alert)}
+                            route
+                        ></pg-alert-list-item>`,
+                    ),
+                );
+            });
+        });
+
+        setTimeout(() => this.requestUpdate());
     }
 
     connectedCallback(): void {
