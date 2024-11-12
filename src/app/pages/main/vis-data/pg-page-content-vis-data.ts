@@ -25,7 +25,16 @@ export class PGPageContentVisData extends PGPageContent<VisData> {
         return html`
             <div class="container no-scrollbar" style="width: 100%; height: 100%; overflow: auto;">
                 <ui-flex-grid gap="0.25rem">
-                    ${this.renderActions()} ${this.renderContent()}
+                    ${this.renderActions()}
+
+                    <ui-flex-grid-item>
+                        <div
+                            class="list no-scrollbar"
+                            style="width: 100%; height: 100%; overflow: auto;"
+                        >
+                            ${this.content}
+                        </div>
+                    </ui-flex-grid-item>
                 </ui-flex-grid>
             </div>
 
@@ -76,16 +85,6 @@ export class PGPageContentVisData extends PGPageContent<VisData> {
         `;
     }
 
-    private renderContent() {
-        return html`
-            <ui-flex-grid-item>
-                <div class="list no-scrollbar" style="width: 100%; height: 100%; overflow: auto;">
-                    ${this.content}
-                </div>
-            </ui-flex-grid-item>
-        `;
-    }
-
     private renderDialog() {
         const submit = async (ev: Event & { currentTarget: PGVisDataDialog }) => {
             if (this.data === undefined) return;
@@ -132,6 +131,7 @@ export class PGPageContentVisData extends PGPageContent<VisData> {
                                 ? lib.listsStore("visData").listKey(this.data)
                                 : ""}"
                             entry-index=${index}
+                            show-filter
                             route
                         ></pg-vis-data-list-item>`,
                     ),
