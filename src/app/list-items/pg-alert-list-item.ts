@@ -1,7 +1,9 @@
-import { html, LitElement } from "lit";
+import { html, LitElement, PropertyValues } from "lit";
 import { customElement, property } from "lit/decorators.js";
 
 import { Alert } from "../../store-types";
+import { PGPageContent } from "../pages";
+import PGApp from "../pg-app";
 
 // TODO: Handle list item click event if property "enable-alert-page" is set
 @customElement("pg-alert-list-item")
@@ -40,6 +42,22 @@ class PGAlertListItem extends LitElement {
                     : `${this.data.from}..${this.data.to}`}
             </ui-text>
         `;
+    }
+
+    protected firstUpdated(_changedProperties: PropertyValues): void {
+        this.addEventListener("click", () => {
+            PGApp.queryStackLayout()!.setPage(
+                "alert",
+                (page): void => {
+                    const content = page.children[0] as PGPageContent<Alert> | undefined;
+
+                    if (content !== undefined) {
+                        content.data = this.data;
+                    }
+                },
+                true,
+            );
+        });
     }
 }
 

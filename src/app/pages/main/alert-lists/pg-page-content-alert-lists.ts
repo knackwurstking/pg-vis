@@ -5,7 +5,7 @@ import { keyed, Keyed } from "lit/directives/keyed.js";
 import { CleanUp, styles, UIIconButton } from "ui";
 
 import * as lib from "../../../../lib";
-import { Alert, AlertList } from "../../../../store-types";
+import { AlertList } from "../../../../store-types";
 import { PGSearchBar } from "../../../components";
 import { PGAlertListItem } from "../../../list-items";
 import PGApp from "../../../pg-app";
@@ -47,34 +47,7 @@ class PGPageContentAlertLists extends PGPageContent<AlertList> {
                     overflow: "auto",
                 } as CSSStyleDeclaration)}"
             >
-                <div
-                    class="list"
-                    @click=${async (ev: MouseEvent): Promise<void> => {
-                        if (!(ev.target instanceof Element)) return;
-
-                        const target = lib.queryTargetFromElementPath<PGAlertListItem>(
-                            ev.target,
-                            `pg-alert-list-item`,
-                        );
-                        if (target === null) return;
-
-                        PGApp.queryStackLayout()!.setPage(
-                            "alert",
-                            (page): void => {
-                                const content = page.children[0] as
-                                    | PGPageContent<Alert>
-                                    | undefined;
-
-                                if (content !== undefined) {
-                                    content.data = target.data;
-                                }
-                            },
-                            true,
-                        );
-                    }}
-                >
-                    ${this.content}
-                </div>
+                <div class="list">${this.content}</div>
             </div>
         `;
     }
