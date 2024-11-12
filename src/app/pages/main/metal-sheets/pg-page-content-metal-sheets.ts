@@ -241,4 +241,5 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
         listsStore.replaceInStore(PGApp.queryStore(), list, list);
     }
 }
+
 export default PGPageContentMetalSheets;

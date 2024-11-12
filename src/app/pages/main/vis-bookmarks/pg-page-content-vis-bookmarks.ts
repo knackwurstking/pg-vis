@@ -28,29 +28,31 @@ class PGPageContentVisBookmarks extends PGPageContent<Bookmarks> {
 
     protected updated(changedProperties: PropertyValues): void {
         if (changedProperties.has("data")) {
-            setTimeout(() => {
-                const store = PGApp.queryStore();
-                this.content = [];
-                (this.data?.data || []).forEach(async (product) => {
-                    setTimeout(() => {
-                        product = this.productFromStore(store, product);
-                        this.content.push(
-                            keyed(
-                                product,
-                                html`<pg-vis-list-item
-                                    role="button"
-                                    style="cursor: pointer;"
-                                    data="${JSON.stringify(product)}"
-                                    route
-                                ></pg-vis-list-item>`,
-                            ),
-                        );
-                    });
-                });
-
-                setTimeout(() => this.requestUpdate());
-            });
+            setTimeout(() => this.updateContent());
         }
+    }
+
+    private updateContent() {
+        const store = PGApp.queryStore();
+        this.content = [];
+        (this.data?.data || []).forEach(async (product) => {
+            setTimeout(() => {
+                product = this.productFromStore(store, product);
+                this.content.push(
+                    keyed(
+                        product,
+                        html`<pg-vis-list-item
+                            role="button"
+                            style="cursor: pointer;"
+                            data="${JSON.stringify(product)}"
+                            route
+                        ></pg-vis-list-item>`,
+                    ),
+                );
+            });
+        });
+
+        setTimeout(() => this.requestUpdate());
     }
 
     private productFromStore(store: PGStore, product: Product): Product {
