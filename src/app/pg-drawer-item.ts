@@ -1,6 +1,6 @@
 import { html, LitElement } from "lit";
 import { customElement, property } from "lit/decorators.js";
-import { svg } from "ui";
+import { svg, UISpinner } from "ui";
 
 import { PGApp } from ".";
 import * as lib from "../lib";
@@ -46,12 +46,20 @@ class PGDrawerItem extends LitElement {
                             if (lock) return;
                             lock = true;
 
+                            const spinner = new UISpinner();
+                            spinner.id = "pageLoadSpinner";
+                            document.querySelector(`pg-app`)!.appendChild(spinner);
+
                             setTimeout(async () => {
                                 try {
                                     await this.setStackLayoutPage();
                                     PGApp.queryDrawer()!.open = false;
                                 } finally {
                                     lock = false;
+
+                                    setTimeout(() => {
+                                        spinner.parentElement?.removeChild(spinner);
+                                    });
                                 }
                             });
                         }}
