@@ -1,4 +1,4 @@
-import { html, nothing, PropertyValues, TemplateResult } from "lit";
+import { html, PropertyValues, TemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
 
 import * as lib from "../../../../lib";
@@ -33,7 +33,7 @@ class PGPageContentProduct extends PGPageContent<types.Product> {
                     </ui-flex-grid-row>
 
                     <ui-flex-grid class="list" direction="column" gap="0.25rem">
-                        ${nothing}
+                        ${this.listItems}
                     </ui-flex-grid>
                 </ui-flex-grid>
             </div>
@@ -42,7 +42,7 @@ class PGPageContentProduct extends PGPageContent<types.Product> {
 
     protected updated(changedProperties: PropertyValues): void {
         if (changedProperties.has("data")) {
-            this.updateContent();
+            setTimeout(() => this.updateContent());
         }
     }
 
@@ -63,13 +63,20 @@ class PGPageContentProduct extends PGPageContent<types.Product> {
             const listKey = listsStore.listKey(list);
             let hasHeading = false;
             for (const entry of list.data) {
-                if (
-                    !this.isLotto(entry.lotto, this.data!.lotto) ||
-                    !this.isFormat(entry.format, this.data!.format) ||
-                    !this.isStamp(entry.stamp, this.data!.stamp) ||
-                    !this.isThickness(entry.thickness, this.data!.thickness)
-                ) {
-                    return;
+                if (!this.isLotto(entry.lotto, this.data!.lotto)) {
+                    continue;
+                }
+
+                if (!this.isFormat(entry.format, this.data!.format)) {
+                    continue;
+                }
+
+                if (!this.isStamp(entry.stamp, this.data!.stamp)) {
+                    continue;
+                }
+
+                if (!this.isThickness(entry.thickness, this.data!.thickness)) {
+                    continue;
                 }
 
                 if (!hasHeading) {
