@@ -1,10 +1,12 @@
-import { html, PropertyValues, TemplateResult } from "lit";
+import { html, PropertyValues } from "lit";
 import { customElement, state } from "lit/decorators.js";
 import { CleanUp, UIIconButton } from "ui";
 
 import * as lib from "../../../../lib";
 import * as types from "../../../../types";
 
+import { DirectiveResult } from "lit/async-directive.js";
+import { Keyed, keyed } from "lit/directives/keyed.js";
 import { PGVisDataDialog } from "../../../dialogs";
 import PGApp from "../../../pg-app";
 import PGPageContent from "../../pg-page-content";
@@ -13,7 +15,7 @@ import { PGPageContentVisDataEdit } from "../../sub";
 @customElement("pg-page-content-vis-data")
 export class PGPageContentVisData extends PGPageContent<types.VisData> {
     @state()
-    private listItems: TemplateResult<1>[] = [];
+    private listItems: DirectiveResult<typeof Keyed>[] = [];
 
     private cleanup = new CleanUp();
 
@@ -124,16 +126,19 @@ export class PGPageContentVisData extends PGPageContent<types.VisData> {
 
         const listsStore = lib.listStore("visData");
         this.listItems = this.data.data.map((entry, index) => {
-            return html`
-                <pg-vis-data-list-item
-                    data=${JSON.stringify(entry)}
-                    list-key=${this.data !== undefined ? listsStore.listKey(this.data) : ""}
-                    entry-index=${index}
-                    show-filter
-                    route
-                >
-                </pg-vis-data-list-item>
-            `;
+            return keyed(
+                entry,
+                html`
+                    <pg-vis-data-list-item
+                        data=${JSON.stringify(entry)}
+                        list-key=${this.data !== undefined ? listsStore.listKey(this.data) : ""}
+                        entry-index=${index}
+                        show-filter
+                        route
+                    >
+                    </pg-vis-data-list-item>
+                `,
+            );
         });
     }
 
