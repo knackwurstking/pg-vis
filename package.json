@@ -7,7 +7,7 @@
         "test": "jest",
         "dev": "vite --host",
         "preview": "vite preview --host",
-        "build": "vite build --minify -c vite.config.js --emptyOutDir",
+        "build": "npm run test && vite build --minify -c vite.config.js --emptyOutDir",
         "generate-assets": "npx pwa-assets-generator"
     },
     "devDependencies": {
