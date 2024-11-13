@@ -27,8 +27,8 @@ class PGPageContentAlertLists extends PGPageContent<types.AlertList> {
     protected render(): TemplateResult<1> {
         PGApp.queryAppBar()!.contentName("title")!.contentAt(0).innerText =
             this.data !== undefined
-                ? lib.listsStore("alertLists").listKey(this.data)
-                : lib.listsStore("alertLists").title();
+                ? lib.listStore("alertLists").listKey(this.data)
+                : lib.listStore("alertLists").title();
 
         return html`
             <pg-search-bar

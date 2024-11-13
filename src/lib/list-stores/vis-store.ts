@@ -1,10 +1,10 @@
 import * as types from "../../types";
 import * as convert from "../convert";
 
-import { ListsStore, ListsStoreData } from "./base";
+import { ListStore, ListStoreData } from "./base";
 
-export class VisStore extends ListsStore<"vis"> {
-    public key(): keyof ListsStoreData {
+export class VisStore extends ListStore<"vis"> {
+    public key(): keyof ListStoreData {
         return "vis";
     }
 

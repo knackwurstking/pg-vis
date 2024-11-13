@@ -53,7 +53,7 @@ class PGPageContentProduct extends PGPageContent<types.Product> {
         const visData = PGApp.queryStore().getData("visData");
         if (visData === undefined) return html``;
 
-        const listsStore = lib.listsStore("visData");
+        const listsStore = lib.listStore("visData");
 
         let index = -1;
         for (const list of visData) {

@@ -133,7 +133,7 @@ export class PGPageContentVisDataEdit extends PGPageContent<types.VisDataEntry> 
                     return data;
                 }
 
-                const listsStore = lib.listsStore("visData");
+                const listsStore = lib.listStore("visData");
                 for (const list of data) {
                     if (listsStore.listKey(list) === this.listKey) {
                         if (this.deleteEntry) {

@@ -10,7 +10,7 @@ import { PGApp } from "..";
 @customElement("pg-import-dialog")
 class PGImportDialog extends LitElement {
     @property({ type: String, attribute: "store-key", reflect: true })
-    storeKey?: keyof lib.ListsStoreData;
+    storeKey?: keyof lib.listStores.ListStoreData;
 
     protected createRenderRoot(): HTMLElement | DocumentFragment {
         return this;
@@ -84,7 +84,7 @@ class PGImportDialog extends LitElement {
                     if (typeof reader.result !== "string") return;
                     if (this.storeKey === undefined) return;
 
-                    const listsStore = lib.listsStore(this.storeKey);
+                    const listsStore = lib.listStore(this.storeKey);
 
                     let data: any;
                     try {

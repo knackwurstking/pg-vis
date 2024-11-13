@@ -70,7 +70,7 @@ class PGBookmarkSelectDialog extends LitElement {
             if (this.product === undefined) return;
 
             const productKey = lib.productKey(this.product);
-            lib.listsStore("visBookmarks").replaceInStore(
+            lib.listStore("visBookmarks").replaceInStore(
                 PGApp.queryStore(),
                 {
                     ...list,

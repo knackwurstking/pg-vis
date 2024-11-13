@@ -23,8 +23,8 @@ class PGPageContentVis extends PGPageContent<types.Vis> {
     protected render() {
         PGApp.queryAppBar()!.contentName("title")!.contentAt(0).innerText =
             this.data !== undefined
-                ? lib.listsStore("vis").listKey(this.data)
-                : lib.listsStore("vis").title();
+                ? lib.listStore("vis").listKey(this.data)
+                : lib.listStore("vis").title();
 
         // TODO: - Add some special flakes marker
 

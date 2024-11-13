@@ -20,8 +20,8 @@ export class PGPageContentVisData extends PGPageContent<types.VisData> {
     protected render() {
         PGApp.queryAppBar()!.contentName("title")!.contentAt(0).innerText =
             this.data !== undefined
-                ? lib.listsStore("visData").listKey(this.data)
-                : lib.listsStore("visData").title();
+                ? lib.listStore("visData").listKey(this.data)
+                : lib.listStore("visData").title();
 
         return html`
             <div class="container no-scrollbar" style="width: 100%; height: 100%; overflow: auto;">
@@ -60,7 +60,7 @@ export class PGPageContentVisData extends PGPageContent<types.VisData> {
                             thickness: null,
                         };
 
-                        content.listKey = lib.listsStore("visData").listKey(this.data!);
+                        content.listKey = lib.listStore("visData").listKey(this.data!);
 
                         content.entryIndex = -1;
                     }
@@ -94,7 +94,7 @@ export class PGPageContentVisData extends PGPageContent<types.VisData> {
             this.data.title = ev.currentTarget.title;
 
             try {
-                lib.listsStore("visData").replaceInStore(
+                lib.listStore("visData").replaceInStore(
                     PGApp.queryStore(),
                     { ...this.data },
                     oldData,
@@ -122,7 +122,7 @@ export class PGPageContentVisData extends PGPageContent<types.VisData> {
         this.listItems = [];
         if (this.data === undefined) return;
 
-        const listsStore = lib.listsStore("visData");
+        const listsStore = lib.listStore("visData");
         this.listItems = this.data.data.map((entry, index) => {
             return html`
                 <pg-vis-data-list-item
@@ -163,7 +163,7 @@ export class PGPageContentVisData extends PGPageContent<types.VisData> {
 
         // Re-Render if "visData" store changes
 
-        const listsStore = lib.listsStore("visData");
+        const listsStore = lib.listStore("visData");
         const store = PGApp.queryStore();
 
         this.cleanup.add(

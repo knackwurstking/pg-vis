@@ -503,7 +503,7 @@ class PGApp extends LitElement {
                         },
                     };
 
-                    const listsStore = lib.listsStore("metalSheets");
+                    const listsStore = lib.listStore("metalSheets");
                     const newListKey = listsStore.listKey(newData);
 
                     for (const list of store.getData("metalSheets") || []) {
@@ -522,7 +522,7 @@ class PGApp extends LitElement {
             <pg-vis-data-dialog
                 @submit=${(ev: Event & { currentTarget: PGVisDataDialog }) => {
                     const title = ev.currentTarget.title;
-                    const listsStore = lib.listsStore("visData");
+                    const listsStore = lib.listStore("visData");
 
                     try {
                         listsStore.addToStore(
@@ -550,7 +550,7 @@ class PGApp extends LitElement {
             <pg-vis-bookmarks-dialog
                 @submit=${(ev: Event & { currentTarget: PGVisBookmarksDialog }) => {
                     const title = ev.currentTarget.title;
-                    const listsStore = lib.listsStore("visBookmarks");
+                    const listsStore = lib.listStore("visBookmarks");
 
                     try {
                         listsStore.addToStore(
@@ -727,7 +727,10 @@ class PGApp extends LitElement {
         this.drawerGroupItemsRendering(store, "visData");
     }
 
-    private drawerGroupItemsRendering(store: types.PGStore, storeKey: keyof lib.ListsStoreData) {
+    private drawerGroupItemsRendering(
+        store: types.PGStore,
+        storeKey: keyof lib.listStores.ListStoreData,
+    ) {
         store.addListener(
             storeKey,
             (data) => {
@@ -739,7 +742,7 @@ class PGApp extends LitElement {
                     .slice(fixedItems)
                     .forEach((child) => groupContainer.removeChild(child));
 
-                const listsStore = lib.listsStore(storeKey);
+                const listsStore = lib.listStore(storeKey);
                 data.forEach(async (list) => {
                     const item = new UIDrawerGroupItem();
                     groupContainer.appendChild(item);

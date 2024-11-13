@@ -8,7 +8,7 @@ import PGApp from "./pg-app";
 @customElement("pg-drawer-item-gist")
 class PGDrawerItemGist extends LitElement {
     @property({ type: String, attribute: "store-key", reflect: true })
-    storeKey?: keyof lib.ListsStoreData;
+    storeKey?: keyof lib.listStores.ListStoreData;
 
     @property({ type: Number, attribute: false, reflect: true })
     revision: number = 0;
@@ -84,7 +84,7 @@ class PGDrawerItemGist extends LitElement {
                 "gist",
                 (data) => {
                     if (!this.storeKey) return;
-                    const listsStore = lib.listsStore(this.storeKey);
+                    const listsStore = lib.listStore(this.storeKey);
                     const part = data[listsStore.key()];
                     if (part !== undefined) {
                         this.gistID = part.id;

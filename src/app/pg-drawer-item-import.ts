@@ -10,7 +10,7 @@ import * as lib from "../lib";
 @customElement("pg-drawer-item-import")
 class PGDrawerItemImport extends LitElement {
     @property({ type: String, attribute: "store-key", reflect: true })
-    storeKey?: keyof lib.ListsStoreData;
+    storeKey?: keyof lib.listStores.ListStoreData;
 
     protected createRenderRoot(): HTMLElement | DocumentFragment {
         return this;
@@ -52,7 +52,7 @@ class PGDrawerItemImport extends LitElement {
         if (!this.storeKey) return;
 
         const zip = new JSZip();
-        const listsStore = lib.listsStore(this.storeKey);
+        const listsStore = lib.listStore(this.storeKey);
 
         const storeData = PGApp.queryStore().getData(this.storeKey);
         if (storeData === undefined) return;

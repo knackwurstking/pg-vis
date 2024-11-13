@@ -1,9 +1,9 @@
 import * as types from "../../types";
 
-import { ListsStore, ListsStoreData } from "./base";
+import { ListStore, ListStoreData } from "./base";
 
-export class AlertListsStore extends ListsStore<"alertLists"> {
-    public key(): keyof ListsStoreData {
+export class AlertListsStore extends ListStore<"alertLists"> {
+    public key(): keyof ListStoreData {
         return "alertLists";
     }
 

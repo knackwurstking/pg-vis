@@ -6,21 +6,10 @@ import { PGApp } from ".";
 import * as lib from "../lib";
 import { PGPageContent } from "./pages";
 
-/**
- * ```
- *  <pg-drawer-item
- *       store-key="alertLists"
- *       store-key-entry="Alert List 2"
- *       primary="Alert List 2"
- *       secondary=""
- *       allowDeletion
- *  ></pg-drawer-item>
- * ```
- */
 @customElement("pg-drawer-item")
 class PGDrawerItem extends LitElement {
     @property({ type: String, attribute: "store-key", reflect: true })
-    storeKey?: keyof lib.ListsStoreData;
+    storeKey?: keyof lib.listStores.ListStoreData;
 
     /**
      * Entry to access, or delete, from the global ui-store element
@@ -104,7 +93,7 @@ class PGDrawerItem extends LitElement {
     protected async setStackLayoutPage() {
         if (!this.storeKey) return;
 
-        const listsStore = lib.listsStore(this.storeKey);
+        const listsStore = lib.listStore(this.storeKey);
         const storeData = PGApp.queryStore().getData(this.storeKey);
         const data = storeData?.find((list) => listsStore.listKey(list) === this.storeListKey);
 
@@ -134,7 +123,7 @@ class PGDrawerItem extends LitElement {
             case "visBookmarks":
             case "visData":
                 if (confirm(`Möchten Sie "${this.storeListKey}" wirklich löschen?`)) {
-                    const listsStore = lib.listsStore(this.storeKey);
+                    const listsStore = lib.listStore(this.storeKey);
                     PGApp.queryStore().updateData(this.storeKey, (data) => {
                         return data.filter(
                             (list) => listsStore.listKey(list) !== this.storeListKey,

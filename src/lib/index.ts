@@ -1,5 +1,5 @@
 export * from "./convert";
 export * from "./gist";
-export * from "./lists-store";
+export * as listStores from "./list-stores";
 export * from "./query-utils";
 export * from "./utils";

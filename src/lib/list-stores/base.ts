@@ -1,6 +1,6 @@
 import * as types from "../../types";
 
-export interface ListsStoreData {
+export interface ListStoreData {
     alertLists: types.AlertList;
     metalSheets: types.MetalSheet;
     vis: types.Vis;
@@ -8,12 +8,12 @@ export interface ListsStoreData {
     visBookmarks: types.Bookmarks;
 }
 
-export class ListsStore<T extends keyof ListsStoreData> {
-    public key(): keyof ListsStoreData {
-        return "" as keyof ListsStoreData;
+export class ListStore<T extends keyof ListStoreData> {
+    public key(): keyof ListStoreData {
+        return "" as keyof ListStoreData;
     }
 
-    public listKey(list: ListsStoreData[T]): string {
+    public listKey(list: ListStoreData[T]): string {
         if ("title" in list) return list.title as string;
         return "unknown";
     }
@@ -22,7 +22,7 @@ export class ListsStore<T extends keyof ListsStoreData> {
         return "";
     }
 
-    public fileName(list: ListsStoreData[T]): string {
+    public fileName(list: ListStoreData[T]): string {
         return `${this.listKey(list)}.json`;
     }
 
@@ -34,8 +34,8 @@ export class ListsStore<T extends keyof ListsStoreData> {
         return JSON.parse(dataString);
     }
 
-    public sort(data: ListsStoreData[T][]): ListsStoreData[T][] {
-        const result: ListsStoreData[T][] = [];
+    public sort(data: ListStoreData[T][]): ListStoreData[T][] {
+        const result: ListStoreData[T][] = [];
 
         const keys = data.map((list) => `${this.listKey(list)}`).sort();
 
@@ -52,23 +52,23 @@ export class ListsStore<T extends keyof ListsStoreData> {
      */
     public replaceInStore(
         store: types.PGStore,
-        newList: ListsStoreData[T],
-        oldList: ListsStoreData[T],
+        newList: ListStoreData[T],
+        oldList: ListStoreData[T],
     ) {
         const newListKey = this.listKey(newList);
         const oldListKey = this.listKey(oldList);
 
         if (oldListKey !== newListKey) {
-            for (const list of store.getData(this.key() as keyof ListsStoreData) || []) {
+            for (const list of store.getData(this.key() as keyof ListStoreData) || []) {
                 if (this.listKey(list as any) === newListKey) {
                     throw new Error(`Liste "${newListKey}" existiert bereits!"`);
                 }
             }
         }
 
-        store.updateData(this.key() as keyof ListsStoreData, (data) => {
+        store.updateData(this.key() as keyof ListStoreData, (data) => {
             for (let i = 0; i < data.length; i++) {
-                if (this.listKey(data[i] as ListsStoreData[T]) === oldListKey) {
+                if (this.listKey(data[i] as ListStoreData[T]) === oldListKey) {
                     data[i] = newList;
                 }
             }
@@ -80,16 +80,16 @@ export class ListsStore<T extends keyof ListsStoreData> {
     /**
      * @throws exists error
      */
-    public addToStore(store: types.PGStore, newData: ListsStoreData[T][], sort?: boolean) {
-        const storeData = store.getData(this.key() as keyof ListsStoreData);
+    public addToStore(store: types.PGStore, newData: ListStoreData[T][], sort?: boolean) {
+        const storeData = store.getData(this.key() as keyof ListStoreData);
         if (storeData === undefined) {
             return;
         }
 
         for (const newList of newData) {
-            const newListKey = this.listKey(newList as ListsStoreData[T]);
+            const newListKey = this.listKey(newList as ListStoreData[T]);
             const existingData = storeData.find((list) => {
-                if (this.listKey(list as ListsStoreData[T]) === newListKey) {
+                if (this.listKey(list as ListStoreData[T]) === newListKey) {
                     return true;
                 }
 
@@ -103,7 +103,7 @@ export class ListsStore<T extends keyof ListsStoreData> {
 
         const filteredData = storeData.filter((storeList) => {
             const data = newData.find(
-                (list) => this.listKey(list) === this.listKey(storeList as ListsStoreData[T]),
+                (list) => this.listKey(list) === this.listKey(storeList as ListStoreData[T]),
             );
 
             return data === undefined;
@@ -112,8 +112,8 @@ export class ListsStore<T extends keyof ListsStoreData> {
         const mergedData = [...filteredData, ...newData];
 
         store.setData(
-            this.key() as keyof ListsStoreData,
-            (sort ? this.sort(mergedData as ListsStoreData[T][]) : mergedData) as any[],
+            this.key() as keyof ListStoreData,
+            (sort ? this.sort(mergedData as ListStoreData[T][]) : mergedData) as any[],
         );
     }
 }

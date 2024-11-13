@@ -18,8 +18,8 @@ class PGPageContentVisBookmarks extends PGPageContent<types.Bookmarks> {
     protected render() {
         PGApp.queryAppBar()!.contentName("title")!.contentAt(0).innerText =
             this.data !== undefined
-                ? lib.listsStore("visBookmarks").listKey(this.data)
-                : lib.listsStore("visBookmarks").title();
+                ? lib.listStore("visBookmarks").listKey(this.data)
+                : lib.listStore("visBookmarks").title();
 
         return html`
             <div class="container no-scrollbar" style="width: 100%; height: 100%; overflow: auto;">
@@ -56,7 +56,7 @@ class PGPageContentVisBookmarks extends PGPageContent<types.Bookmarks> {
         // Update content if "visBookmarks" data changes
 
         const store = PGApp.queryStore();
-        const listsStore = lib.listsStore("visBookmarks");
+        const listsStore = lib.listStore("visBookmarks");
 
         this.cleanup.add(
             store.addListener("visBookmarks", (data) => {

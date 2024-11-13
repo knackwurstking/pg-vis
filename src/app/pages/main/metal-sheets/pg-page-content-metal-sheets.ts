@@ -18,8 +18,8 @@ class PGPageContentMetalSheets extends PGPageContent<types.MetalSheet> {
     protected render(): TemplateResult<1> {
         PGApp.queryAppBar()!.contentName("title")!.contentAt(0).innerText =
             this.data !== undefined
-                ? lib.listsStore("metalSheets").listKey(this.data)
-                : lib.listsStore("metalSheets").title();
+                ? lib.listStore("metalSheets").listKey(this.data)
+                : lib.listStore("metalSheets").title();
 
         return html`
             <div
@@ -101,7 +101,7 @@ class PGPageContentMetalSheets extends PGPageContent<types.MetalSheet> {
                     }
 
                     const store = PGApp.queryStore();
-                    const listsStore = lib.listsStore("metalSheets");
+                    const listsStore = lib.listStore("metalSheets");
 
                     try {
                         const newData: types.MetalSheet = {
@@ -238,7 +238,7 @@ class PGPageContentMetalSheets extends PGPageContent<types.MetalSheet> {
     }
 
     private replaceInStore(list: types.MetalSheet) {
-        const listsStore = lib.listsStore("metalSheets");
+        const listsStore = lib.listStore("metalSheets");
         listsStore.replaceInStore(PGApp.queryStore(), list, list);
     }
 }
