@@ -1,20 +1,21 @@
-import { html, PropertyValues } from "lit";
-import { customElement } from "lit/decorators.js";
-import { DirectiveResult } from "lit/directive.js";
-import { Keyed, keyed } from "lit/directives/keyed.js";
+import { html, PropertyValues, TemplateResult } from "lit";
+import { customElement, state } from "lit/decorators.js";
 import { CleanUp, UIIconButton } from "ui";
 
 import * as lib from "../../../../lib";
-import { VisData } from "../../../../store-types";
+import * as types from "../../../../types";
+
 import { PGVisDataDialog } from "../../../dialogs";
 import PGApp from "../../../pg-app";
 import PGPageContent from "../../pg-page-content";
 import { PGPageContentVisDataEdit } from "../../sub";
 
 @customElement("pg-page-content-vis-data")
-export class PGPageContentVisData extends PGPageContent<VisData> {
+export class PGPageContentVisData extends PGPageContent<types.VisData> {
+    @state()
+    private listItems: TemplateResult<1>[] = [];
+
     private cleanup = new CleanUp();
-    private content: DirectiveResult<typeof Keyed>[] = [];
 
     protected render() {
         PGApp.queryAppBar()!.contentName("title")!.contentAt(0).innerText =
@@ -32,7 +33,7 @@ export class PGPageContentVisData extends PGPageContent<VisData> {
                             class="list no-scrollbar"
                             style="width: 100%; height: 100%; overflow: auto;"
                         >
-                            ${this.content}
+                            ${this.listItems}
                         </div>
                     </ui-flex-grid-item>
                 </ui-flex-grid>
@@ -118,28 +119,22 @@ export class PGPageContentVisData extends PGPageContent<VisData> {
     }
 
     private updateContent() {
-        this.content = [];
-        (this.data?.data || []).forEach(async (entry, index) => {
-            setTimeout(() => {
-                this.content.push(
-                    keyed(
-                        entry,
-                        html`<pg-vis-data-list-item
-                            style="cursor: pointer;"
-                            data="${JSON.stringify(entry)}"
-                            list-key="${this.data !== undefined
-                                ? lib.listsStore("visData").listKey(this.data)
-                                : ""}"
-                            entry-index=${index}
-                            show-filter
-                            route
-                        ></pg-vis-data-list-item>`,
-                    ),
-                );
-            });
-        });
+        this.listItems = [];
+        if (this.data === undefined) return;
 
-        setTimeout(() => this.requestUpdate());
+        const listsStore = lib.listsStore("visData");
+        this.listItems = this.data.data.map((entry, index) => {
+            return html`
+                <pg-vis-data-list-item
+                    data=${JSON.stringify(entry)}
+                    list-key=${this.data !== undefined ? listsStore.listKey(this.data) : ""}
+                    entry-index=${index}
+                    show-filter
+                    route
+                >
+                </pg-vis-data-list-item>
+            `;
+        });
     }
 
     connectedCallback(): void {
@@ -166,15 +161,21 @@ export class PGPageContentVisData extends PGPageContent<VisData> {
             editButton.removeEventListener("click", onEditClick);
         });
 
-        // Re-Render if "visData" changes
+        // Re-Render if "visData" store changes
 
         const listsStore = lib.listsStore("visData");
         const store = PGApp.queryStore();
+
         this.cleanup.add(
             store.addListener("visData", (data) => {
+                if (this.data === undefined) return;
+
+                const listKey = listsStore.listKey(this.data);
+
                 for (const list of data) {
-                    if (listsStore.listKey(list) === listsStore.listKey(this.data!)) {
+                    if (listsStore.listKey(list) === listKey) {
                         this.data = list;
+                        break;
                     }
                 }
             }),

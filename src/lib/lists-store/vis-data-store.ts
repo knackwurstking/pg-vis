@@ -1,4 +1,5 @@
-import { VisData } from "../../store-types";
+import * as types from "../../types";
+
 import { ListsStore, ListsStoreData } from "./base";
 
 export class VisDataStore extends ListsStore<"visData"> {
@@ -6,7 +7,7 @@ export class VisDataStore extends ListsStore<"visData"> {
         return "visData";
     }
 
-    public listKey(list: VisData): string {
+    public listKey(list: types.VisData): string {
         return `${list.title}`;
     }
 
@@ -14,11 +15,11 @@ export class VisDataStore extends ListsStore<"visData"> {
         return "Vis Data";
     }
 
-    public fileName(list: VisData): string {
+    public fileName(list: types.VisData): string {
         return `Vis Data - ${super.fileName(list)}`;
     }
 
-    public validate(dataString: string): VisData | null {
+    public validate(dataString: string): types.VisData | null {
         const list = super.validate(dataString);
 
         if (typeof list.title !== "string" || !Array.isArray(list.data)) return null;

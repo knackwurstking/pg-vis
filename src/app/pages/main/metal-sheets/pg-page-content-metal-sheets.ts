@@ -5,13 +5,14 @@ import { Keyed, keyed } from "lit/directives/keyed.js";
 import { CleanUp, draggable, styles, UIIconButton } from "ui";
 
 import * as lib from "../../../../lib";
-import { MetalSheet } from "../../../../store-types";
+import * as types from "../../../../types";
+
 import { PGMetalSheetEntryDialog, PGMetalSheetTableDialog } from "../../../dialogs";
 import PGApp from "../../../pg-app";
 import PGPageContent from "../../pg-page-content";
 
 @customElement("pg-page-content-metal-sheets")
-class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
+class PGPageContentMetalSheets extends PGPageContent<types.MetalSheet> {
     private cleanup = new CleanUp();
 
     protected render(): TemplateResult<1> {
@@ -103,7 +104,7 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
                     const listsStore = lib.listsStore("metalSheets");
 
                     try {
-                        const newData: MetalSheet = {
+                        const newData: types.MetalSheet = {
                             ...this.data,
                             format: format,
                             toolID: toolID,
@@ -236,7 +237,7 @@ class PGPageContentMetalSheets extends PGPageContent<MetalSheet> {
         dialog.show();
     }
 
-    private replaceInStore(list: MetalSheet) {
+    private replaceInStore(list: types.MetalSheet) {
         const listsStore = lib.listsStore("metalSheets");
         listsStore.replaceInStore(PGApp.queryStore(), list, list);
     }

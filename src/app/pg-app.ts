@@ -11,9 +11,11 @@ import {
     UIThemeHandler,
     UIThemeHandlerTheme,
 } from "ui";
-import { build, version } from "../constants";
+
 import * as lib from "../lib";
-import { AlertList, MetalSheet, PGStackLayoutPage, PGStore, Vis, VisData } from "../store-types";
+import * as types from "../types";
+
+import { build, version } from "../constants";
 import {
     PGBookmarkSelectDialog,
     PGImportDialog,
@@ -35,8 +37,8 @@ import PGDrawerItem from "./pg-drawer-item";
 
 @customElement("pg-app")
 class PGApp extends LitElement {
-    static queryStore(): PGStore {
-        return document.querySelector<PGStore>("ui-store")!;
+    static queryStore(): types.PGStore {
+        return document.querySelector<types.PGStore>("ui-store")!;
     }
 
     static queryThemeHandler(): UIThemeHandler {
@@ -51,8 +53,8 @@ class PGApp extends LitElement {
         return document.querySelector<UIDrawer>("ui-drawer") || null;
     }
 
-    static queryStackLayout(): UIStackLayout<PGStackLayoutPage> | null {
-        return document.querySelector<UIStackLayout<PGStackLayoutPage>>("ui-stack-layout");
+    static queryStackLayout(): UIStackLayout<types.PGStackLayoutPage> | null {
+        return document.querySelector<UIStackLayout<types.PGStackLayoutPage>>("ui-stack-layout");
     }
 
     static queryImportDialog(): PGImportDialog | null {
@@ -682,7 +684,7 @@ class PGApp extends LitElement {
                 return;
             }
 
-            switch (current.name as PGStackLayoutPage) {
+            switch (current.name as types.PGStackLayoutPage) {
                 case "alertLists":
                     appBar.contentName("search")!.show();
                     break;
@@ -725,7 +727,7 @@ class PGApp extends LitElement {
         this.drawerGroupItemsRendering(store, "visData");
     }
 
-    private drawerGroupItemsRendering(store: PGStore, storeKey: keyof lib.ListsStoreData) {
+    private drawerGroupItemsRendering(store: types.PGStore, storeKey: keyof lib.ListsStoreData) {
         store.addListener(
             storeKey,
             (data) => {
@@ -751,15 +753,15 @@ class PGApp extends LitElement {
 
                     switch (storeKey) {
                         case "metalSheets":
-                            ((list: MetalSheet) => {
+                            ((list: types.MetalSheet) => {
                                 groupItem.primary =
                                     (list.data.press >= 0 ? `[P${list.data.press}] ` : "") +
                                     listsStore.listKey(list);
-                                groupItem.secondary = `${(list as MetalSheet).data.table.data.length} Einträge`;
-                            })(list as MetalSheet);
+                                groupItem.secondary = `${(list as types.MetalSheet).data.table.data.length} Einträge`;
+                            })(list as types.MetalSheet);
                             break;
                         default:
-                            groupItem.secondary = `${(list as AlertList | Vis | VisData).data.length} Einträge`;
+                            groupItem.secondary = `${(list as types.AlertList | types.Vis | types.VisData).data.length} Einträge`;
                     }
 
                     groupItem.allowDeletion = true;

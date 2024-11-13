@@ -4,13 +4,14 @@ import { keyed } from "lit/directives/keyed.js";
 import { CleanUp, UIDialog } from "ui";
 
 import * as lib from "../../lib";
-import { Bookmarks, PGStore, Product } from "../../store-types";
+import * as types from "../../types";
+
 import PGApp from "../pg-app";
 
 @customElement("pg-bookmark-select-dialog")
 class PGBookmarkSelectDialog extends LitElement {
     @property({ type: Object, attribute: "product", reflect: false })
-    product?: Product;
+    product?: types.Product;
 
     private cleanup = new CleanUp();
 
@@ -60,12 +61,12 @@ class PGBookmarkSelectDialog extends LitElement {
         `;
     }
 
-    private renderChecklists(store: PGStore) {
+    private renderChecklists(store: types.PGStore) {
         if (this.product === undefined) return html``;
 
         const bookmarksData = store.getData("visBookmarks") || [];
 
-        const toggleBookmark = (list: Bookmarks) => {
+        const toggleBookmark = (list: types.Bookmarks) => {
             if (this.product === undefined) return;
 
             const productKey = lib.productKey(this.product);
@@ -116,7 +117,7 @@ class PGBookmarkSelectDialog extends LitElement {
         this.cleanup.run();
     }
 
-    public isBookmark(bookmarks: Bookmarks): boolean {
+    public isBookmark(bookmarks: types.Bookmarks): boolean {
         if (this.product === undefined) return false;
 
         const productKey = lib.productKey(this.product);

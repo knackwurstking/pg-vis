@@ -1,17 +1,19 @@
-import { PropertyValues } from "lit";
-import { DirectiveResult } from "lit/async-directive.js";
-import { customElement } from "lit/decorators.js";
-import { Keyed, keyed } from "lit/directives/keyed.js";
-import { html } from "ui";
+import { PropertyValues, TemplateResult } from "lit";
+import { customElement, state } from "lit/decorators.js";
+import { CleanUp, html } from "ui";
 
 import * as lib from "../../../../lib";
-import { Bookmarks, PGStore, Product, Vis } from "../../../../store-types";
+import * as types from "../../../../types";
+
 import PGApp from "../../../pg-app";
 import PGPageContent from "../../pg-page-content";
 
 @customElement("pg-page-content-vis-bookmarks")
-class PGPageContentVisBookmarks extends PGPageContent<Bookmarks> {
-    private content: DirectiveResult<typeof Keyed>[] = [];
+class PGPageContentVisBookmarks extends PGPageContent<types.Bookmarks> {
+    @state()
+    private listItems: TemplateResult<1>[] = [];
+
+    private cleanup = new CleanUp();
 
     protected render() {
         PGApp.queryAppBar()!.contentName("title")!.contentAt(0).innerText =
@@ -21,7 +23,7 @@ class PGPageContentVisBookmarks extends PGPageContent<Bookmarks> {
 
         return html`
             <div class="container no-scrollbar" style="width: 100%; height: 100%; overflow: auto;">
-                <div class="list">${this.content}</div>
+                <div class="list">${this.listItems}</div>
             </div>
         `;
     }
@@ -33,29 +35,51 @@ class PGPageContentVisBookmarks extends PGPageContent<Bookmarks> {
     }
 
     private updateContent() {
-        const store = PGApp.queryStore();
-        this.content = [];
-        (this.data?.data || []).forEach(async (product) => {
-            setTimeout(() => {
-                product = this.productFromStore(store, product);
-                this.content.push(
-                    keyed(
-                        product,
-                        html`<pg-vis-list-item
-                            role="button"
-                            style="cursor: pointer;"
-                            data="${JSON.stringify(product)}"
-                            route
-                        ></pg-vis-list-item>`,
-                    ),
-                );
-            });
-        });
+        this.listItems = [];
+        if (this.data === undefined) return;
 
-        setTimeout(() => this.requestUpdate());
+        const store = PGApp.queryStore();
+        this.listItems = this.data.data.map((bookmarksProduct) => {
+            return html`
+                <pg-vis-list-item
+                    data=${JSON.stringify(this.productFromStore(store, bookmarksProduct))}
+                    route
+                >
+                </pg-vis-list-item>
+            `;
+        });
     }
 
-    private productFromStore(store: PGStore, product: Product): Product {
+    connectedCallback(): void {
+        super.connectedCallback();
+
+        // Update content if "visBookmarks" data changes
+
+        const store = PGApp.queryStore();
+        const listsStore = lib.listsStore("visBookmarks");
+
+        this.cleanup.add(
+            store.addListener("visBookmarks", (data) => {
+                if (this.data === undefined) return;
+
+                const listKey = listsStore.listKey(this.data);
+
+                for (const list of data) {
+                    if (listsStore.listKey(list) === listKey) {
+                        this.data = list;
+                        break;
+                    }
+                }
+            }),
+        );
+    }
+
+    disconnectedCallback(): void {
+        super.disconnectedCallback();
+        this.cleanup.run();
+    }
+
+    private productFromStore(store: types.PGStore, product: types.Product): types.Product {
         const productKey = lib.productKey(product);
 
         for (const list of this.sortVisLists(store.getData("vis") || [])) {
@@ -73,7 +97,7 @@ class PGPageContentVisBookmarks extends PGPageContent<Bookmarks> {
         return product;
     }
 
-    private sortVisLists(lists: Vis[]): Vis[] {
+    private sortVisLists(lists: types.Vis[]): types.Vis[] {
         return lists.sort((a, b) => a.date - b.date).reverse();
     }
 }

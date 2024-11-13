@@ -1,4 +1,5 @@
-import { Bookmarks } from "../../store-types";
+import * as types from "../../types";
+
 import { ListsStore, ListsStoreData } from "./base";
 
 export class VisBookmarksStore extends ListsStore<"visBookmarks"> {
@@ -6,7 +7,7 @@ export class VisBookmarksStore extends ListsStore<"visBookmarks"> {
         return "visBookmarks";
     }
 
-    public listKey(list: Bookmarks): string {
+    public listKey(list: types.Bookmarks): string {
         return `${list.title}`;
     }
 
@@ -14,7 +15,7 @@ export class VisBookmarksStore extends ListsStore<"visBookmarks"> {
         return "Vis Bookmarks";
     }
 
-    public fileName(list: Bookmarks): string {
+    public fileName(list: types.Bookmarks): string {
         return `Vis Bookmarks - ${super.fileName(list)}`;
     }
 }

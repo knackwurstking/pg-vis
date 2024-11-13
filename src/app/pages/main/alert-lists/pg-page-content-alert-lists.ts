@@ -1,23 +1,24 @@
 import { html, PropertyValues, TemplateResult } from "lit";
-import { DirectiveResult } from "lit/async-directive.js";
-import { customElement, property } from "lit/decorators.js";
-import { keyed, Keyed } from "lit/directives/keyed.js";
+import { customElement, property, state } from "lit/decorators.js";
 import { CleanUp, styles, UIIconButton } from "ui";
 
 import * as lib from "../../../../lib";
-import { AlertList } from "../../../../store-types";
+import * as types from "../../../../types";
+
 import { PGSearchBar } from "../../../components";
 import { PGAlertListItem } from "../../../list-items";
 import PGApp from "../../../pg-app";
 import PGPageContent from "../../pg-page-content";
 
 @customElement("pg-page-content-alert-lists")
-class PGPageContentAlertLists extends PGPageContent<AlertList> {
+class PGPageContentAlertLists extends PGPageContent<types.AlertList> {
     @property({ type: Boolean, attribute: "search-bar", reflect: true })
     searchBar?: boolean;
 
+    @state()
+    private listItems: TemplateResult<1>[] = [];
+
     private cleanup = new CleanUp();
-    private content: DirectiveResult<typeof Keyed>[] = [];
 
     public querySearchBar(): PGSearchBar | null {
         return this.querySelector<PGSearchBar>(`pg-search-bar`);
@@ -47,7 +48,7 @@ class PGPageContentAlertLists extends PGPageContent<AlertList> {
                     overflow: "auto",
                 } as CSSStyleDeclaration)}"
             >
-                <div class="list">${this.content}</div>
+                <div class="list">${this.listItems}</div>
             </div>
         `;
     }
@@ -70,22 +71,15 @@ class PGPageContentAlertLists extends PGPageContent<AlertList> {
     }
 
     private updateContent() {
-        this.content = [];
-        (this.data?.data || []).forEach(async (alert) => {
-            setTimeout(() => {
-                this.content.push(
-                    keyed(
-                        alert,
-                        html`<pg-alert-list-item
-                            data=${JSON.stringify(alert)}
-                            route
-                        ></pg-alert-list-item>`,
-                    ),
-                );
-            });
-        });
+        this.listItems = [];
+        if (this.data === undefined) return;
 
-        setTimeout(() => this.requestUpdate());
+        this.listItems = this.data.data.map((alert) => {
+            return html`<pg-alert-list-item
+                data=${JSON.stringify(alert)}
+                route
+            ></pg-alert-list-item>`;
+        });
     }
 
     connectedCallback(): void {

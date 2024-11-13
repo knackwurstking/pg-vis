@@ -1,18 +1,22 @@
-import { html, nothing, PropertyValues } from "lit";
-import { customElement, property } from "lit/decorators.js";
+import { html, PropertyValues, TemplateResult } from "lit";
+import { customElement, property, state } from "lit/decorators.js";
 import { CleanUp, styles, UIIconButton } from "ui";
 
 import * as lib from "../../../../lib";
-import { Vis } from "../../../../store-types";
+import * as types from "../../../../types";
+
 import { PGSearchBar } from "../../../components";
 import { PGVisListItem } from "../../../list-items";
 import PGApp from "../../../pg-app";
 import PGPageContent from "../../pg-page-content";
 
 @customElement("pg-page-content-vis")
-class PGPageContentVis extends PGPageContent<Vis> {
+class PGPageContentVis extends PGPageContent<types.Vis> {
     @property({ type: Boolean, attribute: "search-bar", reflect: true })
     searchBar?: boolean;
+
+    @state()
+    private listItems: TemplateResult<1>[] = [];
 
     private cleanup = new CleanUp();
 
@@ -42,7 +46,7 @@ class PGPageContentVis extends PGPageContent<Vis> {
                     overflow: "auto",
                 } as CSSStyleDeclaration)}"
             >
-                <div class="list">${nothing}</div>
+                <div class="list">${this.listItems}</div>
             </div>
         `;
     }
@@ -65,18 +69,13 @@ class PGPageContentVis extends PGPageContent<Vis> {
     }
 
     private updateContent() {
-        const container = this.querySelector(`.list`)!;
-
+        this.listItems = [];
         if (this.data === undefined) return;
 
-        for (const product of this.data?.data || []) {
-            setTimeout(() => {
-                const item = new PGVisListItem();
-                item.data = product;
-                item.route = true;
-                container.appendChild(item);
-            });
-        }
+        this.listItems = this.data.data.map((product) => {
+            return html`<pg-vis-list-item data=${JSON.stringify(product)} route>
+            </pg-vis-list-item>`;
+        });
     }
 
     connectedCallback(): void {

@@ -1,4 +1,5 @@
-import { MetalSheet } from "../../store-types";
+import * as types from "../../types";
+
 import { ListsStore, ListsStoreData } from "./base";
 
 export class MetalSheetsStore extends ListsStore<"metalSheets"> {
@@ -6,7 +7,7 @@ export class MetalSheetsStore extends ListsStore<"metalSheets"> {
         return "metalSheets";
     }
 
-    public listKey(list: MetalSheet): string {
+    public listKey(list: types.MetalSheet): string {
         return `${list.format} ${list.toolID}`;
     }
 
@@ -14,11 +15,11 @@ export class MetalSheetsStore extends ListsStore<"metalSheets"> {
         return "Blech Listen";
     }
 
-    public fileName(list: MetalSheet): string {
+    public fileName(list: types.MetalSheet): string {
         return `Blech Liste - ${super.fileName(list)}`;
     }
 
-    public validate(dataString: string): MetalSheet | null {
+    public validate(dataString: string): types.MetalSheet | null {
         const list = super.validate(dataString);
 
         if (typeof list.format !== "string") return null;

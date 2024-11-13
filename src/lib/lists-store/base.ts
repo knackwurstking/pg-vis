@@ -1,11 +1,11 @@
-import { AlertList, Bookmarks, MetalSheet, PGStore, Vis, VisData } from "../../store-types";
+import * as types from "../../types";
 
 export interface ListsStoreData {
-    alertLists: AlertList;
-    metalSheets: MetalSheet;
-    vis: Vis;
-    visData: VisData;
-    visBookmarks: Bookmarks;
+    alertLists: types.AlertList;
+    metalSheets: types.MetalSheet;
+    vis: types.Vis;
+    visData: types.VisData;
+    visBookmarks: types.Bookmarks;
 }
 
 export class ListsStore<T extends keyof ListsStoreData> {
@@ -50,7 +50,11 @@ export class ListsStore<T extends keyof ListsStoreData> {
     /**
      * @throws exists error
      */
-    public replaceInStore(store: PGStore, newList: ListsStoreData[T], oldList: ListsStoreData[T]) {
+    public replaceInStore(
+        store: types.PGStore,
+        newList: ListsStoreData[T],
+        oldList: ListsStoreData[T],
+    ) {
         const newListKey = this.listKey(newList);
         const oldListKey = this.listKey(oldList);
 
@@ -76,7 +80,7 @@ export class ListsStore<T extends keyof ListsStoreData> {
     /**
      * @throws exists error
      */
-    public addToStore(store: PGStore, newData: ListsStoreData[T][], sort?: boolean) {
+    public addToStore(store: types.PGStore, newData: ListsStoreData[T][], sort?: boolean) {
         const storeData = store.getData(this.key() as keyof ListsStoreData);
         if (storeData === undefined) {
             return;

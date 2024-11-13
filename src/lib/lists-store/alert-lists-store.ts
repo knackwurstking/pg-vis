@@ -1,4 +1,5 @@
-import { AlertList } from "../../store-types";
+import * as types from "../../types";
+
 import { ListsStore, ListsStoreData } from "./base";
 
 export class AlertListsStore extends ListsStore<"alertLists"> {
@@ -6,7 +7,7 @@ export class AlertListsStore extends ListsStore<"alertLists"> {
         return "alertLists";
     }
 
-    public listKey(list: AlertList): string {
+    public listKey(list: types.AlertList): string {
         return list.title;
     }
 
@@ -14,11 +15,11 @@ export class AlertListsStore extends ListsStore<"alertLists"> {
         return "Alarm Listen";
     }
 
-    public fileName(list: AlertList): string {
+    public fileName(list: types.AlertList): string {
         return `Alarm Liste - ${super.fileName(list)}`;
     }
 
-    public validate(dataString: any): AlertList | null {
+    public validate(dataString: any): types.AlertList | null {
         const list = super.validate(dataString);
 
         if (typeof list?.title !== "string") return null;

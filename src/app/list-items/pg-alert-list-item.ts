@@ -1,14 +1,15 @@
 import { html, LitElement, PropertyValues } from "lit";
 import { customElement, property } from "lit/decorators.js";
 
-import { Alert } from "../../store-types";
+import * as types from "../../types";
+
 import { PGPageContent } from "../pages";
 import PGApp from "../pg-app";
 
 @customElement("pg-alert-list-item")
 class PGAlertListItem extends LitElement {
     @property({ type: Object, attribute: "data", reflect: false })
-    data?: Alert;
+    data?: types.Alert;
 
     @property({ type: Boolean, attribute: "route", reflect: true })
     route?: boolean;
@@ -51,7 +52,7 @@ class PGAlertListItem extends LitElement {
             PGApp.queryStackLayout()!.setPage(
                 "alert",
                 (page) => {
-                    const content = page.children[0] as PGPageContent<Alert> | undefined;
+                    const content = page.children[0] as PGPageContent<types.Alert> | undefined;
 
                     if (content !== undefined) {
                         content.data = this.data;

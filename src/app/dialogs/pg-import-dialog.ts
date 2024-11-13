@@ -3,8 +3,9 @@ import { customElement, property } from "lit/decorators.js";
 import { keyed } from "lit/directives/keyed.js";
 import { UIDialog, UIInput } from "ui";
 
-import { PGApp } from "..";
 import * as lib from "../../lib";
+
+import { PGApp } from "..";
 
 @customElement("pg-import-dialog")
 class PGImportDialog extends LitElement {

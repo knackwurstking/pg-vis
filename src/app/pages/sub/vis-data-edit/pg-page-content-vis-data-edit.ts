@@ -3,12 +3,13 @@ import { customElement, property } from "lit/decorators.js";
 import { CleanUp, UIIconButton, UIInput } from "ui";
 
 import * as lib from "../../../../lib";
-import { VisDataEntry } from "../../../../store-types";
+import * as types from "../../../../types";
+
 import PGApp from "../../../pg-app";
 import PGPageContent from "../../pg-page-content";
 
 @customElement("pg-page-content-vis-data-edit")
-export class PGPageContentVisDataEdit extends PGPageContent<VisDataEntry> {
+export class PGPageContentVisDataEdit extends PGPageContent<types.VisDataEntry> {
     @property({ type: String, attribute: "list-key", reflect: true })
     listKey?: string;
 

@@ -1,4 +1,4 @@
-import { Product, Vis } from "../store-types";
+import * as types from "../types";
 
 export function fixFormatString(format: string): string {
     try {
@@ -18,9 +18,9 @@ export function fixFormatString(format: string): string {
     return format;
 }
 
-export function toVis(dataString: string): Vis | null {
+export function toVis(dataString: string): types.Vis | null {
     /** @type {PGStore_Vis} */
-    const vis: Vis = (() => {
+    const vis: types.Vis = (() => {
         const date = new Date();
         const m = (date.getMonth() + 1).toString().padStart(2, "0");
         const d = date.getDate().toString().padStart(2, "0");
@@ -36,7 +36,7 @@ export function toVis(dataString: string): Vis | null {
         line = line.trim();
         if (!line) continue;
 
-        const product: Product = {
+        const product: types.Product = {
             lotto: "",
             name: "",
             format: "",

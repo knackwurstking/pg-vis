@@ -1,5 +1,6 @@
-import { Vis } from "../../store-types";
+import * as types from "../../types";
 import * as convert from "../convert";
+
 import { ListsStore, ListsStoreData } from "./base";
 
 export class VisStore extends ListsStore<"vis"> {
@@ -7,7 +8,7 @@ export class VisStore extends ListsStore<"vis"> {
         return "vis";
     }
 
-    public listKey(list: Vis): string {
+    public listKey(list: types.Vis): string {
         return `${list.title}`;
     }
 
@@ -15,11 +16,11 @@ export class VisStore extends ListsStore<"vis"> {
         return "Vis";
     }
 
-    public fileName(list: Vis): string {
+    public fileName(list: types.Vis): string {
         return `Vis Liste - ${super.fileName(list)}`;
     }
 
-    public validate(dataString: string): Vis | null {
+    public validate(dataString: string): types.Vis | null {
         let list: any;
         try {
             list = super.validate(dataString);

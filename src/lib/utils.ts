@@ -1,4 +1,5 @@
-import { Product } from "../store-types";
+import * as types from "../types";
+
 import {
     AlertListsStore,
     ListsStore,
@@ -9,7 +10,7 @@ import {
     VisStore,
 } from "./lists-store";
 
-export function productKey(product: Product): string {
+export function productKey(product: types.Product): string {
     return `${product.lotto} ${product.name}`;
 }
 

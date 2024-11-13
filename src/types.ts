@@ -1,3 +1,5 @@
+/// <reference types="vite-plugin-pwa/client" />
+
 import { UIStore, UIThemeHandlerTheme } from "ui";
 
 export type PGStore = UIStore<PGStoreEvents>;

@@ -2,13 +2,14 @@ import { html, LitElement } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { svg } from "ui";
 
-import { Product } from "../../../../store-types";
+import * as types from "../../../../types";
+
 import PGApp from "../../../pg-app";
 
 @customElement("pg-bookmarks-action")
 class PGBookmarksAction extends LitElement {
     @property({ type: Object, attribute: "product", reflect: false })
-    product?: Product;
+    product?: types.Product;
 
     protected createRenderRoot(): HTMLElement | DocumentFragment {
         return this;

@@ -1,14 +1,15 @@
 import { html, LitElement, PropertyValues } from "lit";
 import { customElement, property } from "lit/decorators.js";
 
-import { VisDataEntry } from "../../store-types";
+import * as types from "../../types";
+
 import { PGPageContentVisDataEdit } from "../pages";
 import PGApp from "../pg-app";
 
 @customElement("pg-vis-data-list-item")
 class PGVisDataListItem extends LitElement {
     @property({ type: Object, attribute: "data", reflect: true })
-    data?: VisDataEntry;
+    data?: types.VisDataEntry;
 
     @property({ type: Boolean, attribute: "route", reflect: true })
     route?: boolean;

@@ -1,14 +1,15 @@
 import { html, LitElement, PropertyValues } from "lit";
 import { customElement, property } from "lit/decorators.js";
 
-import { Product } from "../../store-types";
+import * as types from "../../types";
+
 import { PGPageContent } from "../pages";
 import PGApp from "../pg-app";
 
 @customElement("pg-vis-list-item")
 class PGVisListItem extends LitElement {
     @property({ type: Object, attribute: "data", reflect: true })
-    data?: Product;
+    data?: types.Product;
 
     @property({ type: Boolean, attribute: "route", reflect: true })
     route?: boolean;
@@ -67,7 +68,7 @@ class PGVisListItem extends LitElement {
             PGApp.queryStackLayout()!.setPage(
                 "product",
                 (page) => {
-                    const content = page.children[0] as PGPageContent<Product> | undefined;
+                    const content = page.children[0] as PGPageContent<types.Product> | undefined;
 
                     if (content !== undefined) {
                         content.data = this.data;
