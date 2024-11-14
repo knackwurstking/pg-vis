@@ -2,6 +2,7 @@
 
 ## v1.1.0 — [unreleased]
 
+- [ ] Add "Flakes" special
 - [x] Add "mm" suffix to vis search (product list items)
 - [x] Create a GitHub pages repo for dev
 - [x] Convert project to typescript using lit
