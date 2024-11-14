@@ -128,6 +128,7 @@ export interface Bookmarks {
 
 export interface FlakesSpecial {
     type: "flakes";
+    title: "Flakes";
     data: FlakesData[];
 }
 
