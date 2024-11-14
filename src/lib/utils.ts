@@ -24,6 +24,9 @@ export function listStore<T extends keyof lib.listStores.ListStoreData>(
         case "visData":
             return new lib.listStores.VisDataStore() as lib.listStores.ListStore<T>;
 
+        case "special":
+            return new lib.listStores.SpecialStore() as lib.listStores.ListStore<T>;
+
         default:
             throw new Error(`unknown "${key}"`);
     }
