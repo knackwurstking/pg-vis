@@ -1,4 +1,8 @@
-import { html, PropertyValues, TemplateResult } from "lit";
+import { html, PropertyValues } from "lit";
+import { CleanUp } from "ui";
+
+import { Keyed, keyed } from "lit/directives/keyed.js";
+import { DirectiveResult } from "lit/async-directive.js";
 import { customElement, state } from "lit/decorators.js";
 
 import * as app from "@app";
@@ -8,7 +12,9 @@ import * as types from "@types";
 @customElement("pg-page-contents-product")
 class PGPageContentProduct extends app.PGPageContent<types.Product> {
     @state()
-    private listItems: TemplateResult<1>[] = [];
+    private listItems: DirectiveResult<typeof Keyed>[] = [];
+
+    private cleanup = new CleanUp();
 
     protected render() {
         return html`
@@ -48,12 +54,8 @@ class PGPageContentProduct extends app.PGPageContent<types.Product> {
         this.listItems = [];
         if (this.data === undefined) return html``;
 
-        const visData = app.PGApp.queryStore().getData("visData");
-        if (visData === undefined) return html``;
-
         const listsStore = lib.listStore("visData");
-
-        for (const list of visData) {
+        for (const list of app.PGApp.queryStore().getData("visData") || []) {
             const listKey = listsStore.listKey(list);
 
             let hasHeading = false;
@@ -81,24 +83,47 @@ class PGPageContentProduct extends app.PGPageContent<types.Product> {
                     hasHeading = true;
                     this.listItems = [
                         ...this.listItems,
-                        html`<ui-flex-grid-item>
-                            <ui-heading level="3">${list.title}</ui-heading>
-                        </ui-flex-grid-item>`,
+                        keyed(
+                            entry,
+                            html`<ui-flex-grid-item>
+                                <ui-heading level="3">${list.title}</ui-heading>
+                            </ui-flex-grid-item>`,
+                        ),
                     ];
                 }
 
                 this.listItems = [
                     ...this.listItems,
-                    html`<pg-vis-data-list-item
-                        data=${JSON.stringify(entry)}
-                        entry-index=${index}
-                        list-key=${listKey}
-                        route
-                    ></pg-vis-data-list-item>`,
+                    keyed(
+                        entry,
+                        html`<pg-vis-data-list-item
+                            data=${JSON.stringify(entry)}
+                            entry-index=${index}
+                            list-key=${listKey}
+                            route
+                        ></pg-vis-data-list-item>`,
+                    ),
                 ];
             }
             hasHeading = false;
         }
+    }
+
+    connectedCallback(): void {
+        super.connectedCallback();
+
+        const store = app.PGApp.queryStore();
+
+        this.cleanup.add(
+            store.addListener("visData", () => {
+                this.updateContent();
+            }),
+        );
+    }
+
+    disconnectedCallback(): void {
+        super.disconnectedCallback();
+        this.cleanup.run();
     }
 
     private isLotto(match: string | null, lotto: string): boolean {
