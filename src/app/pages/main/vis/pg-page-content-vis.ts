@@ -104,7 +104,7 @@ class PGPageContentVis extends app.PGPageContent<types.Vis> {
             if (child.data === undefined) continue;
 
             setTimeout(() => {
-                searchString = `${child.data!.lotto} ${child.data!.name} ${child.data!.format} ${child.data!.stamp} ${child.data!.thickness}`;
+                searchString = `${child.data!.lotto} ${child.data!.name} ${child.data!.format} ${child.data!.stamp} ${child.data!.thickness}mm`;
 
                 if (regex.test(searchString)) {
                     child.style.display = "block";
