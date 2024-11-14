@@ -107,6 +107,7 @@ class PGApp extends LitElement {
         );
 
         store.setData("visData", [], true);
+        store.setData("special", [], true);
 
         store.setData("gist", {}, true);
     }
