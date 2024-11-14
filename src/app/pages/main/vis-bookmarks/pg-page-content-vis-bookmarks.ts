@@ -2,21 +2,19 @@ import { PropertyValues, TemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
 import { CleanUp, html } from "ui";
 
-import * as lib from "../../../../lib";
-import * as types from "../../../../types";
-
-import PGApp from "../../../pg-app";
-import PGPageContent from "../../pg-page-content";
+import * as app from "@app";
+import * as lib from "@lib";
+import * as types from "@types";
 
 @customElement("pg-page-content-vis-bookmarks")
-class PGPageContentVisBookmarks extends PGPageContent<types.Bookmarks> {
+class PGPageContentVisBookmarks extends app.PGPageContent<types.Bookmarks> {
     @state()
     private listItems: TemplateResult<1>[] = [];
 
     private cleanup = new CleanUp();
 
     protected render() {
-        PGApp.queryAppBar()!.contentName("title")!.contentAt(0).innerText =
+        app.PGApp.queryAppBar()!.contentName("title")!.contentAt(0).innerText =
             this.data !== undefined
                 ? lib.listStore("visBookmarks").listKey(this.data)
                 : lib.listStore("visBookmarks").title();
@@ -38,7 +36,7 @@ class PGPageContentVisBookmarks extends PGPageContent<types.Bookmarks> {
         this.listItems = [];
         if (this.data === undefined) return;
 
-        const store = PGApp.queryStore();
+        const store = app.PGApp.queryStore();
         this.listItems = this.data.data.map((bookmarksProduct) => {
             return html`
                 <pg-vis-list-item
@@ -55,7 +53,7 @@ class PGPageContentVisBookmarks extends PGPageContent<types.Bookmarks> {
 
         // Update content if "visBookmarks" data changes
 
-        const store = PGApp.queryStore();
+        const store = app.PGApp.queryStore();
         const listsStore = lib.listStore("visBookmarks");
 
         this.cleanup.add(

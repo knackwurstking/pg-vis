@@ -1,10 +1,8 @@
 import { html, LitElement, PropertyValues } from "lit";
 import { customElement, property } from "lit/decorators.js";
 
-import * as types from "../../types";
-
-import { PGPageContent } from "../pages";
-import PGApp from "../pg-app";
+import * as app from "@app";
+import * as types from "@types";
 
 @customElement("pg-alert-list-item")
 class PGAlertListItem extends LitElement {
@@ -49,10 +47,10 @@ class PGAlertListItem extends LitElement {
 
     protected updated(_changedProperties: PropertyValues): void {
         const clickHandler = () => {
-            PGApp.queryStackLayout()!.setPage(
+            app.PGApp.queryStackLayout()!.setPage(
                 "alert",
                 (page) => {
-                    const content = page.children[0] as PGPageContent<types.Alert> | undefined;
+                    const content = page.children[0] as app.PGPageContent<types.Alert> | undefined;
 
                     if (content !== undefined) {
                         content.data = this.data;

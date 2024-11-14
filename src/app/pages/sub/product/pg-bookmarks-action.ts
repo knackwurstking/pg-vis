@@ -2,9 +2,8 @@ import { html, LitElement } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { svg } from "ui";
 
-import * as types from "../../../../types";
-
-import PGApp from "../../../pg-app";
+import * as app from "@app";
+import * as types from "@types";
 
 @customElement("pg-bookmarks-action")
 class PGBookmarksAction extends LitElement {
@@ -18,7 +17,7 @@ class PGBookmarksAction extends LitElement {
     protected render() {
         const buttonClick = () => {
             if (this.product === undefined) return;
-            const dialog = PGApp.queryBookmarkSelectDialog()!;
+            const dialog = app.PGApp.queryBookmarkSelectDialog()!;
             dialog.product = this.product;
             dialog.show();
         };

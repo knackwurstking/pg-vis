@@ -4,8 +4,8 @@ import { html, LitElement } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { svg } from "ui";
 
-import { PGApp } from ".";
-import * as lib from "../lib";
+import * as app from "@app";
+import * as lib from "@lib";
 
 @customElement("pg-drawer-item-import")
 class PGDrawerItemImport extends LitElement {
@@ -25,7 +25,7 @@ class PGDrawerItemImport extends LitElement {
                         color="primary"
                         ripple
                         @click=${async () => {
-                            const dialog = PGApp.queryImportDialog()!;
+                            const dialog = app.PGApp.queryImportDialog()!;
                             dialog.storeKey = this.storeKey;
                             dialog.show();
                         }}
@@ -54,7 +54,7 @@ class PGDrawerItemImport extends LitElement {
         const zip = new JSZip();
         const listsStore = lib.listStore(this.storeKey);
 
-        const storeData = PGApp.queryStore().getData(this.storeKey);
+        const storeData = app.PGApp.queryStore().getData(this.storeKey);
         if (storeData === undefined) return;
 
         for (const list of storeData) {

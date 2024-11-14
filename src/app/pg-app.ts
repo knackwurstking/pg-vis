@@ -12,28 +12,10 @@ import {
     UIThemeHandlerTheme,
 } from "ui";
 
-import * as lib from "../lib";
-import * as types from "../types";
-
-import { build, version } from "../constants";
-import {
-    PGBookmarkSelectDialog,
-    PGImportDialog,
-    PGMetalSheetTableDialog,
-    PGVisBookmarksDialog,
-    PGVisDataDialog,
-} from "./dialogs";
-import {
-    PGPageContentAlert,
-    PGPageContentAlertLists,
-    PGPageContentMetalSheets,
-    PGPageContentProduct,
-    PGPageContentVis,
-    PGPageContentVisBookmarks,
-    PGPageContentVisData,
-    PGPageContentVisDataEdit,
-} from "./pages";
-import PGDrawerItem from "./pg-drawer-item";
+import * as app from "@app";
+import * as constants from "@constants";
+import * as lib from "@lib";
+import * as types from "@types";
 
 @customElement("pg-app")
 class PGApp extends LitElement {
@@ -57,20 +39,20 @@ class PGApp extends LitElement {
         return document.querySelector<UIStackLayout<types.PGStackLayoutPage>>("ui-stack-layout");
     }
 
-    static queryImportDialog(): PGImportDialog | null {
-        return document.querySelector<PGImportDialog>(`pg-import-dialog`);
+    static queryImportDialog(): app.PGImportDialog | null {
+        return document.querySelector<app.PGImportDialog>(`pg-import-dialog`);
     }
 
-    static queryVisBookmarksDialog(): PGVisBookmarksDialog | null {
-        return document.querySelector<PGVisBookmarksDialog>(`pg-vis-bookmarks-dialog`);
+    static queryVisBookmarksDialog(): app.PGVisBookmarksDialog | null {
+        return document.querySelector<app.PGVisBookmarksDialog>(`pg-vis-bookmarks-dialog`);
     }
 
-    static queryBookmarkSelectDialog(): PGBookmarkSelectDialog | null {
-        return document.querySelector<PGBookmarkSelectDialog>(`pg-bookmark-select-dialog`);
+    static queryBookmarkSelectDialog(): app.PGBookmarkSelectDialog | null {
+        return document.querySelector<app.PGBookmarkSelectDialog>(`pg-bookmark-select-dialog`);
     }
 
-    static queryVisDataDialog(): PGVisDataDialog | null {
-        return document.querySelector<PGVisDataDialog>(`pg-vis-data-dialog`);
+    static queryVisDataDialog(): app.PGVisDataDialog | null {
+        return document.querySelector<app.PGVisDataDialog>(`pg-vis-data-dialog`);
     }
 
     constructor() {
@@ -231,7 +213,7 @@ class PGApp extends LitElement {
                                 // });
                             }}
                         >
-                            ${version} - [Build: ${build}]
+                            ${constants.version} - [Build: ${constants.build}]
                         </ui-button>
                     </ui-drawer-group-item>
 
@@ -335,7 +317,7 @@ class PGApp extends LitElement {
                             variant="full"
                             color="secondary"
                             @click=${() => {
-                                const dialog = this.querySelector<PGMetalSheetTableDialog>(
+                                const dialog = this.querySelector<app.PGMetalSheetTableDialog>(
                                     `pg-metal-sheet-table-dialog`,
                                 )!;
 
@@ -500,13 +482,13 @@ class PGApp extends LitElement {
 
             <pg-metal-sheet-table-dialog
                 title="Neue Liste"
-                @submit=${(ev: Event & { currentTarget: PGMetalSheetTableDialog }) => {
+                @submit=${(ev: Event & { currentTarget: app.PGMetalSheetTableDialog }) => {
                     const format = ev.currentTarget.format;
                     const toolID = ev.currentTarget.toolID;
                     const press = ev.currentTarget.press;
 
                     const reopenDialog = () => {
-                        const dialog = this.querySelector<PGMetalSheetTableDialog>(
+                        const dialog = this.querySelector<app.PGMetalSheetTableDialog>(
                             `pg-metal-sheet-table-dialog`,
                         )!;
 
@@ -552,7 +534,7 @@ class PGApp extends LitElement {
             ></pg-metal-sheet-table-dialog>
 
             <pg-vis-data-dialog
-                @submit=${(ev: Event & { currentTarget: PGVisDataDialog }) => {
+                @submit=${(ev: Event & { currentTarget: app.PGVisDataDialog }) => {
                     const title = ev.currentTarget.title;
                     const listsStore = lib.listStore("visData");
 
@@ -580,7 +562,7 @@ class PGApp extends LitElement {
             </pg-vis-data-dialog>
 
             <pg-vis-bookmarks-dialog
-                @submit=${(ev: Event & { currentTarget: PGVisBookmarksDialog }) => {
+                @submit=${(ev: Event & { currentTarget: app.PGVisBookmarksDialog }) => {
                     const title = ev.currentTarget.title;
                     const listsStore = lib.listStore("visBookmarks");
 
@@ -632,35 +614,35 @@ class PGApp extends LitElement {
         stack.registerPage("alertLists", () => {
             const page = new UIStackLayoutPage();
             page.name = "alertLists";
-            page.appendChild(new PGPageContentAlertLists());
+            page.appendChild(new app.PGPageContentAlertLists());
             return page;
         });
 
         stack.registerPage("metalSheets", () => {
             const page = new UIStackLayoutPage();
             page.name = "metalSheets";
-            page.appendChild(new PGPageContentMetalSheets());
+            page.appendChild(new app.PGPageContentMetalSheets());
             return page;
         });
 
         stack.registerPage("vis", () => {
             const page = new UIStackLayoutPage();
             page.name = "vis";
-            page.appendChild(new PGPageContentVis());
+            page.appendChild(new app.PGPageContentVis());
             return page;
         });
 
         stack.registerPage("visBookmarks", () => {
             const page = new UIStackLayoutPage();
             page.name = "visBookmarks";
-            page.appendChild(new PGPageContentVisBookmarks());
+            page.appendChild(new app.PGPageContentVisBookmarks());
             return page;
         });
 
         stack.registerPage("visData", () => {
             const page = new UIStackLayoutPage();
             page.name = "visData";
-            page.appendChild(new PGPageContentVisData());
+            page.appendChild(new app.PGPageContentVisData());
             return page;
         });
 
@@ -669,21 +651,21 @@ class PGApp extends LitElement {
         stack.registerPage("alert", () => {
             const page = new UIStackLayoutPage();
             page.name = "alert";
-            page.appendChild(new PGPageContentAlert());
+            page.appendChild(new app.PGPageContentAlert());
             return page;
         });
 
         stack.registerPage("product", () => {
             const page = new UIStackLayoutPage();
             page.name = "product";
-            page.append(new PGPageContentProduct());
+            page.append(new app.PGPageContentProduct());
             return page;
         });
 
         stack.registerPage("visDataEdit", () => {
             const page = new UIStackLayoutPage();
             page.name = "visDataEdit";
-            page.append(new PGPageContentVisDataEdit());
+            page.append(new app.PGPageContentVisDataEdit());
             return page;
         });
     }
@@ -779,7 +761,7 @@ class PGApp extends LitElement {
                     const item = new UIDrawerGroupItem();
                     groupContainer.appendChild(item);
 
-                    const groupItem = new PGDrawerItem();
+                    const groupItem = new app.PGDrawerItem();
                     item.appendChild(groupItem);
 
                     groupItem.storeKey = listsStore.key();

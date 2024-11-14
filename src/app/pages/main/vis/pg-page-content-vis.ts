@@ -2,16 +2,12 @@ import { html, PropertyValues, TemplateResult } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { CleanUp, styles, UIIconButton } from "ui";
 
-import * as lib from "../../../../lib";
-import * as types from "../../../../types";
-
-import { PGSearchBar } from "../../../components";
-import { PGVisListItem } from "../../../list-items";
-import PGApp from "../../../pg-app";
-import PGPageContent from "../../pg-page-content";
+import * as app from "@app";
+import * as lib from "@lib";
+import * as types from "@types";
 
 @customElement("pg-page-content-vis")
-class PGPageContentVis extends PGPageContent<types.Vis> {
+class PGPageContentVis extends app.PGPageContent<types.Vis> {
     @property({ type: Boolean, attribute: "search-bar", reflect: true })
     searchBar?: boolean;
 
@@ -21,7 +17,7 @@ class PGPageContentVis extends PGPageContent<types.Vis> {
     private cleanup = new CleanUp();
 
     protected render() {
-        PGApp.queryAppBar()!.contentName("title")!.contentAt(0).innerText =
+        app.PGApp.queryAppBar()!.contentName("title")!.contentAt(0).innerText =
             this.data !== undefined
                 ? lib.listStore("vis").listKey(this.data)
                 : lib.listStore("vis").title();
@@ -33,7 +29,7 @@ class PGPageContentVis extends PGPageContent<types.Vis> {
                 title="Produktsuche"
                 storage-key="${this.data?.title}"
                 ?active=${!!this.searchBar}
-                @change=${async (ev: Event & { currentTarget: PGSearchBar }) => {
+                @change=${async (ev: Event & { currentTarget: app.PGSearchBar }) => {
                     await this.filter(ev.currentTarget.value());
                 }}
             ></pg-search-bar>
@@ -52,7 +48,7 @@ class PGPageContentVis extends PGPageContent<types.Vis> {
     }
 
     protected updated(changedProperties: PropertyValues): void {
-        const pgSearchBar = this.querySelector<PGSearchBar>(`pg-search-bar`)!;
+        const pgSearchBar = this.querySelector<app.PGSearchBar>(`pg-search-bar`)!;
         const container = this.querySelector<HTMLElement>(`div.container`)!;
 
         if (this.searchBar) {
@@ -83,7 +79,7 @@ class PGPageContentVis extends PGPageContent<types.Vis> {
 
         // App Bar Events
 
-        const appBar = PGApp.queryAppBar()!;
+        const appBar = app.PGApp.queryAppBar()!;
 
         const onClick = async () => (this.searchBar = !this.searchBar);
 
@@ -101,10 +97,10 @@ class PGPageContentVis extends PGPageContent<types.Vis> {
 
     public async filter(value: string) {
         const container = this.querySelector(`.list`)!;
-        const regex: RegExp = PGSearchBar.generateRegExp(value);
+        const regex: RegExp = app.PGSearchBar.generateRegExp(value);
 
         let searchString: string;
-        for (const child of [...container.children] as PGVisListItem[]) {
+        for (const child of [...container.children] as app.PGVisListItem[]) {
             if (child.data === undefined) continue;
 
             setTimeout(() => {

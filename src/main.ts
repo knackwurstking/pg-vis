@@ -1,8 +1,10 @@
 import "../node_modules/ui/lib/css/main.css";
-import "./app";
+
+import "@app";
 
 import { registerSW } from "virtual:pwa-register";
-import { version } from "./constants";
+
+import { version } from "@constants";
 
 registerSW({
     onRegistered(r) {

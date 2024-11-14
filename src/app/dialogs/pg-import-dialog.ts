@@ -3,9 +3,8 @@ import { customElement, property } from "lit/decorators.js";
 import { keyed } from "lit/directives/keyed.js";
 import { UIDialog, UIInput } from "ui";
 
-import * as lib from "../../lib";
-
-import { PGApp } from "..";
+import * as app from "@app";
+import * as lib from "@lib";
 
 @customElement("pg-import-dialog")
 class PGImportDialog extends LitElement {
@@ -57,7 +56,7 @@ class PGImportDialog extends LitElement {
                         if (gistID === "") await this.importFromFile();
                         else await lib.importFromGist(this.storeKey, gistID);
 
-                        const stack = PGApp.queryStackLayout()!;
+                        const stack = app.PGApp.queryStackLayout()!;
                         stack.clearStack();
 
                         this.close();
@@ -100,7 +99,7 @@ class PGImportDialog extends LitElement {
                     }
 
                     try {
-                        listsStore.addToStore(PGApp.queryStore(), [data], true);
+                        listsStore.addToStore(app.PGApp.queryStore(), [data], true);
                     } catch (err) {
                         alert(err);
                         return;

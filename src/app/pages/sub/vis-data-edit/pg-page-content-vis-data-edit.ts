@@ -2,14 +2,12 @@ import { html, PropertyValues } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { CleanUp, UIIconButton, UIInput } from "ui";
 
-import * as lib from "../../../../lib";
-import * as types from "../../../../types";
-
-import PGApp from "../../../pg-app";
-import PGPageContent from "../../pg-page-content";
+import * as app from "@app";
+import * as lib from "@lib";
+import * as types from "@types";
 
 @customElement("pg-page-content-vis-data-edit")
-export class PGPageContentVisDataEdit extends PGPageContent<types.VisDataEntry> {
+export class PGPageContentVisDataEdit extends app.PGPageContent<types.VisDataEntry> {
     @property({ type: String, attribute: "list-key", reflect: true })
     listKey?: string;
 
@@ -118,8 +116,8 @@ export class PGPageContentVisDataEdit extends PGPageContent<types.VisDataEntry> 
     protected firstUpdated(_changedProperties: PropertyValues): void {
         super.firstUpdated(_changedProperties);
 
-        const store = PGApp.queryStore();
-        const stack = PGApp.queryStackLayout()!;
+        const store = app.PGApp.queryStore();
+        const stack = app.PGApp.queryStackLayout()!;
         const cleanup = stack.events.addListener("change", () => {
             cleanup();
 
@@ -163,10 +161,12 @@ export class PGPageContentVisDataEdit extends PGPageContent<types.VisDataEntry> 
 
             this.modified = true;
             this.deleteEntry = true;
-            PGApp.queryStackLayout()!.goBack();
+            app.PGApp.queryStackLayout()!.goBack();
         };
 
-        const trashButton = PGApp.queryAppBar()!.contentName("trash")!.contentAt<UIIconButton>(0);
+        const trashButton = app.PGApp.queryAppBar()!
+            .contentName("trash")!
+            .contentAt<UIIconButton>(0);
 
         trashButton.addEventListener("click", onTrashClick);
 

@@ -3,10 +3,9 @@ import { customElement, property } from "lit/decorators.js";
 import { keyed } from "lit/directives/keyed.js";
 import { CleanUp, UIDialog } from "ui";
 
-import * as lib from "../../lib";
-import * as types from "../../types";
-
-import PGApp from "../pg-app";
+import * as app from "@app";
+import * as lib from "@lib";
+import * as types from "@types";
 
 @customElement("pg-bookmark-select-dialog")
 class PGBookmarkSelectDialog extends LitElement {
@@ -20,10 +19,10 @@ class PGBookmarkSelectDialog extends LitElement {
     }
 
     protected render() {
-        const store = PGApp.queryStore();
+        const store = app.PGApp.queryStore();
 
         const newList = () => {
-            const dialog = PGApp.queryVisBookmarksDialog()!;
+            const dialog = app.PGApp.queryVisBookmarksDialog()!;
             dialog.title = "";
             dialog.invalidTitle = false;
             dialog.show();
@@ -71,7 +70,7 @@ class PGBookmarkSelectDialog extends LitElement {
 
             const productKey = lib.productKey(this.product);
             lib.listStore("visBookmarks").replaceInStore(
-                PGApp.queryStore(),
+                app.PGApp.queryStore(),
                 {
                     ...list,
                     data: this.isBookmark(list)
@@ -108,7 +107,7 @@ class PGBookmarkSelectDialog extends LitElement {
 
     connectedCallback(): void {
         super.connectedCallback();
-        const store = PGApp.queryStore();
+        const store = app.PGApp.queryStore();
         this.cleanup.add(store.addListener("visBookmarks", () => this.requestUpdate()));
     }
 

@@ -1,14 +1,12 @@
 import { html, PropertyValues, TemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
 
-import * as lib from "../../../../lib";
-import * as types from "../../../../types";
-
-import PGApp from "../../../pg-app";
-import PGPageContent from "../../pg-page-content";
+import * as app from "@app";
+import * as lib from "@lib";
+import * as types from "@types";
 
 @customElement("pg-page-contents-product")
-class PGPageContentProduct extends PGPageContent<types.Product> {
+class PGPageContentProduct extends app.PGPageContent<types.Product> {
     @state()
     private listItems: TemplateResult<1>[] = [];
 
@@ -50,7 +48,7 @@ class PGPageContentProduct extends PGPageContent<types.Product> {
         this.listItems = [];
         if (this.data === undefined) return html``;
 
-        const visData = PGApp.queryStore().getData("visData");
+        const visData = app.PGApp.queryStore().getData("visData");
         if (visData === undefined) return html``;
 
         const listsStore = lib.listStore("visData");

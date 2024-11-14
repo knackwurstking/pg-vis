@@ -2,8 +2,8 @@ import { LitElement } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { CleanUp, html, styles, UISpinner } from "ui";
 
-import * as lib from "../lib/";
-import PGApp from "./pg-app";
+import * as app from "@app";
+import * as lib from "@lib";
 
 @customElement("pg-drawer-item-gist")
 class PGDrawerItemGist extends LitElement {
@@ -48,7 +48,7 @@ class PGDrawerItemGist extends LitElement {
                                 if (confirm(`Alle Ihre Änderungen gehen verloren!`)) {
                                     await lib.importFromGist(this.storeKey, this.gistID);
 
-                                    const stack = PGApp.queryStackLayout()!;
+                                    const stack = app.PGApp.queryStackLayout()!;
                                     stack.clearStack();
                                 }
                             } finally {
@@ -77,7 +77,7 @@ class PGDrawerItemGist extends LitElement {
     connectedCallback(): void {
         super.connectedCallback();
 
-        const store = PGApp.queryStore();
+        const store = app.PGApp.queryStore();
 
         this.cleanup.add(
             store.addListener(

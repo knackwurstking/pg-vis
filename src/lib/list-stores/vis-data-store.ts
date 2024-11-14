@@ -1,9 +1,8 @@
-import * as types from "../../types";
+import * as lib from "@lib";
+import * as types from "@types";
 
-import { ListStore, ListStoreData } from "./base";
-
-export class VisDataStore extends ListStore<"visData"> {
-    public key(): keyof ListStoreData {
+export class VisDataStore extends lib.listStores.ListStore<"visData"> {
+    public key(): keyof lib.listStores.ListStoreData {
         return "visData";
     }
 

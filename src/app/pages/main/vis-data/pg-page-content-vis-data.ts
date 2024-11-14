@@ -1,26 +1,22 @@
 import { html, PropertyValues } from "lit";
+import { DirectiveResult } from "lit/async-directive.js";
 import { customElement, state } from "lit/decorators.js";
+import { Keyed, keyed } from "lit/directives/keyed.js";
 import { CleanUp, UIIconButton } from "ui";
 
-import * as lib from "../../../../lib";
-import * as types from "../../../../types";
-
-import { DirectiveResult } from "lit/async-directive.js";
-import { Keyed, keyed } from "lit/directives/keyed.js";
-import { PGVisDataDialog } from "../../../dialogs";
-import PGApp from "../../../pg-app";
-import PGPageContent from "../../pg-page-content";
-import { PGPageContentVisDataEdit } from "../../sub";
+import * as app from "@app";
+import * as lib from "@lib";
+import * as types from "@types";
 
 @customElement("pg-page-content-vis-data")
-export class PGPageContentVisData extends PGPageContent<types.VisData> {
+export class PGPageContentVisData extends app.PGPageContent<types.VisData> {
     @state()
     private listItems: DirectiveResult<typeof Keyed>[] = [];
 
     private cleanup = new CleanUp();
 
     protected render() {
-        PGApp.queryAppBar()!.contentName("title")!.contentAt(0).innerText =
+        app.PGApp.queryAppBar()!.contentName("title")!.contentAt(0).innerText =
             this.data !== undefined
                 ? lib.listStore("visData").listKey(this.data)
                 : lib.listStore("visData").title();
@@ -47,10 +43,10 @@ export class PGPageContentVisData extends PGPageContent<types.VisData> {
 
     private renderActions() {
         const newEntry = async () => {
-            PGApp.queryStackLayout()!.setPage(
+            app.PGApp.queryStackLayout()!.setPage(
                 "visDataEdit",
                 (page) => {
-                    const content = page.children[0] as PGPageContentVisDataEdit | undefined;
+                    const content = page.children[0] as app.PGPageContentVisDataEdit | undefined;
 
                     if (content !== undefined) {
                         content.data = {
@@ -89,7 +85,7 @@ export class PGPageContentVisData extends PGPageContent<types.VisData> {
     }
 
     private renderDialog() {
-        const submit = async (ev: Event & { currentTarget: PGVisDataDialog }) => {
+        const submit = async (ev: Event & { currentTarget: app.PGVisDataDialog }) => {
             if (this.data === undefined) return;
 
             const oldData = { ...this.data };
@@ -97,7 +93,7 @@ export class PGPageContentVisData extends PGPageContent<types.VisData> {
 
             try {
                 lib.listStore("visData").replaceInStore(
-                    PGApp.queryStore(),
+                    app.PGApp.queryStore(),
                     { ...this.data },
                     oldData,
                 );
@@ -150,7 +146,7 @@ export class PGPageContentVisData extends PGPageContent<types.VisData> {
         const onEditClick = () => {
             if (this.data === undefined) return;
 
-            const dialog = this.querySelector<PGVisDataDialog>(`pg-vis-data-dialog`)!;
+            const dialog = this.querySelector<app.PGVisDataDialog>(`pg-vis-data-dialog`)!;
 
             dialog.invalidTitle = false;
             dialog.title = this.data.title;
@@ -158,7 +154,7 @@ export class PGPageContentVisData extends PGPageContent<types.VisData> {
             dialog.show();
         };
 
-        const editButton = PGApp.queryAppBar()!.contentName("edit")!.contentAt<UIIconButton>(0);
+        const editButton = app.PGApp.queryAppBar()!.contentName("edit")!.contentAt<UIIconButton>(0);
 
         editButton.addEventListener("click", onEditClick);
 
@@ -169,7 +165,7 @@ export class PGPageContentVisData extends PGPageContent<types.VisData> {
         // Re-Render if "visData" store changes
 
         const listsStore = lib.listStore("visData");
-        const store = PGApp.queryStore();
+        const store = app.PGApp.queryStore();
 
         this.cleanup.add(
             store.addListener("visData", (data) => {

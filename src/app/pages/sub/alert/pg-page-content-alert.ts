@@ -2,12 +2,11 @@ import { html, PropertyValues, TemplateResult } from "lit";
 import { customElement } from "lit/decorators.js";
 import { styles } from "ui";
 
-import * as types from "../../../../types";
-
-import PGPageContent from "../../pg-page-content";
+import * as app from "@app";
+import * as types from "@types";
 
 @customElement("pg-page-content-alert")
-class PGPageContentAlert extends PGPageContent<types.Alert> {
+class PGPageContentAlert extends app.PGPageContent<types.Alert> {
     protected render(): TemplateResult<1> {
         return html`
             <div

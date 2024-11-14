@@ -1,10 +1,8 @@
-import * as types from "../../types";
-import * as convert from "../convert";
+import * as lib from "@lib";
+import * as types from "@types";
 
-import { ListStore, ListStoreData } from "./base";
-
-export class VisStore extends ListStore<"vis"> {
-    public key(): keyof ListStoreData {
+export class VisStore extends lib.listStores.ListStore<"vis"> {
+    public key(): keyof lib.listStores.ListStoreData {
         return "vis";
     }
 
@@ -25,7 +23,7 @@ export class VisStore extends ListStore<"vis"> {
         try {
             list = super.validate(dataString);
         } catch {
-            return convert.toVis(dataString);
+            return lib.toVis(dataString);
         }
 
         if (typeof list.date !== "number" || list.date <= 0) {

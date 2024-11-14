@@ -2,16 +2,12 @@ import { html, PropertyValues, TemplateResult } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { CleanUp, styles, UIIconButton } from "ui";
 
-import * as lib from "../../../../lib";
-import * as types from "../../../../types";
-
-import { PGSearchBar } from "../../../components";
-import { PGAlertListItem } from "../../../list-items";
-import PGApp from "../../../pg-app";
-import PGPageContent from "../../pg-page-content";
+import * as app from "@app";
+import * as lib from "@lib";
+import * as types from "@types";
 
 @customElement("pg-page-content-alert-lists")
-class PGPageContentAlertLists extends PGPageContent<types.AlertList> {
+class PGPageContentAlertLists extends app.PGPageContent<types.AlertList> {
     @property({ type: Boolean, attribute: "search-bar", reflect: true })
     searchBar?: boolean;
 
@@ -20,12 +16,12 @@ class PGPageContentAlertLists extends PGPageContent<types.AlertList> {
 
     private cleanup = new CleanUp();
 
-    public querySearchBar(): PGSearchBar | null {
-        return this.querySelector<PGSearchBar>(`pg-search-bar`);
+    public querySearchBar(): app.PGSearchBar | null {
+        return this.querySelector<app.PGSearchBar>(`pg-search-bar`);
     }
 
     protected render(): TemplateResult<1> {
-        PGApp.queryAppBar()!.contentName("title")!.contentAt(0).innerText =
+        app.PGApp.queryAppBar()!.contentName("title")!.contentAt(0).innerText =
             this.data !== undefined
                 ? lib.listStore("alertLists").listKey(this.data)
                 : lib.listStore("alertLists").title();
@@ -35,7 +31,7 @@ class PGPageContentAlertLists extends PGPageContent<types.AlertList> {
                 title="Alarmsuche"
                 storage-key="${this.data?.title}"
                 ?active=${!!this.searchBar}
-                @change=${async (ev: Event & { currentTarget: PGSearchBar }) => {
+                @change=${async (ev: Event & { currentTarget: app.PGSearchBar }) => {
                     await this.filter(ev.currentTarget.value());
                 }}
             ></pg-search-bar>
@@ -54,7 +50,7 @@ class PGPageContentAlertLists extends PGPageContent<types.AlertList> {
     }
 
     protected updated(changedProperties: PropertyValues): void {
-        const pgSearchBar = this.querySelector<PGSearchBar>(`pg-search-bar`)!;
+        const pgSearchBar = this.querySelector<app.PGSearchBar>(`pg-search-bar`)!;
         const container = this.querySelector<HTMLElement>(`div.container`)!;
 
         if (this.searchBar) {
@@ -87,7 +83,7 @@ class PGPageContentAlertLists extends PGPageContent<types.AlertList> {
 
         // App Bar Events
 
-        const appBar = PGApp.queryAppBar()!;
+        const appBar = app.PGApp.queryAppBar()!;
 
         const onClick = async () => (this.searchBar = !this.searchBar);
 
@@ -105,13 +101,13 @@ class PGPageContentAlertLists extends PGPageContent<types.AlertList> {
 
     public async filter(value: string) {
         const container = this.querySelector(`.list`)!;
-        const regex: RegExp = PGSearchBar.generateRegExp(value);
+        const regex: RegExp = app.PGSearchBar.generateRegExp(value);
 
         let alertNumberStrings: string[];
         let searchString: string;
         let from: number;
         let to: number;
-        for (const child of [...container.children] as PGAlertListItem[]) {
+        for (const child of [...container.children] as app.PGAlertListItem[]) {
             if (child.data === undefined) continue;
 
             setTimeout(() => {
