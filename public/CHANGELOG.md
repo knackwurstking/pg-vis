@@ -12,7 +12,7 @@
 - [x] Open a confirmation dialog before deleting a drawer item
 - [x] Vis Lists entries should always take current vis product data if possible
 - [ ] Add a search bar for vis data
-- [ ] Edit Vis Data from the product page, just click to edit [work-in-progress]
+- [x] Edit Vis Data from the product page, just click to edit
 - [x] Make Vis Data "title" optional
 - [x] Redesign the gist (drawer) and import/download items
 
