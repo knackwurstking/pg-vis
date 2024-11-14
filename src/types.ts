@@ -15,6 +15,10 @@ export type PGStackLayoutPage =
     | "visDataEdit"
     | "special";
 
+export type Special = FlakesSpecial;
+
+export type TowerSlot = "A" | "C" | "E" | "G" | "I" | "K";
+
 export interface PGStoreEvents {
     theme: {
         name: UIThemeHandlerTheme;
@@ -48,8 +52,7 @@ export interface PGStoreEvents {
     visData: VisData[];
     visBookmarks: Bookmarks[];
 
-    // TODO: Store Keys for "special" - ex: flakes
-    special: [];
+    special: Special[];
 
     gist: {
         [key: string]: {
@@ -121,4 +124,21 @@ export interface Bookmarks {
     title: string;
     allowDeletion: boolean;
     data: Product[];
+}
+
+export interface FlakesSpecial {
+    type: "flakes";
+    data: FlakesData[];
+}
+
+export interface FlakesData {
+    press: "P0" | "P2" | "P3" | "P4" | "P5";
+    compatatore: number;
+    primary: Consumption;
+    secondary: { slot: TowerSlot } & Consumption[];
+}
+
+export interface Consumption {
+    percent: number;
+    value: number;
 }
