@@ -3,6 +3,7 @@
     "private": true,
     "version": "1.1.0",
     "homepage": "/pg-vis-dev.github.io",
+    "type": "module",
     "scripts": {
         "test": "jest",
         "dev": "vite --host",
@@ -15,7 +16,6 @@
         "@types/jest": "^29.5.14",
         "@types/node": "^22.7.4",
         "@vite-pwa/assets-generator": "^0.2.6",
-        "prettier-plugin-organize-imports": "^4.1.0",
         "ts-jest": "^29.2.5",
         "typescript": "^5.6.2",
         "vite": "^5.0.8",
@@ -28,6 +28,7 @@
         "jszip-utils": "^0.1.0",
         "lit": "^3.2.1",
         "octokit": "^4.0.2",
-        "ui": "file:../ui"
+        "ui": "file:../ui",
+        "vite-tsconfig-paths": "^5.1.2"
     }
 }

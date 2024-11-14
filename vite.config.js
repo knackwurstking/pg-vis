@@ -1,5 +1,6 @@
 import { defineConfig } from "vite";
 import { VitePWA } from "vite-plugin-pwa";
+import tsconfigPaths from "vite-tsconfig-paths";
 
 /** @type {import("vite-plugin-pwa").VitePWAOptions} */
 const manifestForPlugIn = {
@@ -52,7 +53,7 @@ const manifestForPlugIn = {
 };
 
 export default defineConfig({
-    plugins: [VitePWA(manifestForPlugIn)],
+    plugins: [VitePWA(manifestForPlugIn), tsconfigPaths()],
     clearScreen: false,
     base: "/pg-vis-dev.github.io/",
 
