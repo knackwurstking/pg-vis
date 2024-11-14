@@ -6,6 +6,7 @@ export interface ListStoreData {
     vis: types.Vis;
     visData: types.VisData;
     visBookmarks: types.Bookmarks;
+    special: types.Special;
 }
 
 export class ListStore<T extends keyof ListStoreData> {
@@ -31,7 +32,11 @@ export class ListStore<T extends keyof ListStoreData> {
     }
 
     public validate(dataString: string): any | null {
-        return JSON.parse(dataString);
+        try {
+            return JSON.parse(dataString);
+        } catch {
+            return null;
+        }
     }
 
     public sort(data: ListStoreData[T][]): ListStoreData[T][] {

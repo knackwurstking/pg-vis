@@ -19,12 +19,9 @@ export class VisStore extends lib.listStores.ListStore<"vis"> {
     }
 
     public validate(dataString: string): types.Vis | null {
-        let list: any;
-        try {
-            list = super.validate(dataString);
-        } catch {
-            return lib.toVis(dataString);
-        }
+        let list = super.validate(dataString);
+        if (list === null) return lib.toVis(dataString);
+        if (typeof list !== "object") return null;
 
         if (typeof list.date !== "number" || list.date <= 0) {
             list.date = new Date().getTime();

@@ -20,6 +20,7 @@ export class MetalSheetsStore extends lib.listStores.ListStore<"metalSheets"> {
 
     public validate(dataString: string): types.MetalSheet | null {
         const list = super.validate(dataString);
+        if (typeof list !== "object") return null;
 
         if (typeof list.format !== "string") return null;
 

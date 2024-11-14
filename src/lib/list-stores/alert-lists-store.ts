@@ -20,6 +20,7 @@ export class AlertListsStore extends lib.listStores.ListStore<"alertLists"> {
 
     public validate(dataString: any): types.AlertList | null {
         const list = super.validate(dataString);
+        if (typeof list !== "object") return null;
 
         if (typeof list?.title !== "string") return null;
         if (!("data" in list)) return null;

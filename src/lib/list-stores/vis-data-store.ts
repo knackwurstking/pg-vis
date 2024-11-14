@@ -20,6 +20,7 @@ export class VisDataStore extends lib.listStores.ListStore<"visData"> {
 
     public validate(dataString: string): types.VisData | null {
         const list = super.validate(dataString);
+        if (typeof list !== "object") return null;
 
         if (typeof list.title !== "string" || !Array.isArray(list.data)) return null;
 
