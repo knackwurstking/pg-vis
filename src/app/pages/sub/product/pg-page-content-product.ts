@@ -53,14 +53,14 @@ class PGPageContentProduct extends app.PGPageContent<types.Product> {
 
         const listsStore = lib.listStore("visData");
 
-        let index = -1;
         for (const list of visData) {
-            index++;
-
-            const entryIndex = index;
             const listKey = listsStore.listKey(list);
+
             let hasHeading = false;
+            let index = -1;
             for (const entry of list.data) {
+                index++;
+
                 if (!this.isLotto(entry.lotto, this.data!.lotto)) {
                     continue;
                 }
@@ -91,7 +91,7 @@ class PGPageContentProduct extends app.PGPageContent<types.Product> {
                     ...this.listItems,
                     html`<pg-vis-data-list-item
                         data=${JSON.stringify(entry)}
-                        entry-index=${entryIndex}
+                        entry-index=${index}
                         list-key=${listKey}
                         route
                     ></pg-vis-data-list-item>`,
