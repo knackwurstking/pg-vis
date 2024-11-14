@@ -1,62 +1,20 @@
 # Changelog
 
-<!--toc:start-->
-
-- [Changelog](#changelog)
-  - [v1.1.0 — [unreleased]](#v110-unreleased)
-  - [v1.0.0 — [2024-08-12]](#v100-2024-08-12)
-  - [v0.0.32 — [2024-08-06]](#v0032-2024-08-06)
-  - [v0.0.31 — [2024-08-05]](#v0031-2024-08-05)
-  - [v0.0.30 — [2024-07-28]](#v0030-2024-07-28)
-  - [v0.0.29 — [2024-07-27]](#v0029-2024-07-27)
-  - [v0.0.28 — [2024-07-20]](#v0028-2024-07-20)
-  - [v0.0.27 — [2024-07-19]](#v0027-2024-07-19)
-  - [v0.0.26 — [2024-07-19]](#v0026-2024-07-19)
-  - [v0.0.25 — [2024-07-19]](#v0025-2024-07-19)
-  - [v0.0.24 — [2024-07-18]](#v0024-2024-07-18)
-  - [v0.0.23 — [2024-07-15 Quick Fix]](#v0023-2024-07-15-quick-fix)
-  - [v0.0.22 — [2024-07-15]](#v0022-2024-07-15)
-  - [v0.0.21 — [2024-07-12]](#v0021-2024-07-12)
-  - [v0.0.20 — [2024-07-12]](#v0020-2024-07-12)
-  - [v0.0.19 — [2024-07-11]](#v0019-2024-07-11)
-  - [v0.0.18 — [2024-07-10]](#v0018-2024-07-10)
-  - [v0.0.17 — [2024-07-09]](#v0017-2024-07-09)
-  - [v0.0.16 — [2024-07-05]](#v0016-2024-07-05)
-  - [v0.0.15 — [2024-07-03]](#v0015-2024-07-03)
-  - [v0.0.14 — [2024-07-03]](#v0014-2024-07-03)
-  - [v0.0.13 — [2024-07-03]](#v0013-2024-07-03)
-  - [v0.0.12 — [2024-06-28]](#v0012-2024-06-28)
-  - [v0.0.11 — [2024-06-27]](#v0011-2024-06-27)
-  - [v0.0.10 — [2024-06-27]](#v0010-2024-06-27)
-  - [v0.0.9 — [2024-06-27]](#v009-2024-06-27)
-  - [v0.0.8 — [2024-06-26]](#v008-2024-06-26)
-  - [v0.0.7 — [2024-06-23]](#v007-2024-06-23)
-  - [v0.0.5 — [2024-06-23]](#v005-2024-06-23)
-  - [v0.0.4 — [2024-06-23]](#v004-2024-06-23)
-  - [v0.0.3](#v003)
-  - [v0.0.2](#v002)
-  - [v0.0.1](#v001)
-
-<!--toc:end-->
-
 ## v1.1.0 — [unreleased]
 
-- [ ] Create a GitHub pages repo for dev
-- [ ] Convert project to typescript using lit [work-in-progress]
+- [ ] Add "mm" suffix to vis search (product list items) [work-in-progress]
+- [x] Create a GitHub pages repo for dev
+- [x] Convert project to typescript using lit
 - [x] Update icons, just like the picow-led-server project
-- [ ] Fix: Cancel a gist pull will set the revision to undefined
-- [ ] Fix: Cancel a gist push will not remove the spinner
-- [ ] Fix: Revisions counter stopping at 30, need to get the real revisions count
+- [ ] ~Fix: Cancel a gist pull will set the revision to undefined~
+- [ ] ~Fix: Cancel a gist push will not remove the spinner~
+- [ ] ~Fix: Revisions counter stopping at 30, need to get the real revisions count~
 - [x] Open a confirmation dialog before deleting a drawer item
-- [ ] Vis Lists entries should always take current vis product data if possible,
-        mark if no data available and use stored data for this entry
+- [x] Vis Lists entries should always take current vis product data if possible
 - [ ] Add a search bar for vis data
-- [ ] Edit Vis Data from the product page, just click to edit
- -[ ] Make Vis Data "title" optional
- -[ ] Redesign the gist (drawer) and import/download items
-    - Import gist id or import files/zip
-    - Display current gist id in use
-    - update (button) from gist
+- [ ] Edit Vis Data from the product page, just click to edit [work-in-progress]
+- [x] Make Vis Data "title" optional
+- [x] Redesign the gist (drawer) and import/download items
 
 - [ ] Replace "pg-vis-dev.github.io" with "pg-vis.github.io" before publishing
 - [ ] ~Replace "pg-vis-dev:" with "pg-vis:"~
