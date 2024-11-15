@@ -107,7 +107,38 @@ class PGApp extends LitElement {
         );
 
         store.setData("visData", [], true);
-        store.setData("special", [], true);
+        store.setData(
+            "special",
+            [
+                {
+                    type: "flakes",
+                    title: "Flakes",
+                    data: [
+                        {
+                            press: "P0",
+                            compatatore: 25,
+                            primary: {
+                                percent: 90,
+                                value: 1.5,
+                            },
+                            secondary: [
+                                {
+                                    slot: "A",
+                                    percent: 5,
+                                    value: 175,
+                                },
+                                {
+                                    slot: "C",
+                                    percent: 5,
+                                    value: 175,
+                                },
+                            ],
+                        },
+                    ],
+                },
+            ],
+            false,
+        ); // NOTE: Dummy Data
 
         store.setData("gist", {}, true);
     }
