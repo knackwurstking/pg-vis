@@ -8,6 +8,7 @@ import * as app from "@app";
 import * as lib from "@lib";
 import * as types from "@types";
 
+// TODO: Convert table to pdf
 @customElement("pg-page-content-metal-sheets")
 class PGPageContentMetalSheets extends app.PGPageContent<types.MetalSheet> {
     private cleanup = new CleanUp();
