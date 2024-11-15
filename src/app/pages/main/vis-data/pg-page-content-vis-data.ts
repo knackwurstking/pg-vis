@@ -16,10 +16,7 @@ export class PGPageContentVisData extends app.PGPageContent<types.VisData> {
     private cleanup = new CleanUp();
 
     protected render() {
-        app.PGApp.queryAppBar()!.contentName("title")!.contentAt(0).innerText =
-            this.data !== undefined
-                ? lib.listStore("visData").listKey(this.data)
-                : lib.listStore("visData").title();
+        super.renderListsAppBarTitle("visData", this.data);
 
         return html`
             <div class="container no-scrollbar" style="width: 100%; height: 100%; overflow: auto;">

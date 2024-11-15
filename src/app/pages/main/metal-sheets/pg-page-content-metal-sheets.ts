@@ -13,10 +13,7 @@ class PGPageContentMetalSheets extends app.PGPageContent<types.MetalSheet> {
     private cleanup = new CleanUp();
 
     protected render(): TemplateResult<1> {
-        app.PGApp.queryAppBar()!.contentName("title")!.contentAt(0).innerText =
-            this.data !== undefined
-                ? lib.listStore("metalSheets").listKey(this.data)
-                : lib.listStore("metalSheets").title();
+        super.renderListsAppBarTitle("metalSheets", this.data);
 
         return html`
             <div
