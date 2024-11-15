@@ -130,6 +130,7 @@ class PGDrawerItem extends LitElement {
             case "vis":
             case "visBookmarks":
             case "visData":
+            case "special":
                 if (confirm(`Möchten Sie "${this.storeListKey}" wirklich löschen?`)) {
                     const listsStore = lib.listStore(this.storeKey);
                     app.PGApp.queryStore().updateData(this.storeKey, (data) => {
