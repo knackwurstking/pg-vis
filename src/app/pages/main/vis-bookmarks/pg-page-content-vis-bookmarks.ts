@@ -1,7 +1,7 @@
 import { customElement, state } from "lit/decorators.js";
 import { repeat } from "lit/directives/repeat.js";
 
-import { PropertyValues } from "lit";
+import { nothing, PropertyValues } from "lit";
 import { CleanUp, draggable, html } from "ui";
 
 import * as app from "@app";
@@ -11,7 +11,7 @@ import * as types from "@types";
 @customElement("pg-page-content-vis-bookmarks")
 class PGPageContentVisBookmarks extends app.PGPageContent<types.Bookmarks> {
     @state()
-    private listItems: unknown = [];
+    private listItems: unknown = nothing;
 
     private cleanup = new CleanUp();
 
