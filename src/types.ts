@@ -128,7 +128,7 @@ export interface Bookmarks {
 
 export interface FlakesSpecial {
     type: "flakes";
-    title: "Flakes";
+    title: string;
     data: FlakesData[];
 }
 
@@ -136,7 +136,7 @@ export interface FlakesData {
     press: "P0" | "P2" | "P3" | "P4" | "P5";
     compatatore: number;
     primary: Consumption;
-    secondary: { slot: TowerSlot } & Consumption[];
+    secondary: ({ slot: TowerSlot } & Consumption)[];
 }
 
 export interface Consumption {
