@@ -1,6 +1,9 @@
-import { PropertyValues, TemplateResult } from "lit";
+import { Keyed, keyed } from "lit/directives/keyed.js";
+import { DirectiveResult } from "lit/async-directive.js";
 import { customElement, state } from "lit/decorators.js";
-import { CleanUp, html } from "ui";
+
+import { PropertyValues } from "lit";
+import { CleanUp, draggable, html } from "ui";
 
 import * as app from "@app";
 import * as lib from "@lib";
@@ -9,7 +12,7 @@ import * as types from "@types";
 @customElement("pg-page-content-vis-bookmarks")
 class PGPageContentVisBookmarks extends app.PGPageContent<types.Bookmarks> {
     @state()
-    private listItems: TemplateResult<1>[] = [];
+    private listItems: DirectiveResult<typeof Keyed>[] = [];
 
     private cleanup = new CleanUp();
 
@@ -38,13 +41,38 @@ class PGPageContentVisBookmarks extends app.PGPageContent<types.Bookmarks> {
 
         const store = app.PGApp.queryStore();
         this.listItems = this.data.data.map((bookmarksProduct) => {
-            return html`
-                <pg-vis-list-item
-                    data=${JSON.stringify(this.productFromStore(store, bookmarksProduct))}
-                    route
-                >
-                </pg-vis-list-item>
-            `;
+            return keyed(
+                bookmarksProduct,
+                html`
+                    <pg-vis-list-item
+                        class="no-user-select"
+                        data=${JSON.stringify(this.productFromStore(store, bookmarksProduct))}
+                        route
+                    >
+                    </pg-vis-list-item>
+                `,
+            );
+        });
+
+        setTimeout(() => {
+            const list = this.querySelector<HTMLElement>(`.list`)!;
+            draggable.createMobile(list, {
+                onDragEnd: () => {
+                    if (this.data === undefined) return;
+
+                    const data = Array.from(list.children)
+                        .filter((child) => child instanceof app.PGVisListItem)
+                        .map((child) => {
+                            return child.data!;
+                        });
+
+                    lib.listStore("visBookmarks").replaceInStore(
+                        store,
+                        { ...this.data, data: data },
+                        this.data,
+                    );
+                },
+            });
         });
     }
 
