@@ -1,6 +1,5 @@
-import { Keyed, keyed } from "lit/directives/keyed.js";
-import { DirectiveResult } from "lit/async-directive.js";
 import { customElement, state } from "lit/decorators.js";
+import { repeat } from "lit/directives/repeat.js";
 
 import { PropertyValues } from "lit";
 import { CleanUp, draggable, html } from "ui";
@@ -12,7 +11,7 @@ import * as types from "@types";
 @customElement("pg-page-content-vis-bookmarks")
 class PGPageContentVisBookmarks extends app.PGPageContent<types.Bookmarks> {
     @state()
-    private listItems: DirectiveResult<typeof Keyed>[] = [];
+    private listItems: unknown = [];
 
     private cleanup = new CleanUp();
 
@@ -40,19 +39,20 @@ class PGPageContentVisBookmarks extends app.PGPageContent<types.Bookmarks> {
         if (this.data === undefined) return;
 
         const store = app.PGApp.queryStore();
-        this.listItems = this.data.data.map((bookmarksProduct) => {
-            return keyed(
-                bookmarksProduct,
-                html`
+        this.listItems = repeat(
+            this.data.data,
+            (bookmarksProduct) => `${bookmarksProduct.lotto} ${bookmarksProduct.name}`,
+            (bookmarksProduct) => {
+                const product = this.productFromStore(store, bookmarksProduct);
+                return html`
                     <pg-vis-list-item
                         class="no-user-select"
-                        data=${JSON.stringify(this.productFromStore(store, bookmarksProduct))}
+                        data=${JSON.stringify(product)}
                         route
-                    >
-                    </pg-vis-list-item>
-                `,
-            );
-        });
+                    ></pg-vis-list-item>
+                `;
+            },
+        );
 
         setTimeout(() => {
             const list = this.querySelector<HTMLElement>(`.list`)!;

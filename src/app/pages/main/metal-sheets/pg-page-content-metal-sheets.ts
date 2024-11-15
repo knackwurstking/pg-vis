@@ -1,7 +1,7 @@
-import { html, PropertyValues, TemplateResult } from "lit";
-import { DirectiveResult } from "lit/async-directive.js";
 import { customElement } from "lit/decorators.js";
-import { Keyed, keyed } from "lit/directives/keyed.js";
+import { repeat } from "lit/directives/repeat.js";
+
+import { html, PropertyValues, TemplateResult } from "lit";
 import { CleanUp, draggable, styles, UIIconButton } from "ui";
 
 import * as app from "@app";
@@ -135,40 +135,36 @@ class PGPageContentMetalSheets extends app.PGPageContent<types.MetalSheet> {
     private renderTableBody() {
         if (!this.data) return html``;
 
-        const content: DirectiveResult<typeof Keyed>[] = [];
-        for (let i = 0; i < this.data.data.table.data.length; i++) {
-            const data = this.data.data.table.data[i];
+        const content: unknown = repeat(
+            this.data.data.table.data,
+            (data) => `${data.join(",")}`,
+            (data, index) => {
+                return html`
+                    <tr
+                        style="cursor: pointer;"
+                        role="button"
+                        data-json="${JSON.stringify(data)}"
+                        @click=${() => {
+                            const dialog = this.querySelector<app.PGMetalSheetEntryDialog>(
+                                `pg-metal-sheet-entry-dialog`,
+                            )!;
+                            dialog.header = this.data?.data.table.header || [];
+                            dialog.entryData = data;
+                            dialog.tableIndex = index;
+                            dialog.show();
+                        }}
+                    >
+                        ${[
+                            ...data.map(
+                                (part) => html` <td style="text-align: center;">${part}</td> `,
+                            ),
+                        ]}
+                    </tr>
+                `;
+            },
+        );
 
-            content.push(
-                keyed(
-                    data,
-                    html`
-                        <tr
-                            style="cursor: pointer;"
-                            role="button"
-                            data-json="${JSON.stringify(data)}"
-                            @click=${() => {
-                                const dialog = this.querySelector<app.PGMetalSheetEntryDialog>(
-                                    `pg-metal-sheet-entry-dialog`,
-                                )!;
-                                dialog.header = this.data?.data.table.header || [];
-                                dialog.entryData = data;
-                                dialog.tableIndex = i;
-                                dialog.show();
-                            }}
-                        >
-                            ${[
-                                ...data.map(
-                                    (part) => html` <td style="text-align: center;">${part}</td> `,
-                                ),
-                            ]}
-                        </tr>
-                    `,
-                ),
-            );
-        }
-
-        return html`${[...content]}`;
+        return html`${content}`;
     }
 
     protected updated(_changedProperties: PropertyValues): void {
