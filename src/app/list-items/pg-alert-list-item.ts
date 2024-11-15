@@ -12,6 +12,20 @@ class PGAlertListItem extends LitElement {
     @property({ type: Boolean, attribute: "route", reflect: true })
     route?: boolean;
 
+    private clickHandler = () => {
+        app.PGApp.queryStackLayout()!.setPage(
+            "alert",
+            (page) => {
+                const content = page.children[0] as app.PGPageContent<types.Alert> | undefined;
+
+                if (content !== undefined) {
+                    content.data = this.data;
+                }
+            },
+            true,
+        );
+    };
+
     protected createRenderRoot(): HTMLElement | DocumentFragment {
         this.classList.add("flex");
         this.classList.add("row");
@@ -46,26 +60,12 @@ class PGAlertListItem extends LitElement {
     }
 
     protected updated(_changedProperties: PropertyValues): void {
-        const clickHandler = () => {
-            app.PGApp.queryStackLayout()!.setPage(
-                "alert",
-                (page) => {
-                    const content = page.children[0] as app.PGPageContent<types.Alert> | undefined;
-
-                    if (content !== undefined) {
-                        content.data = this.data;
-                    }
-                },
-                true,
-            );
-        };
-
         if (this.route) {
-            this.addEventListener("click", clickHandler);
+            this.addEventListener("click", this.clickHandler);
             this.role = "button";
             this.style.cursor = "pointer";
         } else {
-            this.removeEventListener("click", clickHandler);
+            this.removeEventListener("click", this.clickHandler);
             this.role = null;
             this.style.cursor = "default";
         }
