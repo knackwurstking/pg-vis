@@ -84,7 +84,7 @@ class PGPageContentProduct extends app.PGPageContent<types.Product> {
                     this.listItems = [
                         ...this.listItems,
                         keyed(
-                            entry,
+                            list.title,
                             html`<ui-flex-grid-item>
                                 <ui-heading level="3">${list.title}</ui-heading>
                             </ui-flex-grid-item>`,
@@ -92,12 +92,13 @@ class PGPageContentProduct extends app.PGPageContent<types.Product> {
                     ];
                 }
 
+                const data = JSON.stringify(entry);
                 this.listItems = [
                     ...this.listItems,
                     keyed(
-                        entry,
+                        data,
                         html`<pg-vis-data-list-item
-                            data=${JSON.stringify(entry)}
+                            data=${data}
                             entry-index=${index}
                             list-key=${listKey}
                             route
