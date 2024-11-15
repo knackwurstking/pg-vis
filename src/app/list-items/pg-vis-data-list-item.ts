@@ -24,6 +24,22 @@ class PGVisDataListItem extends LitElement {
     @property({ type: Boolean, attribute: "show-filter", reflect: true })
     showFilter?: boolean;
 
+    private clickHandler = () => {
+        app.PGApp.queryStackLayout()!.setPage(
+            "visDataEdit",
+            (page) => {
+                const content = page.children[0] as app.PGPageContentVisDataEdit | undefined;
+
+                if (content !== undefined) {
+                    content.data = this.data;
+                    content.listKey = this.listKey;
+                    content.entryIndex = this.entryIndex;
+                }
+            },
+            true,
+        );
+    };
+
     protected createRenderRoot(): HTMLElement | DocumentFragment {
         this.style.display = "block";
 
@@ -105,32 +121,16 @@ class PGVisDataListItem extends LitElement {
     }
 
     protected updated(_changedProperties: PropertyValues): void {
-        this.querySelector(`ui-text[name="value"]`)!.innerHTML = (this.data?.value || "")
-            .replaceAll("\n", "<br/>")
-            .replaceAll(" ", "&nbsp;");
-
-        const clickHandler = () => {
-            app.PGApp.queryStackLayout()!.setPage(
-                "visDataEdit",
-                (page) => {
-                    const content = page.children[0] as app.PGPageContentVisDataEdit | undefined;
-
-                    if (content !== undefined) {
-                        content.data = this.data;
-                        content.listKey = this.listKey;
-                        content.entryIndex = this.entryIndex;
-                    }
-                },
-                true,
-            );
-        };
+        this.querySelector(`ui-text[name="value"]`)!.innerHTML = (
+            this.data?.value || ""
+        ).replaceAll("\n", "<br/>");
 
         if (this.route) {
-            this.addEventListener("click", clickHandler);
+            this.addEventListener("click", this.clickHandler);
             this.role = "button";
             this.style.cursor = "pointer";
         } else {
-            this.removeEventListener("click", clickHandler);
+            this.removeEventListener("click", this.clickHandler);
             this.role = null;
             this.style.cursor = "default";
         }
