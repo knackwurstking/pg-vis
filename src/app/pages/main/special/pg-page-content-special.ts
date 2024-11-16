@@ -25,7 +25,7 @@ class PGPageContentSpecial extends app.PGPageContent<types.Special> {
     }
 
     private renderFlakes(entries: types.FlakesData[]) {
-        const data: { [key: string]: types.FlakesData[] } = {
+        const data: Record<types.PressSlot, types.FlakesData[]> = {
             P0: [],
             P2: [],
             P3: [],
@@ -37,8 +37,8 @@ class PGPageContentSpecial extends app.PGPageContent<types.Special> {
             data[flakesData.press]?.push(flakesData);
         }
 
-        const towerSlots = ["A", "C", "E", "G", "I", "K"];
-        const pressConvert: { [key: string]: string } = {
+        const towerSlots: types.TowerSlot[] = ["A", "C", "E", "G", "I", "K"];
+        const pressConvert: Record<types.PressSlot, string> = {
             P0: "Presse 0",
             P2: "Presse 2",
             P3: "Presse 3",
@@ -55,7 +55,9 @@ class PGPageContentSpecial extends app.PGPageContent<types.Special> {
                             <table>
                                 <thead>
                                     <tr>
-                                        <th colspan="100%">${pressConvert[press] || "Unknown"}</th>
+                                        <th colspan="100%">
+                                            ${pressConvert[press as types.PressSlot] || "Unknown"}
+                                        </th>
                                     </tr>
 
                                     <tr>
