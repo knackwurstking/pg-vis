@@ -24,7 +24,7 @@ class PGFlakesEntry extends LitElement {
 
     protected render(): unknown {
         return html`
-            <ui-dialog title="" modal inert>
+            <ui-dialog title="Flakes ${this.entry?.press || ""}" modal inert>
                 <ui-flex-grid gap="0.25rem">${this.renderInputs()}</ui-flex-grid>
 
                 ${this.renderDeleteAction()}
@@ -53,27 +53,62 @@ class PGFlakesEntry extends LitElement {
         `;
     }
 
+    // TODO: Add Input handler and update entry
     private renderInputs() {
+        const towerSlots: ("Main" | types.TowerSlot)[] = ["A", "C", "E", "G", "I", "K"];
+
         return html`
             <ui-flex-grid>
-                <ui-secondary>C1</ui-secondary>
+                <ui-flex-grid-row gap="0.25rem">
+                    <ui-flex-grid-item>
+                        <ui-secondary>C1</ui-secondary>
+                    </ui-flex-grid-item>
+                    <ui-flex-grid-item>
+                        <ui-secondary>Main</ui-secondary>
+                    </ui-flex-grid-item>
+                </ui-flex-grid-row>
 
-                <ui-input title="Geschwindigkeit" type="number"></ui-input>
+                <ui-flex-grid-row gap="0.25rem">
+                    <ui-input
+                        title="Geschwindigkeit"
+                        type="number"
+                        value=${this.entry?.compatatore || ""}
+                    ></ui-input>
+
+                    <ui-input
+                        title="Geschwindigkeit"
+                        type="number"
+                        value=${this.entry?.primary.value || ""}
+                    ></ui-input>
+                </ui-flex-grid-row>
             </ui-flex-grid>
 
             ${repeat(
-                ["Main", "A", "C", "E", "G", "I", "K"],
+                towerSlots,
                 (slot) => slot,
-                (slot) => html`
-                    <ui-flex-grid>
-                        <ui-secondary>${slot}</ui-secondary>
+                (slot) => {
+                    const consumption = this.consumptionFor(slot);
 
-                        <ui-flex-grid-row gap="0.25rem">
-                            <ui-input title="Prozent" type="number"></ui-input>
-                            <ui-input title="Geschwindigkeit" type="number"></ui-input>
-                        </ui-flex-grid-row>
-                    </ui-flex-grid>
-                `,
+                    return html`
+                        <ui-flex-grid>
+                            <ui-secondary>${slot}</ui-secondary>
+
+                            <ui-flex-grid-row gap="0.25rem">
+                                <ui-input
+                                    title="Prozent"
+                                    type="number"
+                                    value=${consumption?.percent}
+                                ></ui-input>
+
+                                <ui-input
+                                    title="Geschwindigkeit"
+                                    type="number"
+                                    value=${consumption?.value}
+                                ></ui-input>
+                            </ui-flex-grid-row>
+                        </ui-flex-grid>
+                    `;
+                },
             )}
         `;
     }
@@ -94,6 +129,18 @@ class PGFlakesEntry extends LitElement {
                 Löschen
             </ui-button>
         `;
+    }
+
+    public consumptionFor(slot: string): types.Consumption | null {
+        switch (slot) {
+            case "Main":
+                return this.entry?.primary || null;
+
+            default:
+                return this.entry?.secondary.find(
+                    (c) => c.slot === slot,
+                ) as types.Consumption | null;
+        }
     }
 
     public show() {
