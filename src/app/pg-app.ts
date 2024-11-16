@@ -138,6 +138,86 @@ class PGApp extends LitElement {
                             press: "P0",
                             compatatore: 25,
                             primary: {
+                                percent: 80,
+                                value: 1.5,
+                            },
+                            secondary: [
+                                {
+                                    slot: "A",
+                                    percent: 5,
+                                    value: 175,
+                                },
+                                {
+                                    slot: "C",
+                                    percent: 5,
+                                    value: 175,
+                                },
+                            ],
+                        },
+                        {
+                            press: "P0",
+                            compatatore: 20,
+                            primary: {
+                                percent: 80,
+                                value: 1.5,
+                            },
+                            secondary: [
+                                {
+                                    slot: "A",
+                                    percent: 5,
+                                    value: 175,
+                                },
+                                {
+                                    slot: "C",
+                                    percent: 5,
+                                    value: 175,
+                                },
+                            ],
+                        },
+                        {
+                            press: "P0",
+                            compatatore: 25,
+                            primary: {
+                                percent: 80,
+                                value: 1.5,
+                            },
+                            secondary: [
+                                {
+                                    slot: "A",
+                                    percent: 5,
+                                    value: 175,
+                                },
+                                {
+                                    slot: "C",
+                                    percent: 5,
+                                    value: 175,
+                                },
+                            ],
+                        },
+                        {
+                            press: "P0",
+                            compatatore: 20,
+                            primary: {
+                                percent: 80,
+                                value: 1.5,
+                            },
+                            secondary: [
+                                {
+                                    slot: "A",
+                                    percent: 5,
+                                    value: 175,
+                                },
+                                {
+                                    slot: "C",
+                                    percent: 5,
+                                    value: 175,
+                                },
+                            ],
+                        },
+                        {
+                            press: "P0",
+                            compatatore: 25,
+                            primary: {
                                 percent: 90,
                                 value: 1.5,
                             },
