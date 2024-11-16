@@ -47,6 +47,12 @@ class PGPageContentSpecial extends app.PGPageContent<types.Special> {
             data[entry.press]?.push(entry);
         }
 
+        data.P0 = this.sortEntries(data.P0);
+        data.P2 = this.sortEntries(data.P2);
+        data.P3 = this.sortEntries(data.P3);
+        data.P4 = this.sortEntries(data.P4);
+        data.P5 = this.sortEntries(data.P5);
+
         return html`
             <div class="no-scrollbar" style="width: 100%; overflow-x: auto">
                 ${Object.entries(data)
@@ -183,6 +189,12 @@ class PGPageContentSpecial extends app.PGPageContent<types.Special> {
     disconnectedCallback(): void {
         super.disconnectedCallback();
         this.cleanup.run();
+    }
+
+    public sortEntries(entries: types.FlakesEntry[]): types.FlakesEntry[] {
+        return entries.sort(
+            (a, b) => a.primary.percent - b.primary.percent - (b.compatatore - a.compatatore),
+        );
     }
 }
 
