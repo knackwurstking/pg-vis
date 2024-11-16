@@ -10,8 +10,8 @@ import * as types from "@types";
  * @fires submit
  * @fires delete
  */
-@customElement("pg-flakes-entry")
-class PGFlakesEntry extends LitElement {
+@customElement("pg-flakes-entry-dialog")
+class PGFlakesEntryDialog extends LitElement {
     @property({ type: Object, attribute: "entry", reflect: true })
     entry?: types.FlakesEntry;
 
@@ -152,4 +152,4 @@ class PGFlakesEntry extends LitElement {
     }
 }
 
-export default PGFlakesEntry;
+export default PGFlakesEntryDialog;

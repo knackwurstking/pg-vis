@@ -56,14 +56,14 @@ class PGPageContentSpecial extends app.PGPageContent<types.Special> {
                     )}
             </div>
 
-            <pg-flakes-entry
-                @delete=${(ev: Event & { currentTarget: app.PGFlakesEntry }) => {
+            <pg-flakes-entry-dialog
+                @delete=${(ev: Event & { currentTarget: app.PGFlakesEntryDialog }) => {
                     // TODO: ...
                 }}
-                @submit=${(ev: Event & { currentTarget: app.PGFlakesEntry }) => {
+                @submit=${(ev: Event & { currentTarget: app.PGFlakesEntryDialog }) => {
                     // TODO: ...
                 }}
-            ></pg-flakes-entry>
+            ></pg-flakes-entry-dialog>
         `;
     }
 
@@ -85,7 +85,7 @@ class PGPageContentSpecial extends app.PGPageContent<types.Special> {
                                     color="primary"
                                     @click=${async () => {
                                         const dialog =
-                                            this.querySelector<app.PGFlakesEntry>(
+                                            this.querySelector<app.PGFlakesEntryDialog>(
                                                 `pg-flakes-entry`,
                                             )!;
 
@@ -144,7 +144,7 @@ class PGPageContentSpecial extends app.PGPageContent<types.Special> {
                         style="cursor: pointer;"
                         @click=${() => {
                             const dialog =
-                                this.querySelector<app.PGFlakesEntry>(`pg-flakes-entry`)!;
+                                this.querySelector<app.PGFlakesEntryDialog>(`pg-flakes-entry`)!;
 
                             dialog.entry = flakesEntry;
                             dialog.create = false;
