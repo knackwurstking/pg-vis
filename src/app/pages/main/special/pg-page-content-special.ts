@@ -1,7 +1,8 @@
-import { html } from "lit";
 import { customElement } from "lit/decorators.js";
 import { keyed } from "lit/directives/keyed.js";
 import { repeat } from "lit/directives/repeat.js";
+
+import { html } from "lit";
 import { CleanUp } from "ui";
 
 import * as app from "@app";
@@ -140,6 +141,7 @@ class PGPageContentSpecial extends app.PGPageContent<types.Special> {
 
                 return html`
                     <tr
+                        style="cursor: pointer;"
                         @click=${() => {
                             const dialog =
                                 this.querySelector<app.PGFlakesEntry>(`pg-flakes-entry`)!;
