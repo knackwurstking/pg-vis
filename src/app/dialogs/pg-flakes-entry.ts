@@ -1,5 +1,7 @@
-import { html, LitElement } from "lit";
 import { customElement, property } from "lit/decorators.js";
+import { repeat } from "lit/directives/repeat.js";
+
+import { html, LitElement } from "lit";
 import { UIDialog } from "ui";
 
 import * as types from "@types";
@@ -53,52 +55,26 @@ class PGFlakesEntry extends LitElement {
 
     private renderInputs() {
         return html`
-            <ui-flex-grid-item>
+            <ui-flex-grid>
                 <ui-secondary>C1</ui-secondary>
-                <ui-input title="Geschwindigkeit" type="number"></ui-input>
-            </ui-flex-grid-item>
 
-            <ui-flex-grid-item>
-                <ui-secondary>Main</ui-secondary>
-                <ui-input title="Prozent" type="number"></ui-input>
                 <ui-input title="Geschwindigkeit" type="number"></ui-input>
-            </ui-flex-grid-item>
+            </ui-flex-grid>
 
-            <ui-flex-grid-item>
-                <ui-secondary>A</ui-secondary>
-                <ui-input title="Prozent" type="number"></ui-input>
-                <ui-input title="Geschwindigkeit" type="number"></ui-input>
-            </ui-flex-grid-item>
+            ${repeat(
+                ["Main", "A", "C", "E", "G", "I", "K"],
+                (slot) => slot,
+                (slot) => html`
+                    <ui-flex-grid>
+                        <ui-secondary>${slot}</ui-secondary>
 
-            <ui-flex-grid-item>
-                <ui-secondary>C</ui-secondary>
-                <ui-input title="Prozent" type="number"></ui-input>
-                <ui-input title="Geschwindigkeit" type="number"></ui-input>
-            </ui-flex-grid-item>
-
-            <ui-flex-grid-item>
-                <ui-secondary>E</ui-secondary>
-                <ui-input title="Prozent" type="number"></ui-input>
-                <ui-input title="Geschwindigkeit" type="number"></ui-input>
-            </ui-flex-grid-item>
-
-            <ui-flex-grid-item>
-                <ui-secondary>G</ui-secondary>
-                <ui-input title="Prozent" type="number"></ui-input>
-                <ui-input title="Geschwindigkeit" type="number"></ui-input>
-            </ui-flex-grid-item>
-
-            <ui-flex-grid-item>
-                <ui-secondary>I</ui-secondary>
-                <ui-input title="Prozent" type="number"></ui-input>
-                <ui-input title="Geschwindigkeit" type="number"></ui-input>
-            </ui-flex-grid-item>
-
-            <ui-flex-grid-item>
-                <ui-secondary>K</ui-secondary>
-                <ui-input title="Prozent" type="number"></ui-input>
-                <ui-input title="Geschwindigkeit" type="number"></ui-input>
-            </ui-flex-grid-item>
+                        <ui-flex-grid-row gap="0.25rem">
+                            <ui-input title="Prozent" type="number"></ui-input>
+                            <ui-input title="Geschwindigkeit" type="number"></ui-input>
+                        </ui-flex-grid-row>
+                    </ui-flex-grid>
+                `,
+            )}
         `;
     }
 
