@@ -1,14 +1,16 @@
 import { html } from "lit";
 import { customElement } from "lit/decorators.js";
+import { keyed } from "lit/directives/keyed.js";
+import { repeat } from "lit/directives/repeat.js";
+import { CleanUp } from "ui";
 
 import * as app from "@app";
 import * as types from "@types";
-import { keyed } from "lit/directives/keyed.js";
-import { repeat } from "lit/directives/repeat.js";
 
 // TODO: Convert table to pdf for type "flakes"
 @customElement("pg-page-content-special")
 class PGPageContentSpecial extends app.PGPageContent<types.Special> {
+    private cleanup = new CleanUp();
     private towerSlots: types.TowerSlot[] = ["A", "C", "E", "G", "I", "K"];
 
     private pressConvert: Record<types.PressSlot, string> = {
@@ -40,8 +42,8 @@ class PGPageContentSpecial extends app.PGPageContent<types.Special> {
             P5: [],
         };
 
-        for (const flakesData of entries) {
-            data[flakesData.press]?.push(flakesData);
+        for (const entry of entries) {
+            data[entry.press]?.push(entry);
         }
 
         return html`
@@ -52,6 +54,15 @@ class PGPageContentSpecial extends app.PGPageContent<types.Special> {
                         this.renderFlakesTable(press as types.PressSlot, pressData),
                     )}
             </div>
+
+            <pg-flakes-entry
+                @delete=${(ev: Event & { currentTarget: app.PGFlakesEntry }) => {
+                    // TODO: ...
+                }}
+                @submit=${(ev: Event & { currentTarget: app.PGFlakesEntry }) => {
+                    // TODO: ...
+                }}
+            ></pg-flakes-entry>
         `;
     }
 
@@ -66,12 +77,29 @@ class PGPageContentSpecial extends app.PGPageContent<types.Special> {
                                 <span>
                                     ${this.pressConvert[press as types.PressSlot] || "Unknown"}
                                 </span>
+
                                 <ui-button
                                     style="float: right;"
                                     variant="full"
                                     color="primary"
                                     @click=${async () => {
-                                        // TODO: Add action button(s): "New Entry", just like metal sheets
+                                        const dialog =
+                                            this.querySelector<app.PGFlakesEntry>(
+                                                `pg-flakes-entry`,
+                                            )!;
+
+                                        dialog.entry = {
+                                            press: press as types.PressSlot,
+                                            compatatore: 25,
+                                            primary: {
+                                                percent: 0,
+                                                value: 0,
+                                            },
+                                            secondary: [],
+                                        };
+
+                                        dialog.create = true;
+                                        dialog.show();
                                     }}
                                 >
                                     Neuer Eintrag
@@ -99,25 +127,33 @@ class PGPageContentSpecial extends app.PGPageContent<types.Special> {
     private renderFlakesTableEntries(entries: types.FlakesEntry[]) {
         return repeat(
             entries,
-            (flakesData) => flakesData,
-            (flakesData) => {
+            (flakesEntry) => flakesEntry,
+            (flakesEntry) => {
                 const slots: (types.Consumption | null)[] = [null, null, null, null, null, null];
 
-                for (const part of flakesData.secondary) {
+                for (const part of flakesEntry.secondary) {
                     slots[this.towerSlots.indexOf(part.slot)] = {
                         percent: part.percent,
                         value: part.value,
                     };
                 }
 
-                // TODO: Make `tr` clickable => open new page for edit or delete, just like metal sheets page
                 return html`
-                    <tr>
-                        <td style="text-align: center;">${flakesData.compatatore}</td>
+                    <tr
+                        @click=${() => {
+                            const dialog =
+                                this.querySelector<app.PGFlakesEntry>(`pg-flakes-entry`)!;
+
+                            dialog.entry = flakesEntry;
+                            dialog.create = false;
+                            dialog.show();
+                        }}
+                    >
+                        <td style="text-align: center;">${flakesEntry.compatatore}</td>
 
                         <td style="text-align: center;">
-                            ${flakesData.primary.percent}%<br />
-                            ${flakesData.primary.value}
+                            ${flakesEntry.primary.percent}%<br />
+                            ${flakesEntry.primary.value}
                         </td>
 
                         ${slots.map((slot) =>
@@ -134,6 +170,17 @@ class PGPageContentSpecial extends app.PGPageContent<types.Special> {
                 `;
             },
         );
+    }
+
+    connectedCallback(): void {
+        super.connectedCallback();
+
+        // TODO: Store handler - trigger re-render
+    }
+
+    disconnectedCallback(): void {
+        super.disconnectedCallback();
+        this.cleanup.run();
     }
 }
 
