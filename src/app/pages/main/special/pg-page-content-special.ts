@@ -56,15 +56,26 @@ class PGPageContentSpecial extends app.PGPageContent<types.Special> {
     }
 
     private renderFlakesTable(press: types.PressSlot, entries: types.FlakesEntry[]) {
-        // TODO: Add action button(s): "New Entry", just like metal sheets
         return keyed(
             press,
             html`
                 <table>
                     <thead>
                         <tr>
-                            <th colspan="100%">
-                                ${this.pressConvert[press as types.PressSlot] || "Unknown"}
+                            <th style="text-align: left;" colspan="100%">
+                                <span>
+                                    ${this.pressConvert[press as types.PressSlot] || "Unknown"}
+                                </span>
+                                <ui-button
+                                    style="float: right;"
+                                    variant="full"
+                                    color="primary"
+                                    @click=${async () => {
+                                        // TODO: Add action button(s): "New Entry", just like metal sheets
+                                    }}
+                                >
+                                    Neuer Eintrag
+                                </ui-button>
                             </th>
                         </tr>
 
