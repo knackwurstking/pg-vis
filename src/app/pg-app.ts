@@ -134,6 +134,67 @@ class PGApp extends LitElement {
                                 },
                             ],
                         },
+                        {
+                            press: "P0",
+                            compatatore: 25,
+                            primary: {
+                                percent: 90,
+                                value: 1.5,
+                            },
+                            secondary: [
+                                {
+                                    slot: "G",
+                                    percent: 5,
+                                    value: 175,
+                                },
+                                {
+                                    slot: "I",
+                                    percent: 5,
+                                    value: 175,
+                                },
+                            ],
+                        },
+
+                        {
+                            press: "P5",
+                            compatatore: 25,
+                            primary: {
+                                percent: 90,
+                                value: 1.5,
+                            },
+                            secondary: [
+                                {
+                                    slot: "A",
+                                    percent: 5,
+                                    value: 175,
+                                },
+                                {
+                                    slot: "C",
+                                    percent: 5,
+                                    value: 175,
+                                },
+                            ],
+                        },
+                        {
+                            press: "P4",
+                            compatatore: 25,
+                            primary: {
+                                percent: 90,
+                                value: 1.5,
+                            },
+                            secondary: [
+                                {
+                                    slot: "G",
+                                    percent: 5,
+                                    value: 175,
+                                },
+                                {
+                                    slot: "I",
+                                    percent: 5,
+                                    value: 175,
+                                },
+                            ],
+                        },
                     ],
                 },
             ],
@@ -680,6 +741,13 @@ class PGApp extends LitElement {
             return page;
         });
 
+        stack.registerPage("special", () => {
+            const page = new UIStackLayoutPage();
+            page.name = "special";
+            page.appendChild(new app.PGPageContentSpecial());
+            return page;
+        });
+
         // Sub pages
 
         stack.registerPage("alert", () => {
@@ -773,6 +841,7 @@ class PGApp extends LitElement {
         this.drawerGroupItemsRendering(store, "vis");
         this.drawerGroupItemsRendering(store, "visBookmarks");
         this.drawerGroupItemsRendering(store, "visData");
+        this.drawerGroupItemsRendering(store, "special");
     }
 
     private drawerGroupItemsRendering(

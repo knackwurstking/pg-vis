@@ -14,18 +14,15 @@ class PGPageContentSpecial extends app.PGPageContent<types.Special> {
 
         switch (this.data?.type) {
             case "flakes":
-                this.renderFlakes(this.data.data);
-                break;
+                return this.renderFlakes(this.data.data);
 
             default:
                 return html``;
         }
-
-        return html``;
     }
 
-    private renderFlakes(entries: types.FlakesData[]) {
-        const data: Record<types.PressSlot, types.FlakesData[]> = {
+    private renderFlakes(entries: types.FlakesEntry[]) {
+        const data: Record<types.PressSlot, types.FlakesEntry[]> = {
             P0: [],
             P2: [],
             P3: [],
@@ -48,68 +45,86 @@ class PGPageContentSpecial extends app.PGPageContent<types.Special> {
 
         return html`
             <div class="no-scrollbar" style="width: 100%; overflow-x: auto">
-                ${Object.entries(data).map(([press, pressData]) =>
-                    keyed(
-                        pressData,
-                        html`
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th colspan="100%">
-                                            ${pressConvert[press as types.PressSlot] || "Unknown"}
-                                        </th>
-                                    </tr>
+                ${Object.entries(data)
+                    .filter(([_press, pressData]) => pressData.length > 0)
+                    .map(([press, pressData]) =>
+                        keyed(
+                            pressData,
+                            html`
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th colspan="100%">
+                                                ${pressConvert[press as types.PressSlot] ||
+                                                "Unknown"}
+                                            </th>
+                                        </tr>
 
-                                    <tr>
-                                        ${towerSlots.map((slot) => html`<th>${slot}</th>`)}
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    ${repeat(
-                                        pressData,
-                                        (flakesData) => flakesData,
-                                        (flakesData) => {
-                                            const slots: (types.Consumption | null)[] = [
-                                                null,
-                                                null,
-                                                null,
-                                                null,
-                                                null,
-                                                null,
-                                            ];
+                                        <tr>
+                                            <th style="width: ${100 / 8}%">C1</th>
+                                            <th style="width: ${100 / 8}%">Main</th>
+                                            ${towerSlots.map(
+                                                (slot) =>
+                                                    html`<th style="width: ${100 / 8}%">
+                                                        ${slot}
+                                                    </th>`,
+                                            )}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${repeat(
+                                            pressData,
+                                            (flakesData) => flakesData,
+                                            (flakesData) => {
+                                                const slots: (types.Consumption | null)[] = [
+                                                    null,
+                                                    null,
+                                                    null,
+                                                    null,
+                                                    null,
+                                                    null,
+                                                ];
 
-                                            for (const part of flakesData.secondary) {
-                                                slots[towerSlots.indexOf(part.slot)] = {
-                                                    percent: part.percent,
-                                                    value: part.value,
-                                                };
-                                            }
+                                                for (const part of flakesData.secondary) {
+                                                    slots[towerSlots.indexOf(part.slot)] = {
+                                                        percent: part.percent,
+                                                        value: part.value,
+                                                    };
+                                                }
 
-                                            return html`
-                                                <td>${flakesData.compatatore}</td>
+                                                return html`
+                                                    <tr>
+                                                        <td style="text-align: center;">
+                                                            ${flakesData.compatatore}
+                                                        </td>
 
-                                                <td>
-                                                    ${flakesData.primary.percent},
-                                                    ${flakesData.primary.value}
-                                                </td>
+                                                        <td style="text-align: center;">
+                                                            ${flakesData.primary.percent}%<br />
+                                                            ${flakesData.primary.value}
+                                                        </td>
 
-                                                ${slots.map((slot) =>
-                                                    slot === null
-                                                        ? html``
-                                                        : html`
-                                                              <td>
-                                                                  ${slot.percent}, ${slot.value}
-                                                              </td>
-                                                          `,
-                                                )}
-                                            `;
-                                        },
-                                    )}
-                                </tbody>
-                            </table>
-                        `,
-                    ),
-                )}
+                                                        ${slots.map((slot) =>
+                                                            slot === null
+                                                                ? html`<td></td>`
+                                                                : html`
+                                                                      <td
+                                                                          style="text-align: center;"
+                                                                      >
+                                                                          ${slot.percent}%<br />
+                                                                          ${slot.value}
+                                                                      </td>
+                                                                  `,
+                                                        )}
+                                                    </tr>
+                                                `;
+                                            },
+                                        )}
+                                    </tbody>
+                                </table>
+                                <br />
+                            `,
+                        ),
+                    )}
             </div>
         `;
     }

@@ -130,10 +130,10 @@ export interface Bookmarks {
 export interface FlakesSpecial {
     type: "flakes";
     title: string;
-    data: FlakesData[];
+    data: FlakesEntry[];
 }
 
-export interface FlakesData {
+export interface FlakesEntry {
     press: PressSlot;
     compatatore: number;
     primary: Consumption;
