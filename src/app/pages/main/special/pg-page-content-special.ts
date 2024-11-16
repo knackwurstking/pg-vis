@@ -3,6 +3,7 @@ import { customElement } from "lit/decorators.js";
 
 import * as app from "@app";
 import * as types from "@types";
+import { keyed } from "lit/directives/keyed.js";
 import { repeat } from "lit/directives/repeat.js";
 
 // TODO: Convert table to pdf for type "flakes"
@@ -23,33 +24,89 @@ class PGPageContentSpecial extends app.PGPageContent<types.Special> {
         return html``;
     }
 
-    private renderFlakes(data: types.FlakesData[]) {
+    private renderFlakes(entries: types.FlakesData[]) {
+        const data: { [key: string]: types.FlakesData[] } = {
+            P0: [],
+            P2: [],
+            P3: [],
+            P4: [],
+            P5: [],
+        };
+
+        for (const flakesData of entries) {
+            data[flakesData.press]?.push(flakesData);
+        }
+
+        const towerSlots = ["A", "C", "E", "G", "I", "K"];
+        const pressConvert: { [key: string]: string } = {
+            P0: "Presse 0",
+            P2: "Presse 2",
+            P3: "Presse 3",
+            P4: "Presse 4",
+            P5: "Presse 5",
+        };
+
         return html`
             <div class="no-scrollbar" style="width: 100%; overflow-x: auto">
-                ${repeat(
-                    data,
-                    (data) => `${data.press}`,
-                    (data, index) => html`
-                        <table>
-                            <thead>
-                                <tr>
-                                    <!-- TODO: Table Heading 1: Press info (colspan: 100%) -->
-                                </tr>
-                                <tr>
-                                    <!-- TODO: Table Heading 2: compatatore & (secondary) slots -->
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- TODO: Render compatatore speed -->
-                                ${repeat(
-                                    data.secondary,
-                                    (secondaryData) =>
-                                        `${secondaryData.slot},${secondaryData.percent},${secondaryData.value}`,
-                                    (secondaryData, index) => html``, // TODO: ...
-                                )}
-                            </tbody>
-                        </table>
-                    `,
+                ${Object.entries(data).map(([press, pressData]) =>
+                    keyed(
+                        pressData,
+                        html`
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th colspan="100%">${pressConvert[press] || "Unknown"}</th>
+                                    </tr>
+
+                                    <tr>
+                                        ${towerSlots.map((slot) => html`<th>${slot}</th>`)}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${repeat(
+                                        pressData,
+                                        (flakesData) => flakesData,
+                                        (flakesData) => {
+                                            const slots: (types.Consumption | null)[] = [
+                                                null,
+                                                null,
+                                                null,
+                                                null,
+                                                null,
+                                                null,
+                                            ];
+
+                                            for (const part of flakesData.secondary) {
+                                                slots[towerSlots.indexOf(part.slot)] = {
+                                                    percent: part.percent,
+                                                    value: part.value,
+                                                };
+                                            }
+
+                                            return html`
+                                                <td>${flakesData.compatatore}</td>
+
+                                                <td>
+                                                    ${flakesData.primary.percent},
+                                                    ${flakesData.primary.value}
+                                                </td>
+
+                                                ${slots.map((slot) =>
+                                                    slot === null
+                                                        ? html``
+                                                        : html`
+                                                              <td>
+                                                                  ${slot.percent}, ${slot.value}
+                                                              </td>
+                                                          `,
+                                                )}
+                                            `;
+                                        },
+                                    )}
+                                </tbody>
+                            </table>
+                        `,
+                    ),
                 )}
             </div>
         `;
