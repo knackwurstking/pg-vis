@@ -19,8 +19,6 @@ class PGPageContentVis extends app.PGPageContent<types.Vis> {
     protected render() {
         super.renderListsAppBarTitle("vis", this.data);
 
-        // TODO: - Add some special flakes marker
-
         return html`
             <pg-search-bar
                 title="Produktsuche"
