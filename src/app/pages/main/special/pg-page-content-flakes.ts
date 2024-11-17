@@ -107,7 +107,7 @@ class PGPageContentFlakes extends LitElement {
         return html`
             <pg-search-bar
                 style="top: 0;"
-                title="RegExp (ex: main=90% a=5% c=5%)"
+                title="Filter (Bsp.: main=90% a=5% c=5%)"
                 storage-key="${this.data?.title}"
                 ?active=${!!this.searchBar}
                 @change=${async (ev: Event & { currentTarget: app.PGSearchBar }) => {
@@ -279,7 +279,12 @@ class PGPageContentFlakes extends LitElement {
 
     private checkFilter(entry: types.FlakesEntry): boolean {
         if (this.searchBar && this.flakesFilter !== undefined) {
-            const searchString = `presse=${entry.press},c1=${entry.compatatore},main=${entry.primary.percent}%,main=${entry.primary.value},${entry.secondary.map((c) => `${c.slot}=${c.percent}%,${c.slot}=${c.value}`).join(",")}`;
+            const searchString = `presse=${entry.press},c1=${entry.compatatore},main=${
+                entry.primary.percent
+            }%,main=${entry.primary.value},${entry.secondary
+                .map((c) => `${c.slot}=${c.percent}%,${c.slot}=${c.value}`)
+                .join(",")}`;
+
             return this.flakesFilter.test(searchString);
         }
 
