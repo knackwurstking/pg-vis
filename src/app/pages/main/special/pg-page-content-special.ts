@@ -6,6 +6,7 @@ import { html } from "lit";
 import { CleanUp } from "ui";
 
 import * as app from "@app";
+import * as lib from "@lib";
 import * as types from "@types";
 
 // TODO: Convert table to pdf for type "flakes"
@@ -67,25 +68,41 @@ class PGPageContentSpecial extends app.PGPageContent<types.Special> {
                     const target = ev.currentTarget;
                     if (target.create || this.data === undefined) return;
 
-                    this.data.data = this.data.data.filter((entry) => entry !== target.entry);
-                    this.data = { ...this.data };
+                    const newData = {
+                        ...this.data,
+                        data: this.data.data.filter((entry) => entry !== target.entry),
+                    };
+
+                    lib.listStore("special").replaceInStore(
+                        app.PGApp.queryStore(),
+                        newData,
+                        this.data,
+                    );
+
+                    this.data = newData;
                 }}
                 @submit=${(ev: Event & { currentTarget: app.PGFlakesEntryDialog }) => {
                     const target = ev.currentTarget;
                     if (target.entry === undefined || this.data === undefined) return;
 
+                    const newData = { ...this.data };
+
                     if (target.create) {
-                        this.data.data.push(target.entry);
-                        this.data = { ...this.data };
+                        newData.data.push(target.entry);
                     } else {
-                        this.data = {
-                            ...this.data,
-                            data: [
-                                ...this.data.data.filter((entry) => entry !== target.entry),
-                                target.entry,
-                            ],
-                        };
+                        newData.data = [
+                            ...this.data.data.filter((entry) => entry !== target.entry),
+                            target.entry,
+                        ];
                     }
+
+                    lib.listStore("special").replaceInStore(
+                        app.PGApp.queryStore(),
+                        newData,
+                        this.data,
+                    );
+
+                    this.data = newData;
                 }}
             ></pg-flakes-entry-dialog>
         `;
