@@ -1,4 +1,4 @@
-import { customElement } from "lit/decorators.js";
+import { customElement, property, state } from "lit/decorators.js";
 import { keyed } from "lit/directives/keyed.js";
 import { repeat } from "lit/directives/repeat.js";
 
@@ -11,6 +11,9 @@ import * as types from "@types";
 // TODO: Convert table to pdf for type "flakes"
 @customElement("pg-page-content-special")
 class PGPageContentSpecial extends app.PGPageContent<types.Special> {
+    @state()
+    private flakesFilter?: types.FlakesFilter;
+
     private towerSlots: types.TowerSlot[] = ["A", "C", "E", "G", "I", "K"];
 
     private pressConvert: Record<types.PressSlot, string> = {
@@ -43,7 +46,9 @@ class PGPageContentSpecial extends app.PGPageContent<types.Special> {
         };
 
         for (const entry of entries) {
-            data[entry.press]?.push(entry);
+            if (this.checkFilter(entry)) {
+                data[entry.press]?.push(entry);
+            }
         }
 
         data.P0 = this.sortEntries(data.P0);
@@ -53,6 +58,14 @@ class PGPageContentSpecial extends app.PGPageContent<types.Special> {
         data.P5 = this.sortEntries(data.P5);
 
         return html`
+            <pg-flakes-filter-bar
+                @change=${async (ev: Event & { currentTarget: app.PGFlakesFilterBar }) => {
+                    this.flakesFilter = { ...ev.currentTarget.filter };
+                }}
+            ></pg-flakes-filter-bar>
+
+            <br />
+
             <div class="no-scrollbar" style="width: 100%; overflow-x: auto">
                 ${Object.entries(data)
                     .filter(([_press, pressData]) => pressData.length > 0)
@@ -215,7 +228,47 @@ class PGPageContentSpecial extends app.PGPageContent<types.Special> {
         );
     }
 
-    public sortEntries(entries: types.FlakesEntry[]): types.FlakesEntry[] {
+    private checkFilter(entry: types.FlakesEntry): boolean {
+        if (this.flakesFilter !== undefined) {
+            if (this.flakesFilter.c1 !== null) {
+                if (entry.compatatore !== this.flakesFilter.c1) {
+                    return false;
+                }
+            }
+
+            if (this.flakesFilter.main !== null) {
+                if (
+                    entry.primary.percent !== this.flakesFilter.main &&
+                    entry.primary.value !== this.flakesFilter.main
+                ) {
+                    return false;
+                }
+            }
+
+            let index = -1;
+            slot_filter_loop: for (const slotFilter of this.flakesFilter.towerSlots) {
+                index++;
+
+                if (slotFilter === null) continue;
+
+                const secondary = entry.secondary.filter(
+                    (consumption) => consumption.slot === this.towerSlots[index],
+                );
+
+                if (secondary.length === 0 && slotFilter > 0) return false;
+
+                for (const consumption of secondary) {
+                    if (consumption.percent !== slotFilter && consumption.value !== slotFilter) {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
+
+    private sortEntries(entries: types.FlakesEntry[]): types.FlakesEntry[] {
         return entries.sort(
             (a, b) => a.primary.percent - b.primary.percent - (b.compatatore - a.compatatore),
         );

@@ -131,10 +131,6 @@ export interface FlakesSpecial {
     type: "flakes";
     title: string;
     data: FlakesEntry[];
-    /**
-     * Contains just a list with lotto codes
-     */
-    products: string[];
 }
 
 export interface FlakesEntry {
@@ -147,4 +143,10 @@ export interface FlakesEntry {
 export interface Consumption {
     percent: number;
     value: number;
+}
+
+export interface FlakesFilter {
+    c1: number | null;
+    main: number | null;
+    towerSlots: (number | null)[];
 }

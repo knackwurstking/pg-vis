@@ -3,7 +3,7 @@ import { customElement, state } from "lit/decorators.js";
 import { Keyed, keyed } from "lit/directives/keyed.js";
 
 import { html, PropertyValues } from "lit";
-import { CleanUp, svg } from "ui";
+import { CleanUp } from "ui";
 
 import * as app from "@app";
 import * as lib from "@lib";

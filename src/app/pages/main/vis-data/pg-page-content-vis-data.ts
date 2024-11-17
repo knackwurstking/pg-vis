@@ -15,6 +15,7 @@ export class PGPageContentVisData extends app.PGPageContent<types.VisData> {
 
     private cleanup = new CleanUp();
 
+    // TODO: Add search bar...
     protected render() {
         super.renderListsAppBarTitle("visData", this.data);
 
