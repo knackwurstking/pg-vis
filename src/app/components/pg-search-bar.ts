@@ -15,14 +15,18 @@ class PGSearchBar extends LitElement {
 
     static generateRegExp(value: string): RegExp {
         const regexSplit: string[] = value.split(" ").filter((v) => v !== "");
-        return new RegExp(
-            "(?=.*" +
-                regexSplit
-                    .map((part) => part.replace(/[()]/g, "\\$&")) // $& means the whole matched string
-                    .join(")(?=.*") +
-                ")",
-            "i",
-        );
+        try {
+            return new RegExp("(?=.*" + regexSplit.join(")(?=.*") + ")", "i");
+        } catch {
+            return new RegExp(
+                "(?=.*" +
+                    regexSplit
+                        .map((part) => part.replace(/[()]/g, "\\$&")) // $& means the whole matched string
+                        .join(")(?=.*") +
+                    ")",
+                "i",
+            );
+        }
     }
 
     static get styles() {
@@ -38,7 +42,7 @@ class PGSearchBar extends LitElement {
                 left: 0;
                 right: 0;
                 height: fit-content;
-                margin: var(--ui-spacing);
+                margin: 0 var(--ui-spacing);
                 overflow: hidden;
             }
 
