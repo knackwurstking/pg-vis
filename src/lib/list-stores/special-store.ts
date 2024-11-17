@@ -31,6 +31,11 @@ export class SpecialStore extends lib.listStores.ListStore<"special"> {
         switch (list.type) {
             case "flakes":
                 validateFlakesData(list.data);
+
+                if (!Array.isArray(list.products)) {
+                    list.products = [];
+                }
+
                 break;
 
             default:
