@@ -73,10 +73,19 @@ class PGPageContentSpecial extends app.PGPageContent<types.Special> {
                 }}
                 @submit=${(ev: Event & { currentTarget: app.PGFlakesEntryDialog }) => {
                     const target = ev.currentTarget;
+                    if (target.entry === undefined || this.data === undefined) return;
+
                     if (target.create) {
-                        // TODO: Add a new one
+                        this.data.data.push(target.entry);
+                        this.data = { ...this.data };
                     } else {
-                        // TODO: Remove entry from data
+                        this.data = {
+                            ...this.data,
+                            data: [
+                                ...this.data.data.filter((entry) => entry !== target.entry),
+                                target.entry,
+                            ],
+                        };
                     }
                 }}
             ></pg-flakes-entry-dialog>
