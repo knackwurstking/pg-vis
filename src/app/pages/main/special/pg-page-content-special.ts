@@ -92,7 +92,7 @@ class PGPageContentSpecial extends app.PGPageContent<types.Special> {
                                     @click=${async () => {
                                         const dialog =
                                             this.querySelector<app.PGFlakesEntryDialog>(
-                                                `pg-flakes-entry`,
+                                                `pg-flakes-entry-dialog`,
                                             )!;
 
                                         dialog.entry = {
@@ -150,7 +150,9 @@ class PGPageContentSpecial extends app.PGPageContent<types.Special> {
                         style="cursor: pointer;"
                         @click=${() => {
                             const dialog =
-                                this.querySelector<app.PGFlakesEntryDialog>(`pg-flakes-entry`)!;
+                                this.querySelector<app.PGFlakesEntryDialog>(
+                                    `pg-flakes-entry-dialog`,
+                                )!;
 
                             dialog.entry = flakesEntry;
                             dialog.create = false;
