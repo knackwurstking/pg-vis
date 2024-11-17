@@ -1,5 +1,5 @@
 import { DirectiveResult } from "lit/async-directive.js";
-import { customElement, state } from "lit/decorators.js";
+import { customElement, property, state } from "lit/decorators.js";
 import { Keyed, keyed } from "lit/directives/keyed.js";
 
 import { html, PropertyValues } from "lit";
@@ -11,6 +11,12 @@ import * as types from "@types";
 
 @customElement("pg-page-content-vis-data")
 export class PGPageContentVisData extends app.PGPageContent<types.VisData> {
+    @property({ type: Boolean, attribute: "search-bar", reflect: true })
+    searchBar?: boolean;
+
+    @state()
+    private filter?: RegExp;
+
     @state()
     private listItems: DirectiveResult<typeof Keyed>[] = [];
 
@@ -18,6 +24,16 @@ export class PGPageContentVisData extends app.PGPageContent<types.VisData> {
 
     connectedCallback(): void {
         super.connectedCallback();
+
+        const appBar = app.PGApp.queryAppBar()!;
+
+        // App Bar Events
+
+        const onClick = async () => (this.searchBar = !this.searchBar);
+        const appBarSearchButton = appBar.contentName("search")!.contentAt<UIIconButton>(0);
+
+        appBarSearchButton.addEventListener("click", onClick);
+        this.cleanup.add(() => appBarSearchButton.removeEventListener("click", onClick));
 
         // App Bar: "edit"
 
@@ -32,10 +48,9 @@ export class PGPageContentVisData extends app.PGPageContent<types.VisData> {
             dialog.show();
         };
 
-        const editButton = app.PGApp.queryAppBar()!.contentName("edit")!.contentAt<UIIconButton>(0);
+        const editButton = appBar.contentName("edit")!.contentAt<UIIconButton>(0);
 
         editButton.addEventListener("click", onEditClick);
-
         this.cleanup.add(() => {
             editButton.removeEventListener("click", onEditClick);
         });
@@ -66,11 +81,19 @@ export class PGPageContentVisData extends app.PGPageContent<types.VisData> {
         this.cleanup.run();
     }
 
-    // TODO: Add search bar...
     protected render() {
         super.renderListsAppBarTitle("visData", this.data);
 
         return html`
+            <pg-search-bar
+                title="Filter"
+                storage-key="${this.data?.title}"
+                ?active=${!!this.searchBar}
+                @change=${async (ev: Event & { currentTarget: app.PGSearchBar }) => {
+                    this.filter = app.PGSearchBar.generateRegExp(ev.currentTarget.value());
+                }}
+            ></pg-search-bar>
+
             <div class="container no-scrollbar" style="width: 100%; height: 100%; overflow: auto;">
                 <ui-flex-grid gap="0.25rem">
                     ${this.renderActions()}
@@ -91,9 +114,29 @@ export class PGPageContentVisData extends app.PGPageContent<types.VisData> {
     }
 
     protected updated(changedProperties: PropertyValues): void {
-        if (changedProperties.has("data")) {
+        if (changedProperties.has("data") || changedProperties.has("filter")) {
             setTimeout(() => this.updateContent());
         }
+
+        const pgSearchBar = this.querySelector<app.PGSearchBar>(`pg-search-bar`)!;
+        const container = this.querySelector<HTMLElement>(`div.container`)!;
+
+        setTimeout(() => {
+            if (this.searchBar) {
+                container.style.paddingTop = `calc(${pgSearchBar.clientHeight}px + var(--ui-spacing) * 2)`;
+
+                const filter = app.PGSearchBar.generateRegExp(pgSearchBar.value());
+                if (this.filter?.toString() !== filter.toString()) {
+                    this.filter = app.PGSearchBar.generateRegExp(pgSearchBar.value());
+                }
+            } else {
+                container.style.paddingTop = `0`;
+
+                if (this.filter !== undefined) {
+                    this.filter = undefined;
+                }
+            }
+        });
     }
 
     private renderActions() {
@@ -169,22 +212,43 @@ export class PGPageContentVisData extends app.PGPageContent<types.VisData> {
         this.listItems = [];
         if (this.data === undefined) return;
 
+        const newListItems = [];
         const listsStore = lib.listStore("visData");
-        this.listItems = this.data.data.map((entry, index) => {
-            return keyed(
-                entry,
-                html`
-                    <pg-vis-data-list-item
-                        data=${JSON.stringify(entry)}
-                        list-key=${this.data !== undefined ? listsStore.listKey(this.data) : ""}
-                        entry-index=${index}
-                        show-filter
-                        route
-                    >
-                    </pg-vis-data-list-item>
-                `,
+
+        let index = -1;
+        for (const entry of this.data.data) {
+            index++;
+
+            if (this.searchBar && this.filter !== undefined) {
+                const searchString = `${entry.key || ""} ${entry.lotto || ""},${
+                    entry.format || ""
+                },${entry.stamp || ""},${
+                    entry.thickness?.replace(/[0-9]+/g, "$&mm") || ""
+                } ${entry.value}`;
+
+                if (!this.filter.test(searchString)) {
+                    continue;
+                }
+            }
+
+            newListItems.push(
+                keyed(
+                    entry,
+                    html`
+                        <pg-vis-data-list-item
+                            data=${JSON.stringify(entry)}
+                            list-key=${this.data !== undefined ? listsStore.listKey(this.data) : ""}
+                            entry-index=${index}
+                            show-filter
+                            route
+                        >
+                        </pg-vis-data-list-item>
+                    `,
+                ),
             );
-        });
+        }
+
+        this.listItems = newListItems;
     }
 }
 

@@ -894,6 +894,7 @@ class PGApp extends LitElement {
                     break;
 
                 case "visData":
+                    appBar.contentName("search")!.show();
                     appBar.contentName("edit")!.show();
                     break;
 
