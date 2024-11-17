@@ -358,6 +358,10 @@ class PGApp extends LitElement {
                 <ui-app-bar-item name="trash" slot="right" hidden>
                     <ui-icon-button ripple ghost> ${svg.smoothieLineIcons.trash} </ui-icon-button>
                 </ui-app-bar-item>
+
+                <ui-app-bar-item name="printer" slot="right" hidden>
+                    <ui-icon-button ripple ghost> ${svg.smoothieLineIcons.printer} </ui-icon-button>
+                </ui-app-bar-item>
             </ui-app-bar>
         `;
     }
@@ -886,6 +890,7 @@ class PGApp extends LitElement {
                     break;
 
                 case "metalSheets":
+                    appBar.contentName("printer")!.show();
                     appBar.contentName("edit")!.show();
                     break;
 
@@ -903,6 +908,7 @@ class PGApp extends LitElement {
                     break;
 
                 case "special":
+                    // TODO: Add pdf button
                     switch ((current.children[0] as app.PGPageContentSpecial).data?.type) {
                         case "flakes":
                             appBar.contentName("search")!.show();
