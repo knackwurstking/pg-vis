@@ -1,9 +1,9 @@
-import { html, PropertyValues, TemplateResult } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
+
+import { html, PropertyValues, TemplateResult } from "lit";
 import { CleanUp, styles, UIIconButton } from "ui";
 
 import * as app from "@app";
-import * as lib from "@lib";
 import * as types from "@types";
 
 @customElement("pg-page-content-vis")
