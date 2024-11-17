@@ -1,7 +1,8 @@
+import { customElement, property } from "lit/decorators.js";
+
 import FileSaver from "file-saver";
 import JSZip from "jszip";
 import { html, LitElement } from "lit";
-import { customElement, property } from "lit/decorators.js";
 import { svg } from "ui";
 
 import * as app from "@app";
@@ -11,6 +12,23 @@ import * as lib from "@lib";
 class PGDrawerItemImport extends LitElement {
     @property({ type: String, attribute: "store-key", reflect: true })
     storeKey?: keyof lib.listStores.ListStoreData;
+
+    public async export() {
+        if (!this.storeKey) return;
+
+        const zip = new JSZip();
+        const listsStore = lib.listStore(this.storeKey);
+
+        const storeData = app.PGApp.queryStore().getData(this.storeKey);
+        if (storeData === undefined) return;
+
+        for (const list of storeData) {
+            const fileName = listsStore.fileName(list);
+            zip.file(fileName, JSON.stringify(list, null, 4));
+        }
+
+        FileSaver.saveAs(await zip.generateAsync({ type: "blob" }), listsStore.zipFileName());
+    }
 
     protected createRenderRoot(): HTMLElement | DocumentFragment {
         return this;
@@ -46,23 +64,6 @@ class PGDrawerItemImport extends LitElement {
                 </ui-flex-grid-item>
             </ui-flex-grid-row>
         `;
-    }
-
-    public async export() {
-        if (!this.storeKey) return;
-
-        const zip = new JSZip();
-        const listsStore = lib.listStore(this.storeKey);
-
-        const storeData = app.PGApp.queryStore().getData(this.storeKey);
-        if (storeData === undefined) return;
-
-        for (const list of storeData) {
-            const fileName = listsStore.fileName(list);
-            zip.file(fileName, JSON.stringify(list, null, 4));
-        }
-
-        FileSaver.saveAs(await zip.generateAsync({ type: "blob" }), listsStore.zipFileName());
     }
 }
 

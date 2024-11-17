@@ -13,6 +13,34 @@ import * as types from "@types";
 class PGPageContentMetalSheets extends app.PGPageContent<types.MetalSheet> {
     private cleanup = new CleanUp();
 
+    connectedCallback(): void {
+        super.connectedCallback();
+
+        // App Bar Events
+        const onClick = async () => {
+            if (!this.data) return;
+
+            this.openTableDialog({
+                format: this.data.format,
+                toolID: this.data.toolID,
+                press: this.data.data.press,
+            });
+        };
+
+        const editButton = app.PGApp.queryAppBar()!.contentName("edit")!.contentAt<UIIconButton>(0);
+
+        editButton.addEventListener("click", onClick);
+
+        this.cleanup.add(() => {
+            editButton.removeEventListener("click", onClick);
+        });
+    }
+
+    disconnectedCallback(): void {
+        super.disconnectedCallback();
+        this.cleanup.run();
+    }
+
     protected render(): TemplateResult<1> {
         super.renderListsAppBarTitle("metalSheets", this.data);
 
@@ -119,6 +147,31 @@ class PGPageContentMetalSheets extends app.PGPageContent<types.MetalSheet> {
         `;
     }
 
+    protected updated(_changedProperties: PropertyValues): void {
+        const body = this.querySelector(`tbody`)!;
+        draggable.createMobile(body, {
+            onDragEnd: () => {
+                if (!this.data) return;
+                this.data.data.table.data = Array.from(body.children).map((child) => {
+                    const data = child.getAttribute("data-json");
+                    if (!data) throw new Error(`missing attribute "data-json"`);
+
+                    return JSON.parse(data);
+                });
+
+                this.requestUpdate();
+                this.replaceInStore(this.data);
+            },
+        });
+    }
+
+    protected firstUpdated(_changedProperties: PropertyValues): void {
+        this.classList.add("no-scrollbar");
+
+        this.style.overflow = "hidden";
+        this.style.overflowY = "auto";
+    }
+
     private renderTableHeader() {
         if (!this.data) return html``;
 
@@ -163,59 +216,6 @@ class PGPageContentMetalSheets extends app.PGPageContent<types.MetalSheet> {
         );
 
         return html`${content}`;
-    }
-
-    protected updated(_changedProperties: PropertyValues): void {
-        const body = this.querySelector(`tbody`)!;
-        draggable.createMobile(body, {
-            onDragEnd: () => {
-                if (!this.data) return;
-                this.data.data.table.data = Array.from(body.children).map((child) => {
-                    const data = child.getAttribute("data-json");
-                    if (!data) throw new Error(`missing attribute "data-json"`);
-
-                    return JSON.parse(data);
-                });
-
-                this.requestUpdate();
-                this.replaceInStore(this.data);
-            },
-        });
-    }
-
-    protected firstUpdated(_changedProperties: PropertyValues): void {
-        this.classList.add("no-scrollbar");
-
-        this.style.overflow = "hidden";
-        this.style.overflowY = "auto";
-    }
-
-    connectedCallback(): void {
-        super.connectedCallback();
-
-        // App Bar Events
-        const onClick = async () => {
-            if (!this.data) return;
-
-            this.openTableDialog({
-                format: this.data.format,
-                toolID: this.data.toolID,
-                press: this.data.data.press,
-            });
-        };
-
-        const editButton = app.PGApp.queryAppBar()!.contentName("edit")!.contentAt<UIIconButton>(0);
-
-        editButton.addEventListener("click", onClick);
-
-        this.cleanup.add(() => {
-            editButton.removeEventListener("click", onClick);
-        });
-    }
-
-    disconnectedCallback(): void {
-        super.disconnectedCallback();
-        this.cleanup.run();
     }
 
     private openTableDialog(data: { format: string; toolID: string; press: number }) {

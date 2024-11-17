@@ -16,6 +16,27 @@ class PGPageContentVis extends app.PGPageContent<types.Vis> {
 
     private cleanup = new CleanUp();
 
+    connectedCallback(): void {
+        super.connectedCallback();
+
+        // App Bar Events
+
+        const appBar = app.PGApp.queryAppBar()!;
+
+        const onClick = async () => (this.searchBar = !this.searchBar);
+
+        const appBarSearchButton = appBar.contentName("search")!.contentAt<UIIconButton>(0);
+
+        appBarSearchButton.addEventListener("click", onClick);
+
+        this.cleanup.add(() => appBarSearchButton.removeEventListener("click", onClick));
+    }
+
+    disconnectedCallback(): void {
+        super.disconnectedCallback();
+        this.cleanup.run();
+    }
+
     protected render() {
         super.renderListsAppBarTitle("vis", this.data);
 
@@ -69,28 +90,7 @@ class PGPageContentVis extends app.PGPageContent<types.Vis> {
         });
     }
 
-    connectedCallback(): void {
-        super.connectedCallback();
-
-        // App Bar Events
-
-        const appBar = app.PGApp.queryAppBar()!;
-
-        const onClick = async () => (this.searchBar = !this.searchBar);
-
-        const appBarSearchButton = appBar.contentName("search")!.contentAt<UIIconButton>(0);
-
-        appBarSearchButton.addEventListener("click", onClick);
-
-        this.cleanup.add(() => appBarSearchButton.removeEventListener("click", onClick));
-    }
-
-    disconnectedCallback(): void {
-        super.disconnectedCallback();
-        this.cleanup.run();
-    }
-
-    public async filter(value: string) {
+    private async filter(value: string) {
         const container = this.querySelector(`.list`)!;
         const regex: RegExp = app.PGSearchBar.generateRegExp(value);
 

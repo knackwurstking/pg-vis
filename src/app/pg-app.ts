@@ -61,6 +61,32 @@ class PGApp extends LitElement {
         this.initializeStores();
     }
 
+    protected createRenderRoot(): HTMLElement | DocumentFragment {
+        return this;
+    }
+
+    protected render() {
+        return html`
+            <div class="is-container no-scrollbar" style="height: 100%;">
+                <ui-stack-layout></ui-stack-layout>
+            </div>
+
+            ${this.renderAppBar()} ${this.renderDrawer()} ${this.renderDialogs()}
+        `;
+    }
+
+    protected firstUpdated(_changedProperties: PropertyValues): void {
+        this.style.position = "fixed";
+        this.style.top = "0";
+        this.style.right = "0";
+        this.style.bottom = "0";
+        this.style.left = "0";
+
+        this.registerPages();
+        this.handleStackLayoutChanges();
+        this.storeEventHandlers();
+    }
+
     private initializeStores() {
         const store = PGApp.queryStore();
 
@@ -282,20 +308,6 @@ class PGApp extends LitElement {
         );
 
         store.setData("gist", {}, true);
-    }
-
-    protected createRenderRoot(): HTMLElement | DocumentFragment {
-        return this;
-    }
-
-    protected render() {
-        return html`
-            <div class="is-container no-scrollbar" style="height: 100%;">
-                <ui-stack-layout></ui-stack-layout>
-            </div>
-
-            ${this.renderAppBar()} ${this.renderDrawer()} ${this.renderDialogs()}
-        `;
     }
 
     private renderAppBar() {
@@ -769,18 +781,6 @@ class PGApp extends LitElement {
         `;
     }
 
-    protected firstUpdated(_changedProperties: PropertyValues): void {
-        this.style.position = "fixed";
-        this.style.top = "0";
-        this.style.right = "0";
-        this.style.bottom = "0";
-        this.style.left = "0";
-
-        this.registerPages();
-        this.handleStackLayoutChanges();
-        this.storeEventHandlers();
-    }
-
     private registerPages() {
         const stack = PGApp.queryStackLayout()!;
 
@@ -924,15 +924,15 @@ class PGApp extends LitElement {
             true,
         );
 
-        this.drawerGroupItemsRendering(store, "alertLists");
-        this.drawerGroupItemsRendering(store, "metalSheets");
-        this.drawerGroupItemsRendering(store, "vis");
-        this.drawerGroupItemsRendering(store, "visBookmarks");
-        this.drawerGroupItemsRendering(store, "visData");
-        this.drawerGroupItemsRendering(store, "special");
+        this.createDrawerGroupItems(store, "alertLists");
+        this.createDrawerGroupItems(store, "metalSheets");
+        this.createDrawerGroupItems(store, "vis");
+        this.createDrawerGroupItems(store, "visBookmarks");
+        this.createDrawerGroupItems(store, "visData");
+        this.createDrawerGroupItems(store, "special");
     }
 
-    private drawerGroupItemsRendering(
+    private createDrawerGroupItems(
         store: types.PGStore,
         storeKey: keyof lib.listStores.ListStoreData,
     ) {

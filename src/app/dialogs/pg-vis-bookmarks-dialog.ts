@@ -1,6 +1,7 @@
-import { html, LitElement } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { keyed } from "lit/directives/keyed.js";
+
+import { html, LitElement } from "lit";
 import { UIDialog, UIInput } from "ui";
 
 /**
@@ -16,6 +17,14 @@ class PGVisBookmarksDialog extends LitElement {
 
     @property({ type: Boolean, attribute: "invalid-title", reflect: true })
     invalidTitle?: boolean;
+
+    public show() {
+        this.querySelector<UIDialog>("ui-dialog")!.show();
+    }
+
+    public close() {
+        this.querySelector<UIDialog>("ui-dialog")!.close();
+    }
 
     protected createRenderRoot(): HTMLElement | DocumentFragment {
         return this;
@@ -66,14 +75,6 @@ class PGVisBookmarksDialog extends LitElement {
                 </ui-button>
             </ui-dialog>
         `;
-    }
-
-    public show() {
-        this.querySelector<UIDialog>("ui-dialog")!.show();
-    }
-
-    public close() {
-        this.querySelector<UIDialog>("ui-dialog")!.close();
     }
 }
 

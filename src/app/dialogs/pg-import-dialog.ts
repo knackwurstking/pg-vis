@@ -11,63 +11,6 @@ class PGImportDialog extends LitElement {
     @property({ type: String, attribute: "store-key", reflect: true })
     storeKey?: keyof lib.listStores.ListStoreData;
 
-    protected createRenderRoot(): HTMLElement | DocumentFragment {
-        return this;
-    }
-
-    protected render(): TemplateResult<1> {
-        return html`
-            <ui-dialog title="Import" modal inert>
-                <ui-flex-grid gap="0.5rem">
-                    <ui-flex-grid-item>
-                        <ui-label
-                            secondary="Zum Importieren von einer Datei leer lassen"
-                        ></ui-label>
-                    </ui-flex-grid-item>
-
-                    <ui-flex-grid-item>
-                        ${keyed(
-                            this.storeKey,
-                            html` <ui-input name="gistID" type="text" title="Gist ID"></ui-input> `,
-                        )}
-                    </ui-flex-grid-item>
-                </ui-flex-grid>
-
-                <ui-button
-                    slot="actions"
-                    variant="full"
-                    color="secondary"
-                    @click=${async () => this.close()}
-                >
-                    Abbrechen
-                </ui-button>
-
-                <ui-button
-                    slot="actions"
-                    variant="full"
-                    color="primary"
-                    @click=${async () => {
-                        if (!this.storeKey) return;
-
-                        const gistID = this.querySelector<UIInput>(
-                            `ui-dialog ui-input[name="gistID"]`,
-                        )!.value;
-
-                        if (gistID === "") await this.importFromFile();
-                        else await lib.importFromGist(this.storeKey, gistID);
-
-                        const stack = app.PGApp.queryStackLayout()!;
-                        stack.clearStack();
-
-                        this.close();
-                    }}
-                >
-                    OK
-                </ui-button>
-            </ui-dialog>
-        `;
-    }
-
     public async importFromFile() {
         if (!this.storeKey) return;
 
@@ -123,6 +66,63 @@ class PGImportDialog extends LitElement {
 
     public close() {
         this.querySelector<UIDialog>("ui-dialog")!.close();
+    }
+
+    protected createRenderRoot(): HTMLElement | DocumentFragment {
+        return this;
+    }
+
+    protected render(): TemplateResult<1> {
+        return html`
+            <ui-dialog title="Import" modal inert>
+                <ui-flex-grid gap="0.5rem">
+                    <ui-flex-grid-item>
+                        <ui-label
+                            secondary="Zum Importieren von einer Datei leer lassen"
+                        ></ui-label>
+                    </ui-flex-grid-item>
+
+                    <ui-flex-grid-item>
+                        ${keyed(
+                            this.storeKey,
+                            html` <ui-input name="gistID" type="text" title="Gist ID"></ui-input> `,
+                        )}
+                    </ui-flex-grid-item>
+                </ui-flex-grid>
+
+                <ui-button
+                    slot="actions"
+                    variant="full"
+                    color="secondary"
+                    @click=${async () => this.close()}
+                >
+                    Abbrechen
+                </ui-button>
+
+                <ui-button
+                    slot="actions"
+                    variant="full"
+                    color="primary"
+                    @click=${async () => {
+                        if (!this.storeKey) return;
+
+                        const gistID = this.querySelector<UIInput>(
+                            `ui-dialog ui-input[name="gistID"]`,
+                        )!.value;
+
+                        if (gistID === "") await this.importFromFile();
+                        else await lib.importFromGist(this.storeKey, gistID);
+
+                        const stack = app.PGApp.queryStackLayout()!;
+                        stack.clearStack();
+
+                        this.close();
+                    }}
+                >
+                    OK
+                </ui-button>
+            </ui-dialog>
+        `;
     }
 }
 

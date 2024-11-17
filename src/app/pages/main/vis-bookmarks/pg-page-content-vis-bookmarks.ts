@@ -15,6 +15,35 @@ class PGPageContentVisBookmarks extends app.PGPageContent<types.Bookmarks> {
 
     private cleanup = new CleanUp();
 
+    connectedCallback(): void {
+        super.connectedCallback();
+
+        // Update content if "visBookmarks" data changes
+
+        const store = app.PGApp.queryStore();
+        const listsStore = lib.listStore("visBookmarks");
+
+        this.cleanup.add(
+            store.addListener("visBookmarks", (data) => {
+                if (this.data === undefined) return;
+
+                const listKey = listsStore.listKey(this.data);
+
+                for (const list of data) {
+                    if (listsStore.listKey(list) === listKey) {
+                        this.data = list;
+                        break;
+                    }
+                }
+            }),
+        );
+    }
+
+    disconnectedCallback(): void {
+        super.disconnectedCallback();
+        this.cleanup.run();
+    }
+
     protected render() {
         super.renderListsAppBarTitle("visBookmarks", this.data);
 
@@ -71,35 +100,6 @@ class PGPageContentVisBookmarks extends app.PGPageContent<types.Bookmarks> {
                 },
             });
         });
-    }
-
-    connectedCallback(): void {
-        super.connectedCallback();
-
-        // Update content if "visBookmarks" data changes
-
-        const store = app.PGApp.queryStore();
-        const listsStore = lib.listStore("visBookmarks");
-
-        this.cleanup.add(
-            store.addListener("visBookmarks", (data) => {
-                if (this.data === undefined) return;
-
-                const listKey = listsStore.listKey(this.data);
-
-                for (const list of data) {
-                    if (listsStore.listKey(list) === listKey) {
-                        this.data = list;
-                        break;
-                    }
-                }
-            }),
-        );
-    }
-
-    disconnectedCallback(): void {
-        super.disconnectedCallback();
-        this.cleanup.run();
     }
 
     private productFromStore(store: types.PGStore, product: types.Product): types.Product {

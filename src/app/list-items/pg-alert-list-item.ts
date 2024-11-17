@@ -1,5 +1,6 @@
-import { html, LitElement, PropertyValues } from "lit";
 import { customElement, property } from "lit/decorators.js";
+
+import { html, LitElement, PropertyValues } from "lit";
 
 import * as app from "@app";
 import * as types from "@types";

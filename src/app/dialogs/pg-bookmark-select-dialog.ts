@@ -1,6 +1,7 @@
-import { html, LitElement } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { keyed } from "lit/directives/keyed.js";
+
+import { html, LitElement } from "lit";
 import { CleanUp, UIDialog } from "ui";
 
 import * as app from "@app";
@@ -13,6 +14,34 @@ class PGBookmarkSelectDialog extends LitElement {
     product?: types.Product;
 
     private cleanup = new CleanUp();
+
+    public isBookmark(bookmarks: types.Bookmarks): boolean {
+        if (this.product === undefined) return false;
+
+        const productKey = lib.productKey(this.product);
+        return (
+            bookmarks.data.find((product) => lib.productKey(product) === productKey) !== undefined
+        );
+    }
+
+    public show() {
+        this.querySelector<UIDialog>("ui-dialog")!.show();
+    }
+
+    public close() {
+        this.querySelector<UIDialog>("ui-dialog")!.close();
+    }
+
+    connectedCallback(): void {
+        super.connectedCallback();
+        const store = app.PGApp.queryStore();
+        this.cleanup.add(store.addListener("visBookmarks", () => this.requestUpdate()));
+    }
+
+    disconnectedCallback(): void {
+        super.disconnectedCallback();
+        this.cleanup.run();
+    }
 
     protected createRenderRoot(): HTMLElement | DocumentFragment {
         return this;
@@ -103,34 +132,6 @@ class PGBookmarkSelectDialog extends LitElement {
         }
 
         return html`<ui-flex-grid gap="0.25rem">${content}</ui-flex-grid>`;
-    }
-
-    connectedCallback(): void {
-        super.connectedCallback();
-        const store = app.PGApp.queryStore();
-        this.cleanup.add(store.addListener("visBookmarks", () => this.requestUpdate()));
-    }
-
-    disconnectedCallback(): void {
-        super.disconnectedCallback();
-        this.cleanup.run();
-    }
-
-    public isBookmark(bookmarks: types.Bookmarks): boolean {
-        if (this.product === undefined) return false;
-
-        const productKey = lib.productKey(this.product);
-        return (
-            bookmarks.data.find((product) => lib.productKey(product) === productKey) !== undefined
-        );
-    }
-
-    public show() {
-        this.querySelector<UIDialog>("ui-dialog")!.show();
-    }
-
-    public close() {
-        this.querySelector<UIDialog>("ui-dialog")!.close();
     }
 }
 

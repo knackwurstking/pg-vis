@@ -1,5 +1,6 @@
-import { css, html, LitElement, PropertyValues } from "lit";
 import { customElement, property } from "lit/decorators.js";
+
+import { css, html, LitElement, PropertyValues } from "lit";
 import { UISearch } from "ui";
 
 @customElement("pg-search-bar")
@@ -52,6 +53,10 @@ class PGSearchBar extends LitElement {
         `;
     }
 
+    public value(): string {
+        return this.shadowRoot?.querySelector<UISearch>("ui-search")?.value || "";
+    }
+
     protected render() {
         return html`
             <ui-search
@@ -70,10 +75,6 @@ class PGSearchBar extends LitElement {
 
     protected firstUpdated(_changedProperties: PropertyValues): void {
         this.classList.add("has-backdrop-blur");
-    }
-
-    public value(): string {
-        return this.shadowRoot?.querySelector<UISearch>("ui-search")?.value || "";
     }
 }
 

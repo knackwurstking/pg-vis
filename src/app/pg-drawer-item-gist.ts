@@ -1,5 +1,6 @@
-import { LitElement } from "lit";
 import { customElement, property } from "lit/decorators.js";
+
+import { LitElement } from "lit";
 import { CleanUp, html, styles, UISpinner } from "ui";
 
 import * as app from "@app";
@@ -17,6 +18,41 @@ class PGDrawerItemGist extends LitElement {
     gistID: string = "";
 
     protected cleanup = new CleanUp();
+
+    public startSpinner() {
+        this.querySelector<UISpinner>("ui-spinner")!.style.display = "block";
+    }
+
+    public stopSpinner() {
+        this.querySelector<UISpinner>("ui-spinner")!.style.display = "none";
+    }
+
+    connectedCallback(): void {
+        super.connectedCallback();
+
+        const store = app.PGApp.queryStore();
+
+        this.cleanup.add(
+            store.addListener(
+                "gist",
+                (data) => {
+                    if (!this.storeKey) return;
+                    const listsStore = lib.listStore(this.storeKey);
+                    const part = data[listsStore.key()];
+                    if (part !== undefined) {
+                        this.gistID = part.id;
+                        this.revision = part.revision;
+                    }
+                },
+                true,
+            ),
+        );
+    }
+
+    disconnectedCallback(): void {
+        super.disconnectedCallback();
+        this.cleanup.run();
+    }
 
     protected createRenderRoot(): HTMLElement | DocumentFragment {
         return this;
@@ -72,41 +108,6 @@ class PGDrawerItemGist extends LitElement {
                 } as CSSStyleDeclaration)}"
             ></ui-spinner>
         `;
-    }
-
-    connectedCallback(): void {
-        super.connectedCallback();
-
-        const store = app.PGApp.queryStore();
-
-        this.cleanup.add(
-            store.addListener(
-                "gist",
-                (data) => {
-                    if (!this.storeKey) return;
-                    const listsStore = lib.listStore(this.storeKey);
-                    const part = data[listsStore.key()];
-                    if (part !== undefined) {
-                        this.gistID = part.id;
-                        this.revision = part.revision;
-                    }
-                },
-                true,
-            ),
-        );
-    }
-
-    disconnectedCallback(): void {
-        super.disconnectedCallback();
-        this.cleanup.run();
-    }
-
-    public startSpinner() {
-        this.querySelector<UISpinner>("ui-spinner")!.style.display = "block";
-    }
-
-    public stopSpinner() {
-        this.querySelector<UISpinner>("ui-spinner")!.style.display = "none";
     }
 }
 

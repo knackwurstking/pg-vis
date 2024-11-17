@@ -16,6 +16,23 @@ class PGPageContentProduct extends app.PGPageContent<types.Product> {
 
     private cleanup = new CleanUp();
 
+    connectedCallback(): void {
+        super.connectedCallback();
+
+        const store = app.PGApp.queryStore();
+
+        this.cleanup.add(
+            store.addListener("visData", () => {
+                this.updateContent();
+            }),
+        );
+    }
+
+    disconnectedCallback(): void {
+        super.disconnectedCallback();
+        this.cleanup.run();
+    }
+
     protected render() {
         return html`
             <div class="container no-scrollbar" style="width: 100%; height: 100%; overflow: auto;">
@@ -108,23 +125,6 @@ class PGPageContentProduct extends app.PGPageContent<types.Product> {
             }
             hasHeading = false;
         }
-    }
-
-    connectedCallback(): void {
-        super.connectedCallback();
-
-        const store = app.PGApp.queryStore();
-
-        this.cleanup.add(
-            store.addListener("visData", () => {
-                this.updateContent();
-            }),
-        );
-    }
-
-    disconnectedCallback(): void {
-        super.disconnectedCallback();
-        this.cleanup.run();
     }
 
     private isLotto(match: string | null, lotto: string): boolean {

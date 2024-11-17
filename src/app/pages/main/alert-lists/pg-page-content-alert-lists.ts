@@ -1,9 +1,9 @@
-import { html, PropertyValues, TemplateResult } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
+
+import { html, PropertyValues, TemplateResult } from "lit";
 import { CleanUp, styles, UIIconButton } from "ui";
 
 import * as app from "@app";
-import * as lib from "@lib";
 import * as types from "@types";
 
 @customElement("pg-page-content-alert-lists")
@@ -16,8 +16,25 @@ class PGPageContentAlertLists extends app.PGPageContent<types.AlertList> {
 
     private cleanup = new CleanUp();
 
-    public querySearchBar(): app.PGSearchBar | null {
-        return this.querySelector<app.PGSearchBar>(`pg-search-bar`);
+    connectedCallback(): void {
+        super.connectedCallback();
+
+        // App Bar Events
+
+        const appBar = app.PGApp.queryAppBar()!;
+
+        const onClick = async () => (this.searchBar = !this.searchBar);
+
+        const appBarSearchButton = appBar.contentName("search")!.contentAt<UIIconButton>(0);
+
+        appBarSearchButton.addEventListener("click", onClick);
+
+        this.cleanup.add(() => appBarSearchButton.removeEventListener("click", onClick));
+    }
+
+    disconnectedCallback(): void {
+        super.disconnectedCallback();
+        this.cleanup.run();
     }
 
     protected render(): TemplateResult<1> {
@@ -75,28 +92,7 @@ class PGPageContentAlertLists extends app.PGPageContent<types.AlertList> {
         });
     }
 
-    connectedCallback(): void {
-        super.connectedCallback();
-
-        // App Bar Events
-
-        const appBar = app.PGApp.queryAppBar()!;
-
-        const onClick = async () => (this.searchBar = !this.searchBar);
-
-        const appBarSearchButton = appBar.contentName("search")!.contentAt<UIIconButton>(0);
-
-        appBarSearchButton.addEventListener("click", onClick);
-
-        this.cleanup.add(() => appBarSearchButton.removeEventListener("click", onClick));
-    }
-
-    disconnectedCallback(): void {
-        super.disconnectedCallback();
-        this.cleanup.run();
-    }
-
-    public async filter(value: string) {
+    private async filter(value: string) {
         const container = this.querySelector(`.list`)!;
         const regex: RegExp = app.PGSearchBar.generateRegExp(value);
 

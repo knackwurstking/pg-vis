@@ -1,5 +1,6 @@
-import { html, PropertyValues } from "lit";
 import { customElement, property } from "lit/decorators.js";
+
+import { html, PropertyValues } from "lit";
 import { CleanUp, UIIconButton, UIInput } from "ui";
 
 import * as app from "@app";
@@ -17,6 +18,35 @@ export class PGPageContentVisDataEdit extends app.PGPageContent<types.VisDataEnt
     private modified: boolean = false;
     private deleteEntry: boolean = false;
     private cleanup = new CleanUp();
+
+    connectedCallback(): void {
+        super.connectedCallback();
+
+        const onTrashClick = () => {
+            if (!confirm(`Möchten Sie diesen Eintrag wirklich löschen?`)) {
+                return;
+            }
+
+            this.modified = true;
+            this.deleteEntry = true;
+            app.PGApp.queryStackLayout()!.goBack();
+        };
+
+        const trashButton = app.PGApp.queryAppBar()!
+            .contentName("trash")!
+            .contentAt<UIIconButton>(0);
+
+        trashButton.addEventListener("click", onTrashClick);
+
+        this.cleanup.add(() => {
+            trashButton.removeEventListener("click", onTrashClick);
+        });
+    }
+
+    disconnectedCallback(): void {
+        super.disconnectedCallback();
+        this.cleanup.run();
+    }
 
     protected render() {
         if (
@@ -149,35 +179,6 @@ export class PGPageContentVisDataEdit extends app.PGPageContent<types.VisDataEnt
                 return data;
             });
         });
-    }
-
-    connectedCallback(): void {
-        super.connectedCallback();
-
-        const onTrashClick = () => {
-            if (!confirm(`Möchten Sie diesen Eintrag wirklich löschen?`)) {
-                return;
-            }
-
-            this.modified = true;
-            this.deleteEntry = true;
-            app.PGApp.queryStackLayout()!.goBack();
-        };
-
-        const trashButton = app.PGApp.queryAppBar()!
-            .contentName("trash")!
-            .contentAt<UIIconButton>(0);
-
-        trashButton.addEventListener("click", onTrashClick);
-
-        this.cleanup.add(() => {
-            trashButton.removeEventListener("click", onTrashClick);
-        });
-    }
-
-    disconnectedCallback(): void {
-        super.disconnectedCallback();
-        this.cleanup.run();
     }
 }
 

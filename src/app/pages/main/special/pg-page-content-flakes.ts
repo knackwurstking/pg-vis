@@ -33,6 +33,27 @@ class PGPageContentFlakes extends LitElement {
         P5: "Presse 5",
     };
 
+    connectedCallback(): void {
+        super.connectedCallback();
+
+        // App Bar Events
+
+        const appBar = app.PGApp.queryAppBar()!;
+
+        const onClick = async () => (this.searchBar = !this.searchBar);
+
+        const appBarSearchButton = appBar.contentName("search")!.contentAt<UIIconButton>(0);
+
+        appBarSearchButton.addEventListener("click", onClick);
+
+        this.cleanup.add(() => appBarSearchButton.removeEventListener("click", onClick));
+    }
+
+    disconnectedCallback(): void {
+        super.disconnectedCallback();
+        this.cleanup.run();
+    }
+
     protected createRenderRoot(): HTMLElement | DocumentFragment {
         return this;
     }
@@ -40,6 +61,26 @@ class PGPageContentFlakes extends LitElement {
     protected render() {
         if (this.data === undefined) return html``;
         return this.renderFlakes(this.data.data);
+    }
+
+    protected updated(_changedProperties: PropertyValues): void {
+        const pgSearchBar = this.querySelector<app.PGSearchBar>(`pg-search-bar`)!;
+        const container = this.querySelector<HTMLElement>(`div.container`)!;
+
+        setTimeout(() => {
+            if (this.searchBar) {
+                container.style.paddingTop = `calc(${pgSearchBar.clientHeight}px + var(--ui-spacing) * 2)`;
+                const filter = app.PGSearchBar.generateRegExp(pgSearchBar.value());
+                if (this.flakesFilter?.toString() !== filter.toString()) {
+                    this.flakesFilter = app.PGSearchBar.generateRegExp(pgSearchBar.value());
+                }
+            } else {
+                container.style.paddingTop = `0`;
+                if (this.flakesFilter !== undefined) {
+                    this.flakesFilter = undefined;
+                }
+            }
+        });
     }
 
     private renderFlakes(entries: types.FlakesEntry[]) {
@@ -234,47 +275,6 @@ class PGPageContentFlakes extends LitElement {
                 `;
             },
         );
-    }
-
-    protected updated(_changedProperties: PropertyValues): void {
-        const pgSearchBar = this.querySelector<app.PGSearchBar>(`pg-search-bar`)!;
-        const container = this.querySelector<HTMLElement>(`div.container`)!;
-
-        setTimeout(() => {
-            if (this.searchBar) {
-                container.style.paddingTop = `calc(${pgSearchBar.clientHeight}px + var(--ui-spacing) * 2)`;
-                const filter = app.PGSearchBar.generateRegExp(pgSearchBar.value());
-                if (this.flakesFilter?.toString() !== filter.toString()) {
-                    this.flakesFilter = app.PGSearchBar.generateRegExp(pgSearchBar.value());
-                }
-            } else {
-                container.style.paddingTop = `0`;
-                if (this.flakesFilter !== undefined) {
-                    this.flakesFilter = undefined;
-                }
-            }
-        });
-    }
-
-    connectedCallback(): void {
-        super.connectedCallback();
-
-        // App Bar Events
-
-        const appBar = app.PGApp.queryAppBar()!;
-
-        const onClick = async () => (this.searchBar = !this.searchBar);
-
-        const appBarSearchButton = appBar.contentName("search")!.contentAt<UIIconButton>(0);
-
-        appBarSearchButton.addEventListener("click", onClick);
-
-        this.cleanup.add(() => appBarSearchButton.removeEventListener("click", onClick));
-    }
-
-    disconnectedCallback(): void {
-        super.disconnectedCallback();
-        this.cleanup.run();
     }
 
     private checkFilter(entry: types.FlakesEntry): boolean {

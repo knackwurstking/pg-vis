@@ -1,5 +1,6 @@
-import { html, LitElement, PropertyValues } from "lit";
 import { customElement, property } from "lit/decorators.js";
+
+import { html, LitElement, PropertyValues } from "lit";
 
 import * as app from "@app";
 import * as types from "@types";
@@ -73,6 +74,22 @@ class PGVisDataListItem extends LitElement {
         `;
     }
 
+    protected updated(_changedProperties: PropertyValues): void {
+        this.querySelector(`ui-text[name="value"]`)!.innerHTML = (
+            this.data?.value || ""
+        ).replaceAll("\n", "<br/>");
+
+        if (this.route) {
+            this.addEventListener("click", this.clickHandler);
+            this.role = "button";
+            this.style.cursor = "pointer";
+        } else {
+            this.removeEventListener("click", this.clickHandler);
+            this.role = null;
+            this.style.cursor = "default";
+        }
+    }
+
     private renderFilterTags() {
         if (this.data === undefined || !this.showFilter) return html``;
 
@@ -118,22 +135,6 @@ class PGVisDataListItem extends LitElement {
 
             ${content.length > 0 ? html`<br />` : ""}
         `;
-    }
-
-    protected updated(_changedProperties: PropertyValues): void {
-        this.querySelector(`ui-text[name="value"]`)!.innerHTML = (
-            this.data?.value || ""
-        ).replaceAll("\n", "<br/>");
-
-        if (this.route) {
-            this.addEventListener("click", this.clickHandler);
-            this.role = "button";
-            this.style.cursor = "pointer";
-        } else {
-            this.removeEventListener("click", this.clickHandler);
-            this.role = null;
-            this.style.cursor = "default";
-        }
     }
 }
 

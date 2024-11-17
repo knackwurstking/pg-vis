@@ -1,6 +1,7 @@
-import { html, LitElement } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { keyed } from "lit/directives/keyed.js";
+
+import { html, LitElement } from "lit";
 import { UIDialog, UIInput, UISelect } from "ui";
 
 /**
@@ -22,6 +23,14 @@ class PGMetalSheetTableDialog extends LitElement {
 
     @property({ type: Number, attribute: "press", reflect: true })
     press: number = -1;
+
+    public show() {
+        this.querySelector<UIDialog>("ui-dialog")!.show();
+    }
+
+    public close() {
+        this.querySelector<UIDialog>("ui-dialog")!.close();
+    }
 
     protected createRenderRoot(): HTMLElement | DocumentFragment {
         return this;
@@ -136,14 +145,6 @@ class PGMetalSheetTableDialog extends LitElement {
                 </ui-label>
             `,
         );
-    }
-
-    public show() {
-        this.querySelector<UIDialog>("ui-dialog")!.show();
-    }
-
-    public close() {
-        this.querySelector<UIDialog>("ui-dialog")!.close();
     }
 }
 

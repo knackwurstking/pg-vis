@@ -1,7 +1,8 @@
-import { html, LitElement } from "lit";
 import { DirectiveResult } from "lit/async-directive.js";
 import { customElement, property } from "lit/decorators.js";
 import { keyed, Keyed } from "lit/directives/keyed.js";
+
+import { html, LitElement } from "lit";
 import { UIDialog, UIInput } from "ui";
 
 /**
@@ -22,6 +23,14 @@ class PGMetalSheetEntryDialog extends LitElement {
 
     @property({ type: Number, attribute: "table-index", reflect: true })
     tableIndex: number = -1;
+
+    public show() {
+        this.querySelector<UIDialog>("ui-dialog")!.show();
+    }
+
+    public close() {
+        this.querySelector<UIDialog>("ui-dialog")!.close();
+    }
 
     protected createRenderRoot(): HTMLElement | DocumentFragment {
         return this;
@@ -103,14 +112,6 @@ class PGMetalSheetEntryDialog extends LitElement {
                 Löschen
             </ui-button>
         `;
-    }
-
-    public show() {
-        this.querySelector<UIDialog>("ui-dialog")!.show();
-    }
-
-    public close() {
-        this.querySelector<UIDialog>("ui-dialog")!.close();
     }
 }
 

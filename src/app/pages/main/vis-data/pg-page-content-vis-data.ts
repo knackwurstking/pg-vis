@@ -1,7 +1,8 @@
-import { html, PropertyValues } from "lit";
 import { DirectiveResult } from "lit/async-directive.js";
 import { customElement, state } from "lit/decorators.js";
 import { Keyed, keyed } from "lit/directives/keyed.js";
+
+import { html, PropertyValues } from "lit";
 import { CleanUp, UIIconButton } from "ui";
 
 import * as app from "@app";
@@ -14,6 +15,56 @@ export class PGPageContentVisData extends app.PGPageContent<types.VisData> {
     private listItems: DirectiveResult<typeof Keyed>[] = [];
 
     private cleanup = new CleanUp();
+
+    connectedCallback(): void {
+        super.connectedCallback();
+
+        // App Bar: "edit"
+
+        const onEditClick = () => {
+            if (this.data === undefined) return;
+
+            const dialog = this.querySelector<app.PGVisDataDialog>(`pg-vis-data-dialog`)!;
+
+            dialog.invalidTitle = false;
+            dialog.title = this.data.title;
+
+            dialog.show();
+        };
+
+        const editButton = app.PGApp.queryAppBar()!.contentName("edit")!.contentAt<UIIconButton>(0);
+
+        editButton.addEventListener("click", onEditClick);
+
+        this.cleanup.add(() => {
+            editButton.removeEventListener("click", onEditClick);
+        });
+
+        // Re-Render if "visData" store changes
+
+        const listsStore = lib.listStore("visData");
+        const store = app.PGApp.queryStore();
+
+        this.cleanup.add(
+            store.addListener("visData", (data) => {
+                if (this.data === undefined) return;
+
+                const listKey = listsStore.listKey(this.data);
+
+                for (const list of data) {
+                    if (listsStore.listKey(list) === listKey) {
+                        this.data = list;
+                        break;
+                    }
+                }
+            }),
+        );
+    }
+
+    disconnectedCallback(): void {
+        super.disconnectedCallback();
+        this.cleanup.run();
+    }
 
     // TODO: Add search bar...
     protected render() {
@@ -37,6 +88,12 @@ export class PGPageContentVisData extends app.PGPageContent<types.VisData> {
 
             ${this.renderDialog()}
         `;
+    }
+
+    protected updated(changedProperties: PropertyValues): void {
+        if (changedProperties.has("data")) {
+            setTimeout(() => this.updateContent());
+        }
     }
 
     private renderActions() {
@@ -108,12 +165,6 @@ export class PGPageContentVisData extends app.PGPageContent<types.VisData> {
         return html` <pg-vis-data-dialog @submit=${submit}></pg-vis-data-dialog> `;
     }
 
-    protected updated(changedProperties: PropertyValues): void {
-        if (changedProperties.has("data")) {
-            setTimeout(() => this.updateContent());
-        }
-    }
-
     private updateContent() {
         this.listItems = [];
         if (this.data === undefined) return;
@@ -134,56 +185,6 @@ export class PGPageContentVisData extends app.PGPageContent<types.VisData> {
                 `,
             );
         });
-    }
-
-    connectedCallback(): void {
-        super.connectedCallback();
-
-        // App Bar: "edit"
-
-        const onEditClick = () => {
-            if (this.data === undefined) return;
-
-            const dialog = this.querySelector<app.PGVisDataDialog>(`pg-vis-data-dialog`)!;
-
-            dialog.invalidTitle = false;
-            dialog.title = this.data.title;
-
-            dialog.show();
-        };
-
-        const editButton = app.PGApp.queryAppBar()!.contentName("edit")!.contentAt<UIIconButton>(0);
-
-        editButton.addEventListener("click", onEditClick);
-
-        this.cleanup.add(() => {
-            editButton.removeEventListener("click", onEditClick);
-        });
-
-        // Re-Render if "visData" store changes
-
-        const listsStore = lib.listStore("visData");
-        const store = app.PGApp.queryStore();
-
-        this.cleanup.add(
-            store.addListener("visData", (data) => {
-                if (this.data === undefined) return;
-
-                const listKey = listsStore.listKey(this.data);
-
-                for (const list of data) {
-                    if (listsStore.listKey(list) === listKey) {
-                        this.data = list;
-                        break;
-                    }
-                }
-            }),
-        );
-    }
-
-    disconnectedCallback(): void {
-        super.disconnectedCallback();
-        this.cleanup.run();
     }
 }
 

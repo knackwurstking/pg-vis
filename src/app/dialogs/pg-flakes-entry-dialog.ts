@@ -18,6 +18,26 @@ class PGFlakesEntryDialog extends LitElement {
     @property({ type: Boolean, attribute: "index", reflect: true })
     create?: boolean;
 
+    public consumptionFor(slot: string): types.Consumption | null {
+        switch (slot) {
+            case "Main":
+                return this.entry?.primary || null;
+
+            default:
+                return this.entry?.secondary.find(
+                    (c) => c.slot === slot,
+                ) as types.Consumption | null;
+        }
+    }
+
+    public show() {
+        this.querySelector<UIDialog>("ui-dialog")!.show();
+    }
+
+    public close() {
+        this.querySelector<UIDialog>("ui-dialog")!.close();
+    }
+
     protected createRenderRoot(): HTMLElement | DocumentFragment {
         return this;
     }
@@ -188,26 +208,6 @@ class PGFlakesEntryDialog extends LitElement {
         }
 
         return 100 - secondaryPercent;
-    }
-
-    public consumptionFor(slot: string): types.Consumption | null {
-        switch (slot) {
-            case "Main":
-                return this.entry?.primary || null;
-
-            default:
-                return this.entry?.secondary.find(
-                    (c) => c.slot === slot,
-                ) as types.Consumption | null;
-        }
-    }
-
-    public show() {
-        this.querySelector<UIDialog>("ui-dialog")!.show();
-    }
-
-    public close() {
-        this.querySelector<UIDialog>("ui-dialog")!.close();
     }
 }
 

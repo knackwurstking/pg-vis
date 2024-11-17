@@ -1,5 +1,6 @@
-import { LitElement } from "lit";
 import { customElement, property } from "lit/decorators.js";
+
+import { LitElement } from "lit";
 
 import * as app from "@app";
 import * as lib from "@lib";
