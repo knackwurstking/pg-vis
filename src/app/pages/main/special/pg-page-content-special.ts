@@ -3,7 +3,6 @@ import { keyed } from "lit/directives/keyed.js";
 import { repeat } from "lit/directives/repeat.js";
 
 import { html } from "lit";
-import { CleanUp } from "ui";
 
 import * as app from "@app";
 import * as lib from "@lib";
@@ -12,7 +11,6 @@ import * as types from "@types";
 // TODO: Convert table to pdf for type "flakes"
 @customElement("pg-page-content-special")
 class PGPageContentSpecial extends app.PGPageContent<types.Special> {
-    private cleanup = new CleanUp();
     private towerSlots: types.TowerSlot[] = ["A", "C", "E", "G", "I", "K"];
 
     private pressConvert: Record<types.PressSlot, string> = {
@@ -215,17 +213,6 @@ class PGPageContentSpecial extends app.PGPageContent<types.Special> {
                 `;
             },
         );
-    }
-
-    connectedCallback(): void {
-        super.connectedCallback();
-
-        // TODO: Store handler - trigger re-render
-    }
-
-    disconnectedCallback(): void {
-        super.disconnectedCallback();
-        this.cleanup.run();
     }
 
     public sortEntries(entries: types.FlakesEntry[]): types.FlakesEntry[] {
