@@ -1,10 +1,10 @@
 import { customElement, property } from "lit/decorators.js";
 
-import { css, html, LitElement } from "lit";
+import { html, LitElement } from "lit";
 
 import * as types from "@types";
-import { UISearch } from "ui";
 import { repeat } from "lit/directives/repeat.js";
+import { UISearch } from "ui";
 
 /**
  * @fires change
