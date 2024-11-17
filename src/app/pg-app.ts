@@ -1,5 +1,6 @@
-import { html, LitElement, PropertyValues } from "lit";
 import { customElement } from "lit/decorators.js";
+
+import { html, LitElement, PropertyValues } from "lit";
 import {
     styles,
     svg,
@@ -898,6 +899,10 @@ class PGApp extends LitElement {
 
                 case "visDataEdit":
                     appBar.contentName("trash")!.show();
+                    break;
+
+                case "special":
+                    appBar.contentName("search")!.show();
                     break;
             }
         });

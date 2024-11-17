@@ -2,7 +2,8 @@ import { customElement, property, state } from "lit/decorators.js";
 import { keyed } from "lit/directives/keyed.js";
 import { repeat } from "lit/directives/repeat.js";
 
-import { html } from "lit";
+import { html, PropertyValues } from "lit";
+import { CleanUp, UIIconButton } from "ui";
 
 import * as app from "@app";
 import * as lib from "@lib";
@@ -11,8 +12,13 @@ import * as types from "@types";
 // TODO: Convert table to pdf for type "flakes"
 @customElement("pg-page-content-special")
 class PGPageContentSpecial extends app.PGPageContent<types.Special> {
+    @property({ type: Boolean, attribute: "search-bar", reflect: true })
+    searchBar?: boolean;
+
     @state()
-    private flakesFilter?: types.FlakesFilter;
+    private flakesFilter?: RegExp;
+
+    private cleanup = new CleanUp();
 
     private towerSlots: types.TowerSlot[] = ["A", "C", "E", "G", "I", "K"];
 
@@ -58,15 +64,16 @@ class PGPageContentSpecial extends app.PGPageContent<types.Special> {
         data.P5 = this.sortEntries(data.P5);
 
         return html`
-            <pg-flakes-filter-bar
-                @change=${async (ev: Event & { currentTarget: app.PGFlakesFilterBar }) => {
-                    this.flakesFilter = { ...ev.currentTarget.filter };
+            <pg-search-bar
+                title="RegExp (ex: main=90% a=5% c=5%)"
+                storage-key="${this.data?.title}"
+                ?active=${!!this.searchBar}
+                @change=${async (ev: Event & { currentTarget: app.PGSearchBar }) => {
+                    this.flakesFilter = app.PGSearchBar.generateRegExp(ev.currentTarget.value());
                 }}
-            ></pg-flakes-filter-bar>
+            ></pg-search-bar>
 
-            <br />
-
-            <div class="no-scrollbar" style="width: 100%; overflow-x: auto">
+            <div class="container no-scrollbar" style="width: 100%; height: 100%; overflow: auto">
                 ${Object.entries(data)
                     .filter(([_press, pressData]) => pressData.length > 0)
                     .map(([press, pressData]) =>
@@ -228,41 +235,51 @@ class PGPageContentSpecial extends app.PGPageContent<types.Special> {
         );
     }
 
+    protected updated(_changedProperties: PropertyValues): void {
+        const pgSearchBar = this.querySelector<app.PGSearchBar>(`pg-search-bar`)!;
+        const container = this.querySelector<HTMLElement>(`div.container`)!;
+
+        setTimeout(() => {
+            if (this.searchBar) {
+                container.style.paddingTop = `calc(${pgSearchBar.clientHeight}px + var(--ui-spacing) * 2)`;
+                const filter = app.PGSearchBar.generateRegExp(pgSearchBar.value());
+                if (this.flakesFilter?.toString() !== filter.toString()) {
+                    this.flakesFilter = app.PGSearchBar.generateRegExp(pgSearchBar.value());
+                }
+            } else {
+                container.style.paddingTop = `0`;
+                if (this.flakesFilter !== undefined) {
+                    this.flakesFilter = undefined;
+                }
+            }
+        });
+    }
+
+    connectedCallback(): void {
+        super.connectedCallback();
+
+        // App Bar Events
+
+        const appBar = app.PGApp.queryAppBar()!;
+
+        const onClick = async () => (this.searchBar = !this.searchBar);
+
+        const appBarSearchButton = appBar.contentName("search")!.contentAt<UIIconButton>(0);
+
+        appBarSearchButton.addEventListener("click", onClick);
+
+        this.cleanup.add(() => appBarSearchButton.removeEventListener("click", onClick));
+    }
+
+    disconnectedCallback(): void {
+        super.disconnectedCallback();
+        this.cleanup.run();
+    }
+
     private checkFilter(entry: types.FlakesEntry): boolean {
-        if (this.flakesFilter !== undefined) {
-            if (this.flakesFilter.c1 !== null) {
-                if (entry.compatatore !== this.flakesFilter.c1) {
-                    return false;
-                }
-            }
-
-            if (this.flakesFilter.main !== null) {
-                if (
-                    entry.primary.percent !== this.flakesFilter.main &&
-                    entry.primary.value !== this.flakesFilter.main
-                ) {
-                    return false;
-                }
-            }
-
-            let index = -1;
-            slot_filter_loop: for (const slotFilter of this.flakesFilter.towerSlots) {
-                index++;
-
-                if (slotFilter === null) continue;
-
-                const secondary = entry.secondary.filter(
-                    (consumption) => consumption.slot === this.towerSlots[index],
-                );
-
-                if (secondary.length === 0 && slotFilter > 0) return false;
-
-                for (const consumption of secondary) {
-                    if (consumption.percent !== slotFilter && consumption.value !== slotFilter) {
-                        return false;
-                    }
-                }
-            }
+        if (this.searchBar && this.flakesFilter !== undefined) {
+            const searchString = `presse=${entry.press},c1=${entry.compatatore},main=${entry.primary.percent}%,main=${entry.primary.value},${entry.secondary.map((c) => `${c.slot}=${c.percent}%,${c.slot}=${c.value}`).join(",")}`;
+            return this.flakesFilter.test(searchString);
         }
 
         return true;
