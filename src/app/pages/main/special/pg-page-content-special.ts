@@ -35,7 +35,6 @@ class PGPageContentSpecial extends app.PGPageContent<types.Special> {
     }
 
     private renderFlakes(entries: types.FlakesEntry[]) {
-        console.warn("render flakes data...");
         const data: Record<types.PressSlot, types.FlakesEntry[]> = {
             P0: [],
             P2: [],
