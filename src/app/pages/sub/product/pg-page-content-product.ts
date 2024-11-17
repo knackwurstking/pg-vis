@@ -30,22 +30,6 @@ class PGPageContentProduct extends app.PGPageContent<types.Product> {
 
                     <ui-flex-grid-row justify="flex-end" wrap="warp" gap="0.25rem">
                         <ui-flex-grid-item flex="0">
-                            <ui-button
-                                variant="outline"
-                                color="secondary"
-                                ripple
-                                @click=${() => {
-                                    // TODO: Edit or Add flakes... (dialog?)
-                                }}
-                            >
-                                <ui-svg style="width: 2rem;">
-                                    ${svg.misc.cornflakesOpenBox}
-                                </ui-svg>
-                                Flakes
-                            </ui-button>
-                        </ui-flex-grid-item>
-
-                        <ui-flex-grid-item flex="0">
                             <pg-bookmarks-action
                                 product="${JSON.stringify(this.data) || ""}"
                             ></pg-bookmarks-action>
