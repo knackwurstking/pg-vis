@@ -35,6 +35,7 @@ class PGPageContentSpecial extends app.PGPageContent<types.Special> {
     }
 
     private renderFlakes(entries: types.FlakesEntry[]) {
+        console.warn("render flakes data...");
         const data: Record<types.PressSlot, types.FlakesEntry[]> = {
             P0: [],
             P2: [],
@@ -64,10 +65,19 @@ class PGPageContentSpecial extends app.PGPageContent<types.Special> {
 
             <pg-flakes-entry-dialog
                 @delete=${(ev: Event & { currentTarget: app.PGFlakesEntryDialog }) => {
-                    // TODO: ...
+                    const target = ev.currentTarget;
+                    if (target.create || this.data === undefined) return;
+
+                    this.data.data = this.data.data.filter((entry) => entry !== target.entry);
+                    this.data = { ...this.data };
                 }}
                 @submit=${(ev: Event & { currentTarget: app.PGFlakesEntryDialog }) => {
-                    // TODO: ...
+                    const target = ev.currentTarget;
+                    if (target.create) {
+                        // TODO: Add a new one
+                    } else {
+                        // TODO: Remove entry from data
+                    }
                 }}
             ></pg-flakes-entry-dialog>
         `;
