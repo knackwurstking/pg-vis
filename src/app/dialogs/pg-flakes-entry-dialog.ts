@@ -2,7 +2,7 @@ import { customElement, property } from "lit/decorators.js";
 import { repeat } from "lit/directives/repeat.js";
 
 import { html, LitElement } from "lit";
-import { UIDialog } from "ui";
+import { UIDialog, UIInput } from "ui";
 
 import * as types from "@types";
 
@@ -53,9 +53,8 @@ class PGFlakesEntryDialog extends LitElement {
         `;
     }
 
-    // TODO: Add Input handler and update entry
     private renderInputs() {
-        const towerSlots: ("Main" | types.TowerSlot)[] = ["A", "C", "E", "G", "I", "K"];
+        const towerSlots: types.TowerSlot[] = ["A", "C", "E", "G", "I", "K"];
 
         return html`
             <ui-flex-grid>
@@ -73,12 +72,21 @@ class PGFlakesEntryDialog extends LitElement {
                         title="Geschwindigkeit"
                         type="number"
                         value=${this.entry?.compatatore || ""}
+                        @change=${(ev: Event & { currentTarget: UIInput }) => {
+                            if (this.entry === undefined) return;
+                            this.entry.compatatore = parseInt(ev.currentTarget.value || "0", 10);
+                        }}
                     ></ui-input>
 
                     <ui-input
                         title="Geschwindigkeit"
                         type="number"
                         value=${this.entry?.primary.value || ""}
+                        @change=${(ev: Event & { currentTarget: UIInput }) => {
+                            if (this.entry === undefined) return;
+                            this.entry.primary.value = parseFloat(ev.currentTarget.value || "0");
+                            this.entry.primary.percent = this.calcMainPercent();
+                        }}
                     ></ui-input>
                 </ui-flex-grid-row>
             </ui-flex-grid>
@@ -97,13 +105,53 @@ class PGFlakesEntryDialog extends LitElement {
                                 <ui-input
                                     title="Prozent"
                                     type="number"
-                                    value=${consumption?.percent}
+                                    value=${consumption?.percent || 0}
+                                    @change=${(ev: Event & { currentTarget: UIInput }) => {
+                                        if (this.entry === undefined) return;
+
+                                        const value = parseFloat(ev.currentTarget.value || "0");
+
+                                        try {
+                                            for (const entry of this.entry.secondary) {
+                                                if (entry.slot === slot) {
+                                                    entry.percent = value;
+                                                    return;
+                                                }
+                                            }
+
+                                            this.entry.secondary.push({
+                                                slot: slot,
+                                                percent: value,
+                                                value: 0,
+                                            });
+                                        } finally {
+                                            this.entry.primary.percent = this.calcMainPercent();
+                                        }
+                                    }}
                                 ></ui-input>
 
                                 <ui-input
                                     title="Geschwindigkeit"
                                     type="number"
-                                    value=${consumption?.value}
+                                    value=${consumption?.value || 0}
+                                    @change=${(ev: Event & { currentTarget: UIInput }) => {
+                                        if (this.entry === undefined) return;
+
+                                        const value = parseFloat(ev.currentTarget.value || "0");
+
+                                        for (const entry of this.entry.secondary) {
+                                            if (entry.slot === slot) {
+                                                entry.value = value;
+                                                return;
+                                            }
+                                        }
+
+                                        this.entry.secondary.push({
+                                            slot: slot,
+                                            percent: 0,
+                                            value: value,
+                                        });
+                                    }}
                                 ></ui-input>
                             </ui-flex-grid-row>
                         </ui-flex-grid>
@@ -129,6 +177,17 @@ class PGFlakesEntryDialog extends LitElement {
                 Löschen
             </ui-button>
         `;
+    }
+
+    private calcMainPercent(): number {
+        if (this.entry === undefined) return 100;
+
+        let secondaryPercent = 0;
+        for (const entry of this.entry.secondary) {
+            secondaryPercent += entry.percent;
+        }
+
+        return 100 - secondaryPercent;
     }
 
     public consumptionFor(slot: string): types.Consumption | null {
