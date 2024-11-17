@@ -2,6 +2,8 @@
 
 ## v1.1.0 — [unreleased]
 
+- [ ] Add Print to pdf button for metal sheets page
+- [ ] Add Print to pdf button for flakes (special) page
 - [x] Add "Flakes" special
 - [x] Add "mm" suffix to vis search (product list items)
 - [x] Create a GitHub pages repo for dev
