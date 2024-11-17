@@ -2,17 +2,14 @@
 
 ## v1.1.0 — [unreleased]
 
-- [ ] Add "Flakes" special
+- [x] Add "Flakes" special
 - [x] Add "mm" suffix to vis search (product list items)
 - [x] Create a GitHub pages repo for dev
 - [x] Convert project to typescript using lit
 - [x] Update icons, just like the picow-led-server project
-- [ ] ~Fix: Cancel a gist pull will set the revision to undefined~
-- [ ] ~Fix: Cancel a gist push will not remove the spinner~
-- [ ] ~Fix: Revisions counter stopping at 30, need to get the real revisions count~
 - [x] Open a confirmation dialog before deleting a drawer item
 - [x] Vis Lists entries should always take current vis product data if possible
-- [ ] Add a search bar for vis data
+- [x] Add a search bar for vis data
 - [x] Edit Vis Data from the product page, just click to edit
 - [x] Make Vis Data "title" optional
 - [x] Redesign the gist (drawer) and import/download items
