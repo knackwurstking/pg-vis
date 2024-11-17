@@ -908,9 +908,9 @@ class PGApp extends LitElement {
                     break;
 
                 case "special":
-                    // TODO: Add pdf button
                     switch ((current.children[0] as app.PGPageContentSpecial).data?.type) {
                         case "flakes":
+                            appBar.contentName("printer")!.show();
                             appBar.contentName("search")!.show();
                             break;
                     }
