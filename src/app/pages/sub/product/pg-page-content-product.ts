@@ -1,9 +1,9 @@
-import { html, PropertyValues } from "lit";
-import { CleanUp } from "ui";
-
-import { Keyed, keyed } from "lit/directives/keyed.js";
 import { DirectiveResult } from "lit/async-directive.js";
 import { customElement, state } from "lit/decorators.js";
+import { Keyed, keyed } from "lit/directives/keyed.js";
+
+import { html, PropertyValues } from "lit";
+import { CleanUp, svg } from "ui";
 
 import * as app from "@app";
 import * as lib from "@lib";
@@ -29,6 +29,22 @@ class PGPageContentProduct extends app.PGPageContent<types.Product> {
                     </ui-flex-grid-item>
 
                     <ui-flex-grid-row justify="flex-end" wrap="warp" gap="0.25rem">
+                        <ui-flex-grid-item flex="0">
+                            <ui-button
+                                variant="outline"
+                                color="secondary"
+                                ripple
+                                @click=${() => {
+                                    // TODO: Edit or Add flakes... (dialog?)
+                                }}
+                            >
+                                <ui-svg style="width: 2rem;">
+                                    ${svg.misc.cornflakesOpenBox}
+                                </ui-svg>
+                                Flakes
+                            </ui-button>
+                        </ui-flex-grid-item>
+
                         <ui-flex-grid-item flex="0">
                             <pg-bookmarks-action
                                 product="${JSON.stringify(this.data) || ""}"
