@@ -131,6 +131,10 @@ export interface FlakesSpecial {
     type: "flakes";
     title: string;
     data: FlakesEntry[];
+    /**
+     * Contains just a list with lotto codes
+     */
+    products: string[];
 }
 
 export interface FlakesEntry {
