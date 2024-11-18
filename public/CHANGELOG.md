@@ -1,6 +1,30 @@
 # Changelog
 
-## v1.0.0 — 2024-08-12
+## v1.1.0 — [unreleased]
+
+- [ui v1.1.0](https://github.com/knackwurstking/ui)
+
+**TODOs**:
+- [ ] Replace "pg-vis-dev.github.io" with "pg-vis.github.io" before publishing
+
+**General**:
+
+- Switched code base to typescript using https://lit.dev/
+- Take bookmarks data from the "Vis" if possible
+- Renamed "Vis Listen" to "Vis Bookmarks"
+- Changed "Vis Data": "title" field is now optional
+- Changed gist handling
+
+**Added**:
+
+- Added a new theme "gruvbox" & a theme switcher
+- Added vis data edit to the product page
+- Added a search bar to the metal sheets page
+- Added confirmation dialogs to delete action on drawer items
+- Added new drawer group: "Spezial" for "Flakes"
+- Added download (printer) button to metal sheets and flakes pages
+
+## v1.0.0 — [2024-08-12]
 
 - [ui version v0.2.16](https://github.com/knackwurstking/ui)
 
@@ -32,7 +56,7 @@
 - Fixed product page rendering
 - Fixed drag and drop for metal-sheets
 
-## v0.0.32 — 2024-08-06
+## v0.0.32 — [2024-08-06]
 
 **Added**:
 
@@ -49,7 +73,7 @@
 - Import button from drawer group "Vis Listen"
 - New button from drawer group "Vis Listen"
 
-## v0.0.31 2024-08-05
+## v0.0.31 — [2024-08-05]
 
 **Added**:
 
@@ -68,7 +92,7 @@
 - `NewVisDataDialog` constructor query select, moved to render method
 - `SearchBar` height
 
-## v0.0.30 2024-07-28
+## v0.0.30 — [2024-07-28]
 
 **Added**:
 
@@ -92,14 +116,14 @@
 - Delete button from the metal-sheet-list page
 - Share for the vis page
 
-## v0.0.29 2024-07-27
+## v0.0.29 — [2024-07-27]
 
 **Changed**:
 
 - Code clean up
 - [ui version v0.2.12](https://github.com/knackwurstking/ui)
 
-## v0.0.28 2024-07-20
+## v0.0.28 — [2024-07-20]
 
 **Changed**:
 
@@ -120,7 +144,7 @@
 - Refresh on pull down (overscroll-behavior: none)
 - Pointer lock on scroll for drawer and vis list
 
-## v0.0.27 2024-07-19
+## v0.0.27 — [2024-07-19]
 
 **Added**:
 
@@ -136,47 +160,47 @@
 
 - [ui version v0.2.10](https://github.com/knackwurstking/ui)
 
-## v0.0.26 2024-07-19
+## v0.0.26 — [2024-07-19]
 
 - Added a vis-search-bar
 - [ui version v0.2.9](https://github.com/knackwurstking/ui)
 
-## v0.0.25 2024-07-19
+## v0.0.25 — [2024-07-19]
 
 - Fixed app-bar title (vis-page)
 - Fixed git push
 
-## v0.0.24 2024-07-18
+## v0.0.24 — [2024-07-18]
 
 - Fixed typo in pull alert, "already up to..."
 - Changed vis title when imported from a local text file
 - Add vis data entries as secondary text
 - [ui version v0.2.8](https://github.com/knackwurstking/ui)
 
-## v0.0.23 2024-07-15 Quick Fix
+## v0.0.23 — [2024-07-15 Quick Fix]
 
 - Fixed vis import from gist
 
-## v0.0.22 2024-07-15
+## v0.0.22 — [2024-07-15]
 
 - Allow downgrade and "repull" on a (gist) pull
 - Revision will raise up once after each successful (gist) push
 - Added vis and product page
 - [ui version v0.2.7](https://github.com/knackwurstking/ui)
 
-## v0.0.21 2024-07-12
+## v0.0.21 — [2024-07-12]
 
 - Fixed press 0 not showing for drawer items
 - Zip metal-sheet files before downloading
 
-## v0.0.20 2024-07-12
+## v0.0.20 — [2024-07-12]
 
 - Moved press info to primary text (metal-sheet-lists)
 - Changed cursor to pointer for metal-sheet table rows
 - Changed metal-sheet table row role to "button"
 - [ui version v0.2.6](https://github.com/knackwurstking/ui)
 
-## v0.0.19 2024-07-11
+## v0.0.19 — [2024-07-11]
 
 - Removed `gistID` from data: `MetalSheetList`, `AlertList`
 - Fixed gist push, check differences and sort before
@@ -185,12 +209,12 @@
 - Added icon-button alongside the import buttons, for exporting files
 - [ui version v0.2.5](https://github.com/knackwurstking/ui)
 
-## v0.0.18 2024-07-10
+## v0.0.18 — [2024-07-10]
 
 - Added the missing delete button for metal-sheet-lists entries
 - Added press info to the `appBarTitle` store for metal-sheet-lists pages
 
-## v0.0.17 2024-07-09
+## v0.0.17 — [2024-07-09]
 
 - Added gist pull and push handlers
 - [ui version v0.2.4](https://github.com/knackwurstking/ui)
@@ -201,7 +225,7 @@
 
   - Allow "push" to files instead of gist
 
-## v0.0.16 2024-07-05
+## v0.0.16 — [2024-07-05]
 
 - Added confirmation dialog before deleting a drawer item
 - Kicked notes from the `MetalSheetList`
@@ -212,16 +236,16 @@
 - Add user input via `innerHTML` instead of `innerText`
 - [ui version v0.2.3](https://github.com/knackwurstking/ui)
 
-## v0.0.15 2024-07-03
+## v0.0.15 — [2024-07-03]
 
 - Share the current metal-sheet-list
 
-## v0.0.14 2024-07-03
+## v0.0.14 — [2024-07-03]
 
 - Improved overflow handling for the metal-sheet-lists-page
 - Fixed "Import" buttons (broken in v0.0.13)
 
-## v0.0.13 2024-07-03
+## v0.0.13 — [2024-07-03]
 
 - Create new metal-sheet-lists
 - Edit current metal-sheet-list
@@ -231,7 +255,7 @@
 - Drag'n'Drop for metal-sheet-list table entries
 - [ui version v0.2.2](https://github.com/knackwurstking/ui)
 
-## v0.0.12 2024-06-28
+## v0.0.12 — [2024-06-28]
 
 - Fixed app-bar items for the "metal-sheet-lists" page
 - Added revisions number for each drawer group
@@ -241,38 +265,38 @@
 
 - Reimport all (gists) data
 
-## v0.0.11 2024-06-27
+## v0.0.11 — [2024-06-27]
 
 - Fixed deletion for drawer group items
 - Fixed the not implemented error
 
-## v0.0.10 2024-06-27
+## v0.0.10 — [2024-06-27]
 
 - PATCH gist database repo, needs a token with write access for gist repos
 - Update drawer section: "Blech Listen", new item added (pull/push gist data)
 
-## v0.0.9 2024-06-27
+## v0.0.9 — [2024-06-27]
 
 - Fixed padding for "Blech Listen" page
 
-## v0.0.8 2024-06-26
+## v0.0.8 — [2024-06-26]
 
 - Enable drawer section: "Blech Listen"
 - Added "Blech Listen" page(s) (READONLY for now, work-in-progress)
 - Set html language to "de"
 - [ui version v0.2.1](https://github.com/knackwurstking/ui)
 
-## v0.0.7 2024-06-23
+## v0.0.7 — [2024-06-23]
 
 - Added storage handling for the search-bar
 - [ui version v0.2.0](https://github.com/knackwurstking/ui)
 
-## v0.0.5 2024-06-23
+## v0.0.5 — [2024-06-23]
 
 - Allow importing multiple files at once
 - Use blur drawer backdrop filter
 
-## v0.0.4 2024-06-23
+## v0.0.4 — [2024-06-23]
 
 - Import dialog for downloading a gist file from GitHub
 
