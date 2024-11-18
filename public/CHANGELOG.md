@@ -2,6 +2,10 @@
 
 ## v1.1.1 — [2024-11-18]
 
+**Changed**:
+
+- Highlighting for flakes percentages
+
 **Fixed**:
 
 - Fixed sorting for flakes entries
