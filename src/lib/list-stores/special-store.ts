@@ -30,11 +30,10 @@ export class SpecialStore extends lib.listStores.ListStore<"special"> {
 
         switch (list.type) {
             case "flakes":
-                validateFlakesData(list.data);
+                if (validateFlakesData(list.data)) {
+                    return list;
+                }
                 break;
-
-            default:
-                return null;
         }
 
         return null;
@@ -51,7 +50,7 @@ function validateFlakesData(data: any): boolean {
             return false;
         }
 
-        if (!["P0", "P2", "P3", "P4", "P5"].includes(part.press)) {
+        if (!["P0", "P4", "P5"].includes(part.press)) {
             return false;
         }
 
