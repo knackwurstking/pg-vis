@@ -2,6 +2,8 @@ import { customElement, property, state } from "lit/decorators.js";
 import { keyed } from "lit/directives/keyed.js";
 import { repeat } from "lit/directives/repeat.js";
 
+import * as jspdf from "jspdf";
+import jsPDFAutotable from "jspdf-autotable";
 import { html, LitElement, PropertyValues } from "lit";
 import { CleanUp, UIIconButton } from "ui";
 
@@ -9,7 +11,6 @@ import * as app from "@app";
 import * as lib from "@lib";
 import * as types from "@types";
 
-// TODO: Convert table to pdf for type "flakes"
 @customElement("pg-page-content-flakes")
 class PGPageContentFlakes extends LitElement {
     @property({ type: Object, attribute: "data", reflect: true })
@@ -20,6 +21,14 @@ class PGPageContentFlakes extends LitElement {
 
     @state()
     private flakesFilter?: RegExp;
+
+    private record: Record<types.PressSlot, types.FlakesEntry[]> = {
+        P0: [],
+        P2: [],
+        P3: [],
+        P4: [],
+        P5: [],
+    };
 
     private cleanup = new CleanUp();
 
@@ -33,20 +42,90 @@ class PGPageContentFlakes extends LitElement {
         P5: "Presse 5",
     };
 
+    private onSearchClick = async () => (this.searchBar = !this.searchBar);
+
+    private onPrinterClick = async () => {
+        if (this.data === undefined) return;
+
+        const pdf = new jspdf.jsPDF();
+        const listStore = lib.listStore("special");
+
+        const createTable = (press: types.PressSlot, entries: types.FlakesEntry[]) => {
+            if (entries.length === 0) return;
+
+            const bodyData = [];
+            for (const entry of entries) {
+                const slots = [
+                    entry.compatatore,
+                    `${entry.primary.percent}%\n${entry.primary.value}`,
+                    ``,
+                    ``,
+                    ``,
+                    ``,
+                    ``,
+                    ``,
+                ];
+
+                for (const consumption of entry.secondary) {
+                    slots[this.towerSlots.indexOf(consumption.slot) + 2] =
+                        `${consumption.percent}%\n${consumption.value}`;
+                }
+
+                bodyData.push(slots);
+            }
+
+            jsPDFAutotable(pdf, {
+                head: [
+                    [
+                        {
+                            content: `${listStore.listKey(this.data!)} - ${this.pressConvert[press]}`,
+                            colSpan: this.towerSlots.length + 2, // + "C1" + "Main"
+                            styles: {
+                                fillColor: [255, 255, 255],
+                                textColor: [0, 0, 0],
+                            },
+                        },
+                    ],
+                    ["C1", "Main", ...this.towerSlots],
+                ],
+                body: bodyData,
+                theme: "grid",
+                styles: {
+                    valign: "middle",
+                    halign: "center",
+                    font: "Courier",
+                    fontSize: 12,
+                },
+                headStyles: {
+                    fillColor: [0, 0, 0],
+                    textColor: [255, 255, 255],
+                },
+            });
+        };
+
+        for (const [k, v] of Object.entries(this.record)) {
+            createTable(k as types.PressSlot, v);
+        }
+
+        pdf.save(listStore.fileName(this.data).replace(/(\.json)$/, ".pdf"));
+    };
+
     connectedCallback(): void {
         super.connectedCallback();
 
-        // App Bar Events
-
         const appBar = app.PGApp.queryAppBar()!;
 
-        const onClick = async () => (this.searchBar = !this.searchBar);
+        // App Bar Events - "search"
 
-        const appBarSearchButton = appBar.contentName("search")!.contentAt<UIIconButton>(0);
+        const searchButton = appBar.contentName("search")!.contentAt<UIIconButton>(0);
+        searchButton.addEventListener("click", this.onSearchClick);
+        this.cleanup.add(() => searchButton.removeEventListener("click", this.onSearchClick));
 
-        appBarSearchButton.addEventListener("click", onClick);
+        // App Bar Events - "printer"
 
-        this.cleanup.add(() => appBarSearchButton.removeEventListener("click", onClick));
+        const printerButton = appBar.contentName("printer")!.contentAt<UIIconButton>(0);
+        printerButton.addEventListener("click", this.onPrinterClick);
+        this.cleanup.add(() => printerButton.removeEventListener("click", this.onPrinterClick));
     }
 
     disconnectedCallback(): void {
@@ -84,25 +163,19 @@ class PGPageContentFlakes extends LitElement {
     }
 
     private renderFlakes(entries: types.FlakesEntry[]) {
-        const data: Record<types.PressSlot, types.FlakesEntry[]> = {
-            P0: [],
-            P2: [],
-            P3: [],
-            P4: [],
-            P5: [],
-        };
+        this.record = { P0: [], P2: [], P3: [], P4: [], P5: [] };
 
         for (const entry of entries) {
             if (this.checkFilter(entry)) {
-                data[entry.press]?.push(entry);
+                this.record[entry.press]?.push(entry);
             }
         }
 
-        data.P0 = this.sortEntries(data.P0);
-        data.P2 = this.sortEntries(data.P2);
-        data.P3 = this.sortEntries(data.P3);
-        data.P4 = this.sortEntries(data.P4);
-        data.P5 = this.sortEntries(data.P5);
+        this.record.P0 = this.sortEntries(this.record.P0);
+        this.record.P2 = this.sortEntries(this.record.P2);
+        this.record.P3 = this.sortEntries(this.record.P3);
+        this.record.P4 = this.sortEntries(this.record.P4);
+        this.record.P5 = this.sortEntries(this.record.P5);
 
         return html`
             <pg-search-bar
@@ -116,7 +189,7 @@ class PGPageContentFlakes extends LitElement {
             ></pg-search-bar>
 
             <div class="container no-scrollbar" style="width: 100%; height: 100%; overflow: auto">
-                ${Object.entries(data)
+                ${Object.entries(this.record)
                     .filter(([_press, pressData]) => pressData.length > 0)
                     .map(([press, pressData]) =>
                         this.renderFlakesTable(press as types.PressSlot, pressData),
