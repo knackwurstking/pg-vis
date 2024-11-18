@@ -24,8 +24,6 @@ class PGPageContentFlakes extends LitElement {
 
     private record: Record<types.PressSlot, types.FlakesEntry[]> = {
         P0: [],
-        P2: [],
-        P3: [],
         P4: [],
         P5: [],
     };
@@ -36,8 +34,6 @@ class PGPageContentFlakes extends LitElement {
 
     private pressConvert: Record<types.PressSlot, string> = {
         P0: "Presse 0",
-        P2: "Presse 2",
-        P3: "Presse 3",
         P4: "Presse 4",
         P5: "Presse 5",
     };
@@ -51,8 +47,6 @@ class PGPageContentFlakes extends LitElement {
         const listStore = lib.listStore("special");
 
         const createTable = (press: types.PressSlot, entries: types.FlakesEntry[]) => {
-            if (entries.length === 0) return;
-
             const bodyData = [];
             for (const entry of entries) {
                 const slots = [
@@ -163,7 +157,7 @@ class PGPageContentFlakes extends LitElement {
     }
 
     private renderFlakes(entries: types.FlakesEntry[]) {
-        this.record = { P0: [], P2: [], P3: [], P4: [], P5: [] };
+        this.record = { P0: [], P4: [], P5: [] };
 
         for (const entry of entries) {
             if (this.checkFilter(entry)) {
@@ -172,8 +166,6 @@ class PGPageContentFlakes extends LitElement {
         }
 
         this.record.P0 = this.sortEntries(this.record.P0);
-        this.record.P2 = this.sortEntries(this.record.P2);
-        this.record.P3 = this.sortEntries(this.record.P3);
         this.record.P4 = this.sortEntries(this.record.P4);
         this.record.P5 = this.sortEntries(this.record.P5);
 
@@ -189,11 +181,9 @@ class PGPageContentFlakes extends LitElement {
             ></pg-search-bar>
 
             <div class="container no-scrollbar" style="width: 100%; height: 100%; overflow: auto">
-                ${Object.entries(this.record)
-                    .filter(([_press, pressData]) => pressData.length > 0)
-                    .map(([press, pressData]) =>
-                        this.renderFlakesTable(press as types.PressSlot, pressData),
-                    )}
+                ${Object.entries(this.record).map(([press, pressData]) =>
+                    this.renderFlakesTable(press as types.PressSlot, pressData),
+                )}
             </div>
 
             <pg-flakes-entry-dialog

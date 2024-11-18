@@ -21,7 +21,7 @@ export type PGStackLayoutPage =
 export type Special = FlakesSpecial;
 
 export type TowerSlot = "A" | "C" | "E" | "G" | "I" | "K";
-export type PressSlot = "P0" | "P2" | "P3" | "P4" | "P5";
+export type PressSlot = "P0" | "P4" | "P5";
 
 export interface PGStoreEvents {
     theme: {
