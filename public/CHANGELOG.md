@@ -5,7 +5,8 @@
 - [ui v1.1.0](https://github.com/knackwurstking/ui)
 
 **TODOs**:
-- [ ] Replace "pg-vis-dev.github.io" with "pg-vis.github.io" before publishing
+- [x] Change dev app icons
+- [x] Replace "pg-vis-dev.github.io" with "pg-vis.github.io" before publishing [work-in-progress]
 
 **General**:
 
