@@ -320,7 +320,10 @@ class PGPageContentFlakes extends LitElement {
                         <td style="text-align: center;">${flakesEntry.compatatore}</td>
 
                         <td style="text-align: center;">
-                            ${flakesEntry.primary.percent}%<br />
+                            <span style="color: hsl(var(--ui-hsl-primary));">
+                                ${flakesEntry.primary.percent}%
+                            </span>
+                            <br />
                             ${flakesEntry.primary.value}
                         </td>
 
@@ -329,7 +332,10 @@ class PGPageContentFlakes extends LitElement {
                                 ? html`<td></td>`
                                 : html`
                                       <td style="text-align: center;">
-                                          ${slot.percent}%<br />
+                                          <span style="color: hsl(var(--ui-hsl-primary));">
+                                              ${slot.percent}%
+                                          </span>
+                                          <br />
                                           ${slot.value}
                                       </td>
                                   `,
