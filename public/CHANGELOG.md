@@ -2,24 +2,27 @@
 
 ## v1.1.0 — [unreleased]
 
-- [ ] Replace "pg-vis-dev.github.io" with "pg-vis.github.io" before publishing
-- [ ] ~Replace "pg-vis-dev:" with "pg-vis:"~
-
 - [ui v1.1.0](https://github.com/knackwurstking/ui)
+
+**TODOs**:
+- [ ] Replace "pg-vis-dev.github.io" with "pg-vis.github.io" before publishing
 
 **General**:
 
-- Added download (printer) button to metal sheets and flakes pages
-- Added new drawer group: "Spezial" for "Flakes"
-- Added confirmation dialogs to delete action on drawer items
+- Switched code base to typescript using https://lit.dev/
 - Take bookmarks data from the "Vis" if possible
 - Renamed "Vis Listen" to "Vis Bookmarks"
-- Added a search bar to the metal sheets page
-- Added vis data edit to the product page
 - Changed "Vis Data": "title" field is now optional
 - Changed gist handling
+
+**Added**:
+
 - Added a new theme "gruvbox" & a theme switcher
-- Switched code base to typescript using https://lit.dev/
+- Added vis data edit to the product page
+- Added a search bar to the metal sheets page
+- Added confirmation dialogs to delete action on drawer items
+- Added new drawer group: "Spezial" for "Flakes"
+- Added download (printer) button to metal sheets and flakes pages
 
 ## v1.0.0 — [2024-08-12]
 
