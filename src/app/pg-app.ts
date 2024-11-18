@@ -4,7 +4,6 @@ import { html, LitElement, PropertyValues } from "lit";
 import {
     styles,
     svg,
-    UIAppBar,
     UIDrawer,
     UIDrawerGroupItem,
     UIStackLayout,
@@ -28,8 +27,8 @@ class PGApp extends LitElement {
         return document.querySelector<UIThemeHandler>("ui-theme-handler")!;
     }
 
-    static queryAppBar(): UIAppBar | null {
-        return document.querySelector<UIAppBar>("ui-app-bar") || null;
+    static queryAppBar(): types.PGAppBar | null {
+        return document.querySelector<types.PGAppBar>("ui-app-bar") || null;
     }
 
     static queryDrawer(): UIDrawer | null {

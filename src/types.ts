@@ -1,8 +1,11 @@
 /// <reference types="vite-plugin-pwa/client" />
 
-import { UIStore, UIThemeHandlerTheme } from "ui";
+import { UIAppBar, UIStore, UIThemeHandlerTheme } from "ui";
 
 export type PGStore = UIStore<PGStoreEvents>;
+export type PGAppBar = UIAppBar<
+    "menu" | "back" | "title" | "edit" | "share" | "search" | "trash" | "printer"
+>;
 
 export type PGStackLayoutPage =
     | "alertLists"
