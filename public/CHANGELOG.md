@@ -4,15 +4,15 @@
 
 **Changed**:
 
-- Highlighting for flakes percentages
+- Changed Highlighting for flakes percentages
 
 **Fixed**:
 
-- Fixed flakes page positioning for safari browser (search bar broken)
+- Fixed missing search bar in safari, flakes page positioning
 - Fixed sorting for flakes entries
 - Fixed flakes data validation
-- Fixed zero consumptions on tower slots
-- Fixed flakes dialog, using keyed for inputs on entry object
+- Fixed zero consumption on tower slots
+- Fixed "flakes" dialog, using keyed for inputs on entry object
 
 ## v1.1.0 — [2024-11-18]
 
