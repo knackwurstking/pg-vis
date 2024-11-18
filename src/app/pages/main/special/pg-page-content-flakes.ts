@@ -356,7 +356,7 @@ class PGPageContentFlakes extends LitElement {
 
     private sortEntries(entries: types.FlakesEntry[]): types.FlakesEntry[] {
         return entries.sort(
-            (a, b) => a.primary.percent - b.primary.percent - (b.compatatore - a.compatatore),
+            (a, b) => a.primary.percent - b.primary.percent - (b.compatatore - a.compatatore) / 100,
         );
     }
 }
