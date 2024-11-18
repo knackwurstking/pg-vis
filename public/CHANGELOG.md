@@ -4,6 +4,8 @@
 
 **Fixed**:
 
+- Fixed sorting for flakes entries
+- Fixed flakes data validation
 - Fixed zero consumptions on tower slots
 - Fixed flakes dialog, using keyed for inputs on entry object
 
