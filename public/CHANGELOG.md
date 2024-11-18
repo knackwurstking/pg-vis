@@ -8,6 +8,7 @@
 
 **Fixed**:
 
+- Fixed flakes page positioning for safari browser (search bar broken)
 - Fixed sorting for flakes entries
 - Fixed flakes data validation
 - Fixed zero consumptions on tower slots
