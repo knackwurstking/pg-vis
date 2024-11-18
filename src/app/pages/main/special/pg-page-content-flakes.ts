@@ -128,6 +128,9 @@ class PGPageContentFlakes extends LitElement {
     }
 
     protected createRenderRoot(): HTMLElement | DocumentFragment {
+        this.style.width = "100%";
+        this.style.height = "100%";
+        this.style.display = "block";
         return this;
     }
 
