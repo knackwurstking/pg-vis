@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.1.1 — [2024-11-18]
+
+**Fixed**:
+
+- Fixed zero consumptions on tower slots
+- Fixed flakes dialog, using keyed for inputs on entry object
+
 ## v1.1.0 — [2024-11-18]
 
 - [ui v1.1.0](https://github.com/knackwurstking/ui)
