@@ -1,10 +1,10 @@
 import { customElement, property } from "lit/decorators.js";
-import { repeat } from "lit/directives/repeat.js";
 
 import { html, LitElement } from "lit";
 import { UIDialog, UIInput } from "ui";
 
 import * as types from "@types";
+import { keyed } from "lit/directives/keyed.js";
 
 /**
  * @fires submit
@@ -87,37 +87,47 @@ class PGFlakesEntryDialog extends LitElement {
                     </ui-flex-grid-item>
                 </ui-flex-grid-row>
 
-                <ui-flex-grid-row gap="0.25rem">
-                    <ui-input
-                        title="Geschwindigkeit"
-                        type="number"
-                        value=${this.entry?.compatatore || ""}
-                        @change=${(ev: Event & { currentTarget: UIInput }) => {
-                            if (this.entry === undefined) return;
-                            this.entry.compatatore = parseInt(ev.currentTarget.value || "0", 10);
-                        }}
-                    ></ui-input>
+                ${keyed(
+                    this.entry,
+                    html`
+                        <ui-flex-grid-row gap="0.25rem">
+                            <ui-input
+                                title="Geschwindigkeit"
+                                type="number"
+                                value=${this.entry?.compatatore || ""}
+                                @change=${(ev: Event & { currentTarget: UIInput }) => {
+                                    if (this.entry === undefined) return;
+                                    this.entry.compatatore = parseInt(
+                                        ev.currentTarget.value || "0",
+                                        10,
+                                    );
+                                }}
+                            ></ui-input>
 
-                    <ui-input
-                        title="Geschwindigkeit"
-                        type="number"
-                        value=${this.entry?.primary.value || ""}
-                        @change=${(ev: Event & { currentTarget: UIInput }) => {
-                            if (this.entry === undefined) return;
-                            this.entry.primary.value = parseFloat(ev.currentTarget.value || "0");
-                            this.entry.primary.percent = this.calcMainPercent();
-                        }}
-                    ></ui-input>
-                </ui-flex-grid-row>
+                            <ui-input
+                                title="Geschwindigkeit"
+                                type="number"
+                                value=${this.entry?.primary.value || ""}
+                                @change=${(ev: Event & { currentTarget: UIInput }) => {
+                                    if (this.entry === undefined) return;
+                                    this.entry.primary.value = parseFloat(
+                                        ev.currentTarget.value || "0",
+                                    );
+                                    this.entry.primary.percent = this.calcMainPercent();
+                                }}
+                            ></ui-input>
+                        </ui-flex-grid-row>
+                    `,
+                )}
             </ui-flex-grid>
 
-            ${repeat(
-                towerSlots,
-                (slot) => slot,
-                (slot) => {
-                    const consumption = this.consumptionFor(slot);
+            ${towerSlots.map((slot) => {
+                if (this.entry === undefined) return html``;
+                const consumption = this.consumptionFor(slot);
 
-                    return html`
+                return keyed(
+                    this.entry,
+                    html`
                         <ui-flex-grid>
                             <ui-secondary>${slot}</ui-secondary>
 
@@ -125,7 +135,7 @@ class PGFlakesEntryDialog extends LitElement {
                                 <ui-input
                                     title="Prozent"
                                     type="number"
-                                    value=${consumption?.percent || 0}
+                                    value=${consumption?.percent || ""}
                                     @change=${(ev: Event & { currentTarget: UIInput }) => {
                                         if (this.entry === undefined) return;
 
@@ -145,6 +155,7 @@ class PGFlakesEntryDialog extends LitElement {
                                                 value: 0,
                                             });
                                         } finally {
+                                            this.cleanEntry();
                                             this.entry.primary.percent = this.calcMainPercent();
                                         }
                                     }}
@@ -153,31 +164,35 @@ class PGFlakesEntryDialog extends LitElement {
                                 <ui-input
                                     title="Geschwindigkeit"
                                     type="number"
-                                    value=${consumption?.value || 0}
+                                    value=${consumption?.value || ""}
                                     @change=${(ev: Event & { currentTarget: UIInput }) => {
                                         if (this.entry === undefined) return;
 
                                         const value = parseFloat(ev.currentTarget.value || "0");
 
-                                        for (const entry of this.entry.secondary) {
-                                            if (entry.slot === slot) {
-                                                entry.value = value;
-                                                return;
+                                        try {
+                                            for (const entry of this.entry.secondary) {
+                                                if (entry.slot === slot) {
+                                                    entry.value = value;
+                                                    return;
+                                                }
                                             }
-                                        }
 
-                                        this.entry.secondary.push({
-                                            slot: slot,
-                                            percent: 0,
-                                            value: value,
-                                        });
+                                            this.entry.secondary.push({
+                                                slot: slot,
+                                                percent: 0,
+                                                value: value,
+                                            });
+                                        } finally {
+                                            this.cleanEntry();
+                                        }
                                     }}
                                 ></ui-input>
                             </ui-flex-grid-row>
                         </ui-flex-grid>
-                    `;
-                },
-            )}
+                    `,
+                );
+            })}
         `;
     }
 
@@ -197,6 +212,13 @@ class PGFlakesEntryDialog extends LitElement {
                 Löschen
             </ui-button>
         `;
+    }
+
+    private cleanEntry() {
+        if (this.entry === undefined) return;
+        this.entry.secondary = this.entry.secondary.filter(
+            (cons) => cons.percent !== 0 || cons.value !== 0,
+        );
     }
 
     private calcMainPercent(): number {
