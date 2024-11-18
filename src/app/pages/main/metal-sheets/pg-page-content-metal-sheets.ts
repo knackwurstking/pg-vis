@@ -2,37 +2,85 @@ import { customElement } from "lit/decorators.js";
 import { repeat } from "lit/directives/repeat.js";
 
 import { html, PropertyValues, TemplateResult } from "lit";
-import { CleanUp, draggable, styles, UIIconButton } from "ui";
+import { CleanUp, draggable, isAndroid, styles, UIIconButton } from "ui";
+import * as jspdf from "jspdf";
+import jsPDFAutotable from "jspdf-autotable";
 
 import * as app from "@app";
 import * as lib from "@lib";
 import * as types from "@types";
 
-// TODO: Convert table to pdf
 @customElement("pg-page-content-metal-sheets")
 class PGPageContentMetalSheets extends app.PGPageContent<types.MetalSheet> {
     private cleanup = new CleanUp();
 
+    private onEditClick = async () => {
+        if (!this.data) return;
+
+        this.openTableDialog({
+            format: this.data.format,
+            toolID: this.data.toolID,
+            press: this.data.data.press,
+        });
+    };
+
+    private onPrinterClick = () => {
+        if (this.data === undefined) return;
+
+        const pdf = new jspdf.jsPDF();
+        const listStore = lib.listStore("metalSheets");
+
+        jsPDFAutotable(pdf, {
+            head: [
+                [
+                    {
+                        content: `${listStore.listKey(this.data)}`,
+                        colSpan: this.data.data.table.header.length,
+                        styles: {
+                            fillColor: [255, 255, 255],
+                            textColor: [0, 0, 0],
+                        },
+                    },
+                ],
+                this.data.data.table.header,
+            ],
+            body: this.data.data.table.data,
+            theme: "grid",
+            styles: {
+                valign: "middle",
+                halign: "center",
+                font: "Courier",
+                fontStyle: "bold",
+                fontSize: 12,
+            },
+            headStyles: {
+                fillColor: [0, 0, 0],
+                textColor: [255, 255, 255],
+            },
+        });
+
+        pdf.save(listStore.fileName(this.data).replace(/(\.json)$/, ".pdf"));
+    };
+
     connectedCallback(): void {
         super.connectedCallback();
 
-        // App Bar Events
-        const onClick = async () => {
-            if (!this.data) return;
+        const appBar = app.PGApp.queryAppBar()!;
 
-            this.openTableDialog({
-                format: this.data.format,
-                toolID: this.data.toolID,
-                press: this.data.data.press,
-            });
-        };
+        // App Bar Event - "edit"
 
-        const editButton = app.PGApp.queryAppBar()!.contentName("edit")!.contentAt<UIIconButton>(0);
-
-        editButton.addEventListener("click", onClick);
-
+        const editButton = appBar.contentName("edit")!.contentAt<UIIconButton>(0);
+        editButton.addEventListener("click", this.onEditClick);
         this.cleanup.add(() => {
-            editButton.removeEventListener("click", onClick);
+            editButton.removeEventListener("click", this.onEditClick);
+        });
+
+        // App Bar Event - "printer"
+
+        const printerButton = appBar.contentName("printer")!.contentAt<UIIconButton>(0);
+        printerButton.addEventListener("click", this.onPrinterClick);
+        this.cleanup.add(() => {
+            printerButton.removeEventListener("click", this.onPrinterClick);
         });
     }
 
