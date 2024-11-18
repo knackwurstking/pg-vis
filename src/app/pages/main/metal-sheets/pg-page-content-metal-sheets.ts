@@ -1,10 +1,10 @@
 import { customElement } from "lit/decorators.js";
 import { repeat } from "lit/directives/repeat.js";
 
-import { html, PropertyValues, TemplateResult } from "lit";
-import { CleanUp, draggable, isAndroid, styles, UIIconButton } from "ui";
 import * as jspdf from "jspdf";
 import jsPDFAutotable from "jspdf-autotable";
+import { html, PropertyValues, TemplateResult } from "lit";
+import { CleanUp, draggable, styles, UIIconButton } from "ui";
 
 import * as app from "@app";
 import * as lib from "@lib";
