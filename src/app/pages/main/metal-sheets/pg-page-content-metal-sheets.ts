@@ -24,7 +24,7 @@ class PGPageContentMetalSheets extends app.PGPageContent<types.MetalSheet> {
         });
     };
 
-    private onPrinterClick = () => {
+    private onPrinterClick = async () => {
         if (this.data === undefined) return;
 
         const pdf = new jspdf.jsPDF();
