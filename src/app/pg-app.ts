@@ -227,18 +227,10 @@ class PGApp extends LitElement {
                                 padding: "0.25rem",
                                 fontSize: "0.85rem",
                                 textTransform: "none",
+                                cursor: "default",
                             } as CSSStyleDeclaration)}"
                             variant="ghost"
-                            color="primary"
-                            ripple
-                            @click=${() => {
-                                // TODO: Open build info dialog
-                                // NOTE: Old version
-                                // const versionElement = this.querySelector("ui-button.version");
-                                // versionElement.ui.events.on("click", () => {
-                                //     utils.create.buildInfoDialog();
-                                // });
-                            }}
+                            color="secondary"
                         >
                             ${constants.version} - [Build: ${constants.build}]
                         </ui-button>
