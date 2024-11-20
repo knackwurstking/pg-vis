@@ -130,7 +130,7 @@ export class PGPageContentVisDataEdit extends app.PGPageContent<types.VisDataEnt
                         <ui-input
                             name="thickness"
                             title="Stärke (Filter, Optional)"
-                            type="number"
+                            type="text"
                             value=${this.data.thickness || ""}
                             @change=${async (ev: Event & { currentTarget: UIInput }) => {
                                 this.data!.thickness = ev.currentTarget.value || null;
