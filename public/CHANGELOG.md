@@ -1,5 +1,11 @@
 # Changelog
 
+#  v1.1.2 — [unreleased]
+
+**Changed**:
+
+- Changed input type from number to text
+
 ## v1.1.1 — [2024-11-18]
 
 **Changed**:
