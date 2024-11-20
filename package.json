@@ -30,7 +30,7 @@
         "jszip-utils": "^0.1.0",
         "lit": "^3.2.1",
         "octokit": "^4.0.2",
-        "ui": "knackwurstking/ui#v1.1.0",
+        "ui": "knackwurstking/ui#v1.1.1",
         "vite-tsconfig-paths": "^5.1.2"
     }
 }
