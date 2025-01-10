@@ -5,6 +5,12 @@
 > - Replace "pg-vis.github.io" with "pg-vis-dev.github.io"
 > - Change store prefix from "pg-vis:" to "pg-vis-dev:"
 
+## v?.?.? [unreleased]
+
+**TODO**:
+
+- [ ] Move active items to the top of the metal sheet list in the drawer
+
 ## v1.1.3 — [2025-01-10]
 
 **Fixed**:

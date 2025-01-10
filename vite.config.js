@@ -48,20 +48,20 @@ const manifestForPlugIn = {
         display: "standalone",
         scope: ".",
         start_url: "./",
-        publicPath: "/pg-vis.github.io",
+        publicPath: "/pg-vis-dev.github.io",
     },
 };
 
 export default defineConfig({
     plugins: [VitePWA(manifestForPlugIn), tsconfigPaths()],
     clearScreen: false,
-    base: "/pg-vis.github.io/",
+    base: "/pg-vis-dev.github.io/",
 
     //build: {
     //    outDir: "dist/",
     //},
 
     build: {
-        outDir: "../pg-vis.github.io/",
+        outDir: "../pg-vis-dev.github.io/",
     },
 });
