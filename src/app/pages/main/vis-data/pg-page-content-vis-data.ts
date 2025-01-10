@@ -40,7 +40,7 @@ export class PGPageContentVisData extends app.PGPageContent<types.VisData> {
         const onEditClick = () => {
             if (this.data === undefined) return;
 
-            const dialog = this.querySelector<app.PGVisDataDialog>(`pg-vis-data-dialog`)!;
+            const dialog = this.querySelector<app.PGVisDataDialog>(`pg-vis-data-dialog.editList`)!;
 
             dialog.invalidTitle = false;
             dialog.title = this.data.title;
@@ -205,7 +205,7 @@ export class PGPageContentVisData extends app.PGPageContent<types.VisData> {
             }
         };
 
-        return html` <pg-vis-data-dialog @submit=${submit}></pg-vis-data-dialog> `;
+        return html` <pg-vis-data-dialog class="editList" @submit=${submit}></pg-vis-data-dialog> `;
     }
 
     private updateContent() {

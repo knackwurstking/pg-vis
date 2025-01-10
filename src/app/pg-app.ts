@@ -52,7 +52,7 @@ class PGApp extends LitElement {
     }
 
     static queryVisDataDialog(): app.PGVisDataDialog | null {
-        return document.querySelector<app.PGVisDataDialog>(`pg-vis-data-dialog`);
+        return document.querySelector<app.PGVisDataDialog>(`pg-vis-data-dialog.newList`);
     }
 
     constructor() {
@@ -337,7 +337,7 @@ class PGApp extends LitElement {
                             color="secondary"
                             @click=${() => {
                                 const dialog = this.querySelector<app.PGMetalSheetTableDialog>(
-                                    `pg-metal-sheet-table-dialog`,
+                                    `pg-metal-sheet-table-dialog.newList`,
                                 )!;
 
                                 dialog.format = "";
@@ -502,6 +502,7 @@ class PGApp extends LitElement {
             <pg-import-dialog></pg-import-dialog>
 
             <pg-metal-sheet-table-dialog
+                class="newList"
                 title="Neue Liste"
                 @submit=${(ev: Event & { currentTarget: app.PGMetalSheetTableDialog }) => {
                     const format = ev.currentTarget.format;
@@ -550,11 +551,12 @@ class PGApp extends LitElement {
                         }
                     }
 
-                    listsStore.addToStore(store, [], true);
+                    listsStore.addToStore(store, [newData], true);
                 }}
             ></pg-metal-sheet-table-dialog>
 
             <pg-vis-data-dialog
+                class="newList"
                 @submit=${(ev: Event & { currentTarget: app.PGVisDataDialog }) => {
                     const title = ev.currentTarget.title;
                     const listsStore = lib.listStore("visData");

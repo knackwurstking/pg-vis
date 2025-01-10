@@ -158,6 +158,7 @@ class PGPageContentMetalSheets extends app.PGPageContent<types.MetalSheet> {
             ></pg-metal-sheet-entry-dialog>
 
             <pg-metal-sheet-table-dialog
+                class="editList"
                 title="Bearbeiten"
                 @submit=${(ev: Event & { currentTarget: app.PGMetalSheetTableDialog }) => {
                     if (!this.data) return;
@@ -268,7 +269,7 @@ class PGPageContentMetalSheets extends app.PGPageContent<types.MetalSheet> {
 
     private openTableDialog(data: { format: string; toolID: string; press: number }) {
         const dialog = this.querySelector<app.PGMetalSheetTableDialog>(
-            `pg-metal-sheet-table-dialog`,
+            `pg-metal-sheet-table-dialog.editList`,
         )!;
 
         dialog.format = data.format;
