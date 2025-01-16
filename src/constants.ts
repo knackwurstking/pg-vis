@@ -1,2 +1,2 @@
-export const version = "v1.2.0";
-export const build = 13; // NOTE: v1.2.0 build
+export const version = "v1.2.1";
+export const build = 14; // NOTE: v1.2.1 build

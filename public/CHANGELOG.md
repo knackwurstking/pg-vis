@@ -5,6 +5,12 @@
 > - Replace "pg-vis.github.io" with "pg-vis-dev.github.io"
 > - Change store prefix from "pg-vis:" to "pg-vis-dev:"
 
+## v1.2.1 [unreleased]
+
+**Fixed**:
+
+- Fixed sorting of metal sheet list keys, active ones not on top
+
 ## v1.2.0 [2024-01-16]
 
 **Changed**:
@@ -269,7 +275,7 @@
 
 - Add pull and push handler for Gist IDs
 
-  - Allow "push" to files instead of gist
+    - Allow "push" to files instead of gist
 
 ## v0.0.16 — [2024-07-05]
 

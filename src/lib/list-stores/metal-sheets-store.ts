@@ -59,16 +59,22 @@ export class MetalSheetsStore extends lib.listStores.ListStore<"metalSheets"> {
     }
 
     public sort(data: types.MetalSheet[]): types.MetalSheet[] {
-        const result: types.MetalSheet[] = [];
         const keyOf = (list: types.MetalSheet): string => {
             return list.data.press > -1
                 ? `[P${list.data.press}] ${this.listKey(list)}`
                 : `${this.listKey(list)}`;
         };
 
-        const keys = data.map((list) => keyOf(list)).sort();
-        console.warn(keys);
-        for (const key of keys) {
+        const activeKeys: string[] = [...data.filter((list) => list.data.press >= 0)]
+            .map((list) => keyOf(list))
+            .sort();
+
+        const inactiveKeys: string[] = [...data.filter((list) => list.data.press < 0)]
+            .map((list) => keyOf(list))
+            .sort();
+
+        const result: types.MetalSheet[] = [];
+        for (const key of [...activeKeys, ...inactiveKeys]) {
             const keyData = data.find((list) => keyOf(list) === key);
             if (keyData !== undefined) result.push(keyData);
         }
