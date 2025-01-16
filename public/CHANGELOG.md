@@ -10,7 +10,7 @@
 **Changed**:
 
 - Changed metal sheet list sorting, active items will be moved to the top of the list. Need to
-  refresh metel sheet lists data, just push the update button for metal sheets :)
+  refresh metal sheet lists data, just push the update button for metal sheets :)
 
 **Fixed**:
 
