@@ -78,14 +78,14 @@ export class ListStore<T extends keyof ListStoreData> {
                 }
             }
 
-            return data;
+            return this.sort(data as ListStoreData[T][]) as any[];
         });
     }
 
     /**
      * @throws exists error
      */
-    public addToStore(store: types.PGStore, newData: ListStoreData[T][], sort?: boolean) {
+    public addToStore(store: types.PGStore, newData: ListStoreData[T][]) {
         const storeData = store.getData(this.key() as keyof ListStoreData);
         if (storeData === undefined) {
             return;
@@ -118,7 +118,7 @@ export class ListStore<T extends keyof ListStoreData> {
 
         store.setData(
             this.key() as keyof ListStoreData,
-            (sort ? this.sort(mergedData as ListStoreData[T][]) : mergedData) as any[],
+            this.sort(mergedData as ListStoreData[T][]) as any[],
         );
     }
 }

@@ -505,15 +505,13 @@ class PGApp extends LitElement {
                 class="newList"
                 title="Neue Liste"
                 @submit=${(ev: Event & { currentTarget: app.PGMetalSheetTableDialog }) => {
+                    const dialog = ev.currentTarget;
+
                     const format = ev.currentTarget.format;
                     const toolID = ev.currentTarget.toolID;
                     const press = ev.currentTarget.press;
 
                     const reopenDialog = () => {
-                        const dialog = this.querySelector<app.PGMetalSheetTableDialog>(
-                            `pg-metal-sheet-table-dialog`,
-                        )!;
-
                         dialog.format = format;
                         dialog.toolID = toolID;
                         dialog.press = press;
@@ -533,7 +531,14 @@ class PGApp extends LitElement {
                         data: {
                             press: press,
                             table: {
-                                header: [],
+                                header: [
+                                    "Stärke",
+                                    "Marke (Höhe)",
+                                    "Blech Stempel",
+                                    "Blech Marke",
+                                    "Stf. P2 - P5",
+                                    "Stf. P0",
+                                ],
                                 data: [],
                             },
                         },
@@ -545,13 +550,12 @@ class PGApp extends LitElement {
                     for (const list of store.getData("metalSheets") || []) {
                         if (listsStore.listKey(list) === newListKey) {
                             setTimeout(reopenDialog);
-
                             alert(`Liste "${newListKey}" existiert bereits!"`);
                             return;
                         }
                     }
 
-                    listsStore.addToStore(store, [newData], true);
+                    listsStore.addToStore(store, [newData]);
                 }}
             ></pg-metal-sheet-table-dialog>
 
@@ -562,16 +566,12 @@ class PGApp extends LitElement {
                     const listsStore = lib.listStore("visData");
 
                     try {
-                        listsStore.addToStore(
-                            PGApp.queryStore(),
-                            [
-                                {
-                                    title: title,
-                                    data: [],
-                                },
-                            ],
-                            true,
-                        );
+                        listsStore.addToStore(PGApp.queryStore(), [
+                            {
+                                title: title,
+                                data: [],
+                            },
+                        ]);
                     } catch (err) {
                         alert(err);
                         setTimeout(() => {
@@ -590,17 +590,13 @@ class PGApp extends LitElement {
                     const listsStore = lib.listStore("visBookmarks");
 
                     try {
-                        listsStore.addToStore(
-                            PGApp.queryStore(),
-                            [
-                                {
-                                    title: title,
-                                    allowDeletion: true,
-                                    data: [],
-                                },
-                            ],
-                            true,
-                        );
+                        listsStore.addToStore(PGApp.queryStore(), [
+                            {
+                                title: title,
+                                allowDeletion: true,
+                                data: [],
+                            },
+                        ]);
                     } catch (err) {
                         alert(err);
                         setTimeout(() => {

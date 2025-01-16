@@ -5,6 +5,17 @@
 > - Replace "pg-vis.github.io" with "pg-vis-dev.github.io"
 > - Change store prefix from "pg-vis:" to "pg-vis-dev:"
 
+## v1.2.0 [2024-01-16]
+
+**Changed**:
+
+- Changed metal sheet list sorting, active items will be moved to the top of the list. Need to
+  refresh metel sheet lists data, just push the update button for metal sheets :)
+
+**Fixed**:
+
+- Fixed missing table headers after creating a new metal sheet list
+
 ## v1.1.3 — [2025-01-10]
 
 **Fixed**:

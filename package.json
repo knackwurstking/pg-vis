@@ -1,7 +1,7 @@
 {
     "name": "pg",
     "private": true,
-    "version": "1.1.3",
+    "version": "1.2.0",
     "homepage": "/pg-vis.github.io",
     "type": "module",
     "scripts": {
