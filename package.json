@@ -28,9 +28,7 @@
         "jest": "^29.7.0",
         "jszip": "^3.10.1",
         "jszip-utils": "^0.1.0",
-        "lit": "^3.2.1",
         "octokit": "^4.0.2",
-        "ui": "file:../ui",
-        "vite-tsconfig-paths": "^5.1.2"
+        "ui": "file:../ui"
     }
 }
