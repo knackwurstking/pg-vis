@@ -64,7 +64,7 @@ class PGSearchBar extends LitElement {
                 title="${this.title}"
                 no-submit
                 storage
-                storage-prefix="pg-vis:search:"
+                storage-prefix="pg-vis-dev:search:"
                 storage-key="${this.storageKey}"
                 @change=${() => {
                     this.dispatchEvent(new Event("change"));

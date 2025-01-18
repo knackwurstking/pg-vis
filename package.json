@@ -1,8 +1,8 @@
 {
     "name": "pg",
     "private": true,
-    "version": "1.2.1",
-    "homepage": "/pg-vis.github.io",
+    "version": "2.0.0",
+    "homepage": "/pg-vis-dev.github.io",
     "type": "module",
     "scripts": {
         "test": "jest",
@@ -30,7 +30,7 @@
         "jszip-utils": "^0.1.0",
         "lit": "^3.2.1",
         "octokit": "^4.0.2",
-        "ui": "knackwurstking/ui#v1.1.1",
+        "ui": "file:../ui",
         "vite-tsconfig-paths": "^5.1.2"
     }
 }
