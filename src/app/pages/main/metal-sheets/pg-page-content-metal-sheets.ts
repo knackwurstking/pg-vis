@@ -208,6 +208,7 @@ class PGPageContentMetalSheets extends app.PGPageContent<types.MetalSheet> {
                     return JSON.parse(data);
                 });
 
+                // FIXME: Editing after dragging an item will not correctly rerender the table body
                 this.requestUpdate();
                 this.replaceInStore(this.data);
             },
