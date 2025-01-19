@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="de">
+<html lang="de" data-theme="auto">
     <head>
         <meta charset="UTF-8" />
 
@@ -8,26 +8,32 @@
             content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover"
         />
 
-        <meta name="theme-color" content="hsl(240, 10%, 3.9%)" />
-
         <link rel="icon" href="/icons/favicon.ico" sizes="any" />
         <link rel="apple-touch-icon" href="/icons/apple-touch-icon-180x180.png" />
 
         <title>PG: Vis</title>
 
-        <style>
-            html,
-            body {
-                overscroll-behavior: none !important;
-            }
-        </style>
+        <link rel="stylesheet" href="/node_modules/ui/dist/css/main.css" />
+        <link rel="stylesheet" href="/src/styles.css" />
     </head>
 
-    <body>
-        <ui-store storage storage-prefix="pg-vis-dev:"></ui-store>
-        <ui-theme-handler auto></ui-theme-handler>
-        <pg-app></pg-app>
-        <ui-alerts></ui-alerts>
+    <body class="ui-container">
+        <div class="router-target ui-auto-scroll ui-hide-scrollbar"></div>
+
+        <div class="ui-app-bar" position="top" fixed>
+            <div class="left">
+                <!-- TODO: Continue here... -->
+            </div>
+
+            <div class="center">
+                <!-- TODO: Continue here... -->
+            </div>
+
+            <div class="right">
+                <!-- TODO: Continue here... -->
+            </div>
+        </div>
+
         <script type="module" src="/src/main.ts"></script>
     </body>
 </html>
