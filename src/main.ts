@@ -43,7 +43,27 @@ for (const name of [
         });
 }
 
+// TODO: Settings Page
+//  - Configure all gist IDs here
+//  - Checkbox: Enable auto update for gist data (opt in)
+const settings: ui.router.Route = {
+    title: "VIS | Settings",
+    template: {
+        selector: `template[name="settings"]`,
+        onMount: () => pages.settings.onMount(),
+        onDestroy: () => pages.settings.onDestroy(),
+    },
+};
+
 // Router setup here
 ui.router.hash(query.routerTarget(), {
-    // TODO: Using templates
+    "/": settings,
+    settings: settings,
+
+    "alert-lists": {},
+    "metal-sheets": {},
+    vis: {},
+    "vis-bookmarks": {},
+    "vis-data": {},
+    "vis-special": {},
 });
