@@ -1,104 +1,89 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="de" data-theme="auto">
-    <head>
-        <meta charset="UTF-8" />
-
-        <meta
-            name="viewport"
-            content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover"
-        />
-
-        <link rel="icon" href="/icons/favicon.ico" sizes="any" />
-        <link rel="apple-touch-icon" href="/icons/apple-touch-icon-180x180.png" />
-
-        <title>PG: Vis</title>
-
-        <link rel="stylesheet" href="/node_modules/ui/dist/css/main.css" />
-        <link rel="stylesheet" href="/src/styles.css" />
-    </head>
-
-    <body class="ui-container">
-        <div class="router-target ui-auto-scroll ui-hide-scrollbar"></div>
-
-        <div class="ui-app-bar" position="top" fixed>
-            <div class="left">
-                <button id="appBarButtonOpenDrawer" variant="ghost" color="primary" icon>
-                    <div class="ui-icon-list"></div>
-                </button>
-
-                <button
-                    id="appBarButtonBack"
-                    style="display: none"
-                    variatn="ghost"
-                    color="primary"
-                    icon
-                >
-                    <div class="ui-icon-chevron-left"></div>
-                </button>
-            </div>
-
-            <div class="center">
-                <h3 id="appBarTitle" style="white-space: nowrap">PG: Vis</h3>
-            </div>
-
-            <div class="right">
-                <button
-                    id="appBarButtonEdit"
-                    style="display: none"
-                    variant="ghost"
-                    color="primary"
-                    icon
-                >
-                    <div class="ui-icon-pen"></div>
-                </button>
-
-                <button
-                    id="appBarButtonShare"
-                    style="display: none"
-                    variant="ghost"
-                    color="primary"
-                    icon
-                >
-                    <div class="ui-icon-share"></div>
-                </button>
-
-                <button
-                    id="appBarButtonSearch"
-                    style="display: none"
-                    variant="ghost"
-                    color="primary"
-                    icon
-                >
-                    <div class="ui-icon-search"></div>
-                </button>
-
-                <button
-                    id="appBarButtonTrash"
-                    style="display: none"
-                    variant="ghost"
-                    color="primary"
-                    icon
-                >
-                    <div class="ui-icon-trash"></div>
-                </button>
-
-                <button
-                    id="appBarButtonPrinter"
-                    style="display: none"
-                    variant="ghost"
-                    color="primary"
-                    icon
-                >
-                    <div class="ui-icon-printer"></div>
-                </button>
-            </div>
-        </div>
-
-        <div class="ui-drawer-backdrop"></div>
-        <aside class="ui-drawer">
-            <!-- TODO: Continue here... -->
-        </aside>
-
-        <script type="module" src="/src/main.ts"></script>
-    </body>
+  <head>
+    <meta charset="UTF-8">
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover"
+    >
+    <link rel="icon" href="/icons/favicon.ico" sizes="any">
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon-180x180.png">
+    <title>PG: Vis</title>
+    <link rel="stylesheet" href="/node_modules/ui/dist/css/main.css">
+    <link rel="stylesheet" href="/src/styles.css">
+  </head>
+  <body class="ui-container">
+    <div class="router-target ui-auto-scroll ui-hide-scrollbar"></div>
+    <div class="ui-app-bar" position="top" fixed>
+      <div class="left">
+        <button id="appBarButtonOpenDrawer" variant="ghost" color="primary" icon>
+          <div class="ui-icon-list"></div>
+        </button>
+        <button
+          id="appBarButtonBack"
+          style="display: none"
+          variatn="ghost"
+          color="primary"
+          icon
+        >
+          <div class="ui-icon-chevron-left"></div>
+        </button>
+      </div>
+      <div class="center">
+        <h3 id="appBarTitle" style="white-space: nowrap">PG: Vis</h3>
+      </div>
+      <div class="right">
+        <button
+          id="appBarButtonEdit"
+          style="display: none"
+          variant="ghost"
+          color="primary"
+          icon
+        >
+          <div class="ui-icon-pen"></div>
+        </button>
+        <button
+          id="appBarButtonShare"
+          style="display: none"
+          variant="ghost"
+          color="primary"
+          icon
+        >
+          <div class="ui-icon-share"></div>
+        </button>
+        <button
+          id="appBarButtonSearch"
+          style="display: none"
+          variant="ghost"
+          color="primary"
+          icon
+        >
+          <div class="ui-icon-search"></div>
+        </button>
+        <button
+          id="appBarButtonTrash"
+          style="display: none"
+          variant="ghost"
+          color="primary"
+          icon
+        >
+          <div class="ui-icon-trash"></div>
+        </button>
+        <button
+          id="appBarButtonPrinter"
+          style="display: none"
+          variant="ghost"
+          color="primary"
+          icon
+        >
+          <div class="ui-icon-printer"></div>
+        </button>
+      </div>
+    </div>
+    <div class="ui-drawer-backdrop"></div>
+    <aside class="ui-drawer">
+      <!-- TODO: Continue here... -->
+    </aside>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
 </html>
