@@ -12,9 +12,16 @@ const updateSW = registerSW({
 
 // Initialize AppBar button handlers
 
-const openDrawerButton = query.appBar_ButtonOpenDrawer();
-openDrawerButton.onclick = () => {
-    // TODO: Open the drawer
-};
+{
+    const drawer = query.drawer();
+
+    query.appBar_ButtonOpenDrawer().onclick = () => {
+        drawer.setAttribute("open", "");
+    };
+
+    query.drawerBackdrop().onclick = () => {
+        drawer.removeAttribute("open");
+    };
+}
 
 // TODO: Router setup here

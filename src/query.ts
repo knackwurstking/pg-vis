@@ -31,3 +31,11 @@ export function appBar_ButtonTrash(): HTMLButtonElement {
 export function appBar_ButtonPrinter(): HTMLButtonElement {
     return document.querySelector(`#appBarButtonPrinter`)!;
 }
+
+export function drawer(): HTMLElement {
+    return document.querySelector(`aside.ui-drawer`)!;
+}
+
+export function drawerBackdrop(): HTMLElement {
+    return document.querySelector(`div.ui-drawer-backdrop`)!;
+}
