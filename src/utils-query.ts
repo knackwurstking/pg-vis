@@ -1,5 +1,11 @@
 import * as types from "./types";
 
+// Router
+
+export function routerTarget(): HTMLElement {
+    return document.querySelector(`#routerTarget`)!;
+}
+
 // App Bar Elements
 
 export function appBar_ButtonOpenDrawer(): HTMLButtonElement {
