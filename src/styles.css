@@ -13,3 +13,13 @@ body,
 .router-target {
     padding-top: var(--ui-app-bar-height);
 }
+
+.ui-drawer .app-info {
+    --mono: 1;
+    --wght: 350;
+    font-size: 0.75rem;
+}
+
+.ui-drawer .group {
+    width: 100%;
+}

@@ -82,16 +82,33 @@
     </div>
     <div class="ui-drawer-backdrop"></div>
     <aside class="ui-drawer">
-      <!-- TODO: Add app version information on top (version: v2.0.0, build: 15) -->
-      <details class="group" name="alert-lists">
-        <summary><h4>Alarm Listen</h4></summary>
-        <div class="ui-flex-grid">
-          <!-- TODO: Items: "import/download" -->
-          <!-- TODO: Items: "gist" -->
-          <ul class="items"></ul>
+      <div class="ui-flex-grid">
+        <!-- Version/Build -->
+        <div class="app-info">
+          <span title="version">v2.0.0.dev</span>
+          <span title="build">[Build: 15]</span>
         </div>
-      </details>
-      <!-- TODO: Continue here... -->
+        <!-- Alert Lists Group -->
+        <details class="group" name="alert-lists" data-fixed-items="2">
+          <summary><h4>Alarm Listen</h4></summary>
+          <div class="ui-flex-grid">
+            <!-- TODO: Items: "import/download" -->
+            <!-- TODO: Items: "gist" -->
+            <ul class="items"></ul>
+          </div>
+        </details>
+        <!-- Metal Sheets Group -->
+        <details class="group" name="metal-sheets" data-fixed-items="3">
+          <summary><h4>Blech Listen</h4></summary>
+          <div class="ui-flex-grid">
+            <!-- TODO: Items: "import/download" -->
+            <!-- TODO: Items: "gist" -->
+            <!-- TODO: Items: "new" -->
+            <ul class="items"></ul>
+          </div>
+        </details>
+        <!-- TODO: Continue here... -->
+      </div>
     </aside>
     <script type="module" src="/src/main.ts"></script>
   </body>
