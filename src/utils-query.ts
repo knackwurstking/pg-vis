@@ -40,8 +40,23 @@ export function drawer(): HTMLElement {
     return document.querySelector(`aside.ui-drawer`)!;
 }
 
-export function drawerGroup(name: types.DrawerGroups): HTMLDetailsElement {
-    return drawer().querySelector(`.group[name="${name}"]`)!;
+export function drawerGroup(name: types.DrawerGroups): {
+    root: HTMLDetailsElement;
+    import: null;
+    download: null;
+    gist: null;
+    new: null;
+    items: HTMLUListElement;
+} {
+    const group = drawer().querySelector(`.group[name="${name}"]`)!;
+    return {
+        root: group as HTMLDetailsElement,
+        import: null,
+        download: null,
+        gist: null,
+        new: null,
+        items: group.querySelector(`ui.items`)!,
+    };
 }
 
 export function drawerBackdrop(): HTMLElement {

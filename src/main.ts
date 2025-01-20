@@ -19,12 +19,12 @@ query.drawerBackdrop().onclick = () => drawer.close();
 
 // Drawer Groups state management
 
-query.drawerGroup("alert-lists").onclick = () => {
-    const group = query.drawerGroup("alert-lists");
+const drawerGroup_AlertLists = query.drawerGroup("alert-lists");
+drawerGroup_AlertLists.root.onclick = () => {
     globals.store.update("drawerGroup", (data) => {
         data.alertLists = {
             ...(data.alertLists || {}),
-            open: group.open,
+            open: drawerGroup_AlertLists.root.open,
         };
 
         return data;
