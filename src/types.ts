@@ -18,7 +18,13 @@ export interface Bookmarks {
     data: Product[];
 }
 
-export type DrawerGroups = "alert-lists";
+export type DrawerGroups =
+    | "alert-lists"
+    | "metal-sheets"
+    | "vis"
+    | "vis-bookmarks"
+    | "vis-data"
+    | "special";
 
 export interface MetalSheet {
     format: string;
@@ -45,11 +51,11 @@ export interface PGStoreEvents {
     };
 
     drawerGroup: {
-        alertLists?: {
+        "alert-lists"?: {
             open: boolean;
         };
 
-        metalSheets?: {
+        "metal-sheets"?: {
             open: boolean;
         };
 
@@ -57,11 +63,11 @@ export interface PGStoreEvents {
             open: boolean;
         };
 
-        visBookmarks?: {
+        "vis-bookmarks"?: {
             open: boolean;
         };
 
-        visData?: {
+        "vis-data"?: {
             open: boolean;
         };
 

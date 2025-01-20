@@ -1,8 +1,9 @@
 import { registerSW } from "virtual:pwa-register";
 
-import * as query from "./utils-query";
-import * as drawer from "./utils-drawer";
 import * as globals from "./globals";
+import * as types from "./types";
+import * as drawer from "./utils-drawer";
+import * as query from "./utils-query";
 
 const updateSW = registerSW({
     async onNeedRefresh() {
@@ -19,16 +20,26 @@ query.drawerBackdrop().onclick = () => drawer.close();
 
 // Drawer Groups state management
 
-const drawerGroup_AlertLists = query.drawerGroup("alert-lists");
-drawerGroup_AlertLists.root.onclick = () => {
-    globals.store.update("drawerGroup", (data) => {
-        data.alertLists = {
-            ...(data.alertLists || {}),
-            open: drawerGroup_AlertLists.root.open,
-        };
+for (const name of [
+    "alert-lists",
+    "metal-sheets",
+    "vis",
+    "vis-bookmarks",
+    "vis-data",
+    "special",
+] as types.DrawerGroups[]) {
+    const group = query.drawerGroup(name);
+    group.root.onclick = () =>
+        setTimeout(() => {
+            globals.store.update("drawerGroup", (data) => {
+                data[name] = {
+                    ...(data[name] || {}),
+                    open: group.root.open,
+                };
 
-        return data;
-    });
-};
+                return data;
+            });
+        });
+}
 
 // TODO: Router setup here
