@@ -1,6 +1,7 @@
 import { registerSW } from "virtual:pwa-register";
 
-import * as query from "./query";
+import * as query from "./utils-query";
+import * as drawer from "./utils-drawer";
 
 const updateSW = registerSW({
     async onNeedRefresh() {
@@ -12,16 +13,7 @@ const updateSW = registerSW({
 
 // Initialize AppBar button handlers
 
-{
-    const drawer = query.drawer();
-
-    query.appBar_ButtonOpenDrawer().onclick = () => {
-        drawer.setAttribute("open", "");
-    };
-
-    query.drawerBackdrop().onclick = () => {
-        drawer.removeAttribute("open");
-    };
-}
+query.appBar_ButtonOpenDrawer().onclick = () => drawer.open();
+query.drawerBackdrop().onclick = () => drawer.close();
 
 // TODO: Router setup here
