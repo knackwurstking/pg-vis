@@ -12,6 +12,7 @@ function createStore(): types.PGStore {
 
     // TODO: Initialize here... (Set defaults)
     store.set("drawer", { open: true }, false);
+    store.set("drawerGroup", {}, true);
 
     return store;
 }

@@ -1,3 +1,5 @@
+import * as types from "./types";
+
 // App Bar Elements
 
 export function appBar_ButtonOpenDrawer(): HTMLButtonElement {
@@ -32,8 +34,14 @@ export function appBar_ButtonPrinter(): HTMLButtonElement {
     return document.querySelector(`#appBarButtonPrinter`)!;
 }
 
+// Drawer Elements
+
 export function drawer(): HTMLElement {
     return document.querySelector(`aside.ui-drawer`)!;
+}
+
+export function drawerGroup(name: types.DrawerGroups): HTMLDetailsElement {
+    return drawer().querySelector(`.group[name="${name}"]`)!;
 }
 
 export function drawerBackdrop(): HTMLElement {

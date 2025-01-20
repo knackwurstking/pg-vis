@@ -18,6 +18,8 @@ export interface Bookmarks {
     data: Product[];
 }
 
+export type DrawerGroups = "alert-lists";
+
 export interface MetalSheet {
     format: string;
     toolID: string;
