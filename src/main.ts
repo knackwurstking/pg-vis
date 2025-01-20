@@ -1,3 +1,4 @@
+import * as ui from "ui";
 import { registerSW } from "virtual:pwa-register";
 
 import * as globals from "./globals";
@@ -42,4 +43,7 @@ for (const name of [
         });
 }
 
-// TODO: Router setup here
+// Router setup here
+ui.router.hash(query.routerTarget(), {
+    // TODO: Using templates
+});
