@@ -1,6 +1,5 @@
-import * as globals from "../../globals";
-import * as types from "../../types";
 import * as query from "../../utils-query";
+import * as gistItem from "./gist-item";
 
 let originTitle: string = "";
 
@@ -9,57 +8,40 @@ export async function onMount() {
     originTitle = appBarTitle.innerText;
     appBarTitle.innerText = "Gist IDs";
 
-    gistIDInputs();
-    autoUpdatesCheckboxes();
+    createInputs();
 }
 
 export async function onDestroy() {
     query.appBar_Title().innerText = originTitle;
 }
 
-function gistIDInputs() {
-    const inputElements = document.querySelectorAll<HTMLInputElement>(
-        `.gist-ids .gist-id-container input[type="text"]`,
-    );
+function createInputs() {
+    const itemProps: gistItem.Props[] = [
+        {
+            title: "Alarm Listen",
+            storeKey: "alert-lists",
+        },
+        {
+            title: "Blech Listen",
+            storeKey: "metal-sheets",
+        },
+        {
+            title: "VIS",
+            storeKey: "vis",
+        },
+        {
+            title: "VIS: Data",
+            storeKey: "vis-data",
+        },
+        {
+            title: "Spezial",
+            storeKey: "special",
+        },
+    ];
 
-    const validIDs: { [key: string]: { storeKey: types.DrawerGroups } } = {
-        gistID_AlertLists: { storeKey: "alert-lists" },
-        gistID_MetalSheets: { storeKey: "metal-sheets" },
-        gistID_VIS: { storeKey: "vis" },
-        gistID_VISData: { storeKey: "vis-data" },
-        gistID_Special: { storeKey: "special" },
-    };
-
-    for (const el of inputElements) {
-        if (!Object.keys(validIDs).includes(el.id)) {
-            throw new Error(`unknown id "${el.id}"`);
-        }
-
-        el.onblur = async () => {
-            const drawerGroup = validIDs[el.id].storeKey;
-            const gistID = el.value;
-
-            if (!gistID) {
-                globals.store.update(drawerGroup, (data) => {
-                    data.gist = null;
-                    return data;
-                });
-                return;
-            }
-
-            globals.store.update(drawerGroup, (data) => {
-                data.gist = {
-                    id: gistID,
-                    revision: -1,
-                };
-                return data;
-            });
-
-            // TODO: Import from gist here...
-        };
+    const container = document.querySelector<HTMLUListElement>(`.gist-ids`)!;
+    for (const itemProp of itemProps) {
+        const item = gistItem.create(itemProp);
+        container.appendChild(item);
     }
-}
-
-function autoUpdatesCheckboxes() {
-    // TODO: ...
 }
