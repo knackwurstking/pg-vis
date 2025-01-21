@@ -46,10 +46,6 @@ export type PGStore = ui.Store<PGStoreEvents>;
 // NOTE:
 //  - Kicked: theme.name in v2.0.0
 export interface PGStoreEvents {
-    drawer: {
-        open: boolean;
-    };
-
     drawerGroup: {
         "alert-lists"?: {
             open: boolean;

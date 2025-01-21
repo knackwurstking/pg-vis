@@ -22,6 +22,12 @@ query.drawerBackdrop().onclick = () => drawer.close();
 
 // Drawer Groups state management
 
+const drawerGistIDsButton = query.drawerGistIDsButton();
+drawerGistIDsButton.onclick = () => {
+    location.hash = "";
+    drawer.close();
+};
+
 for (const name of [
     "alert-lists",
     "metal-sheets",
@@ -44,22 +50,16 @@ for (const name of [
         });
 }
 
-// TODO: Settings Page
-//  - Configure all gist IDs here
-//  - Checkbox: Enable auto update for gist data (opt in)
-const settings: ui.router.Route = {
-    title: "VIS | Settings",
-    template: {
-        selector: `template[name="settings"]`,
-        onMount: () => pages.settings.onMount(),
-        onDestroy: () => pages.settings.onDestroy(),
-    },
-};
-
 // Router setup here
 ui.router.hash(query.routerTarget(), {
-    "/": settings,
-    settings: settings,
+    "/": {
+        title: "VIS | Gist IDs",
+        template: {
+            selector: `template[name="gist-ids"]`,
+            onMount: () => pages.gistIDs.onMount(),
+            onDestroy: () => pages.gistIDs.onDestroy(),
+        },
+    },
 
     "alert-lists": {},
     "metal-sheets": {},
@@ -68,3 +68,7 @@ ui.router.hash(query.routerTarget(), {
     "vis-data": {},
     "vis-special": {},
 });
+
+window.onhashchange = () => {
+    drawer.close();
+};

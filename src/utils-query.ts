@@ -46,6 +46,10 @@ export function drawer(): HTMLElement {
     return document.querySelector(`aside.ui-drawer`)!;
 }
 
+export function drawerGistIDsButton(): HTMLButtonElement {
+    return drawer().querySelector(`button.gist-ids`)!;
+}
+
 export function drawerGroup(name: types.DrawerGroups): {
     root: HTMLDetailsElement;
     import: null;

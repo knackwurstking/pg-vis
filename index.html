@@ -81,6 +81,7 @@
             </div>
         </div>
         <div class="ui-drawer-backdrop"></div>
+
         <aside class="ui-drawer">
             <div class="ui-flex-grid">
                 <!-- Version/Build -->
@@ -88,10 +89,12 @@
                     <span title="version">v2.0.0.dev</span>
                     <span title="build">[Build: 15]</span>
                 </div>
-                <!-- Settings -->
+
+                <!-- Gist IDs -->
                 <div class="ui-flex-grid-item" style="width: 100%; padding: var(--ui-spacing)">
-                    <button class="settings" style="width: 100%">Einstellungen</button>
+                    <button class="gist-ids" style="width: 100%">Gist IDs</button>
                 </div>
+
                 <!-- Alert Lists Group -->
                 <details class="group" name="alert-lists">
                     <summary><h4>Alarm Listen</h4></summary>
@@ -149,32 +152,33 @@
                 </details>
             </div>
         </aside>
-        <template name="settings">
+
+        <template name="gist-ids">
             <style>
-                .settings.ui-flex-grid .gist-id-container {
+                .gist-ids .gist-id-container {
                     width: 100%;
                 }
 
-                .settings.ui-flex-grid .gist-id-container input[type="text"] {
+                .gist-ids .gist-id-container input[type="text"] {
                     width: 100%;
                 }
 
-                .settings.ui-flex-grid .auto-update-container {
+                .gist-ids .auto-update-container {
                     --justify: space-between;
                     --align: center;
                 }
 
-                .settings.ui-flex-grid .auto-update-container label {
+                .gist-ids .auto-update-container label {
                     width: 100%;
                     padding: var(--ui-spacing);
                 }
 
-                .settings.ui-flex-grid .auto-update-container input[type="checkbox"] {
+                .gist-ids .auto-update-container input[type="checkbox"] {
                     margin-right: var(--ui-spacing);
                 }
             </style>
 
-            <div class="settings ui-flex-grid">
+            <div class="gist-ids ui-flex-grid">
                 <h3>Alarm Listen</h3>
 
                 <div class="gist-id-container ui-flex-grid-item">
@@ -229,6 +233,8 @@
                     <input id="autoUpdate_VISData" type="checkbox" />
                 </div>
 
+                <hr />
+
                 <h3>Spezial</h3>
 
                 <div class="gist-id-container ui-flex-grid-item">
@@ -242,6 +248,7 @@
                 </div>
             </div>
         </template>
+
         <script type="module" src="/src/main.ts"></script>
     </body>
 </html>
