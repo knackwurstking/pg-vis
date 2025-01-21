@@ -1,3 +1,4 @@
+import * as gist from "../../gist";
 import * as globals from "../../globals";
 import * as types from "../../types";
 
@@ -88,7 +89,9 @@ export function create(props: Props): HTMLLIElement {
             });
         };
 
-        if (!inputGistID.value) {
+        const gistID = inputGistID.value;
+
+        if (!gistID) {
             globals.store.update(props.storeKey, (data) => {
                 data.gist = null;
                 return data;
@@ -99,13 +102,17 @@ export function create(props: Props): HTMLLIElement {
 
         globals.store.update(props.storeKey, (data) => {
             data.gist = {
-                id: inputGistID.value,
+                id: gistID,
                 revision: null,
             };
             return data;
         });
 
-        // TODO: Import from gist here...
+        try {
+            globals.store.set(props.storeKey, await gist.pull(props.storeKey, gistID));
+        } catch (err) {
+            alert(`Etwas ist schiefgelaufen: ${err}`);
+        }
 
         return cleanUp();
     };
