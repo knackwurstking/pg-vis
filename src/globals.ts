@@ -14,6 +14,7 @@ function createStore(): types.PGStore {
     store.set("alert-lists", { gist: null, lists: [] }, true);
     store.set("metal-sheets", { gist: null, lists: [] }, true);
     store.set("vis", { gist: null, lists: [] }, true);
+    store.set("vis-data", { gist: null, lists: [] }, true);
     store.set("vis-bookmarks", { gist: null, lists: [] }, true);
     store.set("special", { gist: null, lists: [] }, true);
 
