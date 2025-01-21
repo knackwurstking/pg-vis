@@ -1,9 +1,9 @@
-import * as lib from "@lib";
-import * as types from "@types";
+import * as base from "../base";
+import * as types from "../../types";
 
-export class VISData extends lib.listStores.ListStore<"visData"> {
-    public key(): keyof lib.listStores.ListStoreData {
-        return "visData";
+export class VISData extends base.ListStore<"vis-data"> {
+    public key(): keyof base.ListStoreData {
+        return "vis-data";
     }
 
     public listKey(list: types.VisData): string {
@@ -20,22 +20,38 @@ export class VISData extends lib.listStores.ListStore<"visData"> {
 
     public validate(dataString: string): types.VisData | null {
         const list = super.validate(dataString);
-        if (typeof list !== "object") return null;
+        if (typeof list !== "object") {
+            return null;
+        }
 
-        if (typeof list.title !== "string" || !Array.isArray(list.data)) return null;
+        if (typeof list.title !== "string" || !Array.isArray(list.data)) {
+            return null;
+        }
 
         for (const part of list.data) {
-            if (typeof part.key !== "string" && part.key !== null) return null;
+            if (typeof part.key !== "string" && part.key !== null) {
+                return null;
+            }
 
-            if (typeof part.value !== "string") return null;
+            if (typeof part.value !== "string") {
+                return null;
+            }
 
-            if (typeof part.lotto !== "string" && part.lotto !== null) return null;
+            if (typeof part.lotto !== "string" && part.lotto !== null) {
+                return null;
+            }
 
-            if (typeof part.format !== "string" && part.format !== null) return null;
+            if (typeof part.format !== "string" && part.format !== null) {
+                return null;
+            }
 
-            if (typeof part.thickness !== "string" && part.thickness !== null) return null;
+            if (typeof part.thickness !== "string" && part.thickness !== null) {
+                return null;
+            }
 
-            if (typeof part.stamp !== "string" && part.stamp !== null) return null;
+            if (typeof part.stamp !== "string" && part.stamp !== null) {
+                return null;
+            }
         }
 
         return list;

@@ -1,13 +1,14 @@
 import { Octokit } from "octokit";
 
+import * as globals from "./globals";
 import * as types from "./types";
 import * as listStores from "./list-stores";
 
-export async function pull(storeKey: keyof lib.listStores.ListStoreData, gistID: string) {
+export async function pull(storeKey: keyof listStores.ListStoreData, gistID: string) {
     try {
         const resp = await gist(gistID);
-        const listsStore = lib.listStore(storeKey);
-        const newData: (types.AlertList | types.MetalSheet | types.Vis)[] = [];
+        const listsStore = listStores.get(storeKey);
+        const newLists: (types.AlertList | types.MetalSheet | types.Vis)[] = [];
 
         for (const file of Object.values(resp.data.files || {})) {
             if (!file?.content) continue;
@@ -18,23 +19,20 @@ export async function pull(storeKey: keyof lib.listStores.ListStoreData, gistID:
                 throw new Error(`ungültige Daten für "${listsStore.title()}"!`);
             }
 
-            newData.push(data);
+            newLists.push(data);
         }
 
         const revision = await gistRevision(gistID);
 
-        const store = app.PGApp.queryStore();
-        store.setData(storeKey, []); // Clear data first
-
-        listsStore.addToStore(store, newData, true);
-        store.updateData("gist", (data) => {
-            data[`${storeKey}`] = {
+        globals.store.set(storeKey, {
+            gist: {
                 id: gistID,
                 revision: revision,
-            };
+            },
+            lists: [],
+        }); // Clear data first
 
-            return data;
-        });
+        listsStore.addToStore(newLists);
     } catch (err) {
         // Something went wrong: ${err}
         alert(`Etwas ist schiefgelaufen: ${err}`);

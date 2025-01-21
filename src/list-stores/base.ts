@@ -16,7 +16,10 @@ export class ListStore<T extends keyof ListStoreData> {
     }
 
     public listKey(list: ListStoreData[T]): string {
-        if ("title" in list) return list.title as string;
+        if ("title" in list) {
+            return list.title as string;
+        }
+
         return "unknown";
     }
 
@@ -47,7 +50,9 @@ export class ListStore<T extends keyof ListStoreData> {
 
         for (const key of keys) {
             const keyData = data.find((list) => `${this.listKey(list)}` === key);
-            if (keyData !== undefined) result.push(keyData);
+            if (keyData !== undefined) {
+                result.push(keyData);
+            }
         }
 
         return result;

@@ -1,8 +1,9 @@
-import * as lib from "@lib";
-import * as types from "@types";
+import * as base from "../base";
+import * as types from "../../types";
+import * as convert from "../../convert";
 
-export class VIS extends lib.listStores.ListStore<"vis"> {
-    public key(): keyof lib.listStores.ListStoreData {
+export class VIS extends base.ListStore<"vis"> {
+    public key(): keyof base.ListStoreData {
         return "vis";
     }
 
@@ -20,17 +21,26 @@ export class VIS extends lib.listStores.ListStore<"vis"> {
 
     public validate(dataString: string): types.Vis | null {
         let list = super.validate(dataString);
-        if (list === null) return lib.toVis(dataString);
-        if (typeof list !== "object") return null;
+        if (list === null) {
+            return convert.toVis(dataString);
+        }
+        if (typeof list !== "object") {
+            return null;
+        }
 
         if (typeof list.date !== "number" || list.date <= 0) {
             list.date = new Date().getTime();
         }
 
-        if (typeof list.title !== "string" || !Array.isArray(list.data)) return null;
+        if (typeof list.title !== "string" || !Array.isArray(list.data)) {
+            return null;
+        }
 
         for (const product of list.data) {
-            if (typeof product !== "object") return null;
+            if (typeof product !== "object") {
+                return null;
+            }
+
             if (
                 !("lotto" in product) ||
                 !("name" in product) ||
