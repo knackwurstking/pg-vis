@@ -18,6 +18,11 @@ export interface Bookmarks {
     data: Product[];
 }
 
+export interface Gist {
+    id: string;
+    revision: number;
+}
+
 export type DrawerGroups =
     | "alert-lists"
     | "metal-sheets"
@@ -72,19 +77,35 @@ export interface PGStoreEvents {
         };
     };
 
-    gist: {
-        [key: string]: {
-            id: string;
-            revision: number;
-        };
+    "alert-lists": {
+        gist: Gist | null;
+        lists: AlertList[];
     };
 
-    alertLists: AlertList[];
-    metalSheets: MetalSheet[];
-    special: Special[];
-    vis: Vis[];
-    visData: VisData[];
-    visBookmarks: Bookmarks[];
+    "metal-sheets": {
+        gist: Gist | null;
+        lists: MetalSheet[];
+    };
+
+    special: {
+        gist: Gist | null;
+        lists: Special[];
+    };
+
+    vis: {
+        gist: Gist | null;
+        lists: Vis[];
+    };
+
+    "vis-data": {
+        gist: Gist | null;
+        lists: VisData[];
+    };
+
+    "vis-bookmarks": {
+        gist: Gist | null;
+        lists: Bookmarks[];
+    };
 }
 
 export interface Product {
