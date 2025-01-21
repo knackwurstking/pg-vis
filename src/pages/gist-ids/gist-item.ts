@@ -48,6 +48,7 @@ export function create(props: Props): HTMLLIElement {
                 />
             </div>
             <div class="ui-flex-grid-item" style="--flex: 0;">
+                <!-- TODO: Use an icon Button here, some "Download" or "Import" icon -->
                 <button class="update">Aktualisieren</button>
             </div>
         </div>
