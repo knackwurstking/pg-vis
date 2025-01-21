@@ -20,7 +20,7 @@ export interface Bookmarks {
 
 export interface Gist {
     id: string;
-    revision: number;
+    revision: number | null;
 }
 
 export type DrawerGroups =

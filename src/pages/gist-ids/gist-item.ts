@@ -13,22 +13,42 @@ export function create(props: Props): HTMLLIElement {
     el.className = "ui-flex-grid-item ui-border";
     el.style.width = "100%";
     el.innerHTML = html`
-        <h3>${props.title}</h3>
+        <div class="ui-flex-grid-row" style="--justify: space-between; --align: center;">
+            <h3>${props.title}</h3>
+            <div
+                class="ui-flex-grid"
+                style="--align: flex-end; --gap: 0; --mono: 1; font-size: 0.85rem; width: fit-content;"
+            >
+                <span>
+                    <span>Local Revision: </span>
+                    <span id="gistID_LocalRevision_${props.storeKey}">
+                        ${globals.store.get(props.storeKey)!.gist?.revision || "?"}
+                    </span>
+                </span>
+                <span>
+                    <span>Remote Revision: </span>
+                    <span id="gistID_RemoteRevision_${props.storeKey}">?</span>
+                </span>
+            </div>
+        </div>
 
-        <!-- TODO: ...
-            * Display current revision number
-            * Check for updates
-            * Update button
-        -->
-
-        <div class="gist-id-container ui-flex-grid-item" style="width: 100%;">
-            <label for="gistID_${props.storeKey}">Gist ID</label>
-            <input
-                id="gistID_${props.storeKey}"
-                style="width: 100%"
-                type="text"
-                placeholder="Gist ID von Telegram hier einfügen"
-            />
+        <div
+            class="gist-id-container ui-flex-grid-row"
+            style="--align: flex-end; --justify: space-between; width: 100%;"
+        >
+            <div class="ui-flex-grid-item">
+                <label for="gistID_${props.storeKey}">Gist ID</label>
+                <input
+                    id="gistID_${props.storeKey}"
+                    style="width: 100%"
+                    type="text"
+                    placeholder="Gist ID von Telegram hier einfügen"
+                    value="${globals.store.get(props.storeKey)!.gist?.id || ""}"
+                />
+            </div>
+            <div class="ui-flex-grid-item" style="--flex: 0;">
+                <button class="update">Aktualisieren</button>
+            </div>
         </div>
 
         <div
@@ -49,28 +69,49 @@ export function create(props: Props): HTMLLIElement {
         </div>
     `;
 
+    const localRevision = el.querySelector(`#gistID_LocalRevision_${props.storeKey}`)!;
+    const remoteRevision = el.querySelector(`#gistID_RemoteRevision_${props.storeKey}`)!;
     const inputGistID = el.querySelector<HTMLInputElement>(`#gistID_${props.storeKey}`)!;
+    const update = el.querySelector<HTMLButtonElement>(`button.update`)!;
     const checkboxAutoUpdate = el.querySelector<HTMLInputElement>(`#autoUpdate_${props.storeKey}`)!;
 
-    inputGistID.onchange = async () => {
+    let updateInProgress: boolean = false;
+    const onGistIDChange = async () => {
+        if (updateInProgress) {
+            return;
+        }
+
+        updateInProgress = true;
+        const cleanUp = () => {
+            setTimeout(() => {
+                updateInProgress = false;
+            });
+        };
+
         if (!inputGistID.value) {
             globals.store.update(props.storeKey, (data) => {
                 data.gist = null;
                 return data;
             });
-            return;
+
+            return cleanUp();
         }
 
         globals.store.update(props.storeKey, (data) => {
             data.gist = {
                 id: inputGistID.value,
-                revision: -1,
+                revision: null,
             };
             return data;
         });
 
         // TODO: Import from gist here...
+
+        return cleanUp();
     };
+
+    inputGistID.onchange = async () => onGistIDChange();
+    update.onclick = async () => onGistIDChange();
 
     checkboxAutoUpdate.onchange = async () => {
         // TODO: ...
