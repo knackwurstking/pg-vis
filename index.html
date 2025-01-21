@@ -1,158 +1,247 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="de" data-theme="auto">
-  <head>
-    <meta charset="UTF-8">
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover"
-    >
-    <link rel="icon" href="/icons/favicon.ico" sizes="any">
-    <link rel="apple-touch-icon" href="/icons/apple-touch-icon-180x180.png">
-    <title>PG: Vis</title>
-    <link rel="stylesheet" href="/node_modules/ui/dist/css/main.css">
-    <link rel="stylesheet" href="/src/styles.css">
-  </head>
-  <body class="ui-container">
-    <div class="router-target ui-auto-scroll ui-hide-scrollbar"></div>
-    <div class="ui-app-bar" position="top" fixed>
-      <div class="left">
-        <button id="appBarButtonOpenDrawer" variant="ghost" color="primary" icon>
-          <div class="ui-icon-list"></div>
-        </button>
-        <button
-          id="appBarButtonBack"
-          style="display: none"
-          variatn="ghost"
-          color="primary"
-          icon
-        >
-          <div class="ui-icon-chevron-left"></div>
-        </button>
-      </div>
-      <div class="center">
-        <h3 id="appBarTitle" style="white-space: nowrap">PG: Vis</h3>
-      </div>
-      <div class="right">
-        <button
-          id="appBarButtonEdit"
-          style="display: none"
-          variant="ghost"
-          color="primary"
-          icon
-        >
-          <div class="ui-icon-pen"></div>
-        </button>
-        <button
-          id="appBarButtonShare"
-          style="display: none"
-          variant="ghost"
-          color="primary"
-          icon
-        >
-          <div class="ui-icon-share"></div>
-        </button>
-        <button
-          id="appBarButtonSearch"
-          style="display: none"
-          variant="ghost"
-          color="primary"
-          icon
-        >
-          <div class="ui-icon-search"></div>
-        </button>
-        <button
-          id="appBarButtonTrash"
-          style="display: none"
-          variant="ghost"
-          color="primary"
-          icon
-        >
-          <div class="ui-icon-trash"></div>
-        </button>
-        <button
-          id="appBarButtonPrinter"
-          style="display: none"
-          variant="ghost"
-          color="primary"
-          icon
-        >
-          <div class="ui-icon-printer"></div>
-        </button>
-      </div>
-    </div>
-    <div class="ui-drawer-backdrop"></div>
-    <aside class="ui-drawer" open>
-      <div class="ui-flex-grid">
-        <!-- Version/Build -->
-        <div class="app-info">
-          <span title="version">v2.0.0.dev</span>
-          <span title="build">[Build: 15]</span>
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover"
+        />
+        <link rel="icon" href="/icons/favicon.ico" sizes="any" />
+        <link rel="apple-touch-icon" href="/icons/apple-touch-icon-180x180.png" />
+        <title>PG: Vis</title>
+        <link rel="stylesheet" href="/node_modules/ui/dist/css/main.css" />
+        <link rel="stylesheet" href="/src/styles.css" />
+    </head>
+    <body class="ui-container">
+        <div id="routerTarget" class="ui-auto-scroll ui-hide-scrollbar"></div>
+        <div class="ui-app-bar" position="top" fixed>
+            <div class="left">
+                <button id="appBarButtonOpenDrawer" variant="ghost" color="primary" icon>
+                    <div class="ui-icon-list"></div>
+                </button>
+                <button
+                    id="appBarButtonBack"
+                    style="display: none"
+                    variatn="ghost"
+                    color="primary"
+                    icon
+                >
+                    <div class="ui-icon-chevron-left"></div>
+                </button>
+            </div>
+            <div class="center">
+                <h3 id="appBarTitle" style="white-space: nowrap">PG: Vis</h3>
+            </div>
+            <div class="right">
+                <button
+                    id="appBarButtonEdit"
+                    style="display: none"
+                    variant="ghost"
+                    color="primary"
+                    icon
+                >
+                    <div class="ui-icon-pen"></div>
+                </button>
+                <button
+                    id="appBarButtonShare"
+                    style="display: none"
+                    variant="ghost"
+                    color="primary"
+                    icon
+                >
+                    <div class="ui-icon-share"></div>
+                </button>
+                <button
+                    id="appBarButtonSearch"
+                    style="display: none"
+                    variant="ghost"
+                    color="primary"
+                    icon
+                >
+                    <div class="ui-icon-search"></div>
+                </button>
+                <button
+                    id="appBarButtonTrash"
+                    style="display: none"
+                    variant="ghost"
+                    color="primary"
+                    icon
+                >
+                    <div class="ui-icon-trash"></div>
+                </button>
+                <button
+                    id="appBarButtonPrinter"
+                    style="display: none"
+                    variant="ghost"
+                    color="primary"
+                    icon
+                >
+                    <div class="ui-icon-printer"></div>
+                </button>
+            </div>
         </div>
-        <!-- Settings -->
-        <div class="ui-flex-grid-item" style="width: 100%; padding: var(--ui-spacing)">
-          <button class="settings" style="width: 100%;">Einstellungen</button>
-        </div>
-        <!-- Alert Lists Group -->
-        <details class="group" name="alert-lists">
-          <summary><h4>Alarm Listen</h4></summary>
-          <div class="ui-flex-grid">
-            <!-- TODO: Items: "import/download" -->
-            <!-- TODO: Items: "gist" -->
-            <ul class="items"></ul>
-          </div>
-        </details>
-        <!-- Metal Sheets Group -->
-        <details class="group" name="metal-sheets">
-          <summary><h4>Blech Listen</h4></summary>
-          <div class="ui-flex-grid">
-            <!-- TODO: Items: "import/download" -->
-            <!-- TODO: Items: "gist" -->
-            <!-- TODO: Items: "new" -->
-            <ul class="items"></ul>
-          </div>
-        </details>
-        <!-- VIS Group -->
-        <details class="group" name="vis">
-          <summary><h4>VIS</h4></summary>
-          <div class="ui-flex-grid">
-            <!-- TODO: Items: "import/download" -->
-            <!-- TODO: Items: "gist" -->
-            <ul class="items"></ul>
-          </div>
-        </details>
-        <!-- VIS Bookmarks Group -->
-        <details class="group" name="vis-bookmarks">
-          <summary><h4>VIS: Bookmarks</h4></summary>
-          <div class="ui-flex-grid">
-            <!-- TODO: Items: "new" -->
-            <ul class="items"></ul>
-          </div>
-        </details>
-        <!-- VIS: Data Group -->
-        <details class="group" name="vis-data">
-          <summary><h4>VIS: Data</h4></summary>
-          <div class="ui-flex-grid">
-            <!-- TODO: Items: "import/download" -->
-            <!-- TODO: Items: "gist" -->
-            <!-- TODO: Items: "new" -->
-            <ul class="items"></ul>
-          </div>
-        </details>
-        <!-- Special Group -->
-        <details class="group" name="special">
-          <summary><h4>Spezial</h4></summary>
-          <div class="ui-flex-grid">
-            <!-- TODO: Items: "import/download" -->
-            <!-- TODO: Items: "gist" -->
-            <ul class="items"></ul>
-          </div>
-        </details>
-      </div>
-    </aside>
-    <template name="settings">
-      <!-- TODO: Handle Gist IDs here and checkboxes for autoupdate -->
-      <!-- NOTE: Readonly if autoupdate is enabled -->
-    </template>
-    <script type="module" src="/src/main.ts"></script>
-  </body>
+        <div class="ui-drawer-backdrop"></div>
+        <aside class="ui-drawer">
+            <div class="ui-flex-grid">
+                <!-- Version/Build -->
+                <div class="app-info">
+                    <span title="version">v2.0.0.dev</span>
+                    <span title="build">[Build: 15]</span>
+                </div>
+                <!-- Settings -->
+                <div class="ui-flex-grid-item" style="width: 100%; padding: var(--ui-spacing)">
+                    <button class="settings" style="width: 100%">Einstellungen</button>
+                </div>
+                <!-- Alert Lists Group -->
+                <details class="group" name="alert-lists">
+                    <summary><h4>Alarm Listen</h4></summary>
+                    <div class="ui-flex-grid">
+                        <!-- TODO: Items: "import/download" -->
+                        <!-- TODO: Items: "gist" -->
+                        <ul class="items"></ul>
+                    </div>
+                </details>
+                <!-- Metal Sheets Group -->
+                <details class="group" name="metal-sheets">
+                    <summary><h4>Blech Listen</h4></summary>
+                    <div class="ui-flex-grid">
+                        <!-- TODO: Items: "import/download" -->
+                        <!-- TODO: Items: "gist" -->
+                        <!-- TODO: Items: "new" -->
+                        <ul class="items"></ul>
+                    </div>
+                </details>
+                <!-- VIS Group -->
+                <details class="group" name="vis">
+                    <summary><h4>VIS</h4></summary>
+                    <div class="ui-flex-grid">
+                        <!-- TODO: Items: "import/download" -->
+                        <!-- TODO: Items: "gist" -->
+                        <ul class="items"></ul>
+                    </div>
+                </details>
+                <!-- VIS Bookmarks Group -->
+                <details class="group" name="vis-bookmarks">
+                    <summary><h4>VIS: Bookmarks</h4></summary>
+                    <div class="ui-flex-grid">
+                        <!-- TODO: Items: "new" -->
+                        <ul class="items"></ul>
+                    </div>
+                </details>
+                <!-- VIS: Data Group -->
+                <details class="group" name="vis-data">
+                    <summary><h4>VIS: Data</h4></summary>
+                    <div class="ui-flex-grid">
+                        <!-- TODO: Items: "import/download" -->
+                        <!-- TODO: Items: "gist" -->
+                        <!-- TODO: Items: "new" -->
+                        <ul class="items"></ul>
+                    </div>
+                </details>
+                <!-- Special Group -->
+                <details class="group" name="special">
+                    <summary><h4>Spezial</h4></summary>
+                    <div class="ui-flex-grid">
+                        <!-- TODO: Items: "import/download" -->
+                        <!-- TODO: Items: "gist" -->
+                        <ul class="items"></ul>
+                    </div>
+                </details>
+            </div>
+        </aside>
+        <template name="settings">
+            <style>
+                .settings.ui-flex-grid .gist-id-container {
+                    width: 100%;
+                }
+
+                .settings.ui-flex-grid .gist-id-container input[type="text"] {
+                    width: 100%;
+                }
+
+                .settings.ui-flex-grid .auto-update-container {
+                    --justify: space-between;
+                    --align: center;
+                }
+
+                .settings.ui-flex-grid .auto-update-container label {
+                    width: 100%;
+                    padding: var(--ui-spacing);
+                }
+
+                .settings.ui-flex-grid .auto-update-container input[type="checkbox"] {
+                    margin-right: var(--ui-spacing);
+                }
+            </style>
+
+            <div class="settings ui-flex-grid">
+                <h3>Alarm Listen</h3>
+
+                <div class="gist-id-container ui-flex-grid-item">
+                    <label for="gistID_AlertLists">Gist ID</label>
+                    <input id="gistID_AlertLists" type="text" />
+                </div>
+
+                <div class="auto-update-container ui-flex-grid-row">
+                    <label for="autoUpdate_AlertLists">Auto Update</label>
+                    <input id="autoUpdate_AlertLists" type="checkbox" />
+                </div>
+
+                <hr />
+
+                <h3>Blech Listen</h3>
+
+                <div class="gist-id-container ui-flex-grid-item">
+                    <label for="gistID_MetalSheets">Gist ID</label>
+                    <input id="gistID_MetalSheets" type="text" />
+                </div>
+
+                <div class="auto-update-container ui-flex-grid-row">
+                    <label for="autoUpdate_MetalSheets">Auto Update</label>
+                    <input id="autoUpdate_MetalSheets" type="checkbox" />
+                </div>
+
+                <hr />
+
+                <h3>VIS</h3>
+
+                <div class="gist-id-container ui-flex-grid-item">
+                    <label for="gistID_VIS">Gist ID</label>
+                    <input id="gistID_VIS" type="text" />
+                </div>
+
+                <div class="auto-update-container ui-flex-grid-row">
+                    <label for="autoUpdate_VIS">Auto Update</label>
+                    <input id="autoUpdate_VIS" type="checkbox" />
+                </div>
+
+                <hr />
+
+                <h3>VIS: Data</h3>
+
+                <div class="gist-id-container ui-flex-grid-item">
+                    <label for="gistID_VISData">Gist ID</label>
+                    <input id="gistID_VISData" type="text" />
+                </div>
+
+                <div class="auto-update-container ui-flex-grid-row">
+                    <label for="autoUpdate_VISData">Auto Update</label>
+                    <input id="autoUpdate_VISData" type="checkbox" />
+                </div>
+
+                <h3>Spezial</h3>
+
+                <div class="gist-id-container ui-flex-grid-item">
+                    <label for="gistID_Special">Gist ID</label>
+                    <input id="gistID_Special" type="text" />
+                </div>
+
+                <div class="auto-update-container ui-flex-grid-row">
+                    <label for="autoUpdate_Special">Auto Update</label>
+                    <input id="autoUpdate_Special" type="checkbox" />
+                </div>
+            </div>
+        </template>
+        <script type="module" src="/src/main.ts"></script>
+    </body>
 </html>

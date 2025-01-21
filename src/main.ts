@@ -2,6 +2,7 @@ import * as ui from "ui";
 import { registerSW } from "virtual:pwa-register";
 
 import * as globals from "./globals";
+import * as pages from "./pages";
 import * as types from "./types";
 import * as drawer from "./utils-drawer";
 import * as query from "./utils-query";
