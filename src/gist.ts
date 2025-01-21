@@ -6,7 +6,7 @@ import * as listStores from "./list-stores";
 
 export async function pull(storeKey: keyof listStores.ListStoreData, gistID: string) {
     try {
-        const resp = await gist(gistID);
+        const resp = await getGist(gistID);
         const listsStore = listStores.get(storeKey);
         const newLists: (types.AlertList | types.MetalSheet | types.Vis)[] = [];
 
@@ -34,13 +34,11 @@ export async function pull(storeKey: keyof listStores.ListStoreData, gistID: str
 
         listsStore.addToStore(newLists);
     } catch (err) {
-        // Something went wrong: ${err}
         alert(`Etwas ist schiefgelaufen: ${err}`);
-        return;
     }
 }
 
-async function gist(gistID: string) {
+async function getGist(gistID: string) {
     const octokit = new Octokit();
     const resp = await octokit.request("GET /gists/{gist_id}", {
         gist_id: gistID,
@@ -50,7 +48,6 @@ async function gist(gistID: string) {
     });
 
     if (resp.status !== 200) {
-        console.error(resp);
         throw new Error(
             `anfrage von "GET /gist/${gistID}" ist mit Statuscode ${resp.status} fehlgeschlagen`,
         );
