@@ -1,3 +1,5 @@
+import "bootstrap-icons/font/bootstrap-icons.min.css";
+
 import * as ui from "ui";
 import { registerSW } from "virtual:pwa-register";
 

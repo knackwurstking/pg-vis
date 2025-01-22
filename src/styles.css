@@ -23,3 +23,12 @@ body,
 .ui-drawer .group {
     width: 100%;
 }
+
+summary::after {
+    font-family: "bootstrap-icons";
+    content: "\f285";
+}
+
+details[open] summary::after {
+    content: "\f282";
+}

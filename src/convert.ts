@@ -60,7 +60,7 @@ export function toVis(dataString: string): types.Vis | null {
     return vis;
 }
 
-function fixFormatString(format: string): string {
+export function fixFormatString(format: string): string {
     try {
         const formatSplit = format.split(/[xX]/i);
         if (formatSplit.length > 2) return format;

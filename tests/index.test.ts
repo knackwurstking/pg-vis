@@ -1,4 +1,4 @@
-import { fixFormatString } from "../src/lib/convert";
+import { fixFormatString } from "../src/convert";
 
 describe("testing fixFormatString function", () => {
     test(`test: 24"X24"`, () => {
