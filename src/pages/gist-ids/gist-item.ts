@@ -72,10 +72,14 @@ export function create(props: Props): HTMLLIElement {
         </div>
     `;
 
-    const localRevision = el.querySelector(`#gistID_LocalRevision_${props.storeKey}`)!;
-    const remoteRevision = el.querySelector(`#gistID_RemoteRevision_${props.storeKey}`)!;
+    const localRevision = el.querySelector<HTMLSpanElement>(
+        `#gistID_LocalRevision_${props.storeKey}`,
+    )!;
+    const remoteRevision = el.querySelector<HTMLSpanElement>(
+        `#gistID_RemoteRevision_${props.storeKey}`,
+    )!;
     const inputGistID = el.querySelector<HTMLInputElement>(`#gistID_${props.storeKey}`)!;
-    const update = el.querySelector<HTMLButtonElement>(`button.update`)!;
+    const updateButton = el.querySelector<HTMLButtonElement>(`button.update`)!;
     const checkboxAutoUpdate = el.querySelector<HTMLInputElement>(`#autoUpdate_${props.storeKey}`)!;
 
     let updateInProgress: boolean = false;
@@ -85,11 +89,11 @@ export function create(props: Props): HTMLLIElement {
         }
 
         updateInProgress = true;
-        update.classList.add("active");
+        updateButton.classList.add("active");
         const cleanUp = () => {
             setTimeout(() => {
                 updateInProgress = false;
-                update.classList.remove("active");
+                updateButton.classList.remove("active");
             });
         };
 
@@ -108,12 +112,15 @@ export function create(props: Props): HTMLLIElement {
             data.gist = {
                 id: gistID,
                 revision: null,
+                autoUpdate: checkboxAutoUpdate.checked,
             };
             return data;
         });
 
         try {
-            globals.store.set(props.storeKey, await gist.pull(props.storeKey, gistID));
+            const data = await gist.pull(props.storeKey, gistID);
+            globals.store.set(props.storeKey, data);
+            localRevision.innerText = `${data.gist?.revision || "?"}`;
         } catch (err) {
             alert(`Etwas ist schiefgelaufen: ${err}`);
         }
@@ -121,12 +128,15 @@ export function create(props: Props): HTMLLIElement {
         return cleanUp();
     };
 
-    inputGistID.onchange = async () => update.click();
-    update.onclick = async () => onGistIDChange();
+    inputGistID.onchange = async () => updateButton.click();
+    updateButton.onclick = async () => onGistIDChange();
 
+    checkboxAutoUpdate.checked = globals.store.get(props.storeKey)!.gist?.autoUpdate || false;
     checkboxAutoUpdate.onchange = async () => {
         // TODO: ...
     };
+
+    // TODO: Get the remote revision if gist id alread set
 
     return el;
 }
