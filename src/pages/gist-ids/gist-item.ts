@@ -85,9 +85,11 @@ export function create(props: Props): HTMLLIElement {
         }
 
         updateInProgress = true;
+        update.classList.add("active");
         const cleanUp = () => {
             setTimeout(() => {
                 updateInProgress = false;
+                update.classList.remove("active");
             });
         };
 
@@ -119,7 +121,7 @@ export function create(props: Props): HTMLLIElement {
         return cleanUp();
     };
 
-    inputGistID.onchange = async () => onGistIDChange();
+    inputGistID.onchange = async () => update.click();
     update.onclick = async () => onGistIDChange();
 
     checkboxAutoUpdate.onchange = async () => {
