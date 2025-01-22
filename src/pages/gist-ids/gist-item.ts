@@ -21,13 +21,13 @@ export function create(props: Props): HTMLLIElement {
                 style="--align: flex-end; --gap: 0; --mono: 1; font-size: 0.85rem; width: fit-content;"
             >
                 <span>
-                    <span>Local Revision: </span>
+                    <span>Local Rev.: </span>
                     <span id="gistID_LocalRevision_${props.storeKey}">
                         ${globals.store.get(props.storeKey)!.gist?.revision || "?"}
                     </span>
                 </span>
                 <span>
-                    <span>Remote Revision: </span>
+                    <span>Remote Rev.: </span>
                     <span id="gistID_RemoteRevision_${props.storeKey}">?</span>
                 </span>
             </div>
@@ -48,8 +48,9 @@ export function create(props: Props): HTMLLIElement {
                 />
             </div>
             <div class="ui-flex-grid-item" style="--flex: 0;">
-                <!-- TODO: Use an icon Button here, "cloud-download" -->
-                <button class="update">Aktualisieren</button>
+                <button class="update" variant="ghost" color="primary" icon>
+                    <i class="bi bi-cloud-download"></i>
+                </button>
             </div>
         </div>
 
