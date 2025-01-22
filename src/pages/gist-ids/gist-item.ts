@@ -11,8 +11,10 @@ export interface Props {
 
 export function create(props: Props): HTMLLIElement {
     const el = document.createElement("li");
+
     el.className = "ui-flex-grid-item ui-border";
     el.style.width = "100%";
+
     el.innerHTML = html`
         <div class="ui-flex-grid-row" style="--justify: space-between; --align: center;">
             <h3>${props.title}</h3>
@@ -136,7 +138,9 @@ export function create(props: Props): HTMLLIElement {
         // TODO: ...
     };
 
-    // TODO: Get the remote revision if gist id alread set
+    if (!!inputGistID.value) {
+        // TODO: Get the remote revision number
+    }
 
     return el;
 }
