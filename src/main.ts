@@ -111,7 +111,7 @@ window.onfocus = async () => {
             const data = await gist.pull(storeKey, id);
 
             needToReload = true;
-            message += `\n${storeKey}: ${id} -> ${data.gist?.id || "?"}`;
+            message += `\n${storeKey}: ${revision} -> ${data.gist?.revision || "?"}`;
 
             globals.store.set(storeKey, data);
         } catch (err) {
