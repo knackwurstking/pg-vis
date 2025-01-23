@@ -104,7 +104,7 @@ export function create(props: Props): HTMLLIElement {
             globals.store.set(props.storeKey, data);
             remoteRevSpan.innerText = localRevSpan.innerText = `${data.gist?.revision || "?"}`;
         } catch (err) {
-            alert(`Etwas ist schiefgelaufen: ${err}`);
+            alert(`Pull from gist failed for "${props.storeKey}" ("${gistID}"): ${err}`);
         }
 
         return cleanUp();
@@ -126,7 +126,7 @@ export function create(props: Props): HTMLLIElement {
 
                 remoteRevSpan.innerText = `${remoteRev || "?"}`;
             } catch (err) {
-                alert(err);
+                alert(`Update failed for "${props.storeKey}" ("${inputGistID.value}"): ${err}`);
             }
         });
     }

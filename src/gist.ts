@@ -34,7 +34,7 @@ export async function pull(
 
 export async function getRevision(gistID: string): Promise<number | null> {
     const octokit = new Octokit();
-    octokit.log.warn = octokitWarnHandler;
+    octokit.log.warn = logWarn;
 
     const resp = await octokit.request("GET /gists/{gist_id}/commits", {
         gist_id: gistID,
@@ -60,7 +60,7 @@ export function shouldUpdate(remoteRev: number | null, currentRev: number | null
 
 async function getGist(gistID: string) {
     const octokit = new Octokit();
-    octokit.log.warn = octokitWarnHandler;
+    octokit.log.warn = logWarn;
 
     const resp = await octokit.request("GET /gists/{gist_id}", {
         gist_id: gistID,
@@ -78,7 +78,6 @@ async function getGist(gistID: string) {
     return resp;
 }
 
-function octokitWarnHandler(message: string, additionalInfo?: Object) {
-    console.warn(message, additionalInfo);
-    throw new Error(message);
+function logWarn(message: string, _additionalInfo?: Object) {
+    alert(message);
 }
