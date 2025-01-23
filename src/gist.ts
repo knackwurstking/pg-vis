@@ -1,7 +1,8 @@
 import { Octokit } from "octokit";
 
-import * as types from "./types";
+import * as globals from "./globals";
 import * as listStores from "./list-stores";
+import * as types from "./types";
 
 export async function pull(
     storeKey: keyof listStores.ListStoreData,
@@ -26,10 +27,28 @@ export async function pull(
     return {
         gist: {
             id: gistID,
-            revision: await gistRevision(gistID),
+            revision: await getRevision(gistID),
+            autoUpdate: !!globals.store.get(storeKey)!.gist?.autoUpdate,
         },
         lists: newLists,
     };
+}
+
+export async function getRevision(gistID: string): Promise<number | null> {
+    const octokit = new Octokit();
+    const resp = await octokit.request("GET /gists/{gist_id}/commits", {
+        gist_id: gistID,
+        headers: {
+            "X-GitHub-Api-Version": "2022-11-28",
+        },
+    });
+
+    if (resp.status !== 200) {
+        console.error(resp);
+        return null;
+    }
+
+    return resp.data.length;
 }
 
 async function getGist(gistID: string) {
@@ -48,21 +67,4 @@ async function getGist(gistID: string) {
     }
 
     return resp;
-}
-
-async function gistRevision(gistID: string): Promise<number> {
-    const octokit = new Octokit();
-    const resp = await octokit.request("GET /gists/{gist_id}/commits", {
-        gist_id: gistID,
-        headers: {
-            "X-GitHub-Api-Version": "2022-11-28",
-        },
-    });
-
-    if (resp.status !== 200) {
-        console.error(resp);
-        return -1;
-    }
-
-    return resp.data.length;
 }

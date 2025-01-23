@@ -135,11 +135,15 @@ export function create(props: Props): HTMLLIElement {
 
     checkboxAutoUpdate.checked = globals.store.get(props.storeKey)!.gist?.autoUpdate || false;
     checkboxAutoUpdate.onchange = async () => {
-        // TODO: ...
+        // TODO: if true: check revision and update if needed, also add some handler which is
+        // running each time the app is starting or gaining focus again, show a confirmation dialog
+        // before updating
     };
 
     if (!!inputGistID.value) {
-        // TODO: Get the remote revision number
+        setTimeout(async () => {
+            remoteRevision.innerText = `${(await gist.getRevision(inputGistID.value)) || "?"}`;
+        });
     }
 
     return el;
