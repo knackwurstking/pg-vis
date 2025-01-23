@@ -1,4 +1,4 @@
-import * as query from "./utils-query";
+import * as query from "../utils-query";
 
 const drawer = query.drawer();
 

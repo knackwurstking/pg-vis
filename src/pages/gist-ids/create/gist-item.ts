@@ -1,15 +1,15 @@
-import * as gist from "../../gist";
-import * as globals from "../../globals";
-import * as types from "../../types";
+import * as gist from "../../../gist";
+import * as globals from "../../../globals";
+import * as types from "../../../types";
 
 const html = String.raw;
 
-export interface Props {
+export interface GistItemProps {
     title: string;
     storeKey: types.DrawerGroups;
 }
 
-export function create(props: Props): HTMLLIElement {
+export function gistItem(props: GistItemProps): types.Component<HTMLLIElement> {
     const el = document.createElement("li");
 
     el.className = "ui-flex-grid-item ui-border";
@@ -131,5 +131,8 @@ export function create(props: Props): HTMLLIElement {
         });
     }
 
-    return el;
+    return {
+        element: el,
+        destroy() {},
+    };
 }

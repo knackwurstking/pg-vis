@@ -1,5 +1,7 @@
 import * as query from "../../utils-query";
-import * as gistItem from "./gist-item";
+import * as create from "./create";
+
+let cleanup: (() => void)[] = [];
 
 let originTitle: string = "";
 
@@ -13,10 +15,12 @@ export async function onMount() {
 
 export async function onDestroy() {
     query.appBar_Title().innerText = originTitle;
+    cleanup.forEach((fn) => fn());
+    cleanup = [];
 }
 
 function createInputs() {
-    const itemProps: gistItem.Props[] = [
+    const itemProps: create.GistItemProps[] = [
         {
             title: "Alarm Listen",
             storeKey: "alert-lists",
@@ -41,7 +45,8 @@ function createInputs() {
 
     const container = document.querySelector<HTMLUListElement>(`.gist-ids`)!;
     for (const itemProp of itemProps) {
-        const item = gistItem.create(itemProp);
-        container.appendChild(item);
+        const item = create.gistItem(itemProp);
+        cleanup.push(item.destroy);
+        container.appendChild(item.element);
     }
 }

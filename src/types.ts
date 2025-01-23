@@ -18,6 +18,11 @@ export interface Bookmarks {
     data: Product[];
 }
 
+export interface Component<T extends HTMLElement> {
+    element: T;
+    destroy(): void;
+}
+
 export interface Gist {
     id: string;
     revision: number | null;

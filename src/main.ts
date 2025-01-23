@@ -3,10 +3,10 @@ import "bootstrap-icons/font/bootstrap-icons.min.css";
 import * as ui from "ui";
 import { registerSW } from "virtual:pwa-register";
 
+import * as drawer from "./drawer";
 import * as globals from "./globals";
 import * as pages from "./pages";
 import * as types from "./types";
-import * as drawer from "./utils-drawer";
 import * as query from "./utils-query";
 
 // PWA Updates
@@ -21,15 +21,15 @@ const updateSW = registerSW({
 
 // Initialize AppBar
 
-query.appBar_ButtonOpenDrawer().onclick = () => drawer.open();
-query.drawerBackdrop().onclick = () => drawer.close();
+query.appBar_ButtonOpenDrawer().onclick = () => drawer.utils.open();
+query.drawerBackdrop().onclick = () => drawer.utils.close();
 
 // Initialize Drawer
 
 const drawerGistIDsButton = query.drawerGistIDsButton();
 drawerGistIDsButton.onclick = () => {
     location.hash = "";
-    drawer.close();
+    drawer.utils.close();
 };
 
 for (const name of [
@@ -54,6 +54,26 @@ for (const name of [
         });
 }
 
+// Initialize Main Event Handlers (store)
+
+let cleanup: (() => void)[] = [];
+globals.store.listen(
+    "alert-lists",
+    async (data) => {
+        cleanup.forEach((fn) => fn());
+        cleanup = [];
+
+        const group = query.drawerGroup("alert-lists");
+        group.items.innerHTML = "";
+        for (const list of data.lists) {
+            const item = drawer.create.alertListItem({ data: list });
+            cleanup.push(item.destroy);
+            group.items.appendChild(item.element);
+        }
+    },
+    true,
+);
+
 // Initialize Router
 
 ui.router.hash(query.routerTarget(), {
@@ -77,5 +97,5 @@ ui.router.hash(query.routerTarget(), {
 // Event Handlers
 
 window.onhashchange = () => {
-    drawer.close();
+    drawer.utils.close();
 };
