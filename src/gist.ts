@@ -51,6 +51,11 @@ export async function getRevision(gistID: string): Promise<number | null> {
     return resp.data.length;
 }
 
+export async function shouldUpdate(gistID: string, currentRev: number | null): Promise<boolean> {
+    const remoteRev = await getRevision(gistID);
+    return remoteRev !== currentRev || remoteRev === 1;
+}
+
 async function getGist(gistID: string) {
     const octokit = new Octokit();
     const resp = await octokit.request("GET /gists/{gist_id}", {

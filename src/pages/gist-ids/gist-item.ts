@@ -74,18 +74,20 @@ export function create(props: Props): HTMLLIElement {
         </div>
     `;
 
-    const localRevision = el.querySelector<HTMLSpanElement>(
+    const localRevSpan = el.querySelector<HTMLSpanElement>(
         `#gistID_LocalRevision_${props.storeKey}`,
     )!;
-    const remoteRevision = el.querySelector<HTMLSpanElement>(
+    const remoteRevSpan = el.querySelector<HTMLSpanElement>(
         `#gistID_RemoteRevision_${props.storeKey}`,
     )!;
     const inputGistID = el.querySelector<HTMLInputElement>(`#gistID_${props.storeKey}`)!;
     const updateButton = el.querySelector<HTMLButtonElement>(`button.update`)!;
     const checkboxAutoUpdate = el.querySelector<HTMLInputElement>(`#autoUpdate_${props.storeKey}`)!;
 
+    inputGistID.onchange = async () => updateButton.click();
+
     let updateInProgress: boolean = false;
-    const onGistIDChange = async () => {
+    updateButton.onclick = async () => {
         if (updateInProgress) {
             return;
         }
@@ -122,7 +124,7 @@ export function create(props: Props): HTMLLIElement {
         try {
             const data = await gist.pull(props.storeKey, gistID);
             globals.store.set(props.storeKey, data);
-            localRevision.innerText = `${data.gist?.revision || "?"}`;
+            remoteRevSpan.innerText = localRevSpan.innerText = `${data.gist?.revision || "?"}`;
         } catch (err) {
             alert(`Etwas ist schiefgelaufen: ${err}`);
         }
@@ -130,19 +132,31 @@ export function create(props: Props): HTMLLIElement {
         return cleanUp();
     };
 
-    inputGistID.onchange = async () => updateButton.click();
-    updateButton.onclick = async () => onGistIDChange();
-
     checkboxAutoUpdate.checked = globals.store.get(props.storeKey)!.gist?.autoUpdate || false;
     checkboxAutoUpdate.onchange = async () => {
-        // TODO: if true: check revision and update if needed, also add some handler which is
-        // running each time the app is starting or gaining focus again, show a confirmation dialog
-        // before updating
+        globals.store.update(props.storeKey, (data) => {
+            if (!!data.gist) {
+                data.gist.autoUpdate = checkboxAutoUpdate.checked;
+            }
+
+            return data;
+        });
+
+        if (checkboxAutoUpdate.checked) {
+            const currentRev = globals.store.get(props.storeKey)!.gist?.revision || null;
+            if (await gist.shouldUpdate(inputGistID.value, currentRev)) {
+                console.debug(
+                    `Remote rev is newer then the local rev (${currentRev}), ` +
+                        `perform an update (${inputGistID.value})`,
+                );
+                updateButton.click();
+            }
+        }
     };
 
     if (!!inputGistID.value) {
         setTimeout(async () => {
-            remoteRevision.innerText = `${(await gist.getRevision(inputGistID.value)) || "?"}`;
+            remoteRevSpan.innerText = `${(await gist.getRevision(inputGistID.value)) || "?"}`;
         });
     }
 
