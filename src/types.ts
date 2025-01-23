@@ -21,7 +21,6 @@ export interface Bookmarks {
 export interface Gist {
     id: string;
     revision: number | null;
-    autoUpdate: boolean;
 }
 
 export type DrawerGroups =

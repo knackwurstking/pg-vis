@@ -55,23 +55,6 @@ export function create(props: Props): HTMLLIElement {
                 </button>
             </div>
         </div>
-
-        <div
-            class="auto-update-container ui-flex-grid-row"
-            style="--justify: space-between; --align: center;"
-        >
-            <label
-                style="width: 100%; padding: var(--ui-spacing);"
-                for="autoUpdate_${props.storeKey}"
-            >
-                Auto Update
-            </label>
-            <input
-                id="autoUpdate_${props.storeKey}"
-                style="margin-right: var(--ui-spacing);"
-                type="checkbox"
-            />
-        </div>
     `;
 
     const localRevSpan = el.querySelector<HTMLSpanElement>(
@@ -82,7 +65,6 @@ export function create(props: Props): HTMLLIElement {
     )!;
     const inputGistID = el.querySelector<HTMLInputElement>(`#gistID_${props.storeKey}`)!;
     const updateButton = el.querySelector<HTMLButtonElement>(`button.update`)!;
-    const checkboxAutoUpdate = el.querySelector<HTMLInputElement>(`#autoUpdate_${props.storeKey}`)!;
 
     inputGistID.onchange = async () => updateButton.click();
 
@@ -113,11 +95,7 @@ export function create(props: Props): HTMLLIElement {
         }
 
         globals.store.update(props.storeKey, (data) => {
-            data.gist = {
-                id: gistID,
-                revision: null,
-                autoUpdate: checkboxAutoUpdate.checked,
-            };
+            data.gist = { id: gistID, revision: null };
             return data;
         });
 
@@ -132,31 +110,24 @@ export function create(props: Props): HTMLLIElement {
         return cleanUp();
     };
 
-    checkboxAutoUpdate.checked = globals.store.get(props.storeKey)!.gist?.autoUpdate || false;
-    checkboxAutoUpdate.onchange = async () => {
-        globals.store.update(props.storeKey, (data) => {
-            if (!!data.gist) {
-                data.gist.autoUpdate = checkboxAutoUpdate.checked;
-            }
-
-            return data;
-        });
-
-        if (checkboxAutoUpdate.checked) {
-            const currentRev = globals.store.get(props.storeKey)!.gist?.revision || null;
-            if (await gist.shouldUpdate(inputGistID.value, currentRev)) {
-                console.debug(
-                    `Remote rev is newer then the local rev (${currentRev}), ` +
-                        `perform an update (${inputGistID.value})`,
-                );
-                updateButton.click();
-            }
-        }
-    };
-
     if (!!inputGistID.value) {
         setTimeout(async () => {
-            remoteRevSpan.innerText = `${(await gist.getRevision(inputGistID.value)) || "?"}`;
+            try {
+                const remoteRev = await gist.getRevision(inputGistID.value);
+
+                if (
+                    gist.shouldUpdate(
+                        remoteRev,
+                        globals.store.get(props.storeKey)!.gist?.revision || null,
+                    )
+                ) {
+                    updateButton.click();
+                }
+
+                remoteRevSpan.innerText = `${remoteRev || "?"}`;
+            } catch (err) {
+                alert(err);
+            }
         });
     }
 

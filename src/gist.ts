@@ -1,6 +1,5 @@
 import { Octokit } from "octokit";
 
-import * as globals from "./globals";
 import * as listStores from "./list-stores";
 import * as types from "./types";
 
@@ -28,7 +27,6 @@ export async function pull(
         gist: {
             id: gistID,
             revision: await getRevision(gistID),
-            autoUpdate: !!globals.store.get(storeKey)!.gist?.autoUpdate,
         },
         lists: newLists,
     };
@@ -36,6 +34,8 @@ export async function pull(
 
 export async function getRevision(gistID: string): Promise<number | null> {
     const octokit = new Octokit();
+    octokit.log.warn = octokitWarnHandler;
+
     const resp = await octokit.request("GET /gists/{gist_id}/commits", {
         gist_id: gistID,
         headers: {
@@ -44,20 +44,24 @@ export async function getRevision(gistID: string): Promise<number | null> {
     });
 
     if (resp.status !== 200) {
-        console.error(resp);
-        return null;
+        throw new Error(`GET ${resp.url} ${resp.status}`);
     }
 
     return resp.data.length;
 }
 
-export async function shouldUpdate(gistID: string, currentRev: number | null): Promise<boolean> {
-    const remoteRev = await getRevision(gistID);
+export function shouldUpdate(remoteRev: number | null, currentRev: number | null): boolean {
+    if (remoteRev === null) {
+        return false;
+    }
+
     return remoteRev !== currentRev || remoteRev === 1;
 }
 
 async function getGist(gistID: string) {
     const octokit = new Octokit();
+    octokit.log.warn = octokitWarnHandler;
+
     const resp = await octokit.request("GET /gists/{gist_id}", {
         gist_id: gistID,
         headers: {
@@ -72,4 +76,9 @@ async function getGist(gistID: string) {
     }
 
     return resp;
+}
+
+function octokitWarnHandler(message: string, additionalInfo?: Object) {
+    console.warn(message, additionalInfo);
+    throw new Error(message);
 }

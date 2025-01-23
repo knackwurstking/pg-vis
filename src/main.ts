@@ -3,7 +3,6 @@ import "bootstrap-icons/font/bootstrap-icons.min.css";
 import * as ui from "ui";
 import { registerSW } from "virtual:pwa-register";
 
-import * as gist from "./gist";
 import * as globals from "./globals";
 import * as pages from "./pages";
 import * as types from "./types";
@@ -79,48 +78,4 @@ ui.router.hash(query.routerTarget(), {
 
 window.onhashchange = () => {
     drawer.close();
-};
-
-window.onfocus = async () => {
-    console.debug(`Window onfocus event called... Check for auto-update stuff...`);
-
-    const storeKeysToCheck: types.DrawerGroups[] = [
-        "alert-lists",
-        "metal-sheets",
-        "vis",
-        "vis-data",
-        "special",
-    ];
-
-    let needToReload = false;
-    let message = `Updated Gist Repos`;
-    for (const storeKey of storeKeysToCheck) {
-        if (
-            !globals.store.get(storeKey)!.gist?.autoUpdate &&
-            !globals.store.get(storeKey)!.gist?.id
-        ) {
-            continue;
-        }
-
-        try {
-            const { id, revision } = globals.store.get(storeKey)!.gist!;
-            if (!(await gist.shouldUpdate(id, revision))) {
-                continue;
-            }
-
-            const data = await gist.pull(storeKey, id);
-
-            needToReload = true;
-            message += `\n${storeKey}: ${revision} -> ${data.gist?.revision || "?"}`;
-
-            globals.store.set(storeKey, data);
-        } catch (err) {
-            alert(`Etwas ist schiefgelaufen: ${err}`);
-        }
-    }
-
-    if (needToReload) {
-        alert(message);
-        location.reload(); // NOTE: Maybe I should just reload drawer items and the current page here
-    }
 };
