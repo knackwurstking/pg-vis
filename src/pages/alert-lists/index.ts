@@ -1,9 +1,10 @@
-import * as query from "../../utils-query";
 import * as globals from "../../globals";
 import * as listsStore from "../../list-stores";
+import * as query from "../../utils-query";
+
+const ls = listsStore.get("alert-lists");
 
 let originTitle: string = "";
-const ls = listsStore.get("alert-lists");
 
 export async function onMount() {
     const param = query.getSearchParam();
