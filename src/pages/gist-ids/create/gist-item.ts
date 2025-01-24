@@ -12,7 +12,7 @@ export interface GistItemProps {
 export function gistItem(props: GistItemProps): types.Component<HTMLLIElement> {
     const el = document.createElement("li");
 
-    el.className = "ui-flex-grid-item ui-border";
+    el.className = "gist-item ui-flex-grid-item ui-border";
     el.style.width = "100%";
 
     el.innerHTML = html`
