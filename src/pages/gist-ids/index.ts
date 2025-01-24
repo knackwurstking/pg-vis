@@ -2,7 +2,6 @@ import * as query from "../../utils-query";
 import * as create from "./create";
 
 let cleanup: (() => void)[] = [];
-
 let originTitle: string = "";
 
 export async function onMount() {
