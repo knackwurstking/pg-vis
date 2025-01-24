@@ -111,24 +111,22 @@ export function gistItem(props: GistItemProps): types.Component<HTMLLIElement> {
     };
 
     if (!!inputGistID.value) {
-        setTimeout(async () => {
-            try {
-                const remoteRev = await gist.getRevision(inputGistID.value);
-
-                if (
-                    gist.shouldUpdate(
-                        remoteRev,
-                        globals.store.get(props.storeKey)!.gist?.revision || null,
-                    )
-                ) {
-                    updateButton.click();
-                }
-
-                remoteRevSpan.innerText = `${remoteRev || "?"}`;
-            } catch (err) {
-                alert(`Update failed for "${props.storeKey}" ("${inputGistID.value}"): ${err}`);
-            }
-        });
+        //setTimeout(async () => {
+        //    try {
+        //        const remoteRev = await gist.getRevision(inputGistID.value);
+        //        if (
+        //            gist.shouldUpdate(
+        //                remoteRev,
+        //                globals.store.get(props.storeKey)!.gist?.revision || null,
+        //            )
+        //        ) {
+        //            updateButton.click();
+        //        }
+        //        remoteRevSpan.innerText = `${remoteRev || "?"}`;
+        //    } catch (err) {
+        //        alert(`Update failed for "${props.storeKey}" ("${inputGistID.value}"): ${err}`);
+        //    }
+        //});
     }
 
     return {
