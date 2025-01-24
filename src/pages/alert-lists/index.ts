@@ -1,9 +1,12 @@
 import * as globals from "../../globals";
 import * as listsStore from "../../list-stores";
+import * as types from "../../types";
 import * as query from "../../utils-query";
+import * as create from "./create";
 
 const ls = listsStore.get("alert-lists");
 
+let cleanup: (() => void)[] = [];
 let originTitle: string = "";
 
 export async function onMount() {
@@ -20,9 +23,21 @@ export async function onMount() {
     originTitle = appBarTitle.innerText;
     appBarTitle.innerText = decodeURIComponent(list.title);
 
-    console.debug(list); // TODO: Render items and init app bar action buttons
+    renderAlerts(list.data);
 }
 
 export async function onDestroy() {
+    cleanup.forEach((fn) => fn());
+    cleanup = [];
     query.appBar_Title().innerText = originTitle;
+}
+
+function renderAlerts(alerts: types.Alert[]) {
+    const container = document.querySelector<HTMLUListElement>(`.alerts`)!;
+
+    for (const alert of alerts) {
+        const item = create.alertItem(alert);
+        cleanup.push(item.destroy);
+        container.appendChild(item.element);
+    }
 }
