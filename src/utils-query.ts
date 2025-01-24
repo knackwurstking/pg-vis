@@ -1,5 +1,16 @@
 import * as types from "./types";
 
+export function getSearchParam(): { [key: string]: string } {
+    const result: { [key: string]: string } = {};
+
+    for (const param of location.search.replace(/^\?/g, "").split("&")) {
+        const [key, value] = param.split("=");
+        result[decodeURIComponent(key)] = decodeURIComponent(value);
+    }
+
+    return result;
+}
+
 // Router
 
 export function routerTarget(): HTMLElement {

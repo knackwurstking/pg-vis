@@ -1,7 +1,17 @@
+import * as query from "../../utils-query";
+
+let originTitle: string = "";
+
 export async function onMount() {
-    console.debug("onMount");
+    const param = query.getSearchParam();
+
+    const appBarTitle = query.appBar_Title();
+    originTitle = appBarTitle.innerText;
+    appBarTitle.innerText = decodeURIComponent(param.listKey);
+
+    // TODO: ...
 }
 
 export async function onDestroy() {
-    console.debug("onDestroy");
+    query.appBar_Title().innerText = originTitle;
 }

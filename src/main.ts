@@ -81,12 +81,28 @@ ui.router.hash(query.routerTarget(), {
         title: "VIS | Gist IDs",
         template: {
             selector: `template[name="gist-ids"]`,
-            onMount: () => pages.gistIDs.onMount(),
-            onDestroy: () => pages.gistIDs.onDestroy(),
+            onMount() {
+                pages.gistIDs.onMount();
+            },
+            onDestroy() {
+                pages.gistIDs.onDestroy();
+            },
         },
     },
 
-    "alert-lists": {},
+    "alert-lists": {
+        title: "VIS | Alarm Listen",
+        template: {
+            selector: `template[name="alert-lists"]`,
+            onMount() {
+                pages.alertLists.onMount();
+            },
+            onDestroy() {
+                pages.alertLists.onDestroy();
+            },
+        },
+    },
+
     "metal-sheets": {},
     vis: {},
     "vis-bookmarks": {},
