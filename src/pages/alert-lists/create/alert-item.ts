@@ -17,7 +17,7 @@ export function alertItem(
 
     el.style.width = "100%";
     el.style.padding = "var(--ui-spacing)";
-    el.style.borderBottom = "1px solid hsl(var(--ui-border-color)";
+    el.style.borderBottom = "1px solid var(--ui-border-color)";
 
     if (!!props?.enableRouting) {
         el.role = "button";
