@@ -36,7 +36,7 @@ function renderAlerts(alerts: types.Alert[]) {
     const container = document.querySelector<HTMLUListElement>(`.alerts`)!;
 
     for (const alert of alerts) {
-        const item = create.alertItem(alert);
+        const item = create.alertItem(alert, { enableRouting: true });
         cleanup.push(item.destroy);
         container.appendChild(item.element);
     }
