@@ -35,8 +35,13 @@ export async function onDestroy() {
 function renderAlerts(alerts: types.Alert[]) {
     const container = document.querySelector<HTMLUListElement>(`.alerts`)!;
 
-    for (const alert of alerts) {
-        const item = create.alertItem(alert, { enableRouting: true });
+    for (let x = 0; x < alerts.length; x++) {
+        const item = create.alertItem({
+            alert: alerts[x],
+            alertIndex: x,
+            listKey: "",
+            enableRouting: true,
+        });
         cleanup.push(item.destroy);
         container.appendChild(item.element);
     }
