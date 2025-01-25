@@ -34,17 +34,19 @@ function render(alerts: types.Alert[], listKey: string) {
         .querySelector<HTMLInputElement>(`.search-bar input[type="search"]`)!;
     const alertsContainer = query.routerTarget().querySelector<HTMLUListElement>(`.alerts`)!;
 
-    for (let x = 0; x < alerts.length; x++) {
-        const item = create.alertItem({
-            alert: alerts[x],
-            enableRouting: {
-                alertIndex: x,
-                listKey,
-            },
+    alerts.forEach((alert, i) => {
+        setTimeout(() => {
+            const item = create.alertItem({
+                alert: alert,
+                enableRouting: {
+                    alertIndex: i,
+                    listKey,
+                },
+            });
+            cleanup.push(item.destroy);
+            alertsContainer.appendChild(item.element);
         });
-        cleanup.push(item.destroy);
-        alertsContainer.appendChild(item.element);
-    }
+    });
 
     searchBarInput.oninput = () => {
         const r = utils.generateRegExp(searchBarInput.value);
