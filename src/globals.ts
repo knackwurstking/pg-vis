@@ -1,8 +1,28 @@
 import * as ui from "ui";
 
+import * as listsStore from "./list-stores";
 import * as types from "./types";
 
 export const store = createStore();
+
+export function getAlertList(listKey: string): types.AlertList | null {
+    const ls = listsStore.get("alert-lists");
+
+    const list = store.get("alert-lists")!.lists.find((list) => {
+        return ls.listKey(list) === listKey;
+    });
+
+    return list || null;
+}
+
+export function getAlert(listKey: string, index: number): types.Alert | null {
+    const list = getAlertList(listKey);
+    if (!list) {
+        return null;
+    }
+
+    return list.data[index];
+}
 
 function createStore(): types.PGStore {
     const storePrefix = "pg-vis-dev:";

@@ -9,7 +9,7 @@ export async function onMount() {
     originTitle = appBarTitle.innerText;
     appBarTitle.innerText = "Gist IDs";
 
-    createInputs();
+    render();
 }
 
 export async function onDestroy() {
@@ -18,7 +18,7 @@ export async function onDestroy() {
     cleanup = [];
 }
 
-function createInputs() {
+function render() {
     const itemProps: create.GistItemProps[] = [
         {
             title: "Alarm Listen",

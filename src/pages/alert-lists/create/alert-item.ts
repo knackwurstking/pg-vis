@@ -5,9 +5,10 @@ const html = String.raw;
 
 export interface AlertItemProps {
     alert: types.Alert;
-    alertIndex?: number;
-    listKey?: string;
-    enableRouting?: boolean;
+    enableRouting?: {
+        alertIndex: number;
+        listKey: string;
+    };
 }
 
 export function alertItem(props: AlertItemProps): types.Component<HTMLLIElement> {
@@ -19,11 +20,15 @@ export function alertItem(props: AlertItemProps): types.Component<HTMLLIElement>
     el.style.padding = "var(--ui-spacing)";
     el.style.borderBottom = "1px solid var(--ui-border-color)";
 
+    const onClickHandler = () => {
+        location.href = `?listKey=${props.enableRouting!.listKey}&index=${props.enableRouting!.alertIndex}#alert`;
+    };
+
     if (!!props.enableRouting) {
         el.role = "button";
         el.style.cursor = "pointer";
 
-        location.href = `?listKey=${props.listKey}&index=${props.alertIndex}#alert`;
+        el.addEventListener("click", onClickHandler);
     }
 
     el.innerHTML = html`
@@ -43,6 +48,10 @@ export function alertItem(props: AlertItemProps): types.Component<HTMLLIElement>
 
     return {
         element: el,
-        destroy() {},
+        destroy() {
+            if (!!props.enableRouting) {
+                el.removeEventListener("click", onClickHandler);
+            }
+        },
     };
 }

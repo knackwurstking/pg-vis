@@ -103,6 +103,19 @@ ui.router.hash(query.routerTarget(), {
         },
     },
 
+    alert: {
+        title: "VIS | Alarm",
+        template: {
+            selector: `template[name="alert"]`,
+            onMount() {
+                pages.alert.onMount();
+            },
+            onDestroy() {
+                pages.alert.onDestroy();
+            },
+        },
+    },
+
     "metal-sheets": {},
     vis: {},
     "vis-bookmarks": {},
