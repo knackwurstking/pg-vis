@@ -24,7 +24,10 @@ export function gistItem(props: GistItemProps): types.Component<HTMLLIElement> {
             >
                 <span>
                     <span>Local Rev.: </span>
-                    <span id="gistID_LocalRevision_${props.storeKey}">
+                    <span
+                        id="gistID_LocalRevision_${props.storeKey}"
+                        style="--wght: 450; color: green"
+                    >
                         ${globals.store.get(props.storeKey)!.gist?.revision || "?"}
                     </span>
                 </span>
@@ -103,30 +106,40 @@ export function gistItem(props: GistItemProps): types.Component<HTMLLIElement> {
             const data = await gist.pull(props.storeKey, gistID);
             globals.store.set(props.storeKey, data);
             remoteRevSpan.innerText = localRevSpan.innerText = `${data.gist?.revision || "?"}`;
+            localRevSpan.style.color = "green";
+            inputGistID.ariaInvalid = null;
         } catch (err) {
-            alert(`Pull from gist failed for "${props.storeKey}" ("${gistID}"): ${err}`);
+            console.warn(`Pull from gist failed for "${props.storeKey}" ("${gistID}"): ${err}`);
+            inputGistID.ariaInvalid = "";
         }
 
         return cleanUp();
     };
 
     if (!!inputGistID.value) {
-        //setTimeout(async () => {
-        //    try {
-        //        const remoteRev = await gist.getRevision(inputGistID.value);
-        //        if (
-        //            gist.shouldUpdate(
-        //                remoteRev,
-        //                globals.store.get(props.storeKey)!.gist?.revision || null,
-        //            )
-        //        ) {
-        //            updateButton.click();
-        //        }
-        //        remoteRevSpan.innerText = `${remoteRev || "?"}`;
-        //    } catch (err) {
-        //        alert(`Update failed for "${props.storeKey}" ("${inputGistID.value}"): ${err}`);
-        //    }
-        //});
+        setTimeout(async () => {
+            try {
+                const remoteRev = await gist.getRevision(inputGistID.value);
+                remoteRevSpan.innerText = `${remoteRev || "?"}`;
+                inputGistID.ariaInvalid = null;
+
+                if (
+                    gist.shouldUpdate(
+                        remoteRev,
+                        globals.store.get(props.storeKey)!.gist?.revision || null,
+                    )
+                ) {
+                    localRevSpan.style.color = "red";
+                } else {
+                    localRevSpan.style.color = "green";
+                }
+            } catch (err) {
+                inputGistID.ariaInvalid = "";
+                console.debug(
+                    `Update failed for "${props.storeKey}" ("${inputGistID.value}"): ${err}`,
+                );
+            }
+        });
     }
 
     return {
