@@ -164,7 +164,15 @@
         </template>
 
         <template name="alert-lists">
-            <!-- TODO: Add search bar on top, open/close via app-bar button -->
+            <section class="search-bar">
+                <fieldset>
+                    <legend>Suche nach Alarmen:</legend>
+                    <div class="ui-flex-grid-row">
+                        <input style="width: 100%" type="search" placeholder="Suche..." />
+                    </div>
+                </fieldset>
+            </section>
+
             <ul class="alerts" style="padding: var(--ui-spacing)"></ul>
         </template>
 
