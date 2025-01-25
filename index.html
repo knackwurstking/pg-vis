@@ -164,16 +164,23 @@
         </template>
 
         <template name="alert-lists">
-            <section class="search-bar">
-                <fieldset>
-                    <legend>Suche nach Alarmen:</legend>
-                    <div class="ui-flex-grid-row">
-                        <input style="width: 100%" type="search" placeholder="Suche..." />
-                    </div>
-                </fieldset>
-            </section>
+            <div class="ui-flex-grid" style="--gap: 0; width: 100%; height: 100%">
+                <section class="search-bar" style="width: 100%">
+                    <fieldset>
+                        <legend>Suche nach Alarmen:</legend>
+                        <div class="ui-flex-grid-row">
+                            <input style="width: 100%" type="search" placeholder="Suche..." />
+                        </div>
+                    </fieldset>
+                </section>
 
-            <ul class="alerts" style="padding: var(--ui-spacing)"></ul>
+                <div
+                    class="ui-flex-grid-item ui-auto-scroll-y ui-hide-scrollbar"
+                    style="width: 100%"
+                >
+                    <ul class="alerts" style="padding: var(--ui-spacing) width: 100%;"></ul>
+                </div>
+            </div>
         </template>
 
         <template name="alert">
