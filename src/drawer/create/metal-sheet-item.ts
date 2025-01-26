@@ -19,7 +19,7 @@ export function metalSheetItem(props: MetalSheetItemProps): types.Component<HTML
         <a
             class="ui-flex column align-start justify-center"
             style="width: 100%; height: 100%;"
-            href="#alert-lists?listKey=${ls.listKey(props.data)}"
+            href="#metal-sheets?listKey=${ls.listKey(props.data)}"
         >
             <span>${pressString} ${props.data.format} ${props.data.toolID}</span>
             <span>${props.data.data.table.data.length} Einträge</span>
