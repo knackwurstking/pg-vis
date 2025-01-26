@@ -18,6 +18,9 @@ export async function onMount() {
             ? `[P${list.data.press}] ${list.format} ${list.toolID}`
             : `${list.format} ${list.toolID}`;
 
+    // TODO: Add some action buttons for adding a new table entry
+    // TODO: Enable app bar button for editing the current list
+
     render(list.data.table.header, list.data.table.data, param.listKey);
 }
 
