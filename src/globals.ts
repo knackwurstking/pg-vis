@@ -30,6 +30,16 @@ export function getAlertList(listKey: string): types.AlertList | null {
     return list || null;
 }
 
+export function getMetalSheet(listKey: string): types.MetalSheet | null {
+    const ls = listsStore.get("metal-sheets");
+
+    const list = store.get("metal-sheets")!.lists.find((list) => {
+        return ls.listKey(list) === listKey;
+    });
+
+    return list || null;
+}
+
 export function getAlert(listKey: string, index: number): types.Alert | null {
     const list = getAlertList(listKey);
     if (!list) {
