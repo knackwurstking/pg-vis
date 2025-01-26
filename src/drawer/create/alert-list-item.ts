@@ -13,6 +13,7 @@ export function alertListItem(props: AlertListItemProps): types.Component<HTMLLI
 
     el.className = "ui-flex justify-between";
 
+    ls.title();
     el.innerHTML = html`
         <a
             class="ui-flex column align-start justify-center"
@@ -25,6 +26,8 @@ export function alertListItem(props: AlertListItemProps): types.Component<HTMLLI
 
         <button variant="ghost" color="destructive"><i class="bi bi-trash"></i></button>
     `;
+
+    // TODO: Delete button handler
 
     return {
         element: el,
