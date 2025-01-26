@@ -155,7 +155,18 @@ ui.router.hash(query.routerTarget(), {
         },
     },
 
-    "metal-sheets": {},
+    "metal-sheets": {
+        title: "VIS | Blech Listen",
+        template: {
+            selector: `template[name="metal-sheets"]`,
+            onMount() {
+                pages.alert.onMount();
+            },
+            onDestroy() {
+                pages.alert.onDestroy();
+            },
+        },
+    },
     vis: {},
     "vis-bookmarks": {},
     "vis-data": {},
