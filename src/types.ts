@@ -111,6 +111,14 @@ export interface PGStoreEvents {
         gist: Gist | null;
         lists: Bookmarks[];
     };
+
+    runtime: {
+        lists: {
+            [key: string]: {
+                remoteRevision: number | null;
+            };
+        };
+    };
 }
 
 export interface Product {

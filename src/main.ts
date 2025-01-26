@@ -28,7 +28,7 @@ query.drawerBackdrop().onclick = () => drawer.utils.close();
 
 const drawerGistIDsButton = query.drawerGistIDsButton();
 drawerGistIDsButton.onclick = () => {
-    location.hash = "";
+    globals.router.goTo(null, "");
     drawer.utils.close();
 };
 

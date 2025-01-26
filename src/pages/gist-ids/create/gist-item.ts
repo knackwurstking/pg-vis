@@ -119,7 +119,18 @@ export function gistItem(props: GistItemProps): types.Component<HTMLLIElement> {
     if (!!inputGistID.value) {
         setTimeout(async () => {
             try {
-                const remoteRev = await gist.getRevision(inputGistID.value);
+                let remoteRev =
+                    globals.store.get("runtime")!.lists[inputGistID.value]?.remoteRevision || null;
+                if (!remoteRev) {
+                    remoteRev = await gist.getRevision(inputGistID.value);
+                    globals.store.update("runtime", (data) => {
+                        data.lists[inputGistID.value] = {
+                            remoteRevision: remoteRev,
+                        };
+                        return data;
+                    });
+                }
+
                 remoteRevSpan.innerText = `${remoteRev || "?"}`;
                 inputGistID.ariaInvalid = null;
 

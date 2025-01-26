@@ -1,5 +1,6 @@
 import * as ui from "ui";
 import * as types from "../../../types";
+import * as globals from "../../../globals";
 
 const html = String.raw;
 
@@ -21,7 +22,13 @@ export function alertItem(props: AlertItemProps): types.Component<HTMLLIElement>
     el.style.borderBottom = "1px solid var(--ui-border-color)";
 
     const onClickHandler = () => {
-        location.href = `?listKey=${props.enableRouting!.listKey}&index=${props.enableRouting!.alertIndex}#alert`;
+        globals.router.goTo(
+            {
+                listKey: props.enableRouting!.listKey,
+                index: props.enableRouting!.alertIndex.toString(),
+            },
+            "#alert",
+        );
     };
 
     if (!!props.enableRouting) {

@@ -38,6 +38,9 @@ export async function getRevision(gistID: string): Promise<number | null> {
         alert(`Get gist revision failed: ${gistID}: ${message}`);
     };
 
+    console.debug("fetch revision...");
+    return 5; // TODO: This needs to be removed after dev is done
+
     const resp = await octokit.request("GET /gists/{gist_id}/commits", {
         gist_id: gistID,
         headers: {
@@ -66,6 +69,7 @@ async function getGist(gistID: string) {
         alert(`Get gist data failed: ${gistID}: ${message}`);
     };
 
+    console.debug("fetch gist...");
     const resp = await octokit.request("GET /gists/{gist_id}", {
         gist_id: gistID,
         headers: {

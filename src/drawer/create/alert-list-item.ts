@@ -17,7 +17,7 @@ export function alertListItem(props: AlertListItemProps): types.Component<HTMLLI
         <a
             class="ui-flex column align-start justify-center"
             style="width: 100%; height: 100%;"
-            href="?listKey=${ls.listKey(props.data)}#alert-lists"
+            href="#alert-lists?listKey=${ls.listKey(props.data)}"
         >
             <span>${props.data.title}</span>
             <span>${props.data.data.length} Einträge</span>
