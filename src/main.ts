@@ -56,23 +56,62 @@ for (const name of [
 
 // Initialize Main Event Handlers (store)
 
-let cleanup: (() => void)[] = [];
-globals.store.listen(
-    "alert-lists",
-    async (data) => {
-        cleanup.forEach((fn) => fn());
-        cleanup = [];
+// Render drawer alert-lists items
+{
+    let cleanup: (() => void)[] = [];
+    globals.store.listen(
+        "alert-lists",
+        async (data) => {
+            cleanup.forEach((fn) => fn());
+            cleanup = [];
 
-        const group = query.drawerGroup("alert-lists");
-        group.items.innerHTML = "";
-        for (const list of data.lists) {
-            const item = drawer.create.alertListItem({ data: list });
-            cleanup.push(item.destroy);
-            group.items.appendChild(item.element);
-        }
-    },
-    true,
-);
+            const group = query.drawerGroup("alert-lists");
+            group.items.innerHTML = "";
+            for (const list of data.lists) {
+                const item = drawer.create.alertListItem({ data: list });
+                cleanup.push(item.destroy);
+                group.items.appendChild(item.element);
+            }
+        },
+        true,
+    );
+}
+
+// Render drawer metal-sheets items
+{
+    let cleanup: (() => void)[] = [];
+    globals.store.listen(
+        "metal-sheets",
+        async (data) => {
+            cleanup.forEach((fn) => fn());
+            cleanup = [];
+
+            // Sort active lists by press
+            let activeLists: types.MetalSheet[] = [];
+            const rest: types.MetalSheet[] = [];
+            for (const list of data.lists) {
+                if (list.data.press > -1) {
+                    activeLists.push(list);
+                } else {
+                    rest.push(list);
+                }
+            }
+
+            // Sort active lists by press from low to high
+            activeLists = activeLists.sort((a, b) => (a.data.press > b.data.press ? 1 : -1));
+
+            // Render
+            const group = query.drawerGroup("metal-sheets");
+            group.items.innerHTML = "";
+            for (const list of [...activeLists, ...rest]) {
+                const item = drawer.create.metalSheetItem({ data: list });
+                cleanup.push(item.destroy);
+                group.items.appendChild(item.element);
+            }
+        },
+        true,
+    );
+}
 
 // Initialize Router
 
