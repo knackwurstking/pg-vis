@@ -45,6 +45,10 @@ export interface MetalSheet {
          */
         press: number;
         table: {
+            /**
+             * This will hide certain data indexes
+             */
+            filter?: number[]; // TODO: Add optional filters here
             header: string[];
             data: string[][];
         };
