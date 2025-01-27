@@ -67,7 +67,7 @@ function sortTableData(data: string[][]): string[][] {
             // Compare thickness
             return 1;
         } else if (thicknessA === thicknessB && parseFloat(a[1]) > parseFloat(b[1])) {
-            // Compare height if thickness is even
+            // Compare height if thickness is event
             return 1;
         }
 
