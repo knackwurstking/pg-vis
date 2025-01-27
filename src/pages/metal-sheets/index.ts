@@ -22,8 +22,9 @@ export async function onMount() {
 
     // TODO: Add some action buttons for adding a new table entry
     // TODO: Enable app bar button for editing the current list
+    // TODO: Drag'n'Drop or just sort for thickness and "Marke" height
 
-    render(list.data.table.header, list.data.table.data, param.listKey);
+    render(list.data.table.header, sortTableData(list.data.table.data), param.listKey);
 }
 
 export async function onDestroy() {
@@ -32,6 +33,46 @@ export async function onDestroy() {
     query.appBar_Title().innerText = originTitle;
 }
 
-function render(_header: string[], _data: string[][], _listKey: string) {
-    // TODO: ...
+function render(header: string[], data: string[][], _listKey: string) {
+    const table = query.routerTarget().querySelector("table")!;
+    const thead = table.querySelector(`thead`)!;
+    const tbody = table.querySelector(`tbody`)!;
+
+    const tr = document.createElement("tr");
+    thead.appendChild(tr);
+    header.forEach((head) => {
+        const el = document.createElement("th");
+        el.style.textWrap = "pretty";
+        el.innerText = head;
+        tr.appendChild(el);
+    });
+
+    data.forEach((row) => {
+        const tr = document.createElement("tr");
+        tbody.appendChild(tr);
+        row.forEach((cell) => {
+            const el = document.createElement("td");
+            el.innerText = cell;
+            tr.appendChild(el);
+        });
+    });
+}
+
+function sortTableData(data: string[][]): string[][] {
+    data.sort((a, b) => {
+        const thicknessA = parseFloat(a[0]);
+        const thicknessB = parseFloat(b[0]);
+
+        if (thicknessA > thicknessB) {
+            // Compare thickness
+            return 1;
+        } else if (thicknessA === thicknessB && parseFloat(a[1]) > parseFloat(b[1])) {
+            // Compare height if thickness is even
+            return 1;
+        }
+
+        return -1;
+    });
+
+    return data;
 }
