@@ -160,10 +160,10 @@ ui.router.hash(query.routerTarget(), {
         template: {
             selector: `template[name="metal-sheets"]`,
             onMount() {
-                pages.alert.onMount();
+                pages.metalSheets.onMount();
             },
             onDestroy() {
-                pages.alert.onDestroy();
+                pages.metalSheets.onDestroy();
             },
         },
     },
