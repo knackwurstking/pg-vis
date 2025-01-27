@@ -5,7 +5,7 @@ let cleanup: (() => void)[] = [];
 let originTitle: string = "";
 
 export async function onMount() {
-    const param = query.getSearchParam();
+    const param = globals.router.getSearchParam();
     const list = globals.getMetalSheet(param.listKey);
     if (!list) {
         throw new Error(`alert list not found: listKey=${param.listKey}`);

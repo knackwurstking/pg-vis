@@ -1,14 +1,14 @@
 import * as globals from "../../globals";
 import * as types from "../../types";
+import * as utils from "../../utils";
 import * as query from "../../utils-query";
 import * as create from "./create";
-import * as utils from "../../utils";
 
 let cleanup: (() => void)[] = [];
 let originTitle: string = "";
 
 export async function onMount() {
-    const param = query.getSearchParam();
+    const param = globals.router.getSearchParam();
 
     const list = globals.getAlertList(param.listKey);
     if (!list) {

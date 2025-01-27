@@ -8,7 +8,7 @@ let cleanup: (() => void)[] = [];
 let originTitle: string = "";
 
 export async function onMount() {
-    const param = query.getSearchParam();
+    const param = globals.router.getSearchParam();
 
     const alert = globals.getAlert(param.listKey, parseInt(param.index, 10));
     if (!alert) {

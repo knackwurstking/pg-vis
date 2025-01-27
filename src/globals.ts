@@ -12,11 +12,30 @@ export const router = {
             search = "";
         } else {
             search = `?${Object.entries(query)
-                .map((e) => e.join("="))
+                .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`)
                 .join("&")}`;
         }
 
-        location.hash = `${hash}${search}`;
+        // TODO: Handle empty hash and search
+        location.hash = `#${encodeURIComponent(hash)}&${search}`;
+    },
+
+    getSearchParam(): { [key: string]: string } {
+        const result: { [key: string]: string } = {};
+
+        location.hash
+            .replace(/^#.*\?/, "") // Remove the hash and the first question mark
+            .split("?") // Split by question mark
+            .forEach((searchParam) => {
+                // Split by ampersand
+                searchParam.split("&").forEach((part) => {
+                    // Split by equal sign
+                    const [key, value] = part.split("=");
+                    result[decodeURIComponent(key)] = decodeURIComponent(value);
+                });
+            });
+
+        return result;
     },
 };
 
