@@ -27,7 +27,7 @@ export function alertItem(props: AlertItemProps): types.Component<HTMLLIElement>
                 listKey: props.enableRouting!.listKey,
                 index: props.enableRouting!.alertIndex.toString(),
             },
-            "#alert",
+            "alert",
         );
     };
 
