@@ -1,6 +1,6 @@
 import * as ui from "ui";
+
 import * as types from "../../../types";
-import * as globals from "../../../globals";
 
 const html = String.raw;
 
@@ -22,7 +22,7 @@ export function alertItem(props: AlertItemProps): types.Component<HTMLLIElement>
     el.style.borderBottom = "1px solid var(--ui-border-color)";
 
     const onClickHandler = () => {
-        globals.router.goTo(
+        ui.router.hash.goTo(
             {
                 listKey: props.enableRouting!.listKey,
                 index: props.enableRouting!.alertIndex.toString(),

@@ -5,44 +5,6 @@ import * as types from "./types";
 
 export const store = createStore();
 
-export const router = {
-    goTo(query: { [key: string]: string } | null, hash: string): void {
-        let search: string;
-        if (!query) {
-            search = "";
-        } else {
-            search = `?${Object.entries(query)
-                .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`)
-                .join("&")}`;
-        }
-
-        if (!hash && !search) {
-            location.hash = "";
-            return;
-        }
-
-        location.hash = `#${encodeURIComponent(hash)}` + (!!search ? `&${search}` : "");
-    },
-
-    getSearchParam(): { [key: string]: string } {
-        const result: { [key: string]: string } = {};
-
-        location.hash
-            .replace(/^#.*\?/, "") // Remove the hash and the first question mark
-            .split("?") // Split by question mark
-            .forEach((searchParam) => {
-                // Split by ampersand
-                searchParam.split("&").forEach((part) => {
-                    // Split by equal sign
-                    const [key, value] = part.split("=");
-                    result[decodeURIComponent(key)] = decodeURIComponent(value);
-                });
-            });
-
-        return result;
-    },
-};
-
 export function getAlertList(listKey: string): types.AlertList | null {
     const ls = listsStore.get("alert-lists");
 

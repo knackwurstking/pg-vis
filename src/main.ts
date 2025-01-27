@@ -28,7 +28,7 @@ query.drawerBackdrop().onclick = () => drawer.utils.close();
 
 const drawerGistIDsButton = query.drawerGistIDsButton();
 drawerGistIDsButton.onclick = () => {
-    globals.router.goTo(null, "");
+    ui.router.hash.goTo(null, "");
     drawer.utils.close();
 };
 
@@ -115,7 +115,7 @@ for (const name of [
 
 // Initialize Router
 
-ui.router.hash(query.routerTarget(), {
+ui.router.hash.init(query.routerTarget(), {
     "/": {
         title: "VIS | Gist IDs",
         template: {

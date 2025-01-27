@@ -1,3 +1,5 @@
+import * as ui from "ui";
+
 import * as globals from "../../globals";
 import * as types from "../../types";
 import * as query from "../../utils-query";
@@ -8,7 +10,7 @@ let cleanup: (() => void)[] = [];
 let originTitle: string = "";
 
 export async function onMount() {
-    const param = globals.router.getSearchParam();
+    const param = ui.router.hash.getSearchParam();
 
     const alert = globals.getAlert(param.listKey, parseInt(param.index, 10));
     if (!alert) {
