@@ -16,8 +16,12 @@ export const router = {
                 .join("&")}`;
         }
 
-        // TODO: Handle empty hash and search
-        location.hash = `#${encodeURIComponent(hash)}&${search}`;
+        if (!hash && !search) {
+            location.hash = "";
+            return;
+        }
+
+        location.hash = `#${encodeURIComponent(hash)}` + (!!search ? `&${search}` : "");
     },
 
     getSearchParam(): { [key: string]: string } {
