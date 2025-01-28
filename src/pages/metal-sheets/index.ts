@@ -4,6 +4,7 @@ import * as globals from "../../globals";
 import * as query from "../../utils-query";
 import * as dialogs from "../../dialogs";
 import * as listStores from "../../list-stores";
+import * as types from "../../types";
 
 const tableHeader = [
     "Stärke",
@@ -74,14 +75,15 @@ export async function onMount() {
             list.data.table.data.push(data);
 
             const ls = listStores.get("metal-sheets");
-            ls.replaceInStore(list, list);
+            ls.replaceInStore(list);
             reload();
         };
         addButton.style.display = "inline-flex";
         cleanup.push(() => (addButton.onclick = null));
     }
 
-    render(sortTableData(list.data.table.data), param.listKey, list.data.table.filter);
+    list.data.table.data = sortTableData(list.data.table.data);
+    render(list);
 }
 
 export async function onDestroy() {
@@ -90,7 +92,7 @@ export async function onDestroy() {
     query.appBar_Title().innerText = originTitle;
 }
 
-function render(data: string[][], _listKey: string, filter?: number[]) {
+function render(list: types.MetalSheet) {
     const table = query.routerTarget().querySelector("table")!;
     const thead = table.querySelector(`thead`)!;
     const tbody = table.querySelector(`tbody`)!;
@@ -101,7 +103,7 @@ function render(data: string[][], _listKey: string, filter?: number[]) {
     const tr = document.createElement("tr");
     thead.appendChild(tr);
     tableHeader.forEach((head, index) => {
-        if (!!filter?.includes(index)) {
+        if (!!list.data.table.filter?.includes(index)) {
             return;
         }
 
@@ -111,12 +113,34 @@ function render(data: string[][], _listKey: string, filter?: number[]) {
         tr.appendChild(el);
     });
 
-    data.forEach((row) => {
+    list.data.table.data.forEach((row) => {
         const tr = document.createElement("tr");
+        tr.style.cursor = "pointer";
         tbody.appendChild(tr);
 
+        tr.onclick = async () => {
+            const data = await dialogs.metalSheetTableEntry(row);
+            if (!data) {
+                return;
+            }
+
+            // Update data and re-render table
+            const rowJoin = row.join(",");
+            list.data.table.data = list.data.table.data.map((r) => {
+                if (r.join(",") === rowJoin) {
+                    return data;
+                }
+
+                return r;
+            });
+
+            const ls = listStores.get("metal-sheets");
+            ls.replaceInStore(list);
+            reload();
+        };
+
         row.forEach((cell, index) => {
-            if (!!filter?.includes(index)) {
+            if (!!list.data.table.filter?.includes(index)) {
                 return;
             }
 
