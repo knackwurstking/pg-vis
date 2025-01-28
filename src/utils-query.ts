@@ -20,25 +20,25 @@ export function appBar_Title(): HTMLHeadingElement {
     return document.querySelector(`#appBarTitle`)!;
 }
 
-export function appBar_ButtonEdit(): HTMLButtonElement {
-    return document.querySelector(`#appBarButtonEdit`)!;
+export function appBar_ButtonListEdit(): HTMLButtonElement {
+    return document.querySelector(`#appBarButtonListEdit`)!;
 }
 
-export function appBar_ButtonShare(): HTMLButtonElement {
-    return document.querySelector(`#appBarButtonShare`)!;
-}
-
-export function appBar_ButtonSearch(): HTMLButtonElement {
-    return document.querySelector(`#appBarButtonSearch`)!;
-}
-
-export function appBar_ButtonTrash(): HTMLButtonElement {
-    return document.querySelector(`#appBarButtonTrash`)!;
-}
-
-export function appBar_ButtonPrinter(): HTMLButtonElement {
-    return document.querySelector(`#appBarButtonPrinter`)!;
-}
+//export function appBar_ButtonShare(): HTMLButtonElement {
+//    return document.querySelector(`#appBarButtonShare`)!;
+//}
+//
+//export function appBar_ButtonSearch(): HTMLButtonElement {
+//    return document.querySelector(`#appBarButtonSearch`)!;
+//}
+//
+//export function appBar_ButtonTrash(): HTMLButtonElement {
+//    return document.querySelector(`#appBarButtonTrash`)!;
+//}
+//
+//export function appBar_ButtonPrinter(): HTMLButtonElement {
+//    return document.querySelector(`#appBarButtonPrinter`)!;
+//}
 
 // Drawer Elements
 
@@ -63,4 +63,20 @@ export function drawerGroup(name: types.DrawerGroups): {
 
 export function drawerBackdrop(): HTMLElement {
     return document.querySelector(`div.ui-drawer-backdrop`)!;
+}
+
+// Dialog Elements
+
+export function dialog_MetalSheet(): {
+    root: HTMLDialogElement;
+    close: HTMLButtonElement;
+    filters: NodeListOf<HTMLInputElement>;
+} {
+    const root = document.querySelector<HTMLDialogElement>(`dialog[name="metal-sheet"]`)!;
+
+    return {
+        root,
+        close: root.querySelector<HTMLButtonElement>(`button.close`)!,
+        filters: root.querySelectorAll<HTMLInputElement>(`.filters input[type="checkbox"]`),
+    };
 }

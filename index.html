@@ -44,15 +44,15 @@
             </div>
 
             <div class="right">
-                <!--button
-                    id="appBarButtonEdit"
+                <button
+                    id="appBarButtonListEdit"
                     style="display: none"
                     variant="ghost"
                     color="primary"
                     icon
                 >
-                    <div class="bi bi-pen"></div>
-                </button-->
+                    <div class="bi bi-pencil-square"></div>
+                </button>
 
                 <!--button
                     id="appBarButtonShare"
@@ -160,6 +160,81 @@
                 </details>
             </div>
         </aside>
+
+        <!-- This dialog can be used for editing and creating a new list -->
+        <dialog name="metal-sheet" oncancel="this.preventDefault()">
+            <div class="ui-flex-grid-row">
+                <h4 class="ui-flex-grid-item">Blech Liste</h4>
+                <button class="close" variant="ghost" color="primary" icon formnovalidate>
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+
+            <form method="dialog">
+                <div class="ui-flex-grid">
+                    <div class="ui-flex-grid-row" style="--align: center">
+                        <label for="metalSheetDialot_Format">Format</label>
+                        <input id="metalSheetDialot_Format" style="width: 100%" type="text" />
+                    </div>
+
+                    <div class="ui-flex-grid-row" style="--align: center">
+                        <label for="metalSheetDialot_ToolID">Tool ID (Unterteil)</label>
+                        <input id="metalSheetDialot_ToolID" style="width: 100%" type="text" />
+                    </div>
+
+                    <br />
+
+                    <!-- Filter Checklist -->
+                    <div class="ui-flex-grid-item" style="width: 100%">
+                        <h5>Filter Checklist</h5>
+                        <p>Deaktiviere bei Bedarf einige Einträge</p>
+                        <ul class="filters" style="padding-top: 0">
+                            <li class="filter">
+                                <label>
+                                    <input type="checkbox" value="Stärke" checked />
+                                    Stärke
+                                </label>
+                            </li>
+                            <li class="filter">
+                                <label>
+                                    <input type="checkbox" value="Marke (Höhe)" checked />
+                                    Marke (Höhe)
+                                </label>
+                            </li>
+                            <li class="filter">
+                                <label>
+                                    <input type="checkbox" value="Blech Stempel" checked />
+                                    Blech Stempel
+                                </label>
+                            </li>
+                            <li class="filter">
+                                <label>
+                                    <input type="checkbox" value="Blech Marke" checked />
+                                    Blech Marke
+                                </label>
+                            </li>
+                            <li class="filter">
+                                <label>
+                                    <input type="checkbox" value="Stf. P2 - P5" checked />
+                                    Stf. P2 - P5
+                                </label>
+                            </li>
+                            <li class="filter">
+                                <label>
+                                    <input type="checkbox" value="Stf. P0" checked />
+                                    Stf. P0
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="ui-flex-grid-row" style="--justify: flex-end">
+                    <input type="reset" />
+                    <input type="submit" />
+                </div>
+            </form>
+        </dialog>
 
         <template name="gist-ids">
             <ul class="gist-ids ui-flex-grid" style="padding: var(--ui-spacing)"></ul>

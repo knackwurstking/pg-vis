@@ -21,8 +21,37 @@ export async function onMount() {
             : `${list.format} ${list.toolID}`;
 
     // TODO: Add some action buttons for adding a new table entry
-    // TODO: Enable app bar button for editing the current list
-    // TODO: Drag'n'Drop or just sort for thickness and "Marke" height
+
+    // Enable app bar button for editing the current sheet
+    const listEditButton = query.appBar_ButtonListEdit();
+    listEditButton.onclick = () => {
+        // Open the edit metal sheet dialog for changing "format", "toolID" and filters
+        const dialog = query.dialog_MetalSheet();
+
+        let canceled = false;
+        dialog.close.onclick = () => {
+            canceled = true;
+            dialog.root.close();
+        };
+
+        dialog.root.onclose = () => {
+            if (canceled) {
+                return;
+            }
+
+            // TODO: Read form inputs, check data, update or reopen this dialog
+            console.debug("Submit...");
+            dialog.filters.forEach((filter) => {
+                // ...
+            });
+        };
+
+        // TODO: Set list data to the dialog
+
+        dialog.root.showModal();
+    };
+    listEditButton.style.display = "inline-flex";
+    cleanup.push(() => (listEditButton.onclick = null));
 
     render(list.data.table.header, sortTableData(list.data.table.data), param.listKey);
 }

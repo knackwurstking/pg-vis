@@ -32,3 +32,9 @@ summary::after {
 details[open] summary::after {
     content: "\f282";
 }
+
+dialog[name="metal-sheet"] .filters .filter label {
+    display: block;
+    width: 100%;
+    padding: var(--ui-spacing);
+}
