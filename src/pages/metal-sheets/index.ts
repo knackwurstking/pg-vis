@@ -111,14 +111,15 @@ function render(data: string[][], _listKey: string, filter?: number[]) {
         tr.appendChild(el);
     });
 
-    data.forEach((row, index) => {
-        if (!!filter?.includes(index)) {
-            return;
-        }
-
+    data.forEach((row) => {
         const tr = document.createElement("tr");
         tbody.appendChild(tr);
-        row.forEach((cell) => {
+
+        row.forEach((cell, index) => {
+            if (!!filter?.includes(index)) {
+                return;
+            }
+
             const el = document.createElement("td");
             el.innerText = cell;
             tr.appendChild(el);
