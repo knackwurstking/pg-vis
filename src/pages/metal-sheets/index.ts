@@ -15,6 +15,7 @@ export async function onMount() {
         throw new Error(`alert list not found: listKey=${param.listKey}`);
     }
 
+    // Set the app bar title
     {
         const appBarTitle = query.appBar_Title();
         originTitle = appBarTitle.innerText;
@@ -24,6 +25,7 @@ export async function onMount() {
                 : `${list.format} ${list.toolID}`;
     }
 
+    // Enable app bar button for editing the current sheet
     {
         // Enable app bar button for editing the current sheet
         const listEditButton = query.appBar_ButtonListEdit();
