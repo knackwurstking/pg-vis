@@ -25,13 +25,13 @@ function init(data?: types.MetalSheet | null): Promise<types.MetalSheet | null> 
             const header: string[] = [];
             const filter: number[] = [];
             dialog.filters.forEach((filterCheckbox) => {
-                header.push(filterCheckbox.textContent!);
+                header.push(filterCheckbox.value);
 
                 if (filterCheckbox.checked) {
                     return;
                 }
 
-                const indexToHide = parseInt(filterCheckbox.value, 10);
+                const indexToHide = parseInt(filterCheckbox.getAttribute("data-index")!, 10);
                 filter!.push(indexToHide);
             });
 
@@ -49,7 +49,14 @@ function init(data?: types.MetalSheet | null): Promise<types.MetalSheet | null> 
             });
         };
 
-        // TODO: Set list data to the dialog, if given
+        if (!!data) {
+            dialog.format.value = data.format;
+            dialog.toolID.value = data.toolID;
+            dialog.filters.forEach((filterCheckbox) => {
+                const indexToHide = parseInt(filterCheckbox.value, 10);
+                filterCheckbox.checked = !data.data.table.filter!.includes(indexToHide);
+            });
+        }
 
         dialog.root.showModal();
     });
