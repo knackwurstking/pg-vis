@@ -61,9 +61,9 @@ export class ListStore<T extends keyof ListStoreData> {
     /**
      * @throws exists error
      */
-    public replaceInStore(newList: ListStoreData[T], oldList: ListStoreData[T]) {
+    public replaceInStore(newList: ListStoreData[T], oldList?: ListStoreData[T]) {
         const newListKey = this.listKey(newList);
-        const oldListKey = this.listKey(oldList);
+        const oldListKey = this.listKey(oldList || newList);
 
         if (oldListKey !== newListKey) {
             for (const list of globals.store.get(this.key() as keyof ListStoreData)!.lists) {
