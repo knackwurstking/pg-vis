@@ -14,6 +14,7 @@ function init(data?: types.MetalSheet | null): Promise<types.MetalSheet | null> 
 
         dialog.root.onclose = () => {
             if (canceled) {
+                resolve(null);
                 return;
             }
 
@@ -43,25 +44,38 @@ function init(data?: types.MetalSheet | null): Promise<types.MetalSheet | null> 
                 format,
                 toolID,
                 data: {
-                    press: -1,
+                    press: press,
                     table: {
                         filter,
                         header,
-                        data: [],
+                        data: data?.data.table.data || [],
                     },
                 },
             });
         };
 
-        if (!!data) {
-            dialog.format.value = data.format;
-            dialog.toolID.value = data.toolID;
-            dialog.press.selectedIndex = data.data.press + 1;
-            dialog.filters.forEach((filterCheckbox) => {
-                const indexToHide = parseInt(filterCheckbox.value, 10);
-                filterCheckbox.checked = !data.data.table.filter?.includes(indexToHide);
-            });
-        }
+        const initForm = () => {
+            if (!!data) {
+                dialog.format.value = data.format;
+                dialog.toolID.value = data.toolID;
+                dialog.press.selectedIndex = data.data.press + 1;
+                dialog.filters.forEach((filterCheckbox) => {
+                    const indexToHide = parseInt(filterCheckbox.value, 10);
+                    filterCheckbox.checked = !data.data.table.filter?.includes(indexToHide);
+                });
+            }
+        };
+
+        initForm();
+
+        dialog.reset.onclick = (e) => {
+            if (!data) {
+                return;
+            }
+
+            e.preventDefault();
+            initForm();
+        };
 
         dialog.root.showModal();
     });

@@ -3,6 +3,7 @@ import * as ui from "ui";
 import * as globals from "../../globals";
 import * as query from "../../utils-query";
 import * as dialogs from "../../dialogs";
+import * as listStores from "../../list-stores";
 
 let cleanup: (() => void)[] = [];
 let originTitle: string = "";
@@ -27,8 +28,24 @@ export async function onMount() {
         // Enable app bar button for editing the current sheet
         const listEditButton = query.appBar_ButtonListEdit();
         listEditButton.onclick = async () => {
+            const formatInput = query.dialog_MetalSheet().format;
             const data = await dialogs.metalSheet(list);
-            // TODO: Add data to store, but make sure to validate list keys first
+
+            if (!data) {
+                formatInput.ariaInvalid = null;
+                return;
+            }
+
+            if (!data.format) {
+                listEditButton.click();
+                formatInput.ariaInvalid = "";
+                return;
+            } else {
+                formatInput.ariaInvalid = null;
+            }
+
+            const ls = listStores.get("metal-sheets");
+            ls.replaceInStore(data, list);
         };
         listEditButton.style.display = "inline-flex";
         cleanup.push(() => (listEditButton.onclick = null));

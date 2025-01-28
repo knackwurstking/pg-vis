@@ -70,19 +70,23 @@ export function drawerBackdrop(): HTMLElement {
 export function dialog_MetalSheet(): {
     root: HTMLDialogElement;
     close: HTMLButtonElement;
+    form: HTMLFormElement;
     format: HTMLInputElement;
     toolID: HTMLInputElement;
     press: HTMLSelectElement;
     filters: NodeListOf<HTMLInputElement>;
+    reset: HTMLInputElement;
 } {
     const root = document.querySelector<HTMLDialogElement>(`dialog[name="metal-sheet"]`)!;
 
     return {
         root,
         close: root.querySelector(`button.close`)!,
+        form: root.querySelector(`form`)!,
         format: root.querySelector(`input#metalSheetDialog_Format`)!,
         toolID: root.querySelector(`input#metalSheetDialog_ToolID`)!,
         press: root.querySelector(`select#metalSheetDialog_Press`)!,
         filters: root.querySelectorAll(`.filters input[type="checkbox"]`),
+        reset: root.querySelector(`input[type="reset"]`)!,
     };
 }
