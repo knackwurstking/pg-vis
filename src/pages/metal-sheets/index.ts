@@ -118,6 +118,19 @@ function render(list: types.MetalSheet) {
         tr.style.cursor = "pointer";
         tbody.appendChild(tr);
 
+        tr.oncontextmenu = (e) => {
+            e.preventDefault();
+
+            if (confirm(`You want to delete this item: "${row.join(",")}" ?`)) {
+                const rowJoin = row.join(",");
+                list.data.table.data = list.data.table.data.filter((r) => r.join(",") !== rowJoin);
+
+                const ls = listStores.get("metal-sheets");
+                ls.replaceInStore(list);
+                reload();
+            }
+        };
+
         tr.onclick = async () => {
             const data = await dialogs.metalSheetTableEntry(row);
             if (!data) {
