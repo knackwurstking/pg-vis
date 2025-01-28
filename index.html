@@ -54,6 +54,16 @@
                     <div class="bi bi-pencil-square"></div>
                 </button>
 
+                <button
+                    id="appBarButtonAdd"
+                    style="display: none"
+                    variant="ghost"
+                    color="primary"
+                    icon
+                >
+                    <div class="bi bi-plus-square"></div>
+                </button>
+
                 <!--button
                     id="appBarButtonShare"
                     style="display: none"
@@ -259,6 +269,27 @@
                             </li>
                         </ul>
                     </div>
+                </div>
+
+                <div class="ui-flex-grid-row" style="--justify: flex-end">
+                    <input type="reset" />
+                    <input type="submit" />
+                </div>
+            </form>
+        </dialog>
+
+        <!-- This dialog can be used for editing and creating a new table entry -->
+        <dialog name="metal-sheet-table-entry" oncancel="this.preventDefault()">
+            <div class="ui-flex-grid-row">
+                <h4 class="ui-flex-grid-item">???</h4>
+                <button class="close" variant="ghost" color="primary" icon formnovalidate>
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+
+            <form method="dialog">
+                <div class="ui-flex-grid">
+                    <!-- TODO: Add input/label items here -->
                 </div>
 
                 <div class="ui-flex-grid-row" style="--justify: flex-end">

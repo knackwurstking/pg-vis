@@ -53,7 +53,22 @@ export async function onMount() {
         cleanup.push(() => (listEditButton.onclick = null));
     }
 
-    // TODO: Add some action buttons for adding a new table entry
+    // Enable app bar button for adding a new table entry
+    {
+        const addButton = query.appBar_ButtonAdd();
+        addButton.onclick = async () => {
+            const data = await dialogs.metalSheetTableEntry();
+            if (!data) {
+                return;
+            }
+            list.data.table.data.push(data);
+
+            const ls = listStores.get("metal-sheets");
+            ls.addToStore([list]);
+        };
+        addButton.style.display = "inline-flex";
+        cleanup.push(() => (addButton.onclick = null));
+    }
 
     render(list.data.table.header, sortTableData(list.data.table.data), param.listKey);
 }

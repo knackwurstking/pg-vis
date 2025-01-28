@@ -24,6 +24,10 @@ export function appBar_ButtonListEdit(): HTMLButtonElement {
     return document.querySelector(`#appBarButtonListEdit`)!;
 }
 
+export function appBar_ButtonAdd(): HTMLButtonElement {
+    return document.querySelector(`#appBarButtonAdd`)!;
+}
+
 //export function appBar_ButtonShare(): HTMLButtonElement {
 //    return document.querySelector(`#appBarButtonShare`)!;
 //}
@@ -70,7 +74,6 @@ export function drawerBackdrop(): HTMLElement {
 export function dialog_MetalSheet(): {
     root: HTMLDialogElement;
     close: HTMLButtonElement;
-    form: HTMLFormElement;
     format: HTMLInputElement;
     toolID: HTMLInputElement;
     press: HTMLSelectElement;
@@ -82,11 +85,28 @@ export function dialog_MetalSheet(): {
     return {
         root,
         close: root.querySelector(`button.close`)!,
-        form: root.querySelector(`form`)!,
         format: root.querySelector(`input#metalSheetDialog_Format`)!,
         toolID: root.querySelector(`input#metalSheetDialog_ToolID`)!,
         press: root.querySelector(`select#metalSheetDialog_Press`)!,
         filters: root.querySelectorAll(`.filters input[type="checkbox"]`),
+        reset: root.querySelector(`input[type="reset"]`)!,
+    };
+}
+
+export function dialog_MetalSheetTableEntry(): {
+    root: HTMLDialogElement;
+    close: HTMLButtonElement;
+    // TODO: Add missing elements
+    reset: HTMLInputElement;
+} {
+    const root = document.querySelector<HTMLDialogElement>(
+        `dialog[name="metal-sheet-table-entry"]`,
+    )!;
+
+    return {
+        root,
+        close: root.querySelector(`button.close`)!,
+        // TODO: Add missing elements
         reset: root.querySelector(`input[type="reset"]`)!,
     };
 }

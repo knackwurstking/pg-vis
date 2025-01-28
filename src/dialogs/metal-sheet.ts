@@ -18,7 +18,7 @@ function init(data?: types.MetalSheet | null): Promise<types.MetalSheet | null> 
                 return;
             }
 
-            // Checking inputs for format and tool id
+            // Get the values from the dialog form inputs
             const format = dialog.format.value;
             const toolID = dialog.toolID.value;
             const press = parseInt(
@@ -26,7 +26,7 @@ function init(data?: types.MetalSheet | null): Promise<types.MetalSheet | null> 
                 10,
             );
 
-            // Check filters
+            // Get filter from the dialog form inputs
             const header: string[] = [];
             const filter: number[] = [];
             dialog.filters.forEach((filterCheckbox) => {
