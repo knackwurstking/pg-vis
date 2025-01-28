@@ -48,13 +48,9 @@ export class MetalSheets extends base.ListStore<"metal-sheets"> {
         }
 
         if (!("table" in list.data)) {
-            list.data.table = { header: [], data: [] };
+            list.data.table = { data: [] };
         } else {
             if (typeof list.data.table !== "object") {
-                return null;
-            }
-
-            if (!("header" in list.data.table)) {
                 return null;
             }
 
@@ -62,14 +58,8 @@ export class MetalSheets extends base.ListStore<"metal-sheets"> {
                 return null;
             }
 
-            if (!Array.isArray(list.data.table.header) || !Array.isArray(list.data.table.data)) {
+            if (!Array.isArray(list.data.table.data)) {
                 return null;
-            }
-
-            for (const s of list.data.table.header) {
-                if (typeof s !== "string") {
-                    return null;
-                }
             }
 
             for (const part of list.data.table.data) {

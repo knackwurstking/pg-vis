@@ -5,6 +5,15 @@ import * as query from "../../utils-query";
 import * as dialogs from "../../dialogs";
 import * as listStores from "../../list-stores";
 
+const tableHeader = [
+    "Stärke",
+    "Marke (Höhe)",
+    "Blech Stempel",
+    "Blech Marke",
+    "Stf. P2 - P5",
+    "Stf. P0",
+];
+
 let cleanup: (() => void)[] = [];
 let originTitle: string = "";
 
@@ -48,6 +57,7 @@ export async function onMount() {
 
             const ls = listStores.get("metal-sheets");
             ls.replaceInStore(data, list);
+            reload();
         };
         listEditButton.style.display = "inline-flex";
         cleanup.push(() => (listEditButton.onclick = null));
@@ -64,13 +74,14 @@ export async function onMount() {
             list.data.table.data.push(data);
 
             const ls = listStores.get("metal-sheets");
-            ls.addToStore([list]);
+            ls.replaceInStore(list, list);
+            reload();
         };
         addButton.style.display = "inline-flex";
         cleanup.push(() => (addButton.onclick = null));
     }
 
-    render(list.data.table.header, sortTableData(list.data.table.data), param.listKey);
+    render(sortTableData(list.data.table.data), param.listKey, list.data.table.filter);
 }
 
 export async function onDestroy() {
@@ -79,21 +90,32 @@ export async function onDestroy() {
     query.appBar_Title().innerText = originTitle;
 }
 
-function render(header: string[], data: string[][], _listKey: string) {
+function render(data: string[][], _listKey: string, filter?: number[]) {
     const table = query.routerTarget().querySelector("table")!;
     const thead = table.querySelector(`thead`)!;
     const tbody = table.querySelector(`tbody`)!;
 
+    thead.innerHTML = "";
+    tbody.innerHTML = "";
+
     const tr = document.createElement("tr");
     thead.appendChild(tr);
-    header.forEach((head) => {
+    tableHeader.forEach((head, index) => {
+        if (!!filter?.includes(index)) {
+            return;
+        }
+
         const el = document.createElement("th");
         el.style.textWrap = "pretty";
         el.innerText = head;
         tr.appendChild(el);
     });
 
-    data.forEach((row) => {
+    data.forEach((row, index) => {
+        if (!!filter?.includes(index)) {
+            return;
+        }
+
         const tr = document.createElement("tr");
         tbody.appendChild(tr);
         row.forEach((cell) => {
@@ -102,6 +124,11 @@ function render(header: string[], data: string[][], _listKey: string) {
             tr.appendChild(el);
         });
     });
+}
+
+async function reload() {
+    await onDestroy();
+    await onMount();
 }
 
 function sortTableData(data: string[][]): string[][] {

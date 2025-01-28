@@ -27,11 +27,8 @@ function init(data?: types.MetalSheet | null): Promise<types.MetalSheet | null> 
             );
 
             // Get filter from the dialog form inputs
-            const header: string[] = [];
             const filter: number[] = [];
             dialog.filters.forEach((filterCheckbox) => {
-                header.push(filterCheckbox.value);
-
                 if (filterCheckbox.checked) {
                     return;
                 }
@@ -47,7 +44,6 @@ function init(data?: types.MetalSheet | null): Promise<types.MetalSheet | null> 
                     press: press,
                     table: {
                         filter,
-                        header,
                         data: data?.data.table.data || [],
                     },
                 },

@@ -96,7 +96,7 @@ export function dialog_MetalSheet(): {
 export function dialog_MetalSheetTableEntry(): {
     root: HTMLDialogElement;
     close: HTMLButtonElement;
-    // TODO: Add missing elements
+    inputs: NodeListOf<HTMLInputElement>;
     reset: HTMLInputElement;
 } {
     const root = document.querySelector<HTMLDialogElement>(
@@ -106,7 +106,7 @@ export function dialog_MetalSheetTableEntry(): {
     return {
         root,
         close: root.querySelector(`button.close`)!,
-        // TODO: Add missing elements
+        inputs: root.querySelectorAll(`input[type="text"]`)!,
         reset: root.querySelector(`input[type="reset"]`)!,
     };
 }

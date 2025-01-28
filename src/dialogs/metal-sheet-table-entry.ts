@@ -17,13 +17,19 @@ function init(data?: string[] | null): Promise<string[] | null> {
             }
 
             // Get the values from the dialog form inputs
+            const result: string[] = [];
+            dialog.inputs.forEach((input) => {
+                result.push(input.value);
+            });
 
-            resolve(null);
+            resolve(result);
         };
 
         const initForm = () => {
             if (!!data) {
-                // TODO: Set the form values
+                data.forEach((value, index) => {
+                    dialog.inputs[index].value = value;
+                });
             }
         };
 
