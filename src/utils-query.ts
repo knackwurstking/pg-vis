@@ -72,6 +72,7 @@ export function dialog_MetalSheet(): {
     close: HTMLButtonElement;
     format: HTMLInputElement;
     toolID: HTMLInputElement;
+    press: HTMLSelectElement;
     filters: NodeListOf<HTMLInputElement>;
 } {
     const root = document.querySelector<HTMLDialogElement>(`dialog[name="metal-sheet"]`)!;
@@ -81,6 +82,7 @@ export function dialog_MetalSheet(): {
         close: root.querySelector(`button.close`)!,
         format: root.querySelector(`input#metalSheetDialog_Format`)!,
         toolID: root.querySelector(`input#metalSheetDialog_ToolID`)!,
+        press: root.querySelector(`select#metalSheetDialog_Press`)!,
         filters: root.querySelectorAll(`.filters input[type="checkbox"]`),
     };
 }

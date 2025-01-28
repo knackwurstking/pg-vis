@@ -20,6 +20,10 @@ function init(data?: types.MetalSheet | null): Promise<types.MetalSheet | null> 
             // Checking inputs for format and tool id
             const format = dialog.format.value;
             const toolID = dialog.toolID.value;
+            const press = parseInt(
+                (dialog.press.children[dialog.press.selectedIndex] as HTMLOptionElement).value,
+                10,
+            );
 
             // Check filters
             const header: string[] = [];
@@ -52,6 +56,7 @@ function init(data?: types.MetalSheet | null): Promise<types.MetalSheet | null> 
         if (!!data) {
             dialog.format.value = data.format;
             dialog.toolID.value = data.toolID;
+            dialog.press.selectedIndex = data.data.press + 1;
             dialog.filters.forEach((filterCheckbox) => {
                 const indexToHide = parseInt(filterCheckbox.value, 10);
                 filterCheckbox.checked = !data.data.table.filter?.includes(indexToHide);
