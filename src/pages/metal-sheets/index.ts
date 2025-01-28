@@ -2,6 +2,7 @@ import * as ui from "ui";
 
 import * as globals from "../../globals";
 import * as query from "../../utils-query";
+import * as dialogs from "../../dialogs";
 
 let cleanup: (() => void)[] = [];
 let originTitle: string = "";
@@ -13,45 +14,27 @@ export async function onMount() {
         throw new Error(`alert list not found: listKey=${param.listKey}`);
     }
 
-    const appBarTitle = query.appBar_Title();
-    originTitle = appBarTitle.innerText;
-    appBarTitle.innerText =
-        list.data.press > -1
-            ? `[P${list.data.press}] ${list.format} ${list.toolID}`
-            : `${list.format} ${list.toolID}`;
+    {
+        const appBarTitle = query.appBar_Title();
+        originTitle = appBarTitle.innerText;
+        appBarTitle.innerText =
+            list.data.press > -1
+                ? `[P${list.data.press}] ${list.format} ${list.toolID}`
+                : `${list.format} ${list.toolID}`;
+    }
+
+    {
+        // Enable app bar button for editing the current sheet
+        const listEditButton = query.appBar_ButtonListEdit();
+        listEditButton.onclick = async () => {
+            const data = await dialogs.metalSheet(list);
+            // TODO: Add data to store, but make sure to validate list keys first
+        };
+        listEditButton.style.display = "inline-flex";
+        cleanup.push(() => (listEditButton.onclick = null));
+    }
 
     // TODO: Add some action buttons for adding a new table entry
-
-    // Enable app bar button for editing the current sheet
-    const listEditButton = query.appBar_ButtonListEdit();
-    listEditButton.onclick = () => {
-        // Open the edit metal sheet dialog for changing "format", "toolID" and filters
-        const dialog = query.dialog_MetalSheet();
-
-        let canceled = false;
-        dialog.close.onclick = () => {
-            canceled = true;
-            dialog.root.close();
-        };
-
-        dialog.root.onclose = () => {
-            if (canceled) {
-                return;
-            }
-
-            // TODO: Read form inputs, check data, update or reopen this dialog
-            console.debug("Submit...");
-            dialog.filters.forEach((filter) => {
-                // ...
-            });
-        };
-
-        // TODO: Set list data to the dialog
-
-        dialog.root.showModal();
-    };
-    listEditButton.style.display = "inline-flex";
-    cleanup.push(() => (listEditButton.onclick = null));
 
     render(list.data.table.header, sortTableData(list.data.table.data), param.listKey);
 }
