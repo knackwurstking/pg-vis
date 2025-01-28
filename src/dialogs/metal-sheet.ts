@@ -54,7 +54,7 @@ function init(data?: types.MetalSheet | null): Promise<types.MetalSheet | null> 
             dialog.toolID.value = data.toolID;
             dialog.filters.forEach((filterCheckbox) => {
                 const indexToHide = parseInt(filterCheckbox.value, 10);
-                filterCheckbox.checked = !data.data.table.filter!.includes(indexToHide);
+                filterCheckbox.checked = !data.data.table.filter?.includes(indexToHide);
             });
         }
 
