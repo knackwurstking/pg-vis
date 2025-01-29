@@ -5,6 +5,15 @@ import * as types from "./types";
 
 export const store = createStore();
 
+export function getProduct(listKey: string, index: number): types.Product | null {
+    const list = getVis(listKey);
+    if (!list) {
+        return null;
+    }
+
+    return list.data[index] || null;
+}
+
 export function getAlertList(listKey: string): types.AlertList | null {
     const ls = listsStore.get("alert-lists");
 
@@ -41,7 +50,7 @@ export function getAlert(listKey: string, index: number): types.Alert | null {
         return null;
     }
 
-    return list.data[index];
+    return list.data[index] || null;
 }
 
 function createStore(): types.PGStore {
