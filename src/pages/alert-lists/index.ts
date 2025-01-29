@@ -31,10 +31,11 @@ export async function onDestroy() {
 }
 
 function render(alerts: types.Alert[], listKey: string) {
-    const searchBarInput = query
-        .routerTarget()
-        .querySelector<HTMLInputElement>(`.search-bar input[type="search"]`)!;
-    const alertsContainer = query.routerTarget().querySelector<HTMLUListElement>(`.alerts`)!;
+    const target = query.routerTarget();
+    const searchBarInput = target.querySelector<HTMLInputElement>(
+        `.search-bar input[type="search"]`,
+    )!;
+    const alertsContainer = target.querySelector<HTMLUListElement>(`.alerts`)!;
 
     alerts.forEach((alert, i) => {
         setTimeout(() => {
