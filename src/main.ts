@@ -34,28 +34,6 @@ drawerGistIDsButton.onclick = () => {
     drawer.utils.close();
 };
 
-for (const name of [
-    "alert-lists",
-    "metal-sheets",
-    "vis",
-    "vis-bookmarks",
-    "vis-data",
-    "special",
-] as types.DrawerGroups[]) {
-    const group = query.drawerGroup(name);
-    group.root.onclick = () =>
-        setTimeout(() => {
-            globals.store.update("drawerGroup", (data) => {
-                data[name] = {
-                    ...(data[name] || {}),
-                    open: group.root.open,
-                };
-
-                return data;
-            });
-        });
-}
-
 // Initialize Main Event Handlers (store)
 
 // Render drawer alert-lists items
@@ -165,6 +143,9 @@ for (const name of [
             }
 
             // TODO: Initialize action buttons "add" - Open file picker
+            group.actions.add!.onclick = async () => {
+                console.debug("TODO: Open file picker");
+            };
         },
         true,
     );

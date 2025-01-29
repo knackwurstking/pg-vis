@@ -58,8 +58,6 @@ function createStore(): types.PGStore {
     const storePrefix = "pg-vis-dev:";
     const store: types.PGStore = new ui.Store(storePrefix);
 
-    store.set("drawerGroup", {}, true);
-
     store.set("alert-lists", { gist: null, lists: [] }, true);
     store.set("metal-sheets", { gist: null, lists: [] }, true);
     store.set("vis", { gist: null, lists: [] }, true);
