@@ -67,6 +67,7 @@ function render(product: types.Product, renderTags: boolean) {
         details.innerHTML = html`<summary><h4>${list.title}</h4></summary>
             <ul></ul>`;
 
+        // Filter entries matching this product
         const ul = details.querySelector("ul")!;
         list.data.forEach((entry) => {
             if (!isLotto(entry.lotto, product.lotto)) {
@@ -85,6 +86,7 @@ function render(product: types.Product, renderTags: boolean) {
                 return;
             }
 
+            // Render and append entry
             const item = visDataCreate.dataItem({ entry, renderTags });
             cleanup.push(item.destroy);
             ul.appendChild(item.element);
