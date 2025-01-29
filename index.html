@@ -304,7 +304,7 @@
 
         <template name="alert-lists">
             <div class="ui-flex-grid" style="--gap: 0; width: 100%; height: 100%">
-                <section class="search-bar" style="width: 100%">
+                <section class="search-bar" style="--gap: var(--ui-spacing); width: 100%">
                     <fieldset>
                         <legend>Suche nach Alarmen:</legend>
                         <div class="ui-flex-grid-row">
@@ -320,7 +320,7 @@
 
                 <div
                     class="ui-flex-grid-item ui-auto-scroll-y ui-hide-scrollbar"
-                    style="width: 100%"
+                    style="--gap: var(--ui-spacing); width: 100%"
                 >
                     <ul class="alerts" style="padding: var(--ui-spacing) width: 100%;"></ul>
                 </div>
@@ -343,7 +343,7 @@
 
         <template name="vis">
             <div class="ui-flex-grid" style="--gap: 0; width: 100%; height: 100%">
-                <section class="search-bar" style="width: 100%">
+                <section class="search-bar" style="--gap: var(--ui-spacing); width: 100%">
                     <fieldset>
                         <legend>Suche nach Produkten:</legend>
                         <div class="ui-flex-grid-row">
@@ -359,7 +359,7 @@
 
                 <div
                     class="ui-flex-grid-item ui-auto-scroll-y ui-hide-scrollbar"
-                    style="width: 100%"
+                    style="--gap: var(--ui-spacing); width: 100%"
                 >
                     <ul class="products" style="padding: var(--ui-spacing) width: 100%;"></ul>
                 </div>
@@ -368,11 +368,14 @@
 
         <template name="product">
             <div class="ui-flex-grid" style="--gap: 0; width: 100%; height: 100%">
-                <section class="product-item-container" style="width: 100%"></section>
+                <section
+                    class="product-item-container"
+                    style="--gap: var(--ui-spacing); width: 100%"
+                ></section>
 
                 <div
                     class="ui-flex-grid-item ui-auto-scroll-y ui-hide-scrollbar"
-                    style="width: 100%"
+                    style="--gap: var(--ui-spacing); width: 100%"
                 >
                     <ul class="product-data" style="padding: var(--ui-spacing) width: 100%;"></ul>
                 </div>

@@ -77,3 +77,7 @@ export function fixFormatString(format: string): string {
 
     return format;
 }
+
+export function textToHTML(content: string) {
+    return content.trim().replace(/\n/g, "<br/>");
+}
