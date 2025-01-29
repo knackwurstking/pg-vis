@@ -56,11 +56,17 @@ export function drawerGistIDsButton(): HTMLButtonElement {
 
 export function drawerGroup(name: types.DrawerGroups): {
     root: HTMLDetailsElement;
+    actions: {
+        add: HTMLButtonElement | null;
+    };
     items: HTMLUListElement;
 } {
     const group = drawer().querySelector(`.group[name="${name}"]`)!;
     return {
         root: group as HTMLDetailsElement,
+        actions: {
+            add: group.querySelector(`button.add`) || null,
+        },
         items: group.querySelector(`ul.items`)!,
     };
 }
