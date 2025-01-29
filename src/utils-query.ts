@@ -28,21 +28,13 @@ export function appBar_ButtonAdd(): HTMLButtonElement {
     return document.querySelector(`#appBarButtonAdd`)!;
 }
 
-//export function appBar_ButtonShare(): HTMLButtonElement {
-//    return document.querySelector(`#appBarButtonShare`)!;
-//}
-//
-//export function appBar_ButtonSearch(): HTMLButtonElement {
-//    return document.querySelector(`#appBarButtonSearch`)!;
-//}
-//
-//export function appBar_ButtonTrash(): HTMLButtonElement {
-//    return document.querySelector(`#appBarButtonTrash`)!;
-//}
-//
-//export function appBar_ButtonPrinter(): HTMLButtonElement {
-//    return document.querySelector(`#appBarButtonPrinter`)!;
-//}
+export function appBar_ButtonBookmarks(): HTMLButtonElement {
+    return document.querySelector(`#appBarButtonBookmarks`)!;
+}
+
+export function appBar_ButtonBookmarksFill(): HTMLButtonElement {
+    return document.querySelector(`#appBarButtonBookmarksFill`)!;
+}
 
 // Drawer Elements
 
