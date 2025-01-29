@@ -68,7 +68,7 @@ function render(product: types.Product, renderTags: boolean) {
             <ul></ul>`;
 
         const ul = details.querySelector("ul")!;
-        list.data.forEach((entry, index) => {
+        list.data.forEach((entry) => {
             if (!isLotto(entry.lotto, product.lotto)) {
                 return;
             }
@@ -88,16 +88,12 @@ function render(product: types.Product, renderTags: boolean) {
             const item = visDataCreate.dataItem({ entry, renderTags });
             cleanup.push(item.destroy);
             ul.appendChild(item.element);
-
-            item.element.style.borderBottom =
-                "var(--ui-border-width) var(--ui-border-style) var(--ui-border-color)";
         });
 
         if (!ul.lastChild) {
             return;
         }
 
-        (ul.lastChild as HTMLElement).style.borderBottom = "none";
         productDataContainer.appendChild(details);
     });
 }
