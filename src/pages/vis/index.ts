@@ -29,11 +29,7 @@ export async function onMount() {
 }
 
 export async function onDestroy() {
-    const target = query.routerTarget();
-    const searchBarInput = target.querySelector<HTMLInputElement>(
-        `.search-bar input[type="search"]`,
-    )!;
-    search = searchBarInput.value;
+    search = querySearchBar().value;
 
     cleanup.forEach((fn) => fn());
     cleanup = [];
@@ -41,12 +37,10 @@ export async function onDestroy() {
 }
 
 function render(list: types.Vis, listKey: string) {
-    const target = query.routerTarget();
-    const searchBarInput = target.querySelector<HTMLInputElement>(
-        `.search-bar input[type="search"]`,
-    )!;
-    const productsContainer = target.querySelector<HTMLUListElement>(`.products`)!;
+    const searchBarInput = querySearchBar();
+    const productsContainer = query.routerTarget().querySelector<HTMLUListElement>(`.products`)!;
 
+    // Render products
     list.data.forEach((product, index) => {
         // Seems to work just fine with more than 1000 items
         setTimeout(() => {
@@ -59,6 +53,7 @@ function render(list: types.Vis, listKey: string) {
         });
     });
 
+    // Search bar
     searchBarInput.oninput = () => {
         const r = utils.generateRegExp(searchBarInput.value);
         for (const item of [...productsContainer.children]) {
@@ -75,6 +70,7 @@ function render(list: types.Vis, listKey: string) {
         }
     };
 
+    // Routing to product page
     productsContainer.onclick = (e) => {
         // Iter event path for ".product-item" element and get the "data-href" attribute
         const item = e.composedPath().find((et) => {
@@ -95,4 +91,13 @@ function render(list: types.Vis, listKey: string) {
     };
 
     searchBarInput.value = search;
+    setTimeout(() => {
+        searchBarInput.oninput!(new Event("input"));
+    });
+}
+
+function querySearchBar(): HTMLInputElement {
+    return query
+        .routerTarget()
+        .querySelector<HTMLInputElement>(`.search-bar input[type="search"]`)!;
 }
