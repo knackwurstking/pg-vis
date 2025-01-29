@@ -6,10 +6,10 @@ import { registerSW } from "virtual:pwa-register";
 import * as dialogs from "./dialogs";
 import * as drawer from "./drawer";
 import * as globals from "./globals";
+import * as listStores from "./list-stores";
 import * as pages from "./pages";
 import * as types from "./types";
 import * as query from "./utils-query";
-import * as listStores from "./list-stores";
 
 // PWA Updates
 
