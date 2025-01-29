@@ -7,7 +7,7 @@ export class MetalSheets extends base.ListStore<"metal-sheets"> {
     }
 
     public listKey(list: types.MetalSheet): string {
-        return `${list.format} ${list.toolID}`;
+        return `${list.format} ${list.toolID}`.trim();
     }
 
     public title(): string {
