@@ -1,5 +1,3 @@
-import * as ui from "ui";
-
 import * as types from "../../../types";
 
 const html = String.raw;
@@ -8,7 +6,6 @@ export interface ProductItemProps {
     product: types.Product;
     enableRouting?: {
         productIndex: number;
-        listKey: string;
     };
 }
 
@@ -21,21 +18,11 @@ export function productItem(props: ProductItemProps): types.Component<HTMLLIElem
     el.style.padding = "var(--ui-spacing)";
     el.style.borderBottom = "var(--ui-border-width) var(--ui-border-style) var(--ui-border-color)";
 
-    const onClickHandler = () => {
-        ui.router.hash.goTo(
-            {
-                listKey: props.enableRouting!.listKey,
-                index: props.enableRouting!.productIndex.toString(),
-            },
-            "product",
-        );
-    };
-
     if (!!props.enableRouting) {
         el.role = "button";
         el.style.cursor = "pointer";
 
-        el.addEventListener("click", onClickHandler);
+        el.setAttribute("data-index", props.enableRouting!.productIndex.toString());
     }
 
     props.product.lotto;
@@ -68,10 +55,6 @@ export function productItem(props: ProductItemProps): types.Component<HTMLLIElem
 
     return {
         element: el,
-        destroy() {
-            if (!!props.enableRouting) {
-                el.removeEventListener("click", onClickHandler);
-            }
-        },
+        destroy() {},
     };
 }
