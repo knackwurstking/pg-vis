@@ -40,8 +40,8 @@ export async function onMount() {
         // Enable app bar button for editing the current sheet
         const listEditButton = query.appBar_ButtonListEdit();
         listEditButton.onclick = async () => {
-            const formatInput = query.dialog_MetalSheet().format;
             const data = await dialogs.metalSheet(list);
+            const formatInput = query.dialog_MetalSheet().format;
 
             if (!data) {
                 formatInput.ariaInvalid = null;
@@ -52,13 +52,19 @@ export async function onMount() {
                 listEditButton.click();
                 formatInput.ariaInvalid = "";
                 return;
-            } else {
-                formatInput.ariaInvalid = null;
             }
 
-            const ls = listStores.get("metal-sheets");
-            ls.replaceInStore(data, list);
-            reload();
+            formatInput.ariaInvalid = null;
+
+            try {
+                const ls = listStores.get("metal-sheets");
+                ls.replaceInStore(data, list);
+                reload();
+            } catch (err) {
+                alert(err);
+                listEditButton.click();
+                return;
+            }
         };
         listEditButton.style.display = "inline-flex";
         cleanup.push(() => (listEditButton.onclick = null));
