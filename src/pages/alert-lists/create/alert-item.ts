@@ -19,7 +19,7 @@ export function alertItem(props: AlertItemProps): types.Component<HTMLLIElement>
 
     el.style.width = "100%";
     el.style.padding = "var(--ui-spacing)";
-    el.style.borderBottom = "1px solid var(--ui-border-color)";
+    el.style.borderBottom = "var(--ui-border-width) var(--ui-border-style) var(--ui-border-color)";
 
     const onClickHandler = () => {
         ui.router.hash.goTo(
