@@ -146,6 +146,30 @@ for (const name of [
     );
 }
 
+// Render drawer vis items
+{
+    let cleanup: (() => void)[] = [];
+    globals.store.listen(
+        "vis",
+        async (data) => {
+            cleanup.forEach((fn) => fn());
+            cleanup = [];
+
+            const group = query.drawerGroup("vis");
+
+            group.items.innerHTML = "";
+            for (const list of data.lists) {
+                const item = drawer.create.visItem({ data: list });
+                cleanup.push(item.destroy);
+                group.items.appendChild(item.element);
+            }
+
+            // TODO: Initilalize action buttons "add" - Open file picker
+        },
+        true,
+    );
+}
+
 // Initialize Router
 
 ui.router.hash.init(query.routerTarget(), {
@@ -200,7 +224,11 @@ ui.router.hash.init(query.routerTarget(), {
             },
         },
     },
-    vis: {},
+
+    vis: {
+        // TODO: ...
+    },
+
     "vis-bookmarks": {},
     "vis-data": {},
     special: {},
