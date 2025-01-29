@@ -3,11 +3,13 @@ import "bootstrap-icons/font/bootstrap-icons.min.css";
 import * as ui from "ui";
 import { registerSW } from "virtual:pwa-register";
 
+import * as dialogs from "./dialogs";
 import * as drawer from "./drawer";
 import * as globals from "./globals";
 import * as pages from "./pages";
 import * as types from "./types";
 import * as query from "./utils-query";
+import * as listStores from "./list-stores";
 
 // PWA Updates
 
@@ -66,6 +68,7 @@ for (const name of [
             cleanup = [];
 
             const group = query.drawerGroup("alert-lists");
+
             group.items.innerHTML = "";
             for (const list of data.lists) {
                 const item = drawer.create.alertListItem({ data: list });
@@ -102,12 +105,42 @@ for (const name of [
 
             // Render
             const group = query.drawerGroup("metal-sheets");
+
             group.items.innerHTML = "";
             for (const list of [...activeLists, ...rest]) {
                 const item = drawer.create.metalSheetItem({ data: list });
                 cleanup.push(item.destroy);
                 group.items.appendChild(item.element);
             }
+
+            // This will open the metal-sheet dialog
+            group.actions.add!.onclick = async () => {
+                const data = await dialogs.metalSheet();
+                const formatInput = query.dialog_MetalSheet().format;
+
+                if (!data) {
+                    formatInput.ariaInvalid = null;
+                    return;
+                }
+
+                // Format should not be empty
+                if (!data.format) {
+                    group.actions.add!.click();
+                    formatInput.ariaInvalid = "";
+                    return;
+                }
+
+                formatInput.ariaInvalid = null;
+
+                const ls = listStores.get("metal-sheets");
+                try {
+                    ls.addToStore([data]);
+                } catch (err) {
+                    alert(err);
+                    group.actions.add!.click();
+                    return;
+                }
+            };
         },
         true,
     );
