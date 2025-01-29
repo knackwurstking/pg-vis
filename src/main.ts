@@ -164,7 +164,7 @@ for (const name of [
                 group.items.appendChild(item.element);
             }
 
-            // TODO: Initilalize action buttons "add" - Open file picker
+            // TODO: Initialize action buttons "add" - Open file picker
         },
         true,
     );
@@ -234,6 +234,19 @@ ui.router.hash.init(query.routerTarget(), {
             },
             onDestroy() {
                 pages.vis.onDestroy();
+            },
+        },
+    },
+
+    product: {
+        title: "VIS | Produkt",
+        template: {
+            selector: `template[name="product"]`,
+            onMount() {
+                pages.product.onMount();
+            },
+            onDestroy() {
+                pages.product.onDestroy();
             },
         },
     },
