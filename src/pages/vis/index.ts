@@ -81,6 +81,7 @@ function render(list: types.Vis, listKey: string) {
             return;
         }
 
+        // TODO: Store this item (just like search) and scroll into view on mount
         ui.router.hash.goTo(
             {
                 listKey: listKey,
