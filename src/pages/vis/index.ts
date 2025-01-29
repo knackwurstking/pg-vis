@@ -32,16 +32,20 @@ export async function onDestroy() {
     query.appBar_Title().innerText = originTitle;
 }
 
-function render(list: types.Vis, _listKey: string) {
+function render(list: types.Vis, listKey: string) {
     const target = query.routerTarget();
     const searchBarInput = target.querySelector<HTMLInputElement>(
         `.search-bar input[type="search"]`,
     )!;
     const productsContainer = target.querySelector<HTMLUListElement>(`.products`)!;
 
-    list.data.forEach((product) => {
+    list.data.forEach((product, index) => {
+        // Seems to work just fine with more than 1000 items
         setTimeout(() => {
-            const item = create.productItem({ product }); // TODO: enableRouting to the product page
+            const item = create.productItem({
+                product,
+                enableRouting: { productIndex: index },
+            });
             cleanup.push(item.destroy);
             productsContainer.appendChild(item.element);
         });
@@ -61,5 +65,24 @@ function render(list: types.Vis, _listKey: string) {
                 (item as HTMLElement).style.display = "none";
             }
         }
+    };
+
+    productsContainer.onclick = (e) => {
+        // Iter event path for ".product-item" element and get the "data-href" attribute
+        const item = e.composedPath().find((et) => {
+            const el = et as HTMLElement;
+            return el.classList.contains("product-item");
+        }) as HTMLElement | undefined;
+        if (!item) {
+            return;
+        }
+
+        ui.router.hash.goTo(
+            {
+                listKey: listKey,
+                index: item.getAttribute("data-index")!,
+            },
+            "product",
+        );
     };
 }
