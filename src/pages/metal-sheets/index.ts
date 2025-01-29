@@ -121,8 +121,10 @@ function render(list: types.MetalSheet) {
 
     list.data.table.data.forEach((row) => {
         const tr = document.createElement("tr");
-        tr.style.cursor = "pointer";
         tbody.appendChild(tr);
+
+        tr.style.cursor = "pointer";
+        tr.role = "button";
 
         tr.oncontextmenu = (e) => {
             e.preventDefault();
