@@ -8,6 +8,8 @@ import * as utils from "../../utils";
 
 let cleanup: (() => void)[] = [];
 let originTitle: string = "";
+let search: string = "";
+
 export async function onMount() {
     const param = ui.router.hash.getSearchParam();
 
@@ -27,6 +29,12 @@ export async function onMount() {
 }
 
 export async function onDestroy() {
+    const target = query.routerTarget();
+    const searchBarInput = target.querySelector<HTMLInputElement>(
+        `.search-bar input[type="search"]`,
+    )!;
+    search = searchBarInput.value;
+
     cleanup.forEach((fn) => fn());
     cleanup = [];
     query.appBar_Title().innerText = originTitle;
@@ -85,4 +93,6 @@ function render(list: types.Vis, listKey: string) {
             "product",
         );
     };
+
+    searchBarInput.value = search;
 }
