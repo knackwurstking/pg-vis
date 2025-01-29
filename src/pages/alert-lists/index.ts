@@ -6,13 +6,17 @@ import * as utils from "../../utils";
 import * as query from "../../utils-query";
 import * as create from "./create";
 
+interface Param {
+    listKey?: string;
+}
+
 let cleanup: (() => void)[] = [];
 let originTitle: string = "";
 
 export async function onMount() {
-    const param = ui.router.hash.getSearchParam();
+    const param: Param = ui.router.hash.getSearchParam();
 
-    const list = globals.getAlertList(param.listKey);
+    const list = globals.getAlertList(param.listKey || "");
     if (!list) {
         throw new Error(`alert list not found: listKey=${param.listKey}`);
     }
@@ -21,7 +25,7 @@ export async function onMount() {
     originTitle = appBarTitle.innerText;
     appBarTitle.innerText = list.title;
 
-    render(list.data, param.listKey);
+    render(list.data, param.listKey || "");
 }
 
 export async function onDestroy() {

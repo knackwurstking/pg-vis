@@ -6,13 +6,18 @@ import * as query from "../../utils-query";
 import * as createAlertLists from "../alert-lists/create";
 import * as create from "./create";
 
+interface Param {
+    listKey?: string;
+    index?: string;
+}
+
 let cleanup: (() => void)[] = [];
 let originTitle: string = "";
 
 export async function onMount() {
-    const param = ui.router.hash.getSearchParam();
+    const param: Param = ui.router.hash.getSearchParam();
 
-    const alert = globals.getAlert(param.listKey, parseInt(param.index, 10));
+    const alert = globals.getAlert(param.listKey || "", parseInt(param.index || "-1", 10));
     if (!alert) {
         throw `alert not found: listKey=${param.listKey}, index=${param.index}`;
     }

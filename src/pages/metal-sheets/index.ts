@@ -6,6 +6,10 @@ import * as dialogs from "../../dialogs";
 import * as listStores from "../../list-stores";
 import * as types from "../../types";
 
+interface Param {
+    listKey?: string;
+}
+
 const tableHeader = [
     "Stärke",
     "Marke (Höhe)",
@@ -19,8 +23,9 @@ let cleanup: (() => void)[] = [];
 let originTitle: string = "";
 
 export async function onMount() {
-    const param = ui.router.hash.getSearchParam();
-    const list = globals.getMetalSheet(param.listKey);
+    const param: Param = ui.router.hash.getSearchParam();
+
+    const list = globals.getMetalSheet(param.listKey || "");
     if (!list) {
         throw new Error(`metal sheet not found: listKey=${param.listKey}`);
     }
