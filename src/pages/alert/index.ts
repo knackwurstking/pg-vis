@@ -23,6 +23,13 @@ export async function onMount() {
         alert.from === alert.to ? `${alert.from}` : `${alert.from}..${alert.to}`
     }`;
 
+    // Enable back button
+    const backButton = query.appBar_ButtonBack();
+    backButton.style.display = "inline-flex";
+    cleanup.push(() => {
+        backButton.style.display = "none";
+    });
+
     render(alert);
 }
 
