@@ -67,7 +67,10 @@ export async function onMount() {
             }
         };
         listEditButton.style.display = "inline-flex";
-        cleanup.push(() => (listEditButton.onclick = null));
+        cleanup.push(() => {
+            listEditButton.style.display = "none";
+            listEditButton.onclick = null;
+        });
     }
 
     // Enable app bar button for adding a new table entry
@@ -85,7 +88,10 @@ export async function onMount() {
             reload();
         };
         addButton.style.display = "inline-flex";
-        cleanup.push(() => (addButton.onclick = null));
+        cleanup.push(() => {
+            addButton.style.display = "none";
+            addButton.onclick = null;
+        });
     }
 
     list.data.table.data = sortTableData(list.data.table.data);
