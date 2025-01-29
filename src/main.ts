@@ -226,7 +226,16 @@ ui.router.hash.init(query.routerTarget(), {
     },
 
     vis: {
-        // TODO: ...
+        title: "VIS",
+        template: {
+            selector: `template[name="vis"]`,
+            onMount() {
+                pages.vis.onMount();
+            },
+            onDestroy() {
+                pages.vis.onDestroy();
+            },
+        },
     },
 
     "vis-bookmarks": {},

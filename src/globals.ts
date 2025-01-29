@@ -15,6 +15,16 @@ export function getAlertList(listKey: string): types.AlertList | null {
     return list || null;
 }
 
+export function getVis(listKey: string): types.Vis | null {
+    const ls = listsStore.get("vis");
+
+    const list = store.get("vis")!.lists.find((list) => {
+        return ls.listKey(list) === listKey;
+    });
+
+    return list || null;
+}
+
 export function getMetalSheet(listKey: string): types.MetalSheet | null {
     const ls = listsStore.get("metal-sheets");
 
