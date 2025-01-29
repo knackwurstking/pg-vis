@@ -6,14 +6,20 @@ import * as types from "../../types";
 import * as query from "../../utils-query";
 import * as utils from "../../utils";
 
+interface Param {
+    listKey?: string;
+    index?: string;
+}
+
 let cleanup: (() => void)[] = [];
 let originTitle: string = "";
 let search: string = "";
+let scrollIntoViewIndex: number = -1;
 
 export async function onMount() {
-    const param = ui.router.hash.getSearchParam();
+    const param: Param = ui.router.hash.getSearchParam();
 
-    const list = globals.getVis(param.listKey);
+    const list = globals.getVis(param.listKey || "");
     if (!list) {
         throw new Error(`alert list not found: listKey=${param.listKey}`);
     }
@@ -25,7 +31,11 @@ export async function onMount() {
         appBarTitle.innerText = list.title;
     }
 
-    render(list, param.listKey);
+    if (!!param.index) {
+        scrollIntoViewIndex = parseInt(param.index, 10);
+    }
+
+    render(list, param.listKey!);
 }
 
 export async function onDestroy() {
@@ -50,6 +60,16 @@ function render(list: types.Vis, listKey: string) {
             });
             cleanup.push(item.destroy);
             productsContainer.appendChild(item.element);
+
+            if (index === list.data.length - 1 && scrollIntoViewIndex > -1) {
+                // Scroll into view
+                const item = productsContainer.querySelector(
+                    `[data-index="${scrollIntoViewIndex}"]`,
+                );
+                if (item) {
+                    item.scrollIntoView({ behavior: "smooth" });
+                }
+            }
         });
     });
 
@@ -74,14 +94,13 @@ function render(list: types.Vis, listKey: string) {
     productsContainer.onclick = (e) => {
         // Iter event path for ".product-item" element and get the "data-href" attribute
         const item = e.composedPath().find((et) => {
-            const el = et as HTMLElement;
-            return el.classList.contains("product-item");
+            return (et as HTMLElement).classList.contains("product-item");
         }) as HTMLElement | undefined;
         if (!item) {
             return;
         }
 
-        // TODO: Store this item (just like search) and scroll into view on mount
+        scrollIntoViewIndex = parseInt(item.getAttribute("data-index")!, 10);
         ui.router.hash.goTo(
             {
                 listKey: listKey,
