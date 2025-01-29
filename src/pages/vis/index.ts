@@ -32,6 +32,10 @@ export async function onDestroy() {
 
 function render(list: types.Vis, listKey: string) {
     const target = query.routerTarget();
+    const searchBarInput = target.querySelector<HTMLInputElement>(
+        `.search-bar input[type="search"]`,
+    )!;
+    const productsContainer = target.querySelector<HTMLUListElement>(`.products`)!;
 
-    // TODO: ...
+    // TODO: Render products
 }
