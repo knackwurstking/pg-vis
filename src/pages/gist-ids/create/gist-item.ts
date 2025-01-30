@@ -23,6 +23,11 @@ export function gistItem(props: GistItemProps): types.Component<HTMLLIElement> {
                 style="--align: flex-end; --gap: 0; --mono: 1; font-size: 0.85rem; width: fit-content;"
             >
                 <span>
+                    <span>Remote Rev.: </span>
+                    <span id="gistID_RemoteRevision_${props.storeKey}">?</span>
+                </span>
+
+                <span>
                     <span>Local Rev.: </span>
                     <span
                         id="gistID_LocalRevision_${props.storeKey}"
@@ -30,10 +35,6 @@ export function gistItem(props: GistItemProps): types.Component<HTMLLIElement> {
                     >
                         ${globals.store.get(props.storeKey)!.gist?.revision || "?"}
                     </span>
-                </span>
-                <span>
-                    <span>Remote Rev.: </span>
-                    <span id="gistID_RemoteRevision_${props.storeKey}">?</span>
                 </span>
             </div>
         </div>
