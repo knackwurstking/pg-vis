@@ -128,3 +128,19 @@ export function dialog_VIS(): {
         reset: root.querySelector(`input[type="reset"]`)!,
     };
 }
+
+export function dialog_Product(): {
+    root: HTMLDialogElement;
+    close: HTMLButtonElement;
+    inputs: NodeListOf<HTMLInputElement>;
+    reset: HTMLInputElement;
+} {
+    const root = document.querySelector<HTMLDialogElement>(`dialog[name="product"]`)!;
+
+    return {
+        root,
+        close: root.querySelector(`button.close`)!,
+        inputs: root.querySelectorAll(`product-input`)!,
+        reset: root.querySelector(`input[type="reset"]`)!,
+    };
+}

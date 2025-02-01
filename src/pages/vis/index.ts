@@ -72,8 +72,28 @@ export async function onMount() {
         });
     }
 
-    // TODO: Enable app bar button for adding a new product
+    // Enable app bar button for adding a new product
     {
+        const addButton = query.appBar_ButtonAdd();
+
+        addButton.onclick = async () => {
+            const data: types.Product | null = await dialogs.product();
+            if (!data) {
+                return;
+            }
+            list.data.push(data);
+
+            const ls = listStores.get("vis");
+            ls.replaceInStore(list);
+            reload();
+        };
+
+        addButton.style.display = "inline-flex";
+
+        cleanup.push(() => {
+            addButton.style.display = "none";
+            addButton.onclick = null;
+        });
     }
 
     render(list, param.listKey!);
@@ -111,7 +131,7 @@ function render(list: types.Vis, listKey: string) {
                         `You want to delete this product: "${product.lotto}: ${product.name}" ?`,
                     )
                 ) {
-                    list.data = list.data.filter((r, i) => i !== index);
+                    list.data = list.data.filter((_p, i) => i !== index);
 
                     const ls = listStores.get("vis");
                     ls.replaceInStore(list);

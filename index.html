@@ -343,6 +343,49 @@
             </form>
         </dialog>
 
+        <dialog name="product" oncancel="event.preventDefault()">
+            <div class="ui-flex-grid-row">
+                <h4 class="ui-flex-grid-item">Produkt</h4>
+                <button class="close" variant="ghost" color="primary" icon>
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+
+            <form method="dialog">
+                <div class="ui-flex-grid">
+                    <div class="ui-flex-grid-row" style="--align: center; --justify: space-between">
+                        <label for="product_Lotto">Lotto</label>
+                        <input class="product-input" id="product_Lotto" type="text" />
+                    </div>
+
+                    <div class="ui-flex-grid-row" style="--align: center; --justify: space-between">
+                        <label for="product_Name">Name</label>
+                        <input class="product-input" id="product_Name" type="text" />
+                    </div>
+
+                    <div class="ui-flex-grid-row" style="--align: center; --justify: space-between">
+                        <label for="product_Format">Format</label>
+                        <input class="product-input" id="product_Format" type="text" />
+                    </div>
+
+                    <div class="ui-flex-grid-row" style="--align: center; --justify: space-between">
+                        <label for="product_Thickness">Stärke</label>
+                        <input class="product-input" id="product_Thickness" type="number" />
+                    </div>
+
+                    <div class="ui-flex-grid-row" style="--align: center; --justify: space-between">
+                        <label for="product_Stamp">Stempel</label>
+                        <input class="product-input" id="product_Stamp" type="number" />
+                    </div>
+                </div>
+
+                <div class="ui-flex-grid-row" style="--justify: flex-end">
+                    <input type="reset" />
+                    <input type="submit" />
+                </div>
+            </form>
+        </dialog>
+
         <template name="gist-ids">
             <ul class="gist-ids ui-flex-grid" style="padding: var(--ui-spacing)"></ul>
         </template>
