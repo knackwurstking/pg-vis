@@ -1,14 +1,20 @@
 import * as query from "../utils-query";
 
-function init(choices: string[]): Promise<string | null> {
+function init(title: string, choices: string[]): Promise<string | null> {
     return new Promise((resolve, _reject) => {
         const dialog = query.dialog_Choose();
 
         let currentChoice: string | null = null;
 
+        dialog.close.onclick = () => {
+            dialog.root.close();
+        };
+
         dialog.root.onclose = () => {
             resolve(currentChoice);
         };
+
+        dialog.title.innerText = title;
 
         // Create dialog button for each choice
         dialog.choices.innerHTML = "";
