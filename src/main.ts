@@ -61,7 +61,9 @@ drawerGistIDsButton.onclick = () => {
             // Initialize action button "download" - Download data packed in a handy zip archive
             group.actions.download!.onclick = async () => {
                 try {
-                    await utils.downloadZIP("alert-lists");
+                    if (confirm(`Download ZIP?`)) {
+                        await utils.downloadZIP("alert-lists");
+                    }
                 } catch (err) {
                     alert(err);
                 }
@@ -110,7 +112,9 @@ drawerGistIDsButton.onclick = () => {
             // Initialize action button "download" - Download data packed in a handy zip archive
             group.actions.download!.onclick = async () => {
                 try {
-                    await utils.downloadZIP("metal-sheets");
+                    if (confirm(`Download ZIP?`)) {
+                        await utils.downloadZIP("metal-sheets");
+                    }
                 } catch (err) {
                     alert(err);
                 }
@@ -173,7 +177,9 @@ drawerGistIDsButton.onclick = () => {
             // Initialize action button "download" - Download data packed in a handy zip archive
             group.actions.download!.onclick = async () => {
                 try {
-                    await utils.downloadZIP("vis");
+                    if (confirm(`Download ZIP?`)) {
+                        await utils.downloadZIP("vis");
+                    }
                 } catch (err) {
                     alert(err);
                 }
