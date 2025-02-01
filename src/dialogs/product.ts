@@ -3,7 +3,7 @@ import * as types from "../types";
 
 function init(data?: types.Product | null): Promise<types.Product | null> {
     return new Promise((resolve, _reject) => {
-        const dialog = query.dialog_Product(); // TODO: Create the dialog (html)
+        const dialog = query.dialog_Product();
 
         let canceled = false;
         dialog.close.onclick = () => {
