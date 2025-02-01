@@ -386,6 +386,17 @@
             </form>
         </dialog>
 
+        <dialog name="choose" oncancel="event.preventDefault()">
+            <div class="ui-flex-grid-row">
+                <h4 class="ui-flex-grid-item"></h4>
+                <button class="close" variant="ghost" color="primary" icon>
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+
+            <div class="choices ui-flex-grid-row" style="--warp: wrap"></div>
+        </dialog>
+
         <template name="gist-ids">
             <ul class="gist-ids ui-flex-grid" style="padding: var(--ui-spacing)"></ul>
         </template>

@@ -122,20 +122,36 @@ function render(list: types.Vis, listKey: string) {
             cleanup.push(item.destroy);
             productsContainer.appendChild(item.element);
 
-            // Delete product on right click
-            item.element.oncontextmenu = (e) => {
+            // Delete or Edit product on right click
+            item.element.oncontextmenu = async (e) => {
                 e.preventDefault();
 
-                if (
-                    confirm(
-                        `You want to delete this product: "${product.lotto}: ${product.name}" ?`,
-                    )
-                ) {
-                    list.data = list.data.filter((_p, i) => i !== index);
+                const choice = await dialogs.choose("Bearbeiten", "Löschen");
 
-                    const ls = listStores.get("vis");
-                    ls.replaceInStore(list);
-                    reload();
+                switch (choice) {
+                    case "Bearbeiten":
+                        {
+                            const data = await dialogs.product(product);
+                            if (!data) {
+                                return;
+                            }
+                            list.data[index] = data;
+
+                            const ls = listStores.get("vis");
+                            ls.replaceInStore(list);
+                            reload();
+                        }
+                        break;
+
+                    case "Löschen":
+                        {
+                            list.data = list.data.filter((_p, i) => i !== index);
+
+                            const ls = listStores.get("vis");
+                            ls.replaceInStore(list);
+                            reload();
+                        }
+                        break;
                 }
             };
 

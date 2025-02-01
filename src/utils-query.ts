@@ -144,3 +144,17 @@ export function dialog_Product(): {
         reset: root.querySelector(`input[type="reset"]`)!,
     };
 }
+
+export function dialog_Choose(): {
+    root: HTMLDialogElement;
+    close: HTMLButtonElement;
+    choices: HTMLDivElement;
+} {
+    const root = document.querySelector<HTMLDialogElement>(`dialog[name="product"]`)!;
+
+    return {
+        root,
+        close: root.querySelector(`button.close`)!,
+        choices: root.querySelector(`.choices`)!,
+    };
+}
