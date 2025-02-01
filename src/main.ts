@@ -3,6 +3,7 @@ import "bootstrap-icons/font/bootstrap-icons.min.css";
 import * as ui from "ui";
 import { registerSW } from "virtual:pwa-register";
 
+import * as utils from "./utils";
 import * as dialogs from "./dialogs";
 import * as drawer from "./drawer";
 import * as globals from "./globals";
@@ -59,7 +60,11 @@ drawerGistIDsButton.onclick = () => {
 
             // Initialize action button "download" - Download data packed in a handy zip archive
             group.actions.download!.onclick = async () => {
-                // TODO: ...
+                try {
+                    await utils.downloadZIP("alert-lists");
+                } catch (err) {
+                    alert(err);
+                }
             };
         },
         true,
@@ -104,7 +109,11 @@ drawerGistIDsButton.onclick = () => {
 
             // Initialize action button "download" - Download data packed in a handy zip archive
             group.actions.download!.onclick = async () => {
-                // TODO: ...
+                try {
+                    await utils.downloadZIP("metal-sheets");
+                } catch (err) {
+                    alert(err);
+                }
             };
 
             // This will open the metal-sheet dialog
@@ -163,7 +172,11 @@ drawerGistIDsButton.onclick = () => {
 
             // Initialize action button "download" - Download data packed in a handy zip archive
             group.actions.download!.onclick = async () => {
-                // TODO: ...
+                try {
+                    await utils.downloadZIP("vis");
+                } catch (err) {
+                    alert(err);
+                }
             };
 
             // Initialize action button "add" - Create a new vis list
@@ -186,7 +199,7 @@ drawerGistIDsButton.onclick = () => {
             };
 
             // Initialize action button "import-from-file" - Open file picker
-            group.actions.add!.onclick = async () => {
+            group.actions.importFromFile!.onclick = async () => {
                 // Create input element of type file, click it and get the .txt type file
                 const input = document.createElement("input");
 

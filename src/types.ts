@@ -59,32 +59,6 @@ export type PGStore = ui.Store<PGStoreEvents>;
 // NOTE:
 //  - Kicked: theme.name in v2.0.0
 export interface PGStoreEvents {
-    drawerGroup: {
-        "alert-lists"?: {
-            open: boolean;
-        };
-
-        "metal-sheets"?: {
-            open: boolean;
-        };
-
-        vis?: {
-            open: boolean;
-        };
-
-        "vis-bookmarks"?: {
-            open: boolean;
-        };
-
-        "vis-data"?: {
-            open: boolean;
-        };
-
-        special?: {
-            open: boolean;
-        };
-    };
-
     "alert-lists": {
         gist: Gist | null;
         lists: AlertList[];
