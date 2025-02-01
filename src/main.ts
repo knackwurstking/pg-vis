@@ -345,9 +345,9 @@ ui.router.hash.init(query.routerTarget(), {
         },
     },
 
-    "vis-bookmarks": {},
-    "vis-data": {},
-    special: {},
+    "vis-bookmarks": {}, // TODO: Continue here...
+    "vis-data": {}, // TODO: ...or here
+    special: {}, // TODO: ...or here
 });
 
 // Event Handlers
