@@ -5,6 +5,8 @@ import * as globals from "../../globals";
 import * as types from "../../types";
 import * as query from "../../utils-query";
 import * as utils from "../../utils";
+import * as dialogs from "../../dialogs";
+import * as listStores from "../../list-stores";
 
 interface Param {
     listKey?: string;
@@ -33,6 +35,36 @@ export async function onMount() {
 
     if (!!param.index) {
         scrollIntoViewIndex = parseInt(param.index, 10);
+    }
+
+    // Enable app bar button for editing the current vis (title)
+    {
+        const listEditButton = query.appBar_ButtonListEdit();
+
+        listEditButton.onclick = async () => {
+            const data = await dialogs.vis(list);
+
+            if (!data) {
+                return;
+            }
+
+            try {
+                const ls = listStores.get("vis");
+                ls.replaceInStore(data, list);
+                reload();
+            } catch (err) {
+                alert(err);
+                listEditButton.click();
+                return;
+            }
+        };
+
+        listEditButton.style.display = "inline-flex";
+
+        cleanup.push(() => {
+            listEditButton.style.display = "none";
+            listEditButton.onclick = null;
+        });
     }
 
     render(list, param.listKey!);
@@ -120,4 +152,9 @@ function querySearchBar(): HTMLInputElement {
     return query
         .routerTarget()
         .querySelector<HTMLInputElement>(`.search-bar input[type="search"]`)!;
+}
+
+async function reload() {
+    await onDestroy();
+    await onMount();
 }
