@@ -49,7 +49,9 @@ export function drawerGistIDsButton(): HTMLButtonElement {
 export function drawerGroup(name: types.DrawerGroups): {
     root: HTMLDetailsElement;
     actions: {
+        download: HTMLButtonElement | null;
         add: HTMLButtonElement | null;
+        importFromFile: HTMLButtonElement | null;
     };
     items: HTMLUListElement;
 } {
@@ -57,7 +59,9 @@ export function drawerGroup(name: types.DrawerGroups): {
     return {
         root: group as HTMLDetailsElement,
         actions: {
+            download: group.querySelector(`button.download`) || null,
             add: group.querySelector(`button.add`) || null,
+            importFromFile: group.querySelector(`button.import-from-file`) || null,
         },
         items: group.querySelector(`ul.items`)!,
     };
@@ -100,6 +104,22 @@ export function dialog_MetalSheetTableEntry(): {
     const root = document.querySelector<HTMLDialogElement>(
         `dialog[name="metal-sheet-table-entry"]`,
     )!;
+
+    return {
+        root,
+        close: root.querySelector(`button.close`)!,
+        inputs: root.querySelectorAll(`input[type="text"]`)!,
+        reset: root.querySelector(`input[type="reset"]`)!,
+    };
+}
+
+export function dialog_VIS(): {
+    root: HTMLDialogElement;
+    close: HTMLButtonElement;
+    inputs: NodeListOf<HTMLInputElement>;
+    reset: HTMLInputElement;
+} {
+    const root = document.querySelector<HTMLDialogElement>(`dialog[name="vis"]`)!;
 
     return {
         root,

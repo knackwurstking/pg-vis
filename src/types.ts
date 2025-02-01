@@ -158,6 +158,7 @@ export type SpecialFlakes_PressSlot = "P0" | "P4" | "P5";
 export interface Vis {
     /**
      * Needed for vis bookmarks
+     * - Updated after each change
      */
     date: number;
     title: string;

@@ -53,6 +53,11 @@ drawerGistIDsButton.onclick = () => {
                 cleanup.push(item.destroy);
                 group.items.appendChild(item.element);
             }
+
+            // Initialize action button "download" - Download data packed in a handy zip archive
+            group.actions.download!.onclick = async () => {
+                // TODO: ...
+            };
         },
         true,
     );
@@ -90,6 +95,11 @@ drawerGistIDsButton.onclick = () => {
                 cleanup.push(item.destroy);
                 group.items.appendChild(item.element);
             }
+
+            // Initialize action button "download" - Download data packed in a handy zip archive
+            group.actions.download!.onclick = async () => {
+                // TODO: ...
+            };
 
             // This will open the metal-sheet dialog
             group.actions.add!.onclick = async () => {
@@ -142,9 +152,84 @@ drawerGistIDsButton.onclick = () => {
                 group.items.appendChild(item.element);
             }
 
-            // TODO: Initialize action buttons "add" - Open file picker
+            // Initialize action button "download" - Download data packed in a handy zip archive
+            group.actions.download!.onclick = async () => {
+                // TODO: ...
+            };
+
+            // Initialize action button "add" - Create a new vis list
             group.actions.add!.onclick = async () => {
-                console.debug("TODO: Open file picker");
+                // Open dialog choosing load from file or create new vis list
+                const data = await dialogs.vis();
+
+                if (!data) {
+                    return;
+                }
+
+                const ls = listStores.get("vis");
+                try {
+                    ls.addToStore([data]);
+                } catch (err) {
+                    alert(err);
+                    group.actions.add!.click();
+                    return;
+                }
+            };
+
+            // Initialize action button "import-from-file" - Open file picker
+            group.actions.add!.onclick = async () => {
+                // Create input element of type file, click it and get the .txt type file
+                const input = document.createElement("input");
+
+                input.type = "file";
+                input.accept = ".txt";
+                input.multiple = true;
+
+                input.onchange = () => {
+                    if (!input.files) {
+                        return;
+                    }
+
+                    for (const file of input.files) {
+                        const reader = new FileReader();
+
+                        reader.onload = async () => {
+                            if (typeof reader.result !== "string") {
+                                return;
+                            }
+
+                            const ls = listStores.get("vis");
+                            let data: any;
+
+                            try {
+                                data = ls.validate(reader.result);
+                            } catch (err) {
+                                alert(err);
+                                return;
+                            }
+
+                            if (data === null) {
+                                alert(`Ungültige Daten für "${ls.title()}"!`);
+                                return;
+                            }
+
+                            try {
+                                ls.addToStore([data]);
+                            } catch (err) {
+                                alert(err);
+                                return;
+                            }
+                        };
+
+                        reader.onerror = () => {
+                            alert(`Lesen der Datei "${file.name}" ist fehlgeschlagen!`);
+                        };
+
+                        reader.readAsText(file);
+                    }
+                };
+
+                input.click();
             };
         },
         true,
