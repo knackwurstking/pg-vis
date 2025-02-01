@@ -196,7 +196,6 @@ function render(list: types.Vis, listKey: string) {
             return;
         }
 
-        // TODO: Find a better way to do this
         scrollTop = productsContainer.parentElement?.scrollTop || 0;
         ui.router.hash.goTo(
             {
