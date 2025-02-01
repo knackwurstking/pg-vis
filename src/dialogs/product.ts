@@ -31,7 +31,11 @@ function init(data?: types.Product | null): Promise<types.Product | null> {
 
         const initForm = () => {
             if (!!data) {
-                // TODO : Set the values of the dialog form inputs
+                dialog.inputs[0].value = data.lotto;
+                dialog.inputs[1].value = data.name;
+                dialog.inputs[2].value = data.format;
+                dialog.inputs[3].value = data.thickness.toString();
+                dialog.inputs[4].value = data.stamp;
             }
         };
 

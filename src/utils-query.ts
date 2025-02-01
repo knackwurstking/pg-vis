@@ -140,7 +140,7 @@ export function dialog_Product(): {
     return {
         root,
         close: root.querySelector(`button.close`)!,
-        inputs: root.querySelectorAll(`product-input`)!,
+        inputs: root.querySelectorAll(`.product-input`)!,
         reset: root.querySelector(`input[type="reset"]`)!,
     };
 }
@@ -150,7 +150,7 @@ export function dialog_Choose(): {
     close: HTMLButtonElement;
     choices: HTMLDivElement;
 } {
-    const root = document.querySelector<HTMLDialogElement>(`dialog[name="product"]`)!;
+    const root = document.querySelector<HTMLDialogElement>(`dialog[name="choose"]`)!;
 
     return {
         root,

@@ -111,6 +111,8 @@ function render(list: types.Vis, listKey: string) {
     const searchBarInput = querySearchBar();
     const productsContainer = query.routerTarget().querySelector<HTMLUListElement>(`.products`)!;
 
+    productsContainer.innerHTML = "";
+
     // Render products
     list.data.forEach((product, index) => {
         // Seems to work just fine with more than 1000 items
@@ -126,7 +128,7 @@ function render(list: types.Vis, listKey: string) {
             item.element.oncontextmenu = async (e) => {
                 e.preventDefault();
 
-                const choice = await dialogs.choose("Bearbeiten", "Löschen");
+                const choice = await dialogs.choose(["Bearbeiten", "Löschen"]);
 
                 switch (choice) {
                     case "Bearbeiten":

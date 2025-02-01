@@ -15,13 +15,13 @@ function init(choices: string[]): Promise<string | null> {
         for (const choice of choices) {
             const button = document.createElement("button");
 
-            button.value = choice;
+            button.innerText = choice;
 
             button.setAttribute("variant", "ghost");
             button.setAttribute("color", "secondary");
 
             button.onclick = () => {
-                currentChoice = button.value;
+                currentChoice = button.innerText;
                 dialog.root.close();
             };
 
