@@ -148,6 +148,7 @@ export function dialog_Product(): {
 export function dialog_Choose(): {
     root: HTMLDialogElement;
     close: HTMLButtonElement;
+    title: HTMLElement;
     choices: HTMLDivElement;
 } {
     const root = document.querySelector<HTMLDialogElement>(`dialog[name="choose"]`)!;
@@ -155,6 +156,7 @@ export function dialog_Choose(): {
     return {
         root,
         close: root.querySelector(`button.close`)!,
+        title: root.querySelector(`.title`)!,
         choices: root.querySelector(`.choices`)!,
     };
 }
