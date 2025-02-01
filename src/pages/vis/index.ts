@@ -23,7 +23,7 @@ export async function onMount() {
 
     const list = globals.getVis(param.listKey || "");
     if (!list) {
-        throw new Error(`alert list not found: listKey=${param.listKey}`);
+        throw new Error(`vis list not found: listKey=${param.listKey}`);
     }
 
     // Set the app bar title
@@ -51,7 +51,12 @@ export async function onMount() {
             try {
                 const ls = listStores.get("vis");
                 ls.replaceInStore(data, list);
-                reload();
+                ui.router.hash.goTo(
+                    {
+                        listKey: ls.listKey(data),
+                    },
+                    "vis",
+                );
             } catch (err) {
                 alert(err);
                 listEditButton.click();
@@ -152,9 +157,4 @@ function querySearchBar(): HTMLInputElement {
     return query
         .routerTarget()
         .querySelector<HTMLInputElement>(`.search-bar input[type="search"]`)!;
-}
-
-async function reload() {
-    await onDestroy();
-    await onMount();
 }

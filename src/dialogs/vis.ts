@@ -29,8 +29,10 @@ function init(data?: types.Vis | null): Promise<types.Vis | null> {
 
         const initForm = () => {
             if (!!data) {
+                const titleInput = dialog.inputs[0];
+
                 // Set title input (default: YYYY-MM-DD)
-                data.title = data.title || generateDefaultTitle(new Date());
+                titleInput.value = data.title || generateDefaultTitle(new Date());
             }
         };
 

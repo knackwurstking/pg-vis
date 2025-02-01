@@ -64,7 +64,12 @@ export async function onMount() {
             try {
                 const ls = listStores.get("metal-sheets");
                 ls.replaceInStore(data, list);
-                reload();
+                ui.router.hash.goTo(
+                    {
+                        listKey: ls.listKey(data),
+                    },
+                    "metal-sheets",
+                );
             } catch (err) {
                 alert(err);
                 listEditButton.click();
@@ -137,6 +142,7 @@ function render(list: types.MetalSheet) {
         tr.style.cursor = "pointer";
         tr.role = "button";
 
+        // Delete row on right click
         tr.oncontextmenu = (e) => {
             e.preventDefault();
 
@@ -150,6 +156,7 @@ function render(list: types.MetalSheet) {
             }
         };
 
+        // Edit row on click
         tr.onclick = async () => {
             const data = await dialogs.metalSheetTableEntry(row);
             if (!data) {
