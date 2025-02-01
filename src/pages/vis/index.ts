@@ -10,13 +10,13 @@ import * as listStores from "../../list-stores";
 
 interface Param {
     listKey?: string;
-    index?: string;
+    scrollTop?: string;
 }
 
 let cleanup: (() => void)[] = [];
 let originTitle: string = "";
 let search: string = "";
-let scrollIntoViewIndex: number = -1;
+let scrollTop: number = 0;
 
 export async function onMount() {
     const param: Param = ui.router.hash.getSearchParam();
@@ -33,8 +33,8 @@ export async function onMount() {
         appBarTitle.innerText = list.title;
     }
 
-    if (!!param.index) {
-        scrollIntoViewIndex = parseInt(param.index, 10);
+    if (!!param.scrollTop) {
+        scrollTop = parseInt(param.scrollTop, 10);
     }
 
     // Enable app bar button for editing the current vis (title)
@@ -157,14 +157,14 @@ function render(list: types.Vis, listKey: string) {
                 }
             };
 
-            if (index === list.data.length - 1 && scrollIntoViewIndex > -1) {
-                // Scroll into view
-                const item = productsContainer.querySelector(
-                    `[data-index="${scrollIntoViewIndex}"]`,
-                );
-                if (item) {
-                    item.scrollIntoView({ behavior: "smooth" });
+            if (index === list.data.length - 1 && scrollTop > 0) {
+                if (!productsContainer.parentElement) {
+                    return;
                 }
+
+                productsContainer.parentElement.style.scrollBehavior = "auto";
+                productsContainer.parentElement.scrollTop = scrollTop;
+                productsContainer.parentElement.style.scrollBehavior = "smooth";
             }
         });
     });
@@ -196,7 +196,8 @@ function render(list: types.Vis, listKey: string) {
             return;
         }
 
-        scrollIntoViewIndex = parseInt(item.getAttribute("data-index")!, 10);
+        // TODO: Find a better way to do this
+        scrollTop = productsContainer.parentElement?.scrollTop || 0;
         ui.router.hash.goTo(
             {
                 listKey: listKey,
