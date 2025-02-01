@@ -72,6 +72,10 @@ export async function onMount() {
         });
     }
 
+    // TODO: Enable app bar button for adding a new product
+    {
+    }
+
     render(list, param.listKey!);
 }
 
@@ -97,6 +101,23 @@ function render(list: types.Vis, listKey: string) {
             });
             cleanup.push(item.destroy);
             productsContainer.appendChild(item.element);
+
+            // Delete product on right click
+            item.element.oncontextmenu = (e) => {
+                e.preventDefault();
+
+                if (
+                    confirm(
+                        `You want to delete this product: "${product.lotto}: ${product.name}" ?`,
+                    )
+                ) {
+                    list.data = list.data.filter((r, i) => i !== index);
+
+                    const ls = listStores.get("vis");
+                    ls.replaceInStore(list);
+                    reload();
+                }
+            };
 
             if (index === list.data.length - 1 && scrollIntoViewIndex > -1) {
                 // Scroll into view
@@ -157,4 +178,9 @@ function querySearchBar(): HTMLInputElement {
     return query
         .routerTarget()
         .querySelector<HTMLInputElement>(`.search-bar input[type="search"]`)!;
+}
+
+async function reload() {
+    await onDestroy();
+    await onMount();
 }
