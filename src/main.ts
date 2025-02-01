@@ -47,11 +47,14 @@ drawerGistIDsButton.onclick = () => {
 
             const group = query.drawerGroup("alert-lists");
 
-            group.items.innerHTML = "";
-            for (const list of data.lists) {
-                const item = drawer.create.alertListItem({ data: list });
-                cleanup.push(item.destroy);
-                group.items.appendChild(item.element);
+            // Render lists
+            {
+                group.items.innerHTML = "";
+                for (const list of data.lists) {
+                    const item = drawer.create.alertListItem({ data: list });
+                    cleanup.push(item.destroy);
+                    group.items.appendChild(item.element);
+                }
             }
 
             // Initialize action button "download" - Download data packed in a handy zip archive
@@ -72,28 +75,31 @@ drawerGistIDsButton.onclick = () => {
             cleanup.forEach((fn) => fn());
             cleanup = [];
 
-            // Sort active lists by press
-            let activeLists: types.MetalSheet[] = [];
-            const rest: types.MetalSheet[] = [];
-            for (const list of data.lists) {
-                if (list.data.press > -1) {
-                    activeLists.push(list);
-                } else {
-                    rest.push(list);
-                }
-            }
-
-            // Sort active lists by press from low to high
-            activeLists = activeLists.sort((a, b) => (a.data.press > b.data.press ? 1 : -1));
-
             // Render
             const group = query.drawerGroup("metal-sheets");
 
-            group.items.innerHTML = "";
-            for (const list of [...activeLists, ...rest]) {
-                const item = drawer.create.metalSheetItem({ data: list });
-                cleanup.push(item.destroy);
-                group.items.appendChild(item.element);
+            // Render active lists first, then the rest
+            {
+                // Sort active lists by press
+                let activeLists: types.MetalSheet[] = [];
+                const rest: types.MetalSheet[] = [];
+                for (const list of data.lists) {
+                    if (list.data.press > -1) {
+                        activeLists.push(list);
+                    } else {
+                        rest.push(list);
+                    }
+                }
+
+                // Sort active lists by press from low to high
+                activeLists = activeLists.sort((a, b) => (a.data.press > b.data.press ? 1 : -1));
+
+                group.items.innerHTML = "";
+                for (const list of [...activeLists, ...rest]) {
+                    const item = drawer.create.metalSheetItem({ data: list });
+                    cleanup.push(item.destroy);
+                    group.items.appendChild(item.element);
+                }
             }
 
             // Initialize action button "download" - Download data packed in a handy zip archive
@@ -145,11 +151,14 @@ drawerGistIDsButton.onclick = () => {
 
             const group = query.drawerGroup("vis");
 
-            group.items.innerHTML = "";
-            for (const list of data.lists) {
-                const item = drawer.create.visItem({ data: list });
-                cleanup.push(item.destroy);
-                group.items.appendChild(item.element);
+            // Render lists
+            {
+                group.items.innerHTML = "";
+                for (const list of data.lists) {
+                    const item = drawer.create.visItem({ data: list });
+                    cleanup.push(item.destroy);
+                    group.items.appendChild(item.element);
+                }
             }
 
             // Initialize action button "download" - Download data packed in a handy zip archive
