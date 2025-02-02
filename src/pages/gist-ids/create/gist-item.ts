@@ -97,7 +97,15 @@ export function gistItem(props: GistItemProps): types.Component<HTMLLIElement> {
     const inputAPIToken = el.querySelector<HTMLInputElement>(`#apiToken_${props.storeKey}`)!;
     const pushButton = el.querySelector<HTMLButtonElement>(`button.push`)!;
 
-    initNormalMode(props.storeKey, localRevSpan, remoteRevSpan, inputGistID, updateButton);
+    initNormalMode(
+        props.storeKey,
+        localRevSpan,
+        remoteRevSpan,
+        inputGistID,
+        inputAPIToken,
+        updateButton,
+    );
+
     initDevMode(
         props.storeKey,
         localRevSpan,
@@ -118,6 +126,7 @@ async function initNormalMode(
     localRevSpan: HTMLSpanElement,
     remoteRevSpan: HTMLSpanElement,
     inputPull: HTMLInputElement,
+    inputPush: HTMLInputElement,
     button: HTMLButtonElement,
 ) {
     inputPull.onchange = async () => button.click();
@@ -138,6 +147,7 @@ async function initNormalMode(
         };
 
         const gistID = inputPull.value;
+        const apiToken = inputPush.value;
 
         if (!gistID) {
             globals.store.update(storeKey, (data) => {
@@ -149,7 +159,11 @@ async function initNormalMode(
         }
 
         globals.store.update(storeKey, (data) => {
-            data.gist = { id: gistID, revision: null, token: "" };
+            data.gist = {
+                id: gistID,
+                revision: null,
+                token: apiToken,
+            };
             return data;
         });
 

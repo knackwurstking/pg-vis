@@ -111,23 +111,26 @@ async function getGist(gistID: string): Promise<
             return reject(new Error(message));
         };
 
-        console.debug("fetch gist...");
-        const resp = await octokit.request("GET /gists/{gist_id}", {
-            gist_id: gistID,
-            headers: {
-                "X-GitHub-Api-Version": "2022-11-28",
-            },
-        });
+        try {
+            const resp = await octokit.request("GET /gists/{gist_id}", {
+                gist_id: gistID,
+                headers: {
+                    "X-GitHub-Api-Version": "2022-11-28",
+                },
+            });
 
-        if (resp.status !== 200) {
-            return reject(
-                new Error(
-                    `anfrage von "GET /gist/${gistID}" ist mit Statuscode ${resp.status} fehlgeschlagen`,
-                ),
-            );
+            if (resp.status !== 200) {
+                return reject(
+                    new Error(
+                        `anfrage von "GET /gist/${gistID}" ist mit Statuscode ${resp.status} fehlgeschlagen`,
+                    ),
+                );
+            }
+
+            return resolve(resp.data.files);
+        } catch (err) {
+            return reject(err);
         }
-
-        return resolve(resp.data.files);
     });
 }
 
@@ -137,29 +140,32 @@ async function patchGist(
     files: { [key: string]: { content: string } },
 ): Promise<void> {
     return new Promise(async (resolve, reject) => {
-        const octokit = new Octokit({
-            auth: apiToken,
-        });
+        const octokit = new Octokit();
 
         octokit.log.error = (message: string) => {
             return reject(new Error(message));
         };
 
-        const resp = await octokit.request("PATCH /gists/{gist_id}", {
-            gist_id: gistID,
-            description: `Update: ${new Date()}`,
-            files: files,
-            headers: {
-                "X-GitHub-Api-Version": "2022-11-28",
-            },
-        });
+        try {
+            const resp = await octokit.request("PATCH /gists/{gist_id}", {
+                gist_id: gistID,
+                description: `Update: ${new Date()}`,
+                files: files,
+                headers: {
+                    Authorization: `Bearer ${apiToken}`,
+                    "X-GitHub-Api-Version": "2022-11-28",
+                },
+            });
 
-        if (resp.status !== 200) {
-            return reject(
-                new Error(
-                    `anfrage von "PATCH /gists/${gistID}" ist mit Statuscode ${resp.status} fehlgeschlagen`,
-                ),
-            );
+            if (resp.status !== 200) {
+                return reject(
+                    new Error(
+                        `anfrage von "PATCH /gists/${gistID}" ist mit Statuscode ${resp.status} fehlgeschlagen`,
+                    ),
+                );
+            }
+        } catch (err) {
+            return reject(err);
         }
 
         return resolve();
