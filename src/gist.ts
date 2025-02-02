@@ -11,7 +11,7 @@ export async function pull(
     const listsStore = listStores.get(storeKey);
     const newLists: any[] = [];
 
-    for (const file of Object.values(resp.data.files || {})) {
+    for (const file of Object.values(resp || {})) {
         if (!file?.content) continue;
 
         const data = listsStore.validate(file.content);
@@ -30,6 +30,17 @@ export async function pull(
         },
         lists: newLists,
     };
+}
+
+export async function push(
+    _storeKey: keyof listStores.ListStoreData,
+    apiToken: string,
+    gistID: string,
+): Promise<void> {
+    // TODO: Compare remote and local gist data first
+
+    // TODO: Take store data and push to gist
+    await patchGist(apiToken, gistID, {});
 }
 
 export async function getRevision(gistID: string): Promise<number | null> {
@@ -63,25 +74,78 @@ export function shouldUpdate(remoteRev: number | null, currentRev: number | null
     return remoteRev !== currentRev || remoteRev === 1;
 }
 
-async function getGist(gistID: string) {
-    const octokit = new Octokit();
-    octokit.log.warn = (message: string) => {
-        alert(`Get gist data failed: ${gistID}: ${message}`);
-    };
+async function getGist(gistID: string): Promise<
+    | {
+          [key: string]: {
+              filename?: string;
+              type?: string;
+              language?: string;
+              raw_url?: string;
+              size?: number;
+              truncated?: boolean;
+              content?: string;
+          } | null;
+      }
+    | undefined
+> {
+    return new Promise(async (resolve, reject) => {
+        const octokit = new Octokit();
 
-    console.debug("fetch gist...");
-    const resp = await octokit.request("GET /gists/{gist_id}", {
-        gist_id: gistID,
-        headers: {
-            "X-GitHub-Api-Version": "2022-11-28",
-        },
+        octokit.log.error = (message: string) => {
+            return reject(new Error(message));
+        };
+
+        console.debug("fetch gist...");
+        const resp = await octokit.request("GET /gists/{gist_id}", {
+            gist_id: gistID,
+            headers: {
+                "X-GitHub-Api-Version": "2022-11-28",
+            },
+        });
+
+        if (resp.status !== 200) {
+            return reject(
+                new Error(
+                    `anfrage von "GET /gist/${gistID}" ist mit Statuscode ${resp.status} fehlgeschlagen`,
+                ),
+            );
+        }
+
+        return resolve(resp.data.files);
     });
+}
 
-    if (resp.status !== 200) {
-        throw new Error(
-            `anfrage von "GET /gist/${gistID}" ist mit Statuscode ${resp.status} fehlgeschlagen`,
-        );
-    }
+async function patchGist(
+    apiToken: string,
+    gistID: string,
+    files: { [key: string]: { content: string } },
+): Promise<void> {
+    return new Promise(async (resolve, reject) => {
+        const octokit = new Octokit({
+            auth: apiToken,
+        });
 
-    return resp;
+        octokit.log.error = (message: string) => {
+            return reject(new Error(message));
+        };
+
+        const resp = await octokit.request("PATCH /gists/{gist_id}", {
+            gist_id: gistID,
+            description: `Update: ${new Date()}`,
+            files: files,
+            headers: {
+                "X-GitHub-Api-Version": "2022-11-28",
+            },
+        });
+
+        if (resp.status !== 200) {
+            return reject(
+                new Error(
+                    `anfrage von "PATCH /gists/${gistID}" ist mit Statuscode ${resp.status} fehlgeschlagen`,
+                ),
+            );
+        }
+
+        return resolve(null);
+    });
 }

@@ -59,6 +59,8 @@ export function gistItem(props: GistItemProps): types.Component<HTMLLIElement> {
                 </button>
             </div>
         </div>
+
+        <!-- TODO: Add and ".api-token-container": input type text for the api token and a upload button -->
     `;
 
     const localRevSpan = el.querySelector<HTMLSpanElement>(
