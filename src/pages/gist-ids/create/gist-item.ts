@@ -98,7 +98,14 @@ export function gistItem(props: GistItemProps): types.Component<HTMLLIElement> {
     const pushButton = el.querySelector<HTMLButtonElement>(`button.push`)!;
 
     initNormalMode(props.storeKey, localRevSpan, remoteRevSpan, inputGistID, updateButton);
-    initDevMode(props.storeKey, inputGistID, inputAPIToken, pushButton);
+    initDevMode(
+        props.storeKey,
+        localRevSpan,
+        remoteRevSpan,
+        inputGistID,
+        inputAPIToken,
+        pushButton,
+    );
 
     return {
         element: el,
@@ -200,6 +207,8 @@ async function initNormalMode(
 
 async function initDevMode(
     storeKey: types.DrawerGroups,
+    localRevSpan: HTMLSpanElement,
+    remoteRevSpan: HTMLSpanElement,
     inputPull: HTMLInputElement,
     inputPush: HTMLInputElement,
     button: HTMLButtonElement,
@@ -250,8 +259,10 @@ async function initDevMode(
         const apiToken = inputPush.value;
 
         try {
-            await gist.push(storeKey, apiToken, gistID);
-            // TODO: Update local and remote gist id
+            const data = await gist.push(storeKey, apiToken, gistID);
+            globals.store.set(storeKey, data);
+            remoteRevSpan.innerText = localRevSpan.innerText = `${data.gist?.revision || "?"}`;
+            localRevSpan.style.color = "green";
         } catch (err) {
             const message = `Push to gist failed for "${storeKey}" ("${gistID}"): ${err}`;
             console.error(message);
