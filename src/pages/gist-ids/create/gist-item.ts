@@ -79,8 +79,6 @@ export function gistItem(props: GistItemProps): types.Component<HTMLLIElement> {
                     <i class="bi bi-cloud-upload"></i>
                 </button>
             </div>
-
-            <!-- TODO: Add a force push checkbox for reset repo back to revision 1 -->
         </div>
     `;
 
