@@ -177,7 +177,7 @@ function render(list: types.Vis, listKey: string) {
                 continue;
             }
 
-            if (!!item.textContent.match(r)) {
+            if (!!item.textContent.replace(/(\n|\r|\s+)/g, " ").match(r)) {
                 // Show
                 (item as HTMLElement).style.display = "flex";
             } else {
