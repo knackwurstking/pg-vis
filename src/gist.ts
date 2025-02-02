@@ -146,6 +146,6 @@ async function patchGist(
             );
         }
 
-        return resolve(null);
+        return resolve();
     });
 }

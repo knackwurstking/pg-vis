@@ -60,9 +60,28 @@ export function gistItem(props: GistItemProps): types.Component<HTMLLIElement> {
             </div>
         </div>
 
-        <!-- NOTE: api stuff is hidden by default, needs to be enabled via app bar button -->
-        <!-- TODO: Add and ".api-token-container": input type text for the api token and a upload button -->
-        <!-- TODO: Need some button to reset the gist repo back to revision 1 -->
+        <div
+            class="dev-mode ui-flex-grid-row"
+            style="--align: flex-end; --justify: space-between; width: 100%"
+        >
+            <div class="ui-flex-grid-item">
+                <label for="apiToken_${props.storeKey}">API Token</label>
+                <input
+                    id="apiToken_${props.storeKey}"
+                    style="width: 100%"
+                    type="text"
+                    placeholder="API Token hier einfügen"
+                    value="${globals.store.get(props.storeKey)!.gist?.token || ""}"
+                />
+            </div>
+            <div class="ui-flex-grid-item" style="--flex: 0;">
+                <button class="push" variant="ghost" color="primary" icon>
+                    <i class="bi bi-cloud-upload"></i>
+                </button>
+            </div>
+
+            <!-- TODO: Add a force push checkbox for reset repo back to revision 1 -->
+        </div>
     `;
 
     const localRevSpan = el.querySelector<HTMLSpanElement>(
@@ -114,7 +133,9 @@ export function gistItem(props: GistItemProps): types.Component<HTMLLIElement> {
             localRevSpan.style.color = "green";
             inputGistID.ariaInvalid = null;
         } catch (err) {
-            console.warn(`Pull from gist failed for "${props.storeKey}" ("${gistID}"): ${err}`);
+            const message = `Pull from gist failed for "${props.storeKey}" ("${gistID}"): ${err}`;
+            console.error(message);
+            alert(message);
             inputGistID.ariaInvalid = "";
         }
 
@@ -157,6 +178,44 @@ export function gistItem(props: GistItemProps): types.Component<HTMLLIElement> {
             }
         });
     }
+
+    // Dev Mode handler
+    const inputAPIToken = el.querySelector<HTMLInputElement>(`#gistID_${props.storeKey}`)!;
+    const pushButton = el.querySelector<HTMLInputElement>(`button.push`)!;
+
+    let pushInProgress = false;
+    pushButton.onclick = async () => {
+        if (!inputAPIToken.value) {
+            return;
+        }
+
+        if (pushInProgress) {
+            return;
+        }
+
+        pushInProgress = true;
+        pushButton.classList.add("active");
+        const cleanUp = () => {
+            setTimeout(() => {
+                pushInProgress = false;
+                pushButton.classList.remove("active");
+            });
+        };
+
+        const gistID = inputGistID.value;
+        const apiToken = inputAPIToken.value;
+
+        try {
+            await gist.push(props.storeKey, apiToken, gistID);
+            // TODO: Update local and remote gist id
+        } catch (err) {
+            const message = `Push to gist failed for "${props.storeKey}" ("${gistID}"): ${err}`;
+            console.error(message);
+            alert(message);
+        }
+
+        return cleanUp();
+    };
 
     return {
         element: el,
