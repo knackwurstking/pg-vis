@@ -42,8 +42,6 @@ export async function push(
     const storeData = globals.store.get(storeKey)!;
     const ls = listStores.get(storeKey);
 
-    // TODO: Compare remote and local gist data first
-
     // Take store data and push to gist
     const data: { [key: string]: { content: string } } = {};
     storeData.lists.forEach((list) => {
