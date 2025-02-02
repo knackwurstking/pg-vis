@@ -9,7 +9,27 @@ export async function onMount() {
     originTitle = appBarTitle.innerText;
     appBarTitle.innerText = "Gist IDs";
 
-    // TODO: Enable (Add) app bar button for switching to dev mode / enable api token sections on all gist-items
+    // Enable app bar button for switching to dev mode
+    {
+        const dataBaseButton = query.appBar_ButtonDataBase();
+        dataBaseButton.onclick = async () => {
+            query
+                .routerTarget()
+                .querySelectorAll(`.dev-mode`)
+                .forEach((child) => {
+                    if ((child as HTMLElement).style.display === "flex") {
+                        (child as HTMLElement).style.display = "none";
+                    } else {
+                        (child as HTMLElement).style.display = "flex";
+                    }
+                });
+        };
+        dataBaseButton.style.display = "inline-flex";
+        cleanup.push(() => {
+            dataBaseButton.style.display = "none";
+            dataBaseButton.onclick = null;
+        });
+    }
 
     render();
 }

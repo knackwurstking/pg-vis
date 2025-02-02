@@ -1,5 +1,6 @@
 import { Octokit } from "octokit";
 
+import * as globals from "./globals";
 import * as listStores from "./list-stores";
 import * as types from "./types";
 
@@ -27,20 +28,37 @@ export async function pull(
         gist: {
             id: gistID,
             revision: await getRevision(gistID),
+            token: globals.store.get(storeKey)!.gist?.token || "",
         },
         lists: newLists,
     };
 }
 
 export async function push(
-    _storeKey: keyof listStores.ListStoreData,
+    storeKey: keyof listStores.ListStoreData,
     apiToken: string,
     gistID: string,
-): Promise<void> {
+): Promise<{ gist: types.Gist | null; lists: any[] }> {
+    const storeData = globals.store.get(storeKey)!;
+    const ls = listStores.get(storeKey);
+
     // TODO: Compare remote and local gist data first
 
-    // TODO: Take store data and push to gist
-    await patchGist(apiToken, gistID, {});
+    // Take store data and push to gist
+    const data: { [key: string]: { content: string } } = {};
+    storeData.lists.forEach((list) => {
+        data[ls.fileName(list)] = { content: JSON.stringify(list) };
+    });
+    await patchGist(apiToken, gistID, data);
+
+    return {
+        gist: {
+            id: gistID,
+            revision: await getRevision(gistID),
+            token: apiToken,
+        },
+        lists: storeData.lists,
+    };
 }
 
 export async function getRevision(gistID: string): Promise<number | null> {

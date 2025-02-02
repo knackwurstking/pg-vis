@@ -62,7 +62,7 @@ export function gistItem(props: GistItemProps): types.Component<HTMLLIElement> {
 
         <div
             class="dev-mode ui-flex-grid-row"
-            style="--align: flex-end; --justify: space-between; width: 100%"
+            style="--align: flex-end; --justify: space-between; width: 100%; display: none"
         >
             <div class="ui-flex-grid-item">
                 <label for="apiToken_${props.storeKey}">API Token</label>
@@ -90,30 +90,50 @@ export function gistItem(props: GistItemProps): types.Component<HTMLLIElement> {
     const remoteRevSpan = el.querySelector<HTMLSpanElement>(
         `#gistID_RemoteRevision_${props.storeKey}`,
     )!;
+
     const inputGistID = el.querySelector<HTMLInputElement>(`#gistID_${props.storeKey}`)!;
     const updateButton = el.querySelector<HTMLButtonElement>(`button.update`)!;
 
-    inputGistID.onchange = async () => updateButton.click();
+    const inputAPIToken = el.querySelector<HTMLInputElement>(`#apiToken_${props.storeKey}`)!;
+    const pushButton = el.querySelector<HTMLButtonElement>(`button.push`)!;
 
-    let updateInProgress: boolean = false;
-    updateButton.onclick = async () => {
-        if (updateInProgress) {
+    initNormalMode(props.storeKey, localRevSpan, remoteRevSpan, inputGistID, updateButton);
+    initDevMode(props.storeKey, inputGistID, inputAPIToken, pushButton);
+
+    return {
+        element: el,
+        destroy() {},
+    };
+}
+
+async function initNormalMode(
+    storeKey: types.DrawerGroups,
+    localRevSpan: HTMLSpanElement,
+    remoteRevSpan: HTMLSpanElement,
+    inputPull: HTMLInputElement,
+    button: HTMLButtonElement,
+) {
+    inputPull.onchange = async () => button.click();
+
+    let inProgress: boolean = false;
+    button.onclick = async () => {
+        if (inProgress) {
             return;
         }
 
-        updateInProgress = true;
-        updateButton.classList.add("active");
+        inProgress = true;
+        button.classList.add("active");
         const cleanUp = () => {
             setTimeout(() => {
-                updateInProgress = false;
-                updateButton.classList.remove("active");
+                inProgress = false;
+                button.classList.remove("active");
             });
         };
 
-        const gistID = inputGistID.value;
+        const gistID = inputPull.value;
 
         if (!gistID) {
-            globals.store.update(props.storeKey, (data) => {
+            globals.store.update(storeKey, (data) => {
                 data.gist = null;
                 return data;
             });
@@ -121,36 +141,36 @@ export function gistItem(props: GistItemProps): types.Component<HTMLLIElement> {
             return cleanUp();
         }
 
-        globals.store.update(props.storeKey, (data) => {
-            data.gist = { id: gistID, revision: null };
+        globals.store.update(storeKey, (data) => {
+            data.gist = { id: gistID, revision: null, token: "" };
             return data;
         });
 
         try {
-            const data = await gist.pull(props.storeKey, gistID);
-            globals.store.set(props.storeKey, data);
+            const data = await gist.pull(storeKey, gistID);
+            globals.store.set(storeKey, data);
             remoteRevSpan.innerText = localRevSpan.innerText = `${data.gist?.revision || "?"}`;
             localRevSpan.style.color = "green";
-            inputGistID.ariaInvalid = null;
+            inputPull.ariaInvalid = null;
         } catch (err) {
-            const message = `Pull from gist failed for "${props.storeKey}" ("${gistID}"): ${err}`;
+            const message = `Pull from gist failed for "${storeKey}" ("${gistID}"): ${err}`;
             console.error(message);
             alert(message);
-            inputGistID.ariaInvalid = "";
+            inputPull.ariaInvalid = "";
         }
 
         return cleanUp();
     };
 
-    if (!!inputGistID.value) {
+    if (!!inputPull.value) {
         setTimeout(async () => {
             try {
                 let remoteRev =
-                    globals.store.get("runtime")!.lists[inputGistID.value]?.remoteRevision || null;
+                    globals.store.get("runtime")!.lists[inputPull.value]?.remoteRevision || null;
                 if (!remoteRev) {
-                    remoteRev = await gist.getRevision(inputGistID.value);
+                    remoteRev = await gist.getRevision(inputPull.value);
                     globals.store.update("runtime", (data) => {
-                        data.lists[inputGistID.value] = {
+                        data.lists[inputPull.value] = {
                             remoteRevision: remoteRev,
                         };
                         return data;
@@ -158,12 +178,12 @@ export function gistItem(props: GistItemProps): types.Component<HTMLLIElement> {
                 }
 
                 remoteRevSpan.innerText = `${remoteRev || "?"}`;
-                inputGistID.ariaInvalid = null;
+                inputPull.ariaInvalid = null;
 
                 if (
                     gist.shouldUpdate(
                         remoteRev,
-                        globals.store.get(props.storeKey)!.gist?.revision || null,
+                        globals.store.get(storeKey)!.gist?.revision || null,
                     )
                 ) {
                     localRevSpan.style.color = "red";
@@ -171,21 +191,45 @@ export function gistItem(props: GistItemProps): types.Component<HTMLLIElement> {
                     localRevSpan.style.color = "green";
                 }
             } catch (err) {
-                inputGistID.ariaInvalid = "";
-                console.debug(
-                    `Update failed for "${props.storeKey}" ("${inputGistID.value}"): ${err}`,
-                );
+                inputPull.ariaInvalid = "";
+                console.debug(`Update failed for "${storeKey}" ("${inputPull.value}"): ${err}`);
             }
         });
     }
+}
 
-    // Dev Mode handler
-    const inputAPIToken = el.querySelector<HTMLInputElement>(`#gistID_${props.storeKey}`)!;
-    const pushButton = el.querySelector<HTMLInputElement>(`button.push`)!;
+async function initDevMode(
+    storeKey: types.DrawerGroups,
+    inputPull: HTMLInputElement,
+    inputPush: HTMLInputElement,
+    button: HTMLButtonElement,
+) {
+    inputPush.oninput = () => {
+        if (!!inputPush.value) {
+            button.removeAttribute("disabled");
+        } else {
+            button.setAttribute("disabled", "");
+        }
+
+        globals.store.update(storeKey, (data) => {
+            if (!data.gist) {
+                data.gist = {
+                    id: "",
+                    revision: null,
+                    token: inputPush.value,
+                };
+            } else {
+                data.gist.token = inputPush.value;
+            }
+
+            return data;
+        });
+    };
+    inputPush.oninput(new Event("input"));
 
     let pushInProgress = false;
-    pushButton.onclick = async () => {
-        if (!inputAPIToken.value) {
+    button.onclick = async () => {
+        if (!inputPush.value) {
             return;
         }
 
@@ -194,31 +238,26 @@ export function gistItem(props: GistItemProps): types.Component<HTMLLIElement> {
         }
 
         pushInProgress = true;
-        pushButton.classList.add("active");
+        button.classList.add("active");
         const cleanUp = () => {
             setTimeout(() => {
                 pushInProgress = false;
-                pushButton.classList.remove("active");
+                button.classList.remove("active");
             });
         };
 
-        const gistID = inputGistID.value;
-        const apiToken = inputAPIToken.value;
+        const gistID = inputPull.value;
+        const apiToken = inputPush.value;
 
         try {
-            await gist.push(props.storeKey, apiToken, gistID);
+            await gist.push(storeKey, apiToken, gistID);
             // TODO: Update local and remote gist id
         } catch (err) {
-            const message = `Push to gist failed for "${props.storeKey}" ("${gistID}"): ${err}`;
+            const message = `Push to gist failed for "${storeKey}" ("${gistID}"): ${err}`;
             console.error(message);
             alert(message);
         }
 
         return cleanUp();
-    };
-
-    return {
-        element: el,
-        destroy() {},
     };
 }

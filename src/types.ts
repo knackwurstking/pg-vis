@@ -26,7 +26,7 @@ export interface Component<T extends HTMLElement> {
 export interface Gist {
     id: string;
     revision: number | null;
-    token?: string;
+    token: string;
 }
 
 export type DrawerGroups =

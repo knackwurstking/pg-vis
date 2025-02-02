@@ -36,6 +36,10 @@ export function appBar_ButtonBookmarksFill(): HTMLButtonElement {
     return document.querySelector(`#appBarButtonBookmarksFill`)!;
 }
 
+export function appBar_ButtonDataBase(): HTMLButtonElement {
+    return document.querySelector(`#appBarButtonDataBase`)!;
+}
+
 // Drawer Elements
 
 export function drawer(): HTMLElement {
