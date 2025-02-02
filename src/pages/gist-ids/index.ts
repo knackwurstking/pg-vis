@@ -9,6 +9,8 @@ export async function onMount() {
     originTitle = appBarTitle.innerText;
     appBarTitle.innerText = "Gist IDs";
 
+    // TODO: Enable (Add) app bar button for switching to dev mode / enable api token sections on all gist-items
+
     render();
 }
 

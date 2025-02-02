@@ -60,7 +60,9 @@ export function gistItem(props: GistItemProps): types.Component<HTMLLIElement> {
             </div>
         </div>
 
+        <!-- NOTE: api stuff is hidden by default, needs to be enabled via app bar button -->
         <!-- TODO: Add and ".api-token-container": input type text for the api token and a upload button -->
+        <!-- TODO: Need some button to reset the gist repo back to revision 1 -->
     `;
 
     const localRevSpan = el.querySelector<HTMLSpanElement>(
