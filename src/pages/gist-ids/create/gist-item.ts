@@ -147,7 +147,6 @@ async function initNormalMode(
         };
 
         const gistID = inputPull.value;
-        const apiToken = inputPush.value;
 
         if (!gistID) {
             globals.store.update(storeKey, (data) => {
@@ -162,7 +161,7 @@ async function initNormalMode(
             data.gist = {
                 id: gistID,
                 revision: null,
-                token: apiToken,
+                token: inputPush.value,
             };
             return data;
         });
