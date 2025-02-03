@@ -32,10 +32,6 @@ export function appBar_ButtonBookmarks(): HTMLButtonElement {
     return document.querySelector(`#appBarButtonBookmarks`)!;
 }
 
-export function appBar_ButtonBookmarksFill(): HTMLButtonElement {
-    return document.querySelector(`#appBarButtonBookmarksFill`)!;
-}
-
 export function appBar_ButtonDataBase(): HTMLButtonElement {
     return document.querySelector(`#appBarButtonDataBase`)!;
 }
@@ -162,5 +158,21 @@ export function dialog_Choose(): {
         close: root.querySelector(`button.close`)!,
         title: root.querySelector(`.title`)!,
         choices: root.querySelector(`.choices`)!,
+    };
+}
+
+export function dialog_ProductBookmark(): {
+    root: HTMLDialogElement;
+    close: HTMLButtonElement;
+    title: HTMLElement;
+    checkboxes: NodeListOf<HTMLInputElement>;
+} {
+    const root = document.querySelector<HTMLDialogElement>(`dialog[name="product-bookmark"]`)!;
+
+    return {
+        root,
+        close: root.querySelector(`button.close`)!,
+        title: root.querySelector(`.title`)!,
+        checkboxes: root.querySelectorAll(`input[type="checkbox"]`)!,
     };
 }
