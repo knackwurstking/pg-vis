@@ -20,78 +20,21 @@ let scrollTop: number = 0;
 export async function onMount() {
     const param: Param = ui.router.hash.getSearchParam();
 
-    const list = globals.getVis(param.listKey || "");
-    if (!list) {
+    const vis = globals.getVis(param.listKey || "");
+    if (!vis) {
         throw new Error(`vis list "${param.listKey}" not found`);
     }
 
     // Set the app bar title
-    cleanup.push(utils.setAppBarTitle(list.title));
+    cleanup.push(utils.setAppBarTitle(vis.title));
 
     if (!!param.scrollTop) {
         scrollTop = parseInt(param.scrollTop, 10);
     }
 
-    // Enable app bar button for editing the current vis (title)
-    {
-        const listEditButton = query.appBar_ButtonListEdit();
-
-        listEditButton.onclick = async () => {
-            const data = await dialogs.vis(list);
-
-            if (!data) {
-                return;
-            }
-
-            try {
-                const ls = listStores.get("vis");
-                ls.replaceInStore(data, list);
-                ui.router.hash.goTo(
-                    {
-                        listKey: ls.listKey(data),
-                    },
-                    "vis",
-                );
-            } catch (err) {
-                alert(err);
-                listEditButton.click();
-                return;
-            }
-        };
-
-        listEditButton.style.display = "inline-flex";
-
-        cleanup.push(() => {
-            listEditButton.style.display = "none";
-            listEditButton.onclick = null;
-        });
-    }
-
-    // Enable app bar button for adding a new product
-    {
-        const addButton = query.appBar_ButtonAdd();
-
-        addButton.onclick = async () => {
-            const data: types.Product | null = await dialogs.product();
-            if (!data) {
-                return;
-            }
-            list.data.push(data);
-
-            const ls = listStores.get("vis");
-            ls.replaceInStore(list);
-            reload();
-        };
-
-        addButton.style.display = "inline-flex";
-
-        cleanup.push(() => {
-            addButton.style.display = "none";
-            addButton.onclick = null;
-        });
-    }
-
-    render(list, param.listKey!);
+    setupAppBarEditListButton(vis);
+    setupAppBarAddProductButton(vis);
+    render(vis, param.listKey!);
 }
 
 export async function onDestroy() {
@@ -104,13 +47,70 @@ export async function onDestroy() {
     cleanup = [];
 }
 
-function render(list: types.Vis, listKey: string) {
+function setupAppBarEditListButton(vis: types.Vis) {
+    const listEditButton = query.appBar_ButtonListEdit();
+
+    listEditButton.onclick = async () => {
+        const data = await dialogs.vis(vis);
+
+        if (!data) {
+            return;
+        }
+
+        try {
+            const ls = listStores.get("vis");
+            ls.replaceInStore(data, vis);
+            ui.router.hash.goTo(
+                {
+                    listKey: ls.listKey(data),
+                },
+                "vis",
+            );
+        } catch (err) {
+            alert(err);
+            listEditButton.click();
+            return;
+        }
+    };
+
+    listEditButton.style.display = "inline-flex";
+
+    cleanup.push(() => {
+        listEditButton.style.display = "none";
+        listEditButton.onclick = null;
+    });
+}
+
+function setupAppBarAddProductButton(vis: types.Vis) {
+    const addButton = query.appBar_ButtonAdd();
+
+    addButton.onclick = async () => {
+        const data: types.Product | null = await dialogs.product();
+        if (!data) {
+            return;
+        }
+        vis.data.push(data);
+
+        const ls = listStores.get("vis");
+        ls.replaceInStore(vis);
+        reload();
+    };
+
+    addButton.style.display = "inline-flex";
+
+    cleanup.push(() => {
+        addButton.style.display = "none";
+        addButton.onclick = null;
+    });
+}
+
+function render(vis: types.Vis, listKey: string) {
     const el = routerTargetElements();
 
     el.products.innerHTML = "";
 
     // Render products
-    list.data.forEach((product, index) => {
+    vis.data.forEach((product, index) => {
         // Seems to work just fine with more than 1000 items
         setTimeout(() => {
             const item = create.productItem({
@@ -133,27 +133,27 @@ function render(list: types.Vis, listKey: string) {
                             if (!data) {
                                 return;
                             }
-                            list.data[index] = data;
+                            vis.data[index] = data;
 
                             const ls = listStores.get("vis");
-                            ls.replaceInStore(list);
+                            ls.replaceInStore(vis);
                             reload();
                         }
                         break;
 
                     case "Löschen":
                         {
-                            list.data = list.data.filter((_p, i) => i !== index);
+                            vis.data = vis.data.filter((_p, i) => i !== index);
 
                             const ls = listStores.get("vis");
-                            ls.replaceInStore(list);
+                            ls.replaceInStore(vis);
                             reload();
                         }
                         break;
                 }
             };
 
-            if (index === list.data.length - 1 && scrollTop > 0) {
+            if (index === vis.data.length - 1 && scrollTop > 0) {
                 if (!el.products.parentElement) {
                     return;
                 }

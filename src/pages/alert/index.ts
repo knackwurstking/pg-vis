@@ -29,18 +29,21 @@ export async function onMount() {
     );
 
     // Enable back button
-    const backButton = query.appBar_ButtonBack();
-    backButton.style.display = "inline-flex";
-    cleanup.push(() => {
-        backButton.style.display = "none";
-    });
-
+    setupAppBarBackButton();
     render(alert);
 }
 
 export async function onDestroy() {
     cleanup.forEach((fn) => fn());
     cleanup = [];
+}
+
+function setupAppBarBackButton() {
+    const backButton = query.appBar_ButtonBack();
+    backButton.style.display = "inline-flex";
+    cleanup.push(() => {
+        backButton.style.display = "none";
+    });
 }
 
 function render(alert: types.Alert) {

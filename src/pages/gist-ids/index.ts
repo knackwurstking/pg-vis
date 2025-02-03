@@ -10,31 +10,31 @@ export async function onMount() {
 
     const el = routerTargetElements();
 
-    // Enable app bar button for switching to dev mode
-    {
-        const dataBaseButton = query.appBar_ButtonDataBase();
-        dataBaseButton.onclick = async () => {
-            el.devModeItems.forEach((child) => {
-                if ((child as HTMLElement).style.display === "flex") {
-                    (child as HTMLElement).style.display = "none";
-                } else {
-                    (child as HTMLElement).style.display = "flex";
-                }
-            });
-        };
-        dataBaseButton.style.display = "inline-flex";
-        cleanup.push(() => {
-            dataBaseButton.style.display = "none";
-            dataBaseButton.onclick = null;
-        });
-    }
-
+    setupAppBarDevModeButton(el);
     render(el);
 }
 
 export async function onDestroy() {
     cleanup.forEach((fn) => fn());
     cleanup = [];
+}
+
+function setupAppBarDevModeButton(el: { devModeItems: NodeListOf<Element> }) {
+    const dataBaseButton = query.appBar_ButtonDataBase();
+    dataBaseButton.onclick = async () => {
+        el.devModeItems.forEach((child) => {
+            if ((child as HTMLElement).style.display === "flex") {
+                (child as HTMLElement).style.display = "none";
+            } else {
+                (child as HTMLElement).style.display = "flex";
+            }
+        });
+    };
+    dataBaseButton.style.display = "inline-flex";
+    cleanup.push(() => {
+        dataBaseButton.style.display = "none";
+        dataBaseButton.onclick = null;
+    });
 }
 
 function render(el: { gistIDs: HTMLUListElement }) {

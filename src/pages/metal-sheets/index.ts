@@ -25,86 +25,25 @@ let cleanup: types.CleanUp[] = [];
 export async function onMount() {
     const param: Param = ui.router.hash.getSearchParam();
 
-    const list = globals.getMetalSheet(param.listKey || "");
-    if (!list) {
+    const metalSheet = globals.getMetalSheet(param.listKey || "");
+    if (!metalSheet) {
         throw new Error(`metal sheet "${param.listKey}" not found`);
     }
 
     // Set the app bar title
     cleanup.push(
         utils.setAppBarTitle(
-            list.data.press > -1
-                ? `[P${list.data.press}] ${list.format} ${list.toolID}`
-                : `${list.format} ${list.toolID}`,
+            metalSheet.data.press > -1
+                ? `[P${metalSheet.data.press}] ${metalSheet.format} ${metalSheet.toolID}`
+                : `${metalSheet.format} ${metalSheet.toolID}`,
         ),
     );
 
-    // Enable app bar button for editing the current sheet
-    {
-        // Enable app bar button for editing the current sheet
-        const listEditButton = query.appBar_ButtonListEdit();
-        listEditButton.onclick = async () => {
-            const data = await dialogs.metalSheet(list);
-            const formatInput = query.dialog_MetalSheet().format;
+    metalSheet.data.table.data = sortTableData(metalSheet.data.table.data);
 
-            if (!data) {
-                formatInput.ariaInvalid = null;
-                return;
-            }
-
-            if (!data.format) {
-                listEditButton.click();
-                formatInput.ariaInvalid = "";
-                return;
-            }
-
-            formatInput.ariaInvalid = null;
-
-            try {
-                const ls = listStores.get("metal-sheets");
-                ls.replaceInStore(data, list);
-                ui.router.hash.goTo(
-                    {
-                        listKey: ls.listKey(data),
-                    },
-                    "metal-sheets",
-                );
-            } catch (err) {
-                alert(err);
-                listEditButton.click();
-                return;
-            }
-        };
-        listEditButton.style.display = "inline-flex";
-        cleanup.push(() => {
-            listEditButton.style.display = "none";
-            listEditButton.onclick = null;
-        });
-    }
-
-    // Enable app bar button for adding a new table entry
-    {
-        const addButton = query.appBar_ButtonAdd();
-        addButton.onclick = async () => {
-            const data = await dialogs.metalSheetTableEntry();
-            if (!data) {
-                return;
-            }
-            list.data.table.data.push(data);
-
-            const ls = listStores.get("metal-sheets");
-            ls.replaceInStore(list);
-            reload();
-        };
-        addButton.style.display = "inline-flex";
-        cleanup.push(() => {
-            addButton.style.display = "none";
-            addButton.onclick = null;
-        });
-    }
-
-    list.data.table.data = sortTableData(list.data.table.data);
-    render(list);
+    setupAppBarEditSheetButton(metalSheet);
+    setupAppBarAddTableEntryButton(metalSheet);
+    render(metalSheet);
 }
 
 export async function onDestroy() {
@@ -112,7 +51,69 @@ export async function onDestroy() {
     cleanup = [];
 }
 
-function render(list: types.MetalSheet) {
+function setupAppBarEditSheetButton(metalSheet: types.MetalSheet) {
+    // Enable app bar button for editing the current sheet
+    const listEditButton = query.appBar_ButtonListEdit();
+    listEditButton.onclick = async () => {
+        const data = await dialogs.metalSheet(metalSheet);
+        const formatInput = query.dialog_MetalSheet().format;
+
+        if (!data) {
+            formatInput.ariaInvalid = null;
+            return;
+        }
+
+        if (!data.format) {
+            listEditButton.click();
+            formatInput.ariaInvalid = "";
+            return;
+        }
+
+        formatInput.ariaInvalid = null;
+
+        try {
+            const ls = listStores.get("metal-sheets");
+            ls.replaceInStore(data, metalSheet);
+            ui.router.hash.goTo(
+                {
+                    listKey: ls.listKey(data),
+                },
+                "metal-sheets",
+            );
+        } catch (err) {
+            alert(err);
+            listEditButton.click();
+            return;
+        }
+    };
+    listEditButton.style.display = "inline-flex";
+    cleanup.push(() => {
+        listEditButton.style.display = "none";
+        listEditButton.onclick = null;
+    });
+}
+
+function setupAppBarAddTableEntryButton(metalSheet: types.MetalSheet) {
+    const addButton = query.appBar_ButtonAdd();
+    addButton.onclick = async () => {
+        const data = await dialogs.metalSheetTableEntry();
+        if (!data) {
+            return;
+        }
+        metalSheet.data.table.data.push(data);
+
+        const ls = listStores.get("metal-sheets");
+        ls.replaceInStore(metalSheet);
+        reload();
+    };
+    addButton.style.display = "inline-flex";
+    cleanup.push(() => {
+        addButton.style.display = "none";
+        addButton.onclick = null;
+    });
+}
+
+function render(metalSheet: types.MetalSheet) {
     const el = routerTargetElements();
 
     el.thead.innerHTML = "";
@@ -121,7 +122,7 @@ function render(list: types.MetalSheet) {
     const tr = document.createElement("tr");
     el.thead.appendChild(tr);
     tableHeader.forEach((head, index) => {
-        if (!!list.data.table.filter?.includes(index)) {
+        if (!!metalSheet.data.table.filter?.includes(index)) {
             return;
         }
 
@@ -131,7 +132,7 @@ function render(list: types.MetalSheet) {
         tr.appendChild(el);
     });
 
-    list.data.table.data.forEach((row) => {
+    metalSheet.data.table.data.forEach((row) => {
         const tr = document.createElement("tr");
         el.tbody.appendChild(tr);
 
@@ -144,10 +145,12 @@ function render(list: types.MetalSheet) {
 
             if (confirm(`You want to delete this item: "${row.join(",")}" ?`)) {
                 const rowJoin = row.join(",");
-                list.data.table.data = list.data.table.data.filter((r) => r.join(",") !== rowJoin);
+                metalSheet.data.table.data = metalSheet.data.table.data.filter(
+                    (r) => r.join(",") !== rowJoin,
+                );
 
                 const ls = listStores.get("metal-sheets");
-                ls.replaceInStore(list);
+                ls.replaceInStore(metalSheet);
                 reload();
             }
         };
@@ -161,7 +164,7 @@ function render(list: types.MetalSheet) {
 
             // Update data and re-render table
             const rowJoin = row.join(",");
-            list.data.table.data = list.data.table.data.map((r) => {
+            metalSheet.data.table.data = metalSheet.data.table.data.map((r) => {
                 if (r.join(",") === rowJoin) {
                     return data;
                 }
@@ -170,12 +173,12 @@ function render(list: types.MetalSheet) {
             });
 
             const ls = listStores.get("metal-sheets");
-            ls.replaceInStore(list);
+            ls.replaceInStore(metalSheet);
             reload();
         };
 
         row.forEach((cell, index) => {
-            if (!!list.data.table.filter?.includes(index)) {
+            if (!!metalSheet.data.table.filter?.includes(index)) {
                 return;
             }
 
