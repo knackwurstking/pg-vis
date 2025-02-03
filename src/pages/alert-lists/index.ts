@@ -35,11 +35,7 @@ export async function onDestroy() {
 }
 
 function render(alerts: types.Alert[], listKey: string) {
-    const target = query.routerTarget();
-    const searchBarInput = target.querySelector<HTMLInputElement>(
-        `.search-bar input[type="search"]`,
-    )!;
-    const alertsContainer = target.querySelector<HTMLUListElement>(`.alerts`)!;
+    const el = routerTargetElements();
 
     alerts.forEach((alert, i) => {
         setTimeout(() => {
@@ -51,13 +47,13 @@ function render(alerts: types.Alert[], listKey: string) {
                 },
             });
             cleanup.push(item.destroy);
-            alertsContainer.appendChild(item.element);
+            el.alerts.appendChild(item.element);
         });
     });
 
-    searchBarInput.oninput = () => {
-        const r = utils.generateRegExp(searchBarInput.value);
-        for (const item of [...alertsContainer.children]) {
+    el.searchBarInput.oninput = () => {
+        const r = utils.generateRegExp(el.searchBarInput.value);
+        for (const item of [...el.alerts.children]) {
             if (item.textContent === null) {
                 continue;
             }
@@ -69,5 +65,17 @@ function render(alerts: types.Alert[], listKey: string) {
                 (item as HTMLElement).style.display = "none";
             }
         }
+    };
+}
+
+function routerTargetElements() {
+    const routerTarget = query.routerTarget();
+
+    return {
+        searchBarInput: routerTarget.querySelector<HTMLInputElement>(
+            `.search-bar input[type="search"]`,
+        )!,
+
+        alerts: routerTarget.querySelector<HTMLUListElement>(`.alerts`)!,
     };
 }

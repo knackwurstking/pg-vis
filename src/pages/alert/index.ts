@@ -45,20 +45,27 @@ export async function onDestroy() {
 }
 
 function render(alert: types.Alert) {
-    const routerTarget = query.routerTarget();
-    const alertContainer = routerTarget.querySelector(`.alert`)!;
-    const descContainer = routerTarget.querySelector(`.desc`)!;
+    const el = routerTargetElements();
 
     // Reset, just in case
-    alertContainer.innerHTML = "";
-    descContainer.innerHTML = "";
+    el.alert.innerHTML = "";
+    el.desc.innerHTML = "";
 
     const alertItem = createAlertLists.alertItem({ alert: alert });
 
-    alertContainer?.appendChild(alertItem.element);
+    el.alert?.appendChild(alertItem.element);
     cleanup.push(alertItem.destroy);
 
     const descItem = create.alertDescription({ alert });
-    descContainer.appendChild(descItem.element);
+    el.desc.appendChild(descItem.element);
     cleanup.push(descItem.destroy);
+}
+
+function routerTargetElements() {
+    const routerTarget = query.routerTarget();
+
+    return {
+        alert: routerTarget.querySelector(`.alert`)!,
+        desc: routerTarget.querySelector(`.desc`)!,
+    };
 }

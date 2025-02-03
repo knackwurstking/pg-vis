@@ -100,7 +100,10 @@ export async function onMount() {
 }
 
 export async function onDestroy() {
-    search = querySearchBar().value;
+    const el = routerTargetElements();
+
+    search = el.searchBarInput.value;
+    scrollTop = el.products.parentElement?.scrollTop || 0;
 
     cleanup.forEach((fn) => fn());
     cleanup = [];
@@ -108,10 +111,9 @@ export async function onDestroy() {
 }
 
 function render(list: types.Vis, listKey: string) {
-    const searchBarInput = querySearchBar();
-    const productsContainer = query.routerTarget().querySelector<HTMLUListElement>(`.products`)!;
+    const el = routerTargetElements();
 
-    productsContainer.innerHTML = "";
+    el.products.innerHTML = "";
 
     // Render products
     list.data.forEach((product, index) => {
@@ -122,7 +124,7 @@ function render(list: types.Vis, listKey: string) {
                 enableRouting: { productIndex: index },
             });
             cleanup.push(item.destroy);
-            productsContainer.appendChild(item.element);
+            el.products.appendChild(item.element);
 
             // Delete or Edit product on right click
             item.element.oncontextmenu = async (e) => {
@@ -158,21 +160,21 @@ function render(list: types.Vis, listKey: string) {
             };
 
             if (index === list.data.length - 1 && scrollTop > 0) {
-                if (!productsContainer.parentElement) {
+                if (!el.products.parentElement) {
                     return;
                 }
 
-                productsContainer.parentElement.style.scrollBehavior = "auto";
-                productsContainer.parentElement.scrollTop = scrollTop;
-                productsContainer.parentElement.style.scrollBehavior = "smooth";
+                el.products.parentElement.style.scrollBehavior = "auto";
+                el.products.parentElement.scrollTop = scrollTop;
+                el.products.parentElement.style.scrollBehavior = "smooth";
             }
         });
     });
 
     // Search bar
-    searchBarInput.oninput = () => {
-        const r = utils.generateRegExp(searchBarInput.value);
-        for (const item of [...productsContainer.children]) {
+    el.searchBarInput.oninput = () => {
+        const r = utils.generateRegExp(el.searchBarInput.value);
+        for (const item of [...el.products.children]) {
             if (item.textContent === null) {
                 continue;
             }
@@ -187,7 +189,7 @@ function render(list: types.Vis, listKey: string) {
     };
 
     // Routing to product page
-    productsContainer.onclick = (e) => {
+    el.products.onclick = (e) => {
         // Iter event path for ".product-item" element and get the "data-href" attribute
         const item = e.composedPath().find((et) => {
             return (et as HTMLElement).classList.contains("product-item");
@@ -196,7 +198,6 @@ function render(list: types.Vis, listKey: string) {
             return;
         }
 
-        scrollTop = productsContainer.parentElement?.scrollTop || 0;
         ui.router.hash.goTo(
             {
                 listKey: listKey,
@@ -206,19 +207,22 @@ function render(list: types.Vis, listKey: string) {
         );
     };
 
-    searchBarInput.value = search;
+    el.searchBarInput.value = search;
     setTimeout(() => {
-        searchBarInput.oninput!(new Event("input"));
+        el.searchBarInput.oninput!(new Event("input"));
     });
-}
-
-function querySearchBar(): HTMLInputElement {
-    return query
-        .routerTarget()
-        .querySelector<HTMLInputElement>(`.search-bar input[type="search"]`)!;
 }
 
 async function reload() {
     await onDestroy();
     await onMount();
+}
+
+function routerTargetElements() {
+    const rt = query.routerTarget();
+
+    return {
+        searchBarInput: rt.querySelector<HTMLInputElement>(`.search-bar input[type="search"]`)!,
+        products: rt.querySelector<HTMLUListElement>(`.products`)!,
+    };
 }

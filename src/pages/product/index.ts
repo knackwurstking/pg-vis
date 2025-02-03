@@ -51,14 +51,14 @@ export async function onDestroy() {
 }
 
 function render(product: types.Product, renderTags: boolean) {
-    // Render product item to ".product-item-container"
-    const itemContainer = query.routerTarget().querySelector(`.product-item-container`)!;
+    const el = routerTargetElements();
+
+    // Render product item to ".product-item"
     const item = visCreate.productItem({ product });
-    itemContainer.appendChild(item.element);
+    el.productItem.appendChild(item.element);
     cleanup.push(() => item.destroy);
 
     // Render data for this product to ".product-data"
-    const productDataContainer = query.routerTarget().querySelector(`.product-data`)!;
 
     // Check vis data and render entries matching this product
     globals.store.get("vis-data")!.lists.forEach((list) => {
@@ -96,7 +96,7 @@ function render(product: types.Product, renderTags: boolean) {
             return;
         }
 
-        productDataContainer.appendChild(details);
+        el.productData.appendChild(details);
     });
 }
 
@@ -122,4 +122,13 @@ function isThickness(match: string | null, thickness: number) {
     if (match === null) return true;
 
     return new RegExp(match, "i").test(thickness.toString());
+}
+
+function routerTargetElements() {
+    const rt = query.routerTarget();
+
+    return {
+        productItem: rt.querySelector(`.product-item`)!,
+        productData: query.routerTarget().querySelector(`.product-data`)!,
+    };
 }

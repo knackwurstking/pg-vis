@@ -9,20 +9,19 @@ export async function onMount() {
     originTitle = appBarTitle.innerText;
     appBarTitle.innerText = "Gist IDs";
 
+    const el = routerTargetElements();
+
     // Enable app bar button for switching to dev mode
     {
         const dataBaseButton = query.appBar_ButtonDataBase();
         dataBaseButton.onclick = async () => {
-            query
-                .routerTarget()
-                .querySelectorAll(`.dev-mode`)
-                .forEach((child) => {
-                    if ((child as HTMLElement).style.display === "flex") {
-                        (child as HTMLElement).style.display = "none";
-                    } else {
-                        (child as HTMLElement).style.display = "flex";
-                    }
-                });
+            el.devModeItems.forEach((child) => {
+                if ((child as HTMLElement).style.display === "flex") {
+                    (child as HTMLElement).style.display = "none";
+                } else {
+                    (child as HTMLElement).style.display = "flex";
+                }
+            });
         };
         dataBaseButton.style.display = "inline-flex";
         cleanup.push(() => {
@@ -31,7 +30,7 @@ export async function onMount() {
         });
     }
 
-    render();
+    render(el);
 }
 
 export async function onDestroy() {
@@ -40,7 +39,7 @@ export async function onDestroy() {
     cleanup = [];
 }
 
-function render() {
+function render(el: { gistIDs: HTMLUListElement }) {
     const itemProps: create.GistItemProps[] = [
         {
             title: "Alarm Listen",
@@ -64,10 +63,18 @@ function render() {
         },
     ];
 
-    const container = document.querySelector<HTMLUListElement>(`.gist-ids`)!;
     for (const itemProp of itemProps) {
         const item = create.gistItem(itemProp);
         cleanup.push(item.destroy);
-        container.appendChild(item.element);
+        el.gistIDs.appendChild(item.element);
     }
+}
+
+function routerTargetElements() {
+    const rt = query.routerTarget();
+
+    return {
+        devModeItems: rt.querySelectorAll(`.dev-mode`),
+        gistIDs: rt.querySelector<HTMLUListElement>(`.gist-ids`)!,
+    };
 }

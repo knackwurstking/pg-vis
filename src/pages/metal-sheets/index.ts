@@ -115,15 +115,13 @@ export async function onDestroy() {
 }
 
 function render(list: types.MetalSheet) {
-    const table = query.routerTarget().querySelector("table")!;
-    const thead = table.querySelector(`thead`)!;
-    const tbody = table.querySelector(`tbody`)!;
+    const el = routerTargetElements();
 
-    thead.innerHTML = "";
-    tbody.innerHTML = "";
+    el.thead.innerHTML = "";
+    el.tbody.innerHTML = "";
 
     const tr = document.createElement("tr");
-    thead.appendChild(tr);
+    el.thead.appendChild(tr);
     tableHeader.forEach((head, index) => {
         if (!!list.data.table.filter?.includes(index)) {
             return;
@@ -137,7 +135,7 @@ function render(list: types.MetalSheet) {
 
     list.data.table.data.forEach((row) => {
         const tr = document.createElement("tr");
-        tbody.appendChild(tr);
+        el.tbody.appendChild(tr);
 
         tr.style.cursor = "pointer";
         tr.role = "button";
@@ -212,4 +210,13 @@ function sortTableData(data: string[][]): string[][] {
     });
 
     return data;
+}
+
+function routerTargetElements() {
+    const rt = query.routerTarget();
+
+    return {
+        thead: rt.querySelector(`table thead`)!,
+        tbody: rt.querySelector(`table tbody`)!,
+    };
 }
