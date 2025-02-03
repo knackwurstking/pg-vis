@@ -80,27 +80,27 @@ function createStore(): types.PGStore {
             lists: [
                 {
                     title: "Presse 0",
-                    allowDeletion: true,
+                    allowDeletion: false,
                     data: [],
                 },
                 {
                     title: "Presse 2",
-                    allowDeletion: true,
+                    allowDeletion: false,
                     data: [],
                 },
                 {
                     title: "Presse 3",
-                    allowDeletion: true,
+                    allowDeletion: false,
                     data: [],
                 },
                 {
                     title: "Presse 4",
-                    allowDeletion: true,
+                    allowDeletion: false,
                     data: [],
                 },
                 {
                     title: "Presse 5",
-                    allowDeletion: true,
+                    allowDeletion: false,
                     data: [],
                 },
             ],
