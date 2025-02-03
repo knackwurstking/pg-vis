@@ -36,9 +36,7 @@ function init(data?: string[] | null): Promise<string[] | null> {
         initForm();
 
         dialog.reset.onclick = (e) => {
-            if (!data) {
-                return;
-            }
+            if (!data) return;
 
             e.preventDefault();
             initForm();

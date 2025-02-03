@@ -1,7 +1,7 @@
 import * as query from "../utils-query";
 import * as types from "../types";
 
-function init(data?: types.Product | null): Promise<types.Product | null> {
+function init(product?: types.Product | null): Promise<types.Product | null> {
     return new Promise((resolve, _reject) => {
         const dialog = query.dialog_Product();
 
@@ -30,22 +30,19 @@ function init(data?: types.Product | null): Promise<types.Product | null> {
         };
 
         const initForm = () => {
-            if (!!data) {
-                dialog.inputs[0].value = data.lotto;
-                dialog.inputs[1].value = data.name;
-                dialog.inputs[2].value = data.format;
-                dialog.inputs[3].value = data.thickness.toString();
-                dialog.inputs[4].value = data.stamp;
+            if (!!product) {
+                dialog.inputs[0].value = product.lotto;
+                dialog.inputs[1].value = product.name;
+                dialog.inputs[2].value = product.format;
+                dialog.inputs[3].value = product.thickness.toString();
+                dialog.inputs[4].value = product.stamp;
             }
         };
 
         initForm();
 
         dialog.reset.onclick = (e) => {
-            if (!data) {
-                return;
-            }
-
+            if (!product) return;
             e.preventDefault();
             initForm();
         };

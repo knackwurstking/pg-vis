@@ -1,7 +1,7 @@
 import * as types from "../types";
 import * as query from "../utils-query";
 
-function init(data?: types.MetalSheet | null): Promise<types.MetalSheet | null> {
+function init(metalSheet?: types.MetalSheet | null): Promise<types.MetalSheet | null> {
     return new Promise((resolve, _reject) => {
         // Open the edit metal sheet dialog for changing "format", "toolID" and filters
         const dialog = query.dialog_MetalSheet();
@@ -44,20 +44,20 @@ function init(data?: types.MetalSheet | null): Promise<types.MetalSheet | null> 
                     press: press,
                     table: {
                         filter,
-                        data: data?.data.table.data || [],
+                        data: metalSheet?.data.table.data || [],
                     },
                 },
             });
         };
 
         const initForm = () => {
-            if (!!data) {
-                dialog.format.value = data.format;
-                dialog.toolID.value = data.toolID;
-                dialog.press.selectedIndex = data.data.press + 1;
+            if (!!metalSheet) {
+                dialog.format.value = metalSheet.format;
+                dialog.toolID.value = metalSheet.toolID;
+                dialog.press.selectedIndex = metalSheet.data.press + 1;
                 dialog.filters.forEach((filterCheckbox) => {
                     const indexToHide = parseInt(filterCheckbox.getAttribute("data-index")!, 10);
-                    filterCheckbox.checked = !data.data.table.filter?.includes(indexToHide);
+                    filterCheckbox.checked = !metalSheet.data.table.filter?.includes(indexToHide);
                 });
             }
         };
@@ -65,10 +65,7 @@ function init(data?: types.MetalSheet | null): Promise<types.MetalSheet | null> 
         initForm();
 
         dialog.reset.onclick = (e) => {
-            if (!data) {
-                return;
-            }
-
+            if (!metalSheet) return;
             e.preventDefault();
             initForm();
         };

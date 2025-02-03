@@ -1,7 +1,7 @@
 import * as types from "../types";
 import * as query from "../utils-query";
 
-function init(data?: types.Vis | null): Promise<types.Vis | null> {
+function init(vis?: types.Vis | null): Promise<types.Vis | null> {
     return new Promise((resolve, _reject) => {
         const dialog = query.dialog_VIS();
 
@@ -28,21 +28,18 @@ function init(data?: types.Vis | null): Promise<types.Vis | null> {
         };
 
         const initForm = () => {
-            if (!!data) {
+            if (!!vis) {
                 const titleInput = dialog.inputs[0];
 
                 // Set title input (default: YYYY-MM-DD)
-                titleInput.value = data.title || generateDefaultTitle(new Date());
+                titleInput.value = vis.title || generateDefaultTitle(new Date());
             }
         };
 
         initForm();
 
         dialog.reset.onclick = (e) => {
-            if (!data) {
-                return;
-            }
-
+            if (!vis) return;
             e.preventDefault();
             initForm();
         };
