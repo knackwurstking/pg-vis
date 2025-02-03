@@ -115,7 +115,7 @@ function render(list: types.Vis, listKey: string) {
         setTimeout(() => {
             const item = create.productItem({
                 product,
-                enableRouting: { productIndex: index },
+                enableRouting: { dataIndex: index },
             });
             cleanup.push(item.destroy);
             el.products.appendChild(item.element);

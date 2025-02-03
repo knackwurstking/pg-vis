@@ -5,7 +5,7 @@ const html = String.raw;
 export interface ProductItemProps {
     product: types.Product;
     enableRouting?: {
-        productIndex: number;
+        dataIndex: number;
     };
 }
 
@@ -22,7 +22,7 @@ export function productItem(props: ProductItemProps): types.Component<HTMLLIElem
         el.role = "button";
         el.style.cursor = "pointer";
 
-        el.setAttribute("data-index", props.enableRouting!.productIndex.toString());
+        el.setAttribute("data-index", props.enableRouting!.dataIndex.toString());
     }
 
     props.product.lotto;
