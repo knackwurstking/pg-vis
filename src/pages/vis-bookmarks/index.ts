@@ -24,8 +24,6 @@ export async function onMount() {
     // Set the app bar title
     cleanup.push(utils.setAppBarTitle(list.title));
 
-    // TODO: Enable edit list item on the app bar
-
     render(list);
 }
 

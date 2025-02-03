@@ -289,8 +289,6 @@ drawerGistIDsButton.onclick = () => {
                     cleanup.push(item.destroy);
                 }
             }
-
-            // TODO: Action Buttons: "add"
         },
         true,
     );
