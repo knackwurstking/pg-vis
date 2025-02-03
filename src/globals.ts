@@ -105,7 +105,7 @@ function createStore(): types.PGStore {
                 },
             ],
         },
-        false, // TODO: Need to change this to true, before working on a new list action button
+        true, // TODO: Need to change this to true, before working on a new list action button
     );
 
     store.set("special", { gist: null, lists: [] }, true);
