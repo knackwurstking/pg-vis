@@ -5,6 +5,16 @@ import * as types from "./types";
 
 export const store = createStore();
 
+export function getVisBookmarks(listKey: string): types.Bookmarks | null {
+    const ls = listsStore.get("vis-bookmarks");
+
+    const list = store.get("vis-bookmarks")!.lists.find((list) => {
+        return ls.listKey(list) === listKey;
+    });
+
+    return list || null;
+}
+
 export function getProduct(listKey: string, index: number): types.Product | null {
     const list = getVis(listKey);
     if (!list) {
