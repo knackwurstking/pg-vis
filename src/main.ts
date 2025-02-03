@@ -345,7 +345,19 @@ ui.router.hash.init(query.routerTarget(), {
         },
     },
 
-    "vis-bookmarks": {}, // TODO: Continue here...
+    "vis-bookmarks": {
+        title: "VIS | Bookmarks",
+        template: {
+            selector: `template[name="vis-bookmarks"]`,
+            onMount() {
+                pages.visBookmarks.onMount();
+            },
+            onDestroy() {
+                pages.visBookmarks.onDestroy();
+            },
+        },
+    },
+
     "vis-data": {}, // TODO: ...or here
     special: {}, // TODO: ...or here
 });
