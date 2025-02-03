@@ -388,8 +388,11 @@ ui.router.hash.init(query.routerTarget(), {
         },
     },
 
-    "vis-data": {}, // TODO: ...or here
-    special: {}, // TODO: ...or here
+    "vis-data": {
+        // TODO: Continuer here
+    },
+
+    special: {},
 });
 
 // Event Handlers

@@ -453,7 +453,7 @@
                     class="ui-flex-grid-item ui-auto-scroll-y ui-hide-scrollbar"
                     style="--gap: var(--ui-spacing); width: 100%"
                 >
-                    <ul class="alerts" style="padding: var(--ui-spacing) width: 100%;"></ul>
+                    <ul class="alerts" style="padding: var(--ui-spacing); width: 100%"></ul>
                 </div>
             </div>
         </template>
@@ -494,7 +494,7 @@
                 >
                     <ul
                         class="products ui-none-select"
-                        style="padding: var(--ui-spacing) width: 100%;"
+                        style="padding: var(--ui-spacing); width: 100%"
                     ></ul>
                 </div>
             </div>
@@ -519,6 +519,34 @@
         <template name="vis-bookmarks">
             <div class="ui-auto-scroll-y ui-hide-scrollbar" style="width: 100%; height: 100%">
                 <ul class="products"></ul>
+            </div>
+        </template>
+
+        <template name="vis-data">
+            <div class="ui-flex-grid" style="--gap: 0; width: 100%; height: 100%">
+                <section class="search-bar" style="--gap: var(--ui-spacing); width: 100%">
+                    <fieldset>
+                        <legend>Suche nach Daten:</legend>
+                        <div class="ui-flex-grid-row">
+                            <input
+                                id="visDataSearchBar"
+                                style="width: 100%"
+                                type="search"
+                                placeholder="Suche..."
+                            />
+                        </div>
+                    </fieldset>
+                </section>
+
+                <div
+                    class="ui-flex-grid-item ui-auto-scroll-y ui-hide-scrollbar"
+                    style="--gap: var(--ui-spacing); width: 100%"
+                >
+                    <ul
+                        class="data-list ui-none-select"
+                        style="padding: var(--ui-spacing); width: 100%"
+                    ></ul>
+                </div>
             </div>
         </template>
     </body>
