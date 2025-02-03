@@ -1,6 +1,7 @@
 import * as ui from "ui";
 
 import * as globals from "../../globals";
+import * as dialogs from "../../dialogs";
 import * as types from "../../types";
 import * as query from "../../utils-query";
 import * as utils from "../../utils";
@@ -30,7 +31,7 @@ export async function onMount() {
     cleanup.push(utils.setAppBarTitle(product.lotto));
 
     setupAppBarBackButton();
-    setupAppBarBookmarkButton();
+    setupAppBarBookmarkButton(product);
     render(product, param.tags === "true" ? true : false);
 }
 
@@ -45,13 +46,11 @@ function setupAppBarBackButton() {
     cleanup.push(() => (button.style.display = "none"));
 }
 
-function setupAppBarBookmarkButton() {
+function setupAppBarBookmarkButton(product: types.Product) {
     const button = query.appBar_ButtonBookmarks();
     button.style.display = "inline-flex";
 
-    button.onclick = () => {
-        // TODO: Open the product-bookmark dialog
-    };
+    button.onclick = () => dialogs.productBookmark(product);
 
     cleanup.push(() => {
         button.onclick = null;

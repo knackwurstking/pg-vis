@@ -401,15 +401,26 @@
             </form>
         </dialog>
 
-        <dialog name="choose" oncancel="event.preventDefault()">
+        <dialog name="choose">
             <div class="ui-flex-grid-row">
-                <h4 class="title ui-flex-grid-item">???</h4>
+                <h4 class="title ui-flex-grid-item"></h4>
                 <button class="close" variant="ghost" color="primary" icon>
                     <i class="bi bi-x-lg"></i>
                 </button>
             </div>
 
             <div class="choices ui-flex-grid-row" style="--warp: wrap"></div>
+        </dialog>
+
+        <dialog name="product-bookmark">
+            <div class="ui-flex-grid-row">
+                <h4 class="title ui-flex-grid-item"></h4>
+                <button class="close" variant="ghost" color="primary" icon>
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+
+            <ul class="checkboxes"></ul>
         </dialog>
 
         <template name="gist-ids">

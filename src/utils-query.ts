@@ -165,7 +165,7 @@ export function dialog_ProductBookmark(): {
     root: HTMLDialogElement;
     close: HTMLButtonElement;
     title: HTMLElement;
-    checkboxes: NodeListOf<HTMLInputElement>;
+    checkboxes: HTMLUListElement;
 } {
     const root = document.querySelector<HTMLDialogElement>(`dialog[name="product-bookmark"]`)!;
 
@@ -173,6 +173,6 @@ export function dialog_ProductBookmark(): {
         root,
         close: root.querySelector(`button.close`)!,
         title: root.querySelector(`.title`)!,
-        checkboxes: root.querySelectorAll(`input[type="checkbox"]`)!,
+        checkboxes: root.querySelector(`.checkboxes`)!,
     };
 }
