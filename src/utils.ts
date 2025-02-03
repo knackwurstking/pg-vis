@@ -2,8 +2,21 @@ import FileSaver from "file-saver";
 import JSZip from "jszip";
 
 import * as types from "./types";
+import * as query from "./utils-query";
 import * as globals from "./globals";
 import * as listStores from "./list-stores";
+
+export function setAppBarTitle(title: string): types.CleanUp {
+    const titleElement = query.appBar_Title();
+
+    let originalTitle = titleElement.innerText;
+
+    titleElement.innerText = title;
+
+    return () => {
+        titleElement.innerText = originalTitle;
+    };
+}
 
 export function generateRegExp(value: string): RegExp {
     const regexSplit: string[] = value.split(" ").filter((v) => v !== "");

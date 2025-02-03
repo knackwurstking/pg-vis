@@ -13,8 +13,7 @@ interface Param {
     scrollTop?: string;
 }
 
-let cleanup: (() => void)[] = [];
-let originTitle: string = "";
+let cleanup: types.CleanUp[] = [];
 let search: string = "";
 let scrollTop: number = 0;
 
@@ -23,15 +22,11 @@ export async function onMount() {
 
     const list = globals.getVis(param.listKey || "");
     if (!list) {
-        throw new Error(`vis list not found: listKey=${param.listKey}`);
+        throw new Error(`vis list "${param.listKey}" not found`);
     }
 
     // Set the app bar title
-    {
-        const appBarTitle = query.appBar_Title();
-        originTitle = appBarTitle.innerText;
-        appBarTitle.innerText = list.title;
-    }
+    cleanup.push(utils.setAppBarTitle(list.title));
 
     if (!!param.scrollTop) {
         scrollTop = parseInt(param.scrollTop, 10);
@@ -107,7 +102,6 @@ export async function onDestroy() {
 
     cleanup.forEach((fn) => fn());
     cleanup = [];
-    query.appBar_Title().innerText = originTitle;
 }
 
 function render(list: types.Vis, listKey: string) {

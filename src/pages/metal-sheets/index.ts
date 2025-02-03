@@ -5,6 +5,7 @@ import * as query from "../../utils-query";
 import * as dialogs from "../../dialogs";
 import * as listStores from "../../list-stores";
 import * as types from "../../types";
+import * as utils from "../../utils";
 
 interface Param {
     listKey?: string;
@@ -19,26 +20,24 @@ const tableHeader = [
     "Stf. P0",
 ];
 
-let cleanup: (() => void)[] = [];
-let originTitle: string = "";
+let cleanup: types.CleanUp[] = [];
 
 export async function onMount() {
     const param: Param = ui.router.hash.getSearchParam();
 
     const list = globals.getMetalSheet(param.listKey || "");
     if (!list) {
-        throw new Error(`metal sheet not found: listKey=${param.listKey}`);
+        throw new Error(`metal sheet "${param.listKey}" not found`);
     }
 
     // Set the app bar title
-    {
-        const appBarTitle = query.appBar_Title();
-        originTitle = appBarTitle.innerText;
-        appBarTitle.innerText =
+    cleanup.push(
+        utils.setAppBarTitle(
             list.data.press > -1
                 ? `[P${list.data.press}] ${list.format} ${list.toolID}`
-                : `${list.format} ${list.toolID}`;
-    }
+                : `${list.format} ${list.toolID}`,
+        ),
+    );
 
     // Enable app bar button for editing the current sheet
     {
@@ -111,7 +110,6 @@ export async function onMount() {
 export async function onDestroy() {
     cleanup.forEach((fn) => fn());
     cleanup = [];
-    query.appBar_Title().innerText = originTitle;
 }
 
 function render(list: types.MetalSheet) {

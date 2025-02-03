@@ -2,6 +2,7 @@ import * as ui from "ui";
 
 import * as globals from "../../globals";
 import * as types from "../../types";
+import * as utils from "../../utils";
 import * as query from "../../utils-query";
 import * as createAlertLists from "../alert-lists/create";
 import * as create from "./create";
@@ -11,8 +12,7 @@ interface Param {
     index?: string;
 }
 
-let cleanup: (() => void)[] = [];
-let originTitle: string = "";
+let cleanup: types.CleanUp[] = [];
 
 export async function onMount() {
     const param: Param = ui.router.hash.getSearchParam();
@@ -22,11 +22,11 @@ export async function onMount() {
         throw `alert not found: listKey=${param.listKey}, index=${param.index}`;
     }
 
-    const appBarTitle = query.appBar_Title();
-    originTitle = appBarTitle.innerText;
-    appBarTitle.innerText = `${
-        alert.from === alert.to ? `${alert.from}` : `${alert.from}..${alert.to}`
-    }`;
+    cleanup.push(
+        utils.setAppBarTitle(
+            alert.from === alert.to ? `${alert.from}` : `${alert.from}..${alert.to}`,
+        ),
+    );
 
     // Enable back button
     const backButton = query.appBar_ButtonBack();
@@ -41,7 +41,6 @@ export async function onMount() {
 export async function onDestroy() {
     cleanup.forEach((fn) => fn());
     cleanup = [];
-    query.appBar_Title().innerText = originTitle;
 }
 
 function render(alert: types.Alert) {

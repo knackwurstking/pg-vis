@@ -3,6 +3,7 @@ import * as ui from "ui";
 import * as globals from "../../globals";
 import * as types from "../../types";
 import * as query from "../../utils-query";
+import * as utils from "../../utils";
 import * as visCreate from "../vis/create";
 import * as visDataCreate from "../vis-data/create";
 
@@ -14,8 +15,7 @@ interface Param {
 
 const html = String.raw;
 
-let cleanup: (() => void)[] = [];
-let originTitle: string = "";
+let cleanup: types.CleanUp[] = [];
 
 export async function onMount() {
     const param: Param = ui.router.hash.getSearchParam();
@@ -23,15 +23,11 @@ export async function onMount() {
     // Get product from vis
     const product = globals.getProduct(param.listKey || "", parseInt(param.index || "-1", 10));
     if (!product) {
-        throw `product not found: listKey=${param.listKey}, index=${param.index}`;
+        throw `product with index "${param.index}" from list "${param.listKey}" not found`;
     }
 
     // Set app bar title
-    {
-        const appBarTitle = query.appBar_Title();
-        originTitle = appBarTitle.innerText;
-        appBarTitle.innerText = `${product.lotto}`;
-    }
+    cleanup.push(utils.setAppBarTitle(product.lotto));
 
     // Enable back button
     {
@@ -46,8 +42,6 @@ export async function onMount() {
 export async function onDestroy() {
     cleanup.forEach((fn) => fn());
     cleanup = [];
-
-    query.appBar_Title().innerText = originTitle;
 }
 
 function render(product: types.Product, renderTags: boolean) {

@@ -1,13 +1,12 @@
 import * as query from "../../utils-query";
 import * as create from "./create";
+import * as utils from "../../utils";
+import * as types from "../../types";
 
-let cleanup: (() => void)[] = [];
-let originTitle: string = "";
+let cleanup: types.CleanUp[] = [];
 
 export async function onMount() {
-    const appBarTitle = query.appBar_Title();
-    originTitle = appBarTitle.innerText;
-    appBarTitle.innerText = "Gist IDs";
+    cleanup.push(utils.setAppBarTitle("Gist IDs"));
 
     const el = routerTargetElements();
 
@@ -34,7 +33,6 @@ export async function onMount() {
 }
 
 export async function onDestroy() {
-    query.appBar_Title().innerText = originTitle;
     cleanup.forEach((fn) => fn());
     cleanup = [];
 }

@@ -1,5 +1,7 @@
 import * as ui from "ui";
 
+export type CleanUp = () => void;
+
 export interface Alert {
     from: number;
     to: number;

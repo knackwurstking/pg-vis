@@ -10,20 +10,17 @@ interface Param {
     listKey?: string;
 }
 
-let cleanup: (() => void)[] = [];
-let originTitle: string = "";
+let cleanup: types.CleanUp[] = [];
 
 export async function onMount() {
     const param: Param = ui.router.hash.getSearchParam();
 
     const list = globals.getAlertList(param.listKey || "");
     if (!list) {
-        throw new Error(`alert list not found: listKey=${param.listKey}`);
+        throw new Error(`alert list "${param.listKey}" not found`);
     }
 
-    const appBarTitle = query.appBar_Title();
-    originTitle = appBarTitle.innerText;
-    appBarTitle.innerText = list.title;
+    cleanup.push(utils.setAppBarTitle(list.title));
 
     render(list.data, param.listKey || "");
 }
@@ -31,7 +28,6 @@ export async function onMount() {
 export async function onDestroy() {
     cleanup.forEach((fn) => fn());
     cleanup = [];
-    query.appBar_Title().innerText = originTitle;
 }
 
 function render(alerts: types.Alert[], listKey: string) {
