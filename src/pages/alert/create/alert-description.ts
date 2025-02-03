@@ -6,7 +6,7 @@ export interface AlertDescriptionProps {
     alert: types.Alert;
 }
 
-export function alertDescription(props: AlertDescriptionProps): types.Component<HTMLElement> {
+export function alertDescription(props: AlertDescriptionProps): types.Component<HTMLElement, {}> {
     const el = document.createElement("div");
 
     el.className = "ui-flex column";

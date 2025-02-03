@@ -72,7 +72,42 @@ function createStore(): types.PGStore {
     store.set("metal-sheets", { gist: null, lists: [] }, true);
     store.set("vis", { gist: null, lists: [] }, true);
     store.set("vis-data", { gist: null, lists: [] }, true);
-    store.set("vis-bookmarks", { gist: null, lists: [] }, true);
+
+    store.set(
+        "vis-bookmarks",
+        {
+            gist: null,
+            lists: [
+                {
+                    title: "Presse 0",
+                    allowDeletion: true,
+                    data: [],
+                },
+                {
+                    title: "Presse 2",
+                    allowDeletion: true,
+                    data: [],
+                },
+                {
+                    title: "Presse 3",
+                    allowDeletion: true,
+                    data: [],
+                },
+                {
+                    title: "Presse 4",
+                    allowDeletion: true,
+                    data: [],
+                },
+                {
+                    title: "Presse 5",
+                    allowDeletion: true,
+                    data: [],
+                },
+            ],
+        },
+        false, // TODO: Need to change this to true, before working on a new list action button
+    );
+
     store.set("special", { gist: null, lists: [] }, true);
 
     store.set("runtime", { lists: {} }, false);

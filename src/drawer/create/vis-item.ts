@@ -9,7 +9,7 @@ export interface VISItemProps {
     data: types.Vis;
 }
 
-export function visItem(props: VISItemProps): types.Component<HTMLLIElement> {
+export function visItem(props: VISItemProps): types.Component<HTMLLIElement, {}> {
     const el = document.createElement("li");
 
     el.className = "ui-flex justify-between";
@@ -30,23 +30,25 @@ export function visItem(props: VISItemProps): types.Component<HTMLLIElement> {
         </button>
     `;
 
-    {
-        const deleteButton = el.querySelector<HTMLButtonElement>(`button.delete`)!;
-        deleteButton.onclick = () => {
-            globals.store.update("vis", (data) => {
-                const key = ls.listKey(props.data);
+    const onClickDelete = () => {
+        globals.store.update("vis", (data) => {
+            const key = ls.listKey(props.data);
 
-                if (confirm(`"${key}" wirklich löschen?`)) {
-                    data.lists = data.lists.filter((list) => ls.listKey(list) !== key);
-                }
+            if (confirm(`"${key}" wirklich löschen?`)) {
+                data.lists = data.lists.filter((list) => ls.listKey(list) !== key);
+            }
 
-                return data;
-            });
-        };
-    }
+            return data;
+        });
+    };
+
+    const deleteButton = el.querySelector<HTMLButtonElement>(`button.delete`)!;
+    deleteButton.addEventListener("click", onClickDelete);
 
     return {
         element: el,
-        destroy() {},
+        destroy() {
+            deleteButton.removeEventListener("click", onClickDelete);
+        },
     };
 }

@@ -12,7 +12,7 @@ export interface AlertItemProps {
     };
 }
 
-export function alertItem(props: AlertItemProps): types.Component<HTMLLIElement> {
+export function alertItem(props: AlertItemProps): types.Component<HTMLLIElement, {}> {
     const el = document.createElement("li");
 
     el.className = "alert-item ui-flex nowrap align-center justify-between";

@@ -3,13 +3,15 @@ import * as listsStore from "../../list-stores";
 import * as types from "../../types";
 
 const html = String.raw;
-const ls = listsStore.get("alert-lists");
+const ls = listsStore.get("vis-bookmarks");
 
-export interface AlertListItemProps {
-    data: types.AlertList;
+export interface VISBookmarksItemProps {
+    data: types.Bookmarks;
 }
 
-export function alertListItem(props: AlertListItemProps): types.Component<HTMLLIElement, {}> {
+export function visBookmarkItem(
+    props: VISBookmarksItemProps,
+): types.Component<HTMLLIElement, { deleteButton: () => HTMLButtonElement }> {
     const el = document.createElement("li");
 
     el.className = "ui-flex justify-between";
@@ -19,7 +21,7 @@ export function alertListItem(props: AlertListItemProps): types.Component<HTMLLI
         <a
             class="ui-flex column align-start justify-center"
             style="width: 100%; height: 100%;"
-            href="#alert-lists?listKey=${ls.listKey(props.data)}"
+            href="#vis-bookmarks?listKey=${ls.listKey(props.data)}"
         >
             <span>${props.data.title}</span>
             <span>${props.data.data.length} Einträge</span>
@@ -31,7 +33,7 @@ export function alertListItem(props: AlertListItemProps): types.Component<HTMLLI
     `;
 
     const onClickDelete = () => {
-        globals.store.update("alert-lists", (data) => {
+        globals.store.update("vis-bookmarks", (data) => {
             const key = ls.listKey(props.data);
 
             if (confirm(`"${key}" wirklich löschen?`)) {
@@ -47,6 +49,9 @@ export function alertListItem(props: AlertListItemProps): types.Component<HTMLLI
 
     return {
         element: el,
+        query: {
+            deleteButton: () => el.querySelector<HTMLButtonElement>(`button.delete`)!,
+        },
         destroy() {
             deleteButton.removeEventListener("click", onClickDelete);
         },

@@ -9,7 +9,7 @@ export interface ProductItemProps {
     };
 }
 
-export function productItem(props: ProductItemProps): types.Component<HTMLLIElement> {
+export function productItem(props: ProductItemProps): types.Component<HTMLLIElement, {}> {
     const el = document.createElement("li");
 
     el.className = "product-item ui-flex nowrap align-center justify-between";

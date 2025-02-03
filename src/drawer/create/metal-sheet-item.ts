@@ -9,7 +9,7 @@ export interface MetalSheetItemProps {
     data: types.MetalSheet;
 }
 
-export function metalSheetItem(props: MetalSheetItemProps): types.Component<HTMLLIElement> {
+export function metalSheetItem(props: MetalSheetItemProps): types.Component<HTMLLIElement, {}> {
     const el = document.createElement("li");
 
     el.className = "ui-flex justify-between";
@@ -31,23 +31,25 @@ export function metalSheetItem(props: MetalSheetItemProps): types.Component<HTML
         </button>
     `;
 
-    {
-        const deleteButton = el.querySelector<HTMLButtonElement>(`button.delete`)!;
-        deleteButton.onclick = () => {
-            globals.store.update("metal-sheets", (data) => {
-                const key = ls.listKey(props.data);
+    const onClickDelete = () => {
+        globals.store.update("metal-sheets", (data) => {
+            const key = ls.listKey(props.data);
 
-                if (confirm(`"${key}" wirklich löschen?`)) {
-                    data.lists = data.lists.filter((list) => ls.listKey(list) !== key);
-                }
+            if (confirm(`"${key}" wirklich löschen?`)) {
+                data.lists = data.lists.filter((list) => ls.listKey(list) !== key);
+            }
 
-                return data;
-            });
-        };
-    }
+            return data;
+        });
+    };
+
+    const deleteButton = el.querySelector<HTMLButtonElement>(`button.delete`)!;
+    deleteButton.addEventListener("click", onClickDelete);
 
     return {
         element: el,
-        destroy() {},
+        destroy() {
+            deleteButton.removeEventListener("click", onClickDelete);
+        },
     };
 }

@@ -264,6 +264,38 @@ drawerGistIDsButton.onclick = () => {
     );
 }
 
+// Render drawer vis bookmarks items
+{
+    let cleanup: (() => void)[] = [];
+    globals.store.listen(
+        "vis-bookmarks",
+        async (data) => {
+            cleanup.forEach((fn) => fn());
+            cleanup = [];
+
+            const group = query.drawerGroup("vis-bookmarks");
+
+            // Render lists
+            {
+                group.items.innerHTML = "";
+                for (const list of data.lists) {
+                    const item = drawer.create.visBookmarkItem({ data: list });
+
+                    if (!list.allowDeletion) {
+                        item.query!.deleteButton().setAttribute("disabled", "");
+                    }
+
+                    group.items.appendChild(item.element);
+                    cleanup.push(item.destroy);
+                }
+            }
+
+            // TODO: Action Buttons: "add"
+        },
+        true,
+    );
+}
+
 // Initialize Router
 
 ui.router.hash.init(query.routerTarget(), {
