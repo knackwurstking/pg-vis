@@ -29,19 +29,34 @@ export async function onMount() {
     // Set app bar title
     cleanup.push(utils.setAppBarTitle(product.lotto));
 
-    // Enable back button
-    {
-        const backButton = query.appBar_ButtonBack();
-        backButton.style.display = "inline-flex";
-        cleanup.push(() => (backButton.style.display = "none"));
-    }
-
+    setupAppBarBackButton();
+    setupAppBarBookmarkButton();
     render(product, param.tags === "true" ? true : false);
 }
 
 export async function onDestroy() {
     cleanup.forEach((fn) => fn());
     cleanup = [];
+}
+
+function setupAppBarBackButton() {
+    const button = query.appBar_ButtonBack();
+    button.style.display = "inline-flex";
+    cleanup.push(() => (button.style.display = "none"));
+}
+
+function setupAppBarBookmarkButton() {
+    const button = query.appBar_ButtonBookmarks();
+    button.style.display = "inline-flex";
+
+    button.onclick = () => {
+        // TODO: Open the product-bookmark dialog
+    };
+
+    cleanup.push(() => {
+        button.onclick = null;
+        button.style.display = "none";
+    });
 }
 
 function render(product: types.Product, renderTags: boolean) {
