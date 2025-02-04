@@ -498,6 +498,85 @@
             <ul class="checkboxes"></ul>
         </dialog>
 
+        <dialog name="vis-data-entry" style="width: 100%" oncancel="event.preventDefault()">
+            <div class="ui-flex-grid-row">
+                <h4 class="ui-flex-grid-item">Vis Data Eintrag</h4>
+                <button class="close" variant="ghost" color="primary" icon>
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+
+            <form method="dialog">
+                <div class="ui-flex-grid">
+                    <div class="ui-flex-grid" style="--gap: 0">
+                        <label for="visDataEntry_Key">Key</label>
+                        <input
+                            class="vis-data-entry-input"
+                            id="visDataEntry_Key"
+                            style="width: 100%"
+                            type="text"
+                        />
+                    </div>
+
+                    <div class="ui-flex-grid" style="--gap: 0">
+                        <label for="visDataEntry_Value">Value</label>
+                        <textarea
+                            class="vis-data-entry-input"
+                            id="visDataEntry_Value"
+                            style="width: 100%; resize: none"
+                            type="text"
+                            rows="10"
+                        ></textarea>
+                    </div>
+
+                    <div class="ui-flex-grid-row" style="--align: center; --justify: space-between">
+                        <label for="visDataEntry_Lotto">Lotto</label>
+                        <input class="vis-data-entry-input" id="visDataEntry_Lotto" type="text" />
+                    </div>
+
+                    <div class="ui-flex-grid-row" style="--align: center; --justify: space-between">
+                        <label for="visDataEntry_Name">Name</label>
+                        <input class="vis-data-entry-input" id="visDataEntry_Name" type="text" />
+                    </div>
+
+                    <div class="ui-flex-grid-row" style="--align: center; --justify: space-between">
+                        <label for="visDataEntry_Format">Format</label>
+                        <input
+                            class="vis-data-entry-input"
+                            id="visDataEntry_Format"
+                            style="width: 15ch"
+                            type="text"
+                        />
+                    </div>
+
+                    <div class="ui-flex-grid-row" style="--align: center; --justify: space-between">
+                        <label for="visDataEntry_Thickness">Stärke</label>
+                        <input
+                            class="vis-data-entry-input"
+                            id="visDataEntry_Thickness"
+                            style="width: 10ch"
+                            type="number"
+                        />
+                    </div>
+
+                    <div class="ui-flex-grid-row" style="--align: center; --justify: space-between">
+                        <label for="visDataEntry_Stamp">Stempel</label>
+                        <input
+                            class="vis-data-entry-input"
+                            id="visDataEntry_Stamp"
+                            style="width: 15ch"
+                            type="text"
+                        />
+                    </div>
+                </div>
+
+                <div class="ui-flex-grid-row" style="--justify: flex-end">
+                    <input type="reset" />
+                    <input type="submit" />
+                </div>
+            </form>
+        </dialog>
+
         <template name="gist-ids">
             <ul class="gist-ids ui-flex-grid" style="padding: var(--ui-spacing)"></ul>
         </template>

@@ -192,3 +192,19 @@ export function dialog_ProductBookmark(): {
         checkboxes: root.querySelector(`.checkboxes`)!,
     };
 }
+
+export function dialog_VisDataEntry(): {
+    root: HTMLDialogElement;
+    close: HTMLButtonElement;
+    inputs: NodeListOf<HTMLInputElement>;
+    reset: HTMLInputElement;
+} {
+    const root = document.querySelector<HTMLDialogElement>(`dialog[name="vis-data-entry"]`)!;
+
+    return {
+        root,
+        close: root.querySelector(`button.close`)!,
+        inputs: root.querySelectorAll(`.vis-data-entry-input`)!,
+        reset: root.querySelector(`input[type="reset"]`)!,
+    };
+}

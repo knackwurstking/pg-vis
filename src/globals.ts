@@ -5,6 +5,16 @@ import * as types from "./types";
 
 export const store = createStore();
 
+export function getVisData(listKey: string): types.VisData | null {
+    const ls = listsStore.get("vis-data");
+
+    const list = store.get("vis-data")!.lists.find((list) => {
+        return ls.listKey(list) === listKey;
+    });
+
+    return list || null;
+}
+
 export function getVisBookmarks(listKey: string): types.Bookmarks | null {
     const ls = listsStore.get("vis-bookmarks");
 
