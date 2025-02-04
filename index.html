@@ -110,6 +110,22 @@
                         <button class="download" variant="ghost" color="primary" icon>
                             <i class="bi bi-file-arrow-down" title="Download ZIP Archive"></i>
                         </button>
+
+                        <!-- TODO: Import alert list from a file (type: json) -->
+                        <button
+                            class="import-from-file"
+                            variant="ghost"
+                            color="primary"
+                            icon
+                            disabled
+                        >
+                            <i class="bi bi-file-arrow-up" title="Import data from .txt file"></i>
+                        </button>
+
+                        <!-- TODO: Create new alert list -->
+                        <button class="add" variant="ghost" color="primary" icon disabled>
+                            <i class="bi bi-plus-square" title="create a new list"></i>
+                        </button>
                     </div>
 
                     <div class="ui-flex-grid">
@@ -123,11 +139,22 @@
 
                     <div class="actions ui-flex-grid-row" style="--justify: flex-end">
                         <button class="download" variant="ghost" color="primary" icon>
-                            <i class="bi bi-file-arrow-down" title="Download ZIP archive"></i>
+                            <i class="bi bi-file-arrow-down" title="download zip archive"></i>
+                        </button>
+
+                        <!-- TODO: Import from file (type: json) -->
+                        <button
+                            class="import-from-file"
+                            variant="ghost"
+                            color="primary"
+                            icon
+                            disabled
+                        >
+                            <i class="bi bi-file-arrow-up" title="Import data from .txt file"></i>
                         </button>
 
                         <button class="add" variant="ghost" color="primary" icon>
-                            <i class="bi bi-plus-square" title="Create a new list"></i>
+                            <i class="bi bi-plus-square" title="create a new list"></i>
                         </button>
                     </div>
 
@@ -163,8 +190,6 @@
                 <details class="group" name="vis-bookmarks">
                     <summary><h4>VIS: Bookmarks</h4></summary>
 
-                    <!-- NOTE: I'm unsure if I want an "Add" action button here -->
-
                     <div class="ui-flex-grid">
                         <ul class="items" style="width: 100%"></ul>
                     </div>
@@ -173,6 +198,27 @@
                 <!-- VIS: Data Group -->
                 <details class="group" name="vis-data">
                     <summary><h4>VIS: Data</h4></summary>
+
+                    <div class="actions ui-flex-grid-row" style="--justify: flex-end">
+                        <button class="download" variant="ghost" color="primary" icon>
+                            <i class="bi bi-file-arrow-down" title="Download ZIP Archive"></i>
+                        </button>
+
+                        <!-- TODO: Import from file -->
+                        <button
+                            class="import-from-file"
+                            variant="ghost"
+                            color="primary"
+                            icon
+                            disabled
+                        >
+                            <i class="bi bi-file-arrow-up" title="Import data from .txt file"></i>
+                        </button>
+
+                        <button class="add" variant="ghost" color="primary" icon>
+                            <i class="bi bi-plus-square" title="Create a new list"></i>
+                        </button>
+                    </div>
 
                     <div class="ui-flex-grid">
                         <ul class="items" style="width: 100%"></ul>
@@ -403,6 +449,29 @@
                 <div class="ui-flex-grid-row" style="--justify: flex-end">
                     <input type="reset" />
                     <input type="submit" />
+                </div>
+            </form>
+        </dialog>
+
+        <dialog name="vis-data" oncancel="event.preventDefault()">
+            <div class="ui-flex-grid-row">
+                <h4 class="ui-flex-grid-item">VIS: Data</h4>
+                <button class="close" variant="ghost" color="primary" icon>
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+
+            <form method="dialog">
+                <div class="ui-flex-grid">
+                    <div class="ui-flex-grid-row" style="--align: center">
+                        <label for="visDialog_Title">Title</label>
+                        <input id="visDialog_Title" style="width: 100%" type="text" />
+                    </div>
+
+                    <div class="ui-flex-grid-row" style="--justify: flex-end">
+                        <input type="reset" />
+                        <input type="submit" />
+                    </div>
                 </div>
             </form>
         </dialog>

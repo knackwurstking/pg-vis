@@ -145,6 +145,22 @@ export function dialog_Product(): {
     };
 }
 
+export function dialog_VISData(): {
+    root: HTMLDialogElement;
+    close: HTMLButtonElement;
+    inputs: NodeListOf<HTMLInputElement>;
+    reset: HTMLInputElement;
+} {
+    const root = document.querySelector<HTMLDialogElement>(`dialog[name="vis-data"]`)!;
+
+    return {
+        root,
+        close: root.querySelector(`button.close`)!,
+        inputs: root.querySelectorAll(`input[type="text"]`)!,
+        reset: root.querySelector(`input[type="reset"]`)!,
+    };
+}
+
 export function dialog_Choose(): {
     root: HTMLDialogElement;
     close: HTMLButtonElement;

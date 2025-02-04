@@ -294,6 +294,71 @@ drawerGistIDsButton.onclick = () => {
     );
 }
 
+// Render drawer vis data items
+{
+    let cleanup: (() => void)[] = [];
+    globals.store.listen(
+        "vis-data",
+        async (data) => {
+            cleanup.forEach((fn) => fn());
+            cleanup = [];
+
+            const group = query.drawerGroup("vis-data");
+
+            // Render lists
+            {
+                group.items.innerHTML = "";
+                for (const list of data.lists) {
+                    const item = drawer.create.visDataItem({ data: list });
+                    group.items.appendChild(item.element);
+                    cleanup.push(item.destroy);
+                }
+            }
+
+            // Initialize action button "download" - Download data packed in a handy zip archive
+            group.actions.download!.onclick = async () => {
+                try {
+                    if (confirm(`Download ZIP?`)) {
+                        await utils.downloadZIP("vis-data");
+                    }
+                } catch (err) {
+                    alert(err);
+                }
+            };
+
+            // Initialize action button "add" - Create a new vis list
+            group.actions.add!.onclick = async () => {
+                // Open dialog choosing load from file or create new vis list
+                const data = await dialogs.visData();
+                const titleInput = query.dialog_VISData().inputs[0];
+
+                if (!data) {
+                    titleInput.ariaInvalid = null;
+                    return;
+                }
+
+                if (!data.title) {
+                    titleInput.ariaInvalid = "";
+                    group.actions.add!.click();
+                    return;
+                }
+
+                const ls = listStores.get("vis-data");
+                try {
+                    ls.addToStore([data]);
+                    titleInput.ariaInvalid = null;
+                } catch (err) {
+                    titleInput.ariaInvalid = "";
+                    alert(err);
+                    group.actions.add!.click();
+                    return;
+                }
+            };
+        },
+        true,
+    );
+}
+
 // Initialize Router
 
 ui.router.hash.init(query.routerTarget(), {
@@ -389,7 +454,16 @@ ui.router.hash.init(query.routerTarget(), {
     },
 
     "vis-data": {
-        // TODO: Continuer here
+        title: "VIS | Data",
+        template: {
+            selector: `template[name="vis-data"]`,
+            onMount() {
+                pages.visData.onMount();
+            },
+            onDestroy() {
+                pages.visData.onDestroy();
+            },
+        },
     },
 
     special: {},
