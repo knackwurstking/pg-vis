@@ -6,6 +6,9 @@ const html = String.raw;
 export interface GistItemProps {
     entry: types.VisDataEntry;
     renderTags: boolean;
+    editDialog?: {
+        listKey: string;
+    } | null;
 }
 
 export function dataItem(props: GistItemProps): types.Component<HTMLLIElement, {}> {
@@ -75,6 +78,11 @@ export function dataItem(props: GistItemProps): types.Component<HTMLLIElement, {
         </div>
     `;
     grid.appendChild(div);
+
+    // TODO: Add an onclick event handler for dialog edit items
+    if (!!props.editDialog) {
+        // ...
+    }
 
     return {
         element: li,

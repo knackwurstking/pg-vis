@@ -124,8 +124,13 @@ function render(visData: types.VisData, listKey: string) {
 
     // Render entries
     visData.data.forEach((entry, index) => {
-        // TODO: Add some dialog handler on click to the data-item
-        const item = create.dataItem({ entry, renderTags: true });
+        const item = create.dataItem({
+            entry,
+            renderTags: true,
+            editDialog: {
+                listKey,
+            },
+        });
         el.dataList.appendChild(item.element);
         cleanup.push(item.destroy);
 
