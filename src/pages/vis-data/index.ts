@@ -6,6 +6,7 @@ import * as listStores from "../../list-stores/";
 import * as types from "../../types";
 import * as utils from "../../utils";
 import * as query from "../../utils-query";
+import * as create from "./create";
 
 interface Param {
     listKey?: string;
@@ -121,7 +122,19 @@ function render(visData: types.VisData, listKey: string) {
 
     el.dataList.innerHTML = "";
 
-    // TODO: Render entries
+    // Render entries
+    visData.data.forEach((entry, index) => {
+        // TODO: Add some dialog handler on click to the data-item
+        const item = create.dataItem({ entry, renderTags: true });
+        el.dataList.appendChild(item.element);
+        cleanup.push(item.destroy);
+
+        if (index === visData.data.length - 1 && scrollTop > 0) {
+            el.dataList.parentElement!.style.scrollBehavior = "auto";
+            el.dataList.parentElement!.scrollTop = scrollTop;
+            el.dataList.parentElement!.style.scrollBehavior = "smooth";
+        }
+    });
 
     // Search bar
     el.searchBarInput.oninput = () => {
