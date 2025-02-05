@@ -66,7 +66,7 @@ export async function getRevision(gistID: string): Promise<number | null> {
     };
 
     console.debug("fetch revision...");
-    return 5; // TODO: This needs to be removed after dev is done
+    return 0; // TODO: This needs to be removed after dev is done
 
     const resp = await octokit.request("GET /gists/{gist_id}/commits", {
         gist_id: gistID,
