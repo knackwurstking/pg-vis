@@ -34,7 +34,7 @@ export async function onMount() {
 
     setupAppBarEditButton(visData);
     setupAppBarAddButton(visData);
-    render(visData, param.listKey!);
+    render(visData);
 }
 
 export async function onDestroy() {
@@ -117,22 +117,34 @@ function setupAppBarAddButton(visData: types.VisData) {
     });
 }
 
-function render(visData: types.VisData, listKey: string) {
+function render(visData: types.VisData) {
     const el = routerTargetElements();
 
     el.dataList.innerHTML = "";
 
     // Render entries
     visData.data.forEach((entry, index) => {
+        // TODO: Add some dialog handler on click to the data-item (edit item)
         const item = create.dataItem({
             entry,
             renderTags: true,
-            editDialog: {
-                listKey,
-            },
         });
         el.dataList.appendChild(item.element);
         cleanup.push(item.destroy);
+
+        item.element.style.cursor = "pointer";
+        item.element.onclick = async () => {
+            const newEntry = await dialogs.visDataEntry(entry);
+
+            if (!newEntry) {
+                return;
+            }
+
+            const ls = listStores.get("vis-data");
+            visData.data[index] = newEntry;
+            ls.replaceInStore(visData);
+            reload();
+        };
 
         if (index === visData.data.length - 1 && scrollTop > 0) {
             el.dataList.parentElement!.style.scrollBehavior = "auto";
