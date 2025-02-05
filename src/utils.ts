@@ -48,3 +48,57 @@ export async function downloadZIP(storeKey: types.DrawerGroups) {
 
     FileSaver.saveAs(await zip.generateAsync({ type: "blob" }), listsStore.zipFileName());
 }
+
+export async function importFromFile(fileType: ".txt" | ".json", storeKey: types.DrawerGroups) {
+    const input = document.createElement("input");
+
+    input.type = "file";
+    input.accept = fileType;
+    input.multiple = true;
+
+    input.onchange = () => {
+        if (!input.files) {
+            return;
+        }
+
+        for (const file of input.files) {
+            const reader = new FileReader();
+
+            reader.onload = async () => {
+                if (typeof reader.result !== "string") {
+                    return;
+                }
+
+                const ls = listStores.get(storeKey);
+                let data: any;
+
+                try {
+                    data = ls.validate(reader.result);
+                } catch (err) {
+                    alert(err);
+                    return;
+                }
+
+                if (data === null) {
+                    alert(`Ungültige Daten für "${ls.title()}"!`);
+                    return;
+                }
+
+                try {
+                    ls.addToStore([data]);
+                } catch (err) {
+                    alert(err);
+                    return;
+                }
+            };
+
+            reader.onerror = () => {
+                alert(`Lesen der Datei "${file.name}" ist fehlgeschlagen!`);
+            };
+
+            reader.readAsText(file);
+        }
+    };
+
+    input.click();
+}
