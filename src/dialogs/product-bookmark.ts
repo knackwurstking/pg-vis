@@ -13,9 +13,11 @@ function init(product: types.Product): Promise<null> {
         dialog.root.onclose = () => resolve(null);
         dialog.title.innerText = product.lotto;
 
+        // For each bookmarks list
         const ls = listStores.get("vis-bookmarks");
         dialog.checkboxes.innerHTML = "";
         globals.store.get("vis-bookmarks")!.lists.forEach((bookmarks, index) => {
+            // Render checklist item
             const li = document.createElement("li");
 
             li.innerHTML = html`
@@ -27,6 +29,7 @@ function init(product: types.Product): Promise<null> {
 
             const input = li.querySelector<HTMLInputElement>(`input`)!;
 
+            // Handle input
             input.onchange = () => {
                 globals.store.update("vis-bookmarks", (data) => {
                     if (input.checked) {
@@ -49,6 +52,7 @@ function init(product: types.Product): Promise<null> {
                     bookmarkedProduct.name === product.name
                 ) {
                     input.checked = true;
+                    break;
                 } else {
                     input.checked = false;
                 }
