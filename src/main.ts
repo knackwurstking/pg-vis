@@ -323,6 +323,77 @@ drawerGistIDsButton.onclick = () => {
     );
 }
 
+// Render drawer special items
+{
+    let cleanup: (() => void)[] = [];
+    globals.store.listen(
+        "special",
+        async (data) => {
+            cleanup.forEach((fn) => fn());
+            cleanup = [];
+
+            const group = query.drawerGroup("special");
+
+            // Render lists
+            {
+                group.items.innerHTML = "";
+                for (const list of data.lists) {
+                    // Type check of special flakes
+                    const item = drawer.create.specialFlakesItem({ data: list });
+                    group.items.appendChild(item.element);
+                    cleanup.push(item.destroy);
+                }
+            }
+
+            // Initialize action button "download" - Download data packed in a handy zip archive
+            group.actions.download!.onclick = async () => {
+                try {
+                    if (confirm(`Download ZIP?`)) {
+                        await utils.downloadZIP("vis-data");
+                    }
+                } catch (err) {
+                    alert(err);
+                }
+            };
+
+            // Initialize action button "import-from-file" - Open file picker
+            group.actions.importFromFile!.onclick = () => {
+                utils.importFromFile(".json", "vis-data");
+            };
+
+            // Initialize action button "add" - Create a new vis list
+            group.actions.add!.onclick = async () => {
+                // Open dialog choosing load from file or create new vis list
+                const data = await dialogs.visData();
+                const titleInput = query.dialog_VISData().inputs[0];
+
+                if (!data) {
+                    titleInput.ariaInvalid = null;
+                    return;
+                }
+
+                if (!data.title) {
+                    titleInput.ariaInvalid = "";
+                    group.actions.add!.click();
+                    return;
+                }
+
+                const ls = listStores.get("vis-data");
+                try {
+                    ls.addToStore([data]);
+                    titleInput.ariaInvalid = null;
+                } catch (err) {
+                    titleInput.ariaInvalid = "";
+                    alert(err);
+                    group.actions.add!.click();
+                    return;
+                }
+            };
+        },
+        true,
+    );
+}
+
 // Initialize Router
 
 ui.router.hash.init(query.routerTarget(), {
@@ -430,7 +501,18 @@ ui.router.hash.init(query.routerTarget(), {
         },
     },
 
-    special: {},
+    "special-flakes": {
+        title: "VIS | Flakes",
+        template: {
+            selector: `template[name="special-flakes"]`,
+            onMount() {
+                pages.special.flakes.onMount();
+            },
+            onDestroy() {
+                pages.special.flakes.onDestroy();
+            },
+        },
+    },
 });
 
 // Event Handlers
