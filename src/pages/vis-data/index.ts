@@ -121,7 +121,7 @@ function render(visData: types.VisData, listKey: string) {
 
     el.dataList.innerHTML = "";
 
-    // TODO: Render products
+    // TODO: Render entries
 
     // Search bar
     el.searchBarInput.oninput = () => {
