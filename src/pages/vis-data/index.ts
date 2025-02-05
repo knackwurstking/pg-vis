@@ -130,8 +130,6 @@ function render(visData: types.VisData, listKey: string) {
         }
     };
 
-    // TODO: Routing to edit entry page
-
     el.searchBarInput.value = search;
     setTimeout(() => {
         el.searchBarInput.oninput!(new Event("input"));
