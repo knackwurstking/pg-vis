@@ -85,12 +85,22 @@ function setupAppBarAddButton(visData: types.VisData) {
 
     addButton.onclick = async () => {
         const data: types.VisDataEntry | null = await dialogs.visDataEntry();
+        const valueInput = query.dialog_VisDataEntry().inputs[1];
+
         if (!data) {
+            valueInput.ariaInvalid = null;
             return;
         }
 
-        // TODO: Validate data, "value" cannot be empty
+        // Validate data, "value" cannot be empty
+        if (!data.value) {
+            // Set input invalid and reopen
+            valueInput.ariaInvalid = "";
+            addButton.onclick!(new MouseEvent("click"));
+            return;
+        }
 
+        valueInput.ariaInvalid = null;
         visData.data.push(data);
 
         const ls = listStores.get("vis-data");
