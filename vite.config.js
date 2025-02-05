@@ -6,17 +6,7 @@ import tsconfigPaths from "vite-tsconfig-paths";
 const manifestForPlugIn = {
     strategies: "generateSW",
     registerType: "autoUpdate",
-    includeAssets: [
-        "/assets/fonts/Recursive_VF_1.085--subset_range_english_basic.woff2",
-        "/assets/fonts/Recursive_VF_1.085--subset_range_latin_1_punc.woff2",
-        "/assets/fonts/Recursive_VF_1.085--subset_range_remaining.woff2",
-        "/assets/fonts/Recursive_VF_1.085--subset_range_latin_1.woff2",
-        "/assets/fonts/Recursive_VF_1.085--subset_range_latin_ext.woff2",
-        "/assets/fonts/Recursive_VF_1.085--subset_range_vietnamese.woff2",
-        "/themes/gruvbox.css",
-        "/themes/original.css",
-        "CHANGELOG.md",
-    ],
+    includeAssets: [],
     manifest: {
         name: "PG: Vis",
         short_name: "pg-vis",
