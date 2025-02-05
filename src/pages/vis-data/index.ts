@@ -124,7 +124,6 @@ function render(visData: types.VisData) {
 
     // Render entries
     visData.data.forEach((entry, index) => {
-        // TODO: Add some dialog handler on click to the data-item (edit item)
         const item = create.dataItem({
             entry,
             renderTags: true,
