@@ -36,6 +36,10 @@ export function appBar_ButtonDataBase(): HTMLButtonElement {
     return document.querySelector(`#appBarButtonDataBase`)!;
 }
 
+export function appBar_ButtonPrinter(): HTMLButtonElement {
+    return document.querySelector(`#appBarButtonPrinter`)!;
+}
+
 // Drawer Elements
 
 export function drawer(): HTMLElement {

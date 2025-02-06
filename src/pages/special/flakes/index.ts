@@ -1,3 +1,5 @@
+import * as jspdf from "jspdf";
+import jsPDFAutotable from "jspdf-autotable";
 import * as ui from "ui";
 
 import * as dialogs from "../../../dialogs";
@@ -24,6 +26,7 @@ export async function onMount() {
 
     cleanup.push(utils.setAppBarTitle(flakes.title));
 
+    setupAppBarPrinterButton(flakes);
     setupAppBarAddButton(flakes);
     render(flakes);
 }
@@ -31,6 +34,85 @@ export async function onMount() {
 export async function onDestroy() {
     cleanup.forEach((fn) => fn());
     cleanup = [];
+}
+
+function setupAppBarPrinterButton(flakes: types.SpecialFlakes) {
+    const printerButton = query.appBar_ButtonPrinter();
+
+    printerButton.onclick = async () => {
+        const pdf = new jspdf.jsPDF();
+        const ls = listStores.get("special");
+
+        const createTable = (
+            press: types.SpecialFlakes_PressSlot,
+            entries: types.SpecialFlakesEntry[],
+        ) => {
+            const bodyData = [];
+            for (const entry of entries) {
+                const slots = [
+                    entry.compatatore,
+                    `${entry.primary.percent}%\n${entry.primary.value}`,
+                    ``,
+                    ``,
+                    ``,
+                    ``,
+                    ``,
+                    ``,
+                ];
+
+                for (const consumption of entry.secondary) {
+                    slots[globals.flakesTowerSlots.indexOf(consumption.slot) + 2] =
+                        `${consumption.percent}%\n${consumption.value}`;
+                }
+
+                bodyData.push(slots);
+            }
+
+            jsPDFAutotable(pdf, {
+                head: [
+                    [
+                        {
+                            content: `${ls.listKey(flakes)} - ${globals.flakesPressSlotsFull[globals.flakesPressSlots.indexOf(press)]}`,
+                            colSpan: globals.flakesTowerSlots.length + 2, // + "C1" + "Main"
+                            styles: {
+                                fillColor: [255, 255, 255],
+                                textColor: [0, 0, 0],
+                            },
+                        },
+                    ],
+                    ["C1", "Main", ...globals.flakesTowerSlots],
+                ],
+                body: bodyData,
+                theme: "grid",
+                styles: {
+                    valign: "middle",
+                    halign: "center",
+                    font: "Courier",
+                    fontSize: 12,
+                },
+                headStyles: {
+                    fillColor: [0, 0, 0],
+                    textColor: [255, 255, 255],
+                },
+            });
+        };
+
+        globals.flakesPressSlots.forEach((slot) => {
+            createTable(
+                slot,
+                flakes.data.filter((e) => e.press === slot),
+            );
+        });
+
+        pdf.save(ls.fileName(flakes).replace(/(\.json)$/, ".pdf"));
+    };
+
+    printerButton.style.display = "inline-flex";
+
+    cleanup.push(() => {
+        printerButton.style.display = "none";
+        printerButton.onclick = null;
+    });
 }
 
 function setupAppBarAddButton(flakes: types.SpecialFlakes) {

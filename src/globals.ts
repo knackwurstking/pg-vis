@@ -13,7 +13,7 @@ export const metalSheetSlots = [
 ];
 
 export const flakesTowerSlots: types.SpecialFlakes_TowerSlot[] = ["A", "C", "E", "G", "I", "K"];
-export const flakesPressSlots = ["P0", "P4", "P5"];
+export const flakesPressSlots: types.SpecialFlakes_PressSlot[] = ["P0", "P4", "P5"];
 export const flakesPressSlotsFull = ["Presse 0", "Presse 4", "Presse 5"];
 
 export const store = createStore();
