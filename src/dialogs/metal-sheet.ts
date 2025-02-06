@@ -60,7 +60,7 @@ function init(metalSheet?: types.MetalSheet | null): Promise<types.MetalSheet | 
                 dialog.press.selectedIndex = metalSheet.data.press + 1;
                 dialog.filters.forEach((filter, index) => {
                     filter.querySelector<HTMLInputElement>(`label > span`)!.innerText =
-                        globals.metalSheetSlots[index];
+                        globals.metalSheetSlots[index] || "";
 
                     const checkbox =
                         filter.querySelector<HTMLInputElement>(`input[type="checkbox"]`)!;

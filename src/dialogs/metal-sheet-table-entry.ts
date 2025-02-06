@@ -28,7 +28,7 @@ function init(data?: string[] | null): Promise<string[] | null> {
 
         const initForm = () => {
             dialog.labels.forEach((label, index) => {
-                label.innerText = globals.metalSheetSlots[index];
+                label.innerText = globals.metalSheetSlots[index] || "";
             });
 
             if (!!data) {
