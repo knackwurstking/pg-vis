@@ -97,11 +97,15 @@ function setupAppBarPrinterButton(flakes: types.SpecialFlakes) {
             });
         };
 
-        globals.flakesPressSlots.forEach((slot) => {
+        globals.flakesPressSlots.forEach((slot, index) => {
             createTable(
                 slot,
                 flakes.data.filter((e) => e.press === slot),
             );
+
+            if (index < globals.flakesPressSlots.length - 1) {
+                pdf.addPage();
+            }
         });
 
         pdf.save(ls.fileName(flakes).replace(/(\.json)$/, ".pdf"));
