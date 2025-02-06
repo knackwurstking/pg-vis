@@ -133,6 +133,19 @@ function render(visData: types.VisData) {
 
         item.element.role = "button";
         item.element.style.cursor = "pointer";
+
+        item.element.oncontextmenu = (e) => {
+            e.preventDefault();
+
+            if (confirm(`You want to delete this item?\n${entry.key}\n${entry.value}`)) {
+                visData.data = visData.data.filter((_e, i) => i !== index);
+
+                const ls = listStores.get("vis-data");
+                ls.replaceInStore(visData);
+                reload();
+            }
+        };
+
         item.element.onclick = async () => {
             const newEntry = await dialogs.visDataEntry(entry);
 
