@@ -692,7 +692,12 @@
         </template>
 
         <template name="special-flakes">
-            <ul class="table-container ui-flex-grid" style="--gap: 1.5rem; width: 100%"></ul>
+            <div class="ui-auto-scroll ui-hide-scrollbar" style="width: 100%; height: 100%">
+                <ul
+                    class="table-container ui-flex-grid"
+                    style="--gap: 1.5rem; min-width: 100%; width: fit-content"
+                ></ul>
+            </div>
         </template>
     </body>
 </html>

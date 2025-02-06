@@ -5,7 +5,7 @@ const html = String.raw;
 
 export function table(
     name: string,
-    data: types.SpecialFlakesEntry[],
+    entries: types.SpecialFlakesEntry[],
 ): types.Component<HTMLTableElement, {}> {
     const el = document.createElement("table");
 
@@ -19,15 +19,51 @@ export function table(
             <tr>
                 <th>C1</th>
                 <th>Main</th>
-                ${globals.flakesPressSlots.map((slot) => html`<th>${slot}</th>`).join("")}
+                ${globals.flakesTowerSlots.map((slot) => html`<th>${slot}</th>`).join("")}
             </tr>
         </thead>
 
         <tbody></tbody>
     `;
 
-    const tbody = document.createElement("tbody");
-    // TODO: Continue here
+    const tbody = el.querySelector<HTMLElement>("tbody")!;
+
+    entries.forEach((entry) => {
+        const tr = document.createElement("tr");
+
+        {
+            let td = document.createElement("td");
+            td.innerText = entry.compatatore.toString();
+            tr.appendChild(td);
+
+            td = document.createElement("td");
+            td.innerHTML = html`
+                <span>${entry.primary.percent}%</span>
+                <br />
+                <span>${entry.primary.value}</span>
+            `;
+            tr.appendChild(td);
+
+            globals.flakesTowerSlots.forEach((slot) => {
+                const td = document.createElement("td");
+                tr.appendChild(td);
+
+                const part = entry.secondary.find((e) => e.slot === slot);
+                if (!part) {
+                    td.innerHTML = "-";
+                    return;
+                }
+
+                td.innerHTML = html`
+                    <span>${part.percent}%</span>
+                    <br />
+                    <span>${part.value}</span>
+                `;
+            });
+        }
+
+        tbody.appendChild(tr);
+    });
 
     return {
         element: el,
