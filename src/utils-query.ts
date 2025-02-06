@@ -210,3 +210,19 @@ export function dialog_VisDataEntry(): {
         reset: root.querySelector(`input[type="reset"]`)!,
     };
 }
+
+export function dialog_SpecialFlakesEntry(): {
+    root: HTMLDialogElement;
+    close: HTMLButtonElement;
+    inputs: HTMLDivElement;
+    reset: HTMLInputElement;
+} {
+    const root = document.querySelector<HTMLDialogElement>(`dialog[name="special-flakes-entry"]`)!;
+
+    return {
+        root,
+        close: root.querySelector(`button.close`)!,
+        inputs: root.querySelector(`.inputs`)!,
+        reset: root.querySelector(`input[type="reset"]`)!,
+    };
+}

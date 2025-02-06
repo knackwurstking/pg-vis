@@ -1,6 +1,8 @@
 import * as ui from "ui";
 
+import * as dialogs from "../../../dialogs";
 import * as globals from "../../../globals";
+import * as listStores from "../../../list-stores";
 import * as types from "../../../types";
 import * as utils from "../../../utils";
 import * as query from "../../../utils-query";
@@ -22,6 +24,7 @@ export async function onMount() {
 
     cleanup.push(utils.setAppBarTitle(flakes.title));
 
+    setupAppBarAddButton(flakes);
     render(flakes);
 }
 
@@ -30,20 +33,58 @@ export async function onDestroy() {
     cleanup = [];
 }
 
+function setupAppBarAddButton(flakes: types.SpecialFlakes) {
+    const addButton = query.appBar_ButtonAdd();
+
+    addButton.onclick = async () => {
+        const data: types.SpecialFlakesEntry | null = await dialogs.specialFlakesEntry();
+        if (!data) return;
+        flakes.data.push(data);
+
+        const ls = listStores.get("special");
+        ls.replaceInStore(flakes);
+        reload();
+    };
+
+    addButton.style.display = "inline-flex";
+
+    cleanup.push(() => {
+        addButton.style.display = "none";
+        addButton.onclick = null;
+    });
+}
+
 function render(flakes: types.SpecialFlakes) {
     const el = routerTargetElements();
+
+    el.tableContainer.innerHTML = "";
 
     globals.flakesPressSlots
         .map((slot, index) =>
             create.table(
                 globals.flakesPressSlotsFull[index],
                 flakes.data.filter((entry) => entry.press === slot),
+                async (entries) => {
+                    flakes.data = [
+                        ...flakes.data.filter((entry) => entry.press !== slot),
+                        ...entries,
+                    ];
+
+                    const ls = listStores.get("special");
+                    ls.replaceInStore(flakes);
+                    reload();
+                },
             ),
         )
         .forEach((table) => {
             el.tableContainer.appendChild(table.element);
             cleanup.push(table.destroy);
         });
+}
+
+async function reload() {
+    await onDestroy();
+    await onMount();
 }
 
 function routerTargetElements(): {

@@ -568,6 +568,25 @@
             </form>
         </dialog>
 
+        <dialog name="special-flakes-entry" oncancel="event.preventDefault()">
+            <div class="ui-flex-grid-row">
+                <h4 class="ui-flex-grid-item">Flakes</h4>
+                <button class="close" variant="ghost" color="primary" icon>
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+
+            <form method="dialog">
+                <div class="inputs ui-flex-grid" style="--gap: 1rem"></div>
+
+                <div class="ui-flex-grid-row" style="--justify: flex-end">
+                    <!-- TODO: Delete button -->
+                    <input type="reset" />
+                    <input type="submit" />
+                </div>
+            </form>
+        </dialog>
+
         <template name="gist-ids">
             <ul class="gist-ids ui-flex-grid" style="padding: var(--ui-spacing)"></ul>
         </template>

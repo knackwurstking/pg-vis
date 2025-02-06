@@ -40,6 +40,7 @@ export function specialItem(props: SpecialItemProps): types.Component<HTMLLIElem
 
             return data;
         });
+        location.hash = "";
     };
 
     const deleteButton = el.querySelector<HTMLButtonElement>(`button.delete`)!;
