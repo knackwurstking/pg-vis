@@ -28,43 +28,45 @@ export function table(
 
     const tbody = el.querySelector<HTMLElement>("tbody")!;
 
-    // TODO: Sort entries first for primary percentage
-    entries.forEach((entry) => {
-        const tr = document.createElement("tr");
+    entries
+        .sort((a, b) => (a.primary.value > b.primary.value ? -1 : 1))
+        .sort((a, b) => (a.primary.percent > b.primary.percent ? -1 : 1))
+        .forEach((entry) => {
+            const tr = document.createElement("tr");
 
-        {
-            let td = document.createElement("td");
-            td.innerText = entry.compatatore.toString();
-            tr.appendChild(td);
-
-            td = document.createElement("td");
-            td.innerHTML = html`
-                <span>${entry.primary.percent}%</span>
-                <br />
-                <span>${entry.primary.value}</span>
-            `;
-            tr.appendChild(td);
-
-            globals.flakesTowerSlots.forEach((slot) => {
-                const td = document.createElement("td");
+            {
+                let td = document.createElement("td");
+                td.innerText = entry.compatatore.toString();
                 tr.appendChild(td);
 
-                const part = entry.secondary.find((e) => e.slot === slot);
-                if (!part) {
-                    td.innerHTML = "-";
-                    return;
-                }
-
+                td = document.createElement("td");
                 td.innerHTML = html`
-                    <span>${part.percent}%</span>
+                    <span>${entry.primary.percent}%</span>
                     <br />
-                    <span>${part.value}</span>
+                    <span>${entry.primary.value}</span>
                 `;
-            });
-        }
+                tr.appendChild(td);
 
-        tbody.appendChild(tr);
-    });
+                globals.flakesTowerSlots.forEach((slot) => {
+                    const td = document.createElement("td");
+                    tr.appendChild(td);
+
+                    const part = entry.secondary.find((e) => e.slot === slot);
+                    if (!part) {
+                        td.innerHTML = "-";
+                        return;
+                    }
+
+                    td.innerHTML = html`
+                        <span>${part.percent}%</span>
+                        <br />
+                        <span>${part.value}</span>
+                    `;
+                });
+            }
+
+            tbody.appendChild(tr);
+        });
 
     return {
         element: el,
