@@ -79,7 +79,7 @@ export function dialog_MetalSheet(): {
     format: HTMLInputElement;
     toolID: HTMLInputElement;
     press: HTMLSelectElement;
-    filters: NodeListOf<HTMLInputElement>;
+    filters: NodeListOf<HTMLLIElement>;
     reset: HTMLInputElement;
 } {
     const root = document.querySelector<HTMLDialogElement>(`dialog[name="metal-sheet"]`)!;
@@ -90,7 +90,7 @@ export function dialog_MetalSheet(): {
         format: root.querySelector(`input#metalSheetDialog_Format`)!,
         toolID: root.querySelector(`input#metalSheetDialog_ToolID`)!,
         press: root.querySelector(`select#metalSheetDialog_Press`)!,
-        filters: root.querySelectorAll(`.filters input[type="checkbox"]`),
+        filters: root.querySelectorAll(`.filters .filter`),
         reset: root.querySelector(`input[type="reset"]`)!,
     };
 }
@@ -98,6 +98,7 @@ export function dialog_MetalSheet(): {
 export function dialog_MetalSheetTableEntry(): {
     root: HTMLDialogElement;
     close: HTMLButtonElement;
+    labels: NodeListOf<HTMLLabelElement>;
     inputs: NodeListOf<HTMLInputElement>;
     reset: HTMLInputElement;
 } {
@@ -108,6 +109,7 @@ export function dialog_MetalSheetTableEntry(): {
     return {
         root,
         close: root.querySelector(`button.close`)!,
+        labels: root.querySelectorAll(`label[for]`)!,
         inputs: root.querySelectorAll(`input[type="text"]`)!,
         reset: root.querySelector(`input[type="reset"]`)!,
     };

@@ -1,3 +1,4 @@
+import * as globals from "../globals";
 import * as query from "../utils-query";
 
 function init(data?: string[] | null): Promise<string[] | null> {
@@ -26,6 +27,10 @@ function init(data?: string[] | null): Promise<string[] | null> {
         };
 
         const initForm = () => {
+            dialog.labels.forEach((label, index) => {
+                label.innerText = globals.metalSheetSlots[index];
+            });
+
             if (!!data) {
                 data.forEach((value, index) => {
                     dialog.inputs[index].value = value;

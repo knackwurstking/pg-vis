@@ -3,6 +3,15 @@ import * as ui from "ui";
 import * as listsStore from "./list-stores";
 import * as types from "./types";
 
+export const metalSheetSlots = [
+    "Stärke",
+    "Marke (Höhe)",
+    "Blech Stempel",
+    "Blech Marke",
+    "Stf. P2 - P5",
+    "Stf. P0",
+];
+
 export const flakesTowerSlots = ["A", "C", "E", "G", "I", "K"];
 export const flakesPressSlots = ["P0", "P4", "P5"];
 
