@@ -132,6 +132,7 @@ function render(visData: types.VisData) {
         cleanup.push(item.destroy);
 
         item.element.role = "button";
+        item.element.classList.add("ui-none-select");
         item.element.style.cursor = "pointer";
 
         item.element.oncontextmenu = (e) => {

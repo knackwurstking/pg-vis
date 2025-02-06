@@ -136,8 +136,9 @@ function render(metalSheet: types.MetalSheet) {
         const tr = document.createElement("tr");
         el.tbody.appendChild(tr);
 
-        tr.style.cursor = "pointer";
         tr.role = "button";
+        tr.classList.add("ui-none-select");
+        tr.style.cursor = "pointer";
 
         // Delete row on right click
         tr.oncontextmenu = (e) => {
