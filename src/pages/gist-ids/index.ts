@@ -8,10 +8,8 @@ let cleanup: types.CleanUp[] = [];
 export async function onMount() {
     cleanup.push(utils.setAppBarTitle("Gist IDs"));
 
-    const el = routerTargetElements();
-
-    setupAppBarDevModeButton(el);
-    render(el);
+    setupAppBarDevModeButton();
+    render();
 }
 
 export async function onDestroy() {
@@ -19,10 +17,10 @@ export async function onDestroy() {
     cleanup = [];
 }
 
-function setupAppBarDevModeButton(el: { devModeItems: NodeListOf<Element> }) {
+function setupAppBarDevModeButton() {
     const dataBaseButton = query.appBar_ButtonDataBase();
     dataBaseButton.onclick = async () => {
-        el.devModeItems.forEach((child) => {
+        routerTargetElements().devModeItems.forEach((child) => {
             if ((child as HTMLElement).style.display === "flex") {
                 (child as HTMLElement).style.display = "none";
             } else {
@@ -37,7 +35,7 @@ function setupAppBarDevModeButton(el: { devModeItems: NodeListOf<Element> }) {
     });
 }
 
-function render(el: { gistIDs: HTMLUListElement }) {
+function render() {
     const itemProps: create.GistItemProps[] = [
         {
             title: "Alarm Listen",
@@ -61,10 +59,11 @@ function render(el: { gistIDs: HTMLUListElement }) {
         },
     ];
 
+    const rt = routerTargetElements();
     for (const itemProp of itemProps) {
         const item = create.gistItem(itemProp);
         cleanup.push(item.destroy);
-        el.gistIDs.appendChild(item.element);
+        rt.gistIDs.appendChild(item.element);
     }
 }
 
