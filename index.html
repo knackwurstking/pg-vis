@@ -16,6 +16,16 @@
         <link rel="stylesheet" href="/node_modules/ui/dist/css/main.css" />
         <link rel="stylesheet" href="/src/styles.css" />
 
+        <script>
+            function scrollGroupIntoView(target) {
+                setTimeout(function () {
+                    if (target.hasAttribute("open")) {
+                        target.scrollIntoView();
+                    }
+                });
+            }
+        </script>
+
         <script type="module" src="/src/main.ts" defer></script>
     </head>
 
@@ -105,7 +115,11 @@
                 </div>
 
                 <!-- Alert Lists Group -->
-                <details class="group" name="alert-lists">
+                <details
+                    class="group"
+                    name="alert-lists"
+                    onclick="scrollGroupIntoView(event.currentTarget)"
+                >
                     <summary><h4>Alarm Listen</h4></summary>
 
                     <div class="actions ui-flex-grid-row" style="--justify: flex-end">
@@ -129,7 +143,11 @@
                 </details>
 
                 <!-- Metal Sheets Group -->
-                <details class="group" name="metal-sheets">
+                <details
+                    class="group"
+                    name="metal-sheets"
+                    onclick="scrollGroupIntoView(event.currentTarget)"
+                >
                     <summary><h4>Blech Listen</h4></summary>
 
                     <div class="actions ui-flex-grid-row" style="--justify: flex-end">
@@ -152,7 +170,11 @@
                 </details>
 
                 <!-- VIS Group -->
-                <details class="group" name="vis">
+                <details
+                    class="group"
+                    name="vis"
+                    onclick="scrollGroupIntoView(event.currentTarget)"
+                >
                     <summary><h4>VIS</h4></summary>
 
                     <div class="actions ui-flex-grid-row" style="--justify: flex-end">
@@ -175,7 +197,11 @@
                 </details>
 
                 <!-- VIS Bookmarks Group -->
-                <details class="group" name="vis-bookmarks">
+                <details
+                    class="group"
+                    name="vis-bookmarks"
+                    onclick="scrollGroupIntoView(event.currentTarget)"
+                >
                     <summary><h4>VIS: Bookmarks</h4></summary>
 
                     <div class="ui-flex-grid">
@@ -184,7 +210,11 @@
                 </details>
 
                 <!-- VIS: Data Group -->
-                <details class="group" name="vis-data">
+                <details
+                    class="group"
+                    name="vis-data"
+                    onclick="scrollGroupIntoView(event.currentTarget)"
+                >
                     <summary><h4>VIS: Data</h4></summary>
 
                     <div class="actions ui-flex-grid-row" style="--justify: flex-end">
@@ -207,7 +237,11 @@
                 </details>
 
                 <!-- Special Group -->
-                <details class="group" name="special">
+                <details
+                    class="group"
+                    name="special"
+                    onclick="scrollGroupIntoView(event.currentTarget)"
+                >
                     <summary><h4>Spezial</h4></summary>
 
                     <div class="actions ui-flex-grid-row" style="--justify: flex-end">
