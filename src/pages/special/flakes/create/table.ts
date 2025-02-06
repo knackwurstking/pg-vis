@@ -28,6 +28,7 @@ export function table(
 
     const tbody = el.querySelector<HTMLElement>("tbody")!;
 
+    // TODO: Sort entries first for primary percentage
     entries.forEach((entry) => {
         const tr = document.createElement("tr");
 
