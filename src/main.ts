@@ -339,7 +339,7 @@ drawerGistIDsButton.onclick = () => {
                 group.items.innerHTML = "";
                 for (const list of data.lists) {
                     // Type check of special flakes
-                    const item = drawer.create.specialFlakesItem({ data: list });
+                    const item = drawer.create.specialItem({ data: list });
                     group.items.appendChild(item.element);
                     cleanup.push(item.destroy);
                 }
@@ -349,7 +349,7 @@ drawerGistIDsButton.onclick = () => {
             group.actions.download!.onclick = async () => {
                 try {
                     if (confirm(`Download ZIP?`)) {
-                        await utils.downloadZIP("vis-data");
+                        await utils.downloadZIP("special");
                     }
                 } catch (err) {
                     alert(err);
@@ -358,36 +358,7 @@ drawerGistIDsButton.onclick = () => {
 
             // Initialize action button "import-from-file" - Open file picker
             group.actions.importFromFile!.onclick = () => {
-                utils.importFromFile(".json", "vis-data");
-            };
-
-            // Initialize action button "add" - Create a new vis list
-            group.actions.add!.onclick = async () => {
-                // Open dialog choosing load from file or create new vis list
-                const data = await dialogs.visData();
-                const titleInput = query.dialog_VISData().inputs[0];
-
-                if (!data) {
-                    titleInput.ariaInvalid = null;
-                    return;
-                }
-
-                if (!data.title) {
-                    titleInput.ariaInvalid = "";
-                    group.actions.add!.click();
-                    return;
-                }
-
-                const ls = listStores.get("vis-data");
-                try {
-                    ls.addToStore([data]);
-                    titleInput.ariaInvalid = null;
-                } catch (err) {
-                    titleInput.ariaInvalid = "";
-                    alert(err);
-                    group.actions.add!.click();
-                    return;
-                }
+                utils.importFromFile(".json", "special");
             };
         },
         true,
