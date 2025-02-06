@@ -1,9 +1,10 @@
 import * as ui from "ui";
 
 import * as globals from "../../../globals";
-import * as utils from "../../../utils";
 import * as types from "../../../types";
+import * as utils from "../../../utils";
 import * as query from "../../../utils-query";
+import * as create from "./create";
 
 interface Param {
     listKey?: string;
@@ -32,11 +33,20 @@ export async function onDestroy() {
 function render(flakes: types.SpecialFlakes) {
     const el = routerTargetElements();
 
-    // TODO: ...
+    globals.flakesPressSlots
+        .map((slot) => create.table(flakes.data.filter((entry) => entry.press === slot)))
+        .forEach((table) => {
+            el.tableContainer.appendChild(table.element);
+            cleanup.push(table.destroy);
+        });
 }
 
-function routerTargetElements() {
-    //const rt = query.routerTarget();
+function routerTargetElements(): {
+    tableContainer: HTMLUListElement;
+} {
+    const rt = query.routerTarget();
 
-    return {};
+    return {
+        tableContainer: rt.querySelector(`.table-container`)!,
+    };
 }

@@ -3,6 +3,9 @@ import * as ui from "ui";
 import * as listsStore from "./list-stores";
 import * as types from "./types";
 
+export const flakesTowerSlots = ["A", "C", "E", "G", "I", "K"];
+export const flakesPressSlots = ["P0", "P4", "P5"];
+
 export const store = createStore();
 
 export function getVisData(listKey: string): types.VisData | null {
