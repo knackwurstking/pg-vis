@@ -38,6 +38,7 @@ export function table(
         const tr = document.createElement("tr");
 
         if (!!onUpdated) {
+            tr.role = "button";
             tr.classList.add("ui-none-select");
             tr.style.cursor = "pointer";
 
