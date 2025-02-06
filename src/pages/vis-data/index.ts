@@ -131,6 +131,7 @@ function render(visData: types.VisData) {
         el.dataList.appendChild(item.element);
         cleanup.push(item.destroy);
 
+        item.element.role = "button";
         item.element.style.cursor = "pointer";
         item.element.onclick = async () => {
             const newEntry = await dialogs.visDataEntry(entry);
