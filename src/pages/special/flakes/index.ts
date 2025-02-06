@@ -34,7 +34,12 @@ function render(flakes: types.SpecialFlakes) {
     const el = routerTargetElements();
 
     globals.flakesPressSlots
-        .map((slot) => create.table(flakes.data.filter((entry) => entry.press === slot)))
+        .map((slot, index) =>
+            create.table(
+                globals.flakesPressSlotsFull[index],
+                flakes.data.filter((entry) => entry.press === slot),
+            ),
+        )
         .forEach((table) => {
             el.tableContainer.appendChild(table.element);
             cleanup.push(table.destroy);
