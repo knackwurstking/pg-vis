@@ -50,7 +50,7 @@ function setupAppBarBookmarkButton(product: types.Product) {
     const button = query.appBar_ButtonBookmarks();
     button.style.display = "inline-flex";
 
-    button.onclick = () => dialogs.productBookmark(product);
+    button.onclick = () => dialogs.productBookmark(product).utils!.open();
 
     cleanup.push(() => {
         button.onclick = null;

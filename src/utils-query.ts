@@ -77,22 +77,6 @@ export function drawerBackdrop(): HTMLElement {
 
 // Dialog Elements
 
-export function dialog_ProductBookmark(): {
-    root: HTMLDialogElement;
-    close: HTMLButtonElement;
-    title: HTMLElement;
-    checkboxes: HTMLUListElement;
-} {
-    const root = document.querySelector<HTMLDialogElement>(`dialog[name="product-bookmark"]`)!;
-
-    return {
-        root,
-        close: root.querySelector(`button.close`)!,
-        title: root.querySelector(`.title`)!,
-        checkboxes: root.querySelector(`.checkboxes`)!,
-    };
-}
-
 export function dialog_VisDataEntry(): {
     root: HTMLDialogElement;
     close: HTMLButtonElement;
