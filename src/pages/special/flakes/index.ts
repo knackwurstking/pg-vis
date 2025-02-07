@@ -123,7 +123,8 @@ function setupAppBarAddButton(flakes: types.SpecialFlakes) {
     const addButton = query.appBar_ButtonAdd();
 
     addButton.onclick = async () => {
-        const data: types.SpecialFlakesEntry | null = await dialogs.specialFlakesEntry();
+        const data = await dialogs.specialFlakesEntry().utils!.open();
+
         if (!data) return;
         flakes.data.push(data);
 

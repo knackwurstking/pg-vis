@@ -85,23 +85,24 @@ function setupAppBarAddButton(visData: types.VisData) {
     const addButton = query.appBar_ButtonAdd();
 
     addButton.onclick = async () => {
-        const data: types.VisDataEntry | null = await dialogs.visDataEntry();
-        const valueInput = query.dialog_VisDataEntry().inputs[1];
+        const dialog = dialogs.visDataEntry();
+        const data = await dialog.utils!.open();
+        const valueInputElement = dialog.query!.inputs[1];
 
         if (!data) {
-            valueInput.ariaInvalid = null;
+            valueInputElement.ariaInvalid = null;
             return;
         }
 
         // Validate data, "value" cannot be empty
         if (!data.value) {
             // Set input invalid and reopen
-            valueInput.ariaInvalid = "";
+            valueInputElement.ariaInvalid = "";
             addButton.onclick!(new MouseEvent("click"));
             return;
         }
 
-        valueInput.ariaInvalid = null;
+        valueInputElement.ariaInvalid = null;
         visData.data.push(data);
 
         const ls = listStores.get("vis-data");
@@ -148,12 +149,22 @@ function render(visData: types.VisData) {
         };
 
         item.element.onclick = async () => {
-            const newEntry = await dialogs.visDataEntry(entry);
+            const dialog = dialogs.visDataEntry(entry);
+            const newEntry = await dialog.utils!.open();
+            const valueInputElement = dialog.query!.inputs[1];
 
             if (!newEntry) {
+                valueInputElement.ariaInvalid = null;
                 return;
             }
 
+            if (!newEntry.value) {
+                valueInputElement.ariaInvalid = "";
+                item.element.onclick!(new MouseEvent("click"));
+                return;
+            }
+
+            valueInputElement.ariaInvalid = null;
             const ls = listStores.get("vis-data");
             visData.data[index] = newEntry;
             ls.replaceInStore(visData);

@@ -9,7 +9,7 @@ export interface AlertListItemProps {
     data: types.AlertList;
 }
 
-export function alertListItem(props: AlertListItemProps): types.Component<HTMLLIElement, {}> {
+export function alertListItem(props: AlertListItemProps): types.Component<HTMLLIElement> {
     const el = document.createElement("li");
 
     el.className = "ui-flex justify-between";

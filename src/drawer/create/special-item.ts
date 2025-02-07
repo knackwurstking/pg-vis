@@ -9,7 +9,7 @@ export interface SpecialItemProps {
     data: types.Special;
 }
 
-export function specialItem(props: SpecialItemProps): types.Component<HTMLLIElement, {}> {
+export function specialItem(props: SpecialItemProps): types.Component<HTMLLIElement> {
     const el = document.createElement("li");
 
     el.className = "ui-flex justify-between";

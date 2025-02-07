@@ -9,7 +9,7 @@ export interface GistItemProps {
     storeKey: types.DrawerGroups;
 }
 
-export function gistItem(props: GistItemProps): types.Component<HTMLLIElement, {}> {
+export function gistItem(props: GistItemProps): types.Component<HTMLLIElement> {
     const el = document.createElement("li");
 
     el.className = "gist-item ui-flex-grid-item ui-border";

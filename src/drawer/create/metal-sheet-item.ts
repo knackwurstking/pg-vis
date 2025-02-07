@@ -9,7 +9,7 @@ export interface MetalSheetItemProps {
     data: types.MetalSheet;
 }
 
-export function metalSheetItem(props: MetalSheetItemProps): types.Component<HTMLLIElement, {}> {
+export function metalSheetItem(props: MetalSheetItemProps): types.Component<HTMLLIElement> {
     const el = document.createElement("li");
 
     el.className = "ui-flex justify-between";

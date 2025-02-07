@@ -1,56 +1,80 @@
-import * as query from "../utils-query";
 import * as types from "../types";
 
-function init(product?: types.VisDataEntry | null): Promise<types.VisDataEntry | null> {
-    return new Promise((resolve, _reject) => {
-        const dialog = query.dialog_VisDataEntry();
+function init(product?: types.VisDataEntry | null): types.Component<
+    HTMLDialogElement,
+    {
+        close: HTMLButtonElement;
+        inputs: NodeListOf<HTMLInputElement>;
+        reset: HTMLInputElement;
+    },
+    { open: () => Promise<types.VisDataEntry | null> }
+> {
+    const root = document.querySelector<HTMLDialogElement>(`dialog[name="vis-data-entry"]`)!;
 
-        let canceled = false;
-        dialog.close.onclick = () => {
-            canceled = true;
-            dialog.root.close();
-        };
+    const query = {
+        close: root.querySelector<HTMLButtonElement>(`button.close`)!,
+        inputs: root.querySelectorAll<HTMLInputElement>(`.vis-data-entry-input`)!,
+        reset: root.querySelector<HTMLInputElement>(`input[type="reset"]`)!,
+    };
 
-        dialog.root.onclose = () => {
-            if (canceled) {
-                resolve(null);
-                return;
-            }
-
-            // Get the values from the dialog form inputs
-            const result: types.VisDataEntry = {
-                key: dialog.inputs[0].value || null,
-                value: dialog.inputs[1].value,
-                lotto: dialog.inputs[2].value || null,
-                format: dialog.inputs[3].value || null,
-                thickness: dialog.inputs[4].value || null,
-                stamp: dialog.inputs[5].value || null,
+    const open: () => Promise<types.VisDataEntry | null> = () => {
+        return new Promise((resolve, _reject) => {
+            let canceled = false;
+            query.close.onclick = () => {
+                canceled = true;
+                root.close();
             };
 
-            resolve(result);
-        };
+            root.onclose = () => {
+                if (canceled) {
+                    resolve(null);
+                    return;
+                }
 
-        const initForm = () => {
-            if (!!product) {
-                dialog.inputs[0].value = product.key || "";
-                dialog.inputs[1].value = product.value || "";
-                dialog.inputs[2].value = product.lotto || "";
-                dialog.inputs[3].value = product.format || "";
-                dialog.inputs[4].value = product.thickness || "";
-                dialog.inputs[5].value = product.stamp || "";
-            }
-        };
+                // Get the values from the dialog form inputs
+                const result: types.VisDataEntry = {
+                    key: query.inputs[0].value || null,
+                    value: query.inputs[1].value,
+                    lotto: query.inputs[2].value || null,
+                    format: query.inputs[3].value || null,
+                    thickness: query.inputs[4].value || null,
+                    stamp: query.inputs[5].value || null,
+                };
 
-        initForm();
+                resolve(result);
+            };
 
-        dialog.reset.onclick = (e) => {
-            if (!product) return;
-            e.preventDefault();
+            const initForm = () => {
+                if (!!product) {
+                    query.inputs[0].value = product.key || "";
+                    query.inputs[1].value = product.value || "";
+                    query.inputs[2].value = product.lotto || "";
+                    query.inputs[3].value = product.format || "";
+                    query.inputs[4].value = product.thickness || "";
+                    query.inputs[5].value = product.stamp || "";
+                }
+            };
+
             initForm();
-        };
 
-        dialog.root.showModal();
-    });
+            query.reset.onclick = (e) => {
+                if (!product) return;
+                e.preventDefault();
+                initForm();
+            };
+
+            root.showModal();
+        });
+    };
+
+    return {
+        element: root,
+        query,
+        utils: {
+            open,
+        },
+        destroy() {},
+    };
 }
 
 export default init;

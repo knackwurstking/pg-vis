@@ -55,7 +55,7 @@ export function table(
             };
 
             tr.onclick = async () => {
-                const updatedEntry = await dialogs.specialFlakesEntry(entry);
+                const updatedEntry = await dialogs.specialFlakesEntry(entry).utils!.open();
                 if (!updatedEntry) return;
                 entries[index] = updatedEntry;
                 onUpdated(entries);

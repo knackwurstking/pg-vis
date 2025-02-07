@@ -9,7 +9,7 @@ export interface VISItemProps {
     data: types.Vis;
 }
 
-export function visItem(props: VISItemProps): types.Component<HTMLLIElement, {}> {
+export function visItem(props: VISItemProps): types.Component<HTMLLIElement> {
     const el = document.createElement("li");
 
     el.className = "ui-flex justify-between";

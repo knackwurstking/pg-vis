@@ -74,37 +74,3 @@ export function drawerGroup(name: types.DrawerGroups): {
 export function drawerBackdrop(): HTMLElement {
     return document.querySelector(`div.ui-drawer-backdrop`)!;
 }
-
-// Dialog Elements
-
-export function dialog_VisDataEntry(): {
-    root: HTMLDialogElement;
-    close: HTMLButtonElement;
-    inputs: NodeListOf<HTMLInputElement>;
-    reset: HTMLInputElement;
-} {
-    const root = document.querySelector<HTMLDialogElement>(`dialog[name="vis-data-entry"]`)!;
-
-    return {
-        root,
-        close: root.querySelector(`button.close`)!,
-        inputs: root.querySelectorAll(`.vis-data-entry-input`)!,
-        reset: root.querySelector(`input[type="reset"]`)!,
-    };
-}
-
-export function dialog_SpecialFlakesEntry(): {
-    root: HTMLDialogElement;
-    close: HTMLButtonElement;
-    inputs: HTMLDivElement;
-    reset: HTMLInputElement;
-} {
-    const root = document.querySelector<HTMLDialogElement>(`dialog[name="special-flakes-entry"]`)!;
-
-    return {
-        root,
-        close: root.querySelector(`button.close`)!,
-        inputs: root.querySelector(`.inputs`)!,
-        reset: root.querySelector(`input[type="reset"]`)!,
-    };
-}

@@ -8,7 +8,7 @@ export interface GistItemProps {
     renderTags: boolean;
 }
 
-export function dataItem(props: GistItemProps): types.Component<HTMLLIElement, {}> {
+export function dataItem(props: GistItemProps): types.Component<HTMLLIElement> {
     const li = document.createElement("li");
     li.innerHTML = html`<div class="ui-flex-grid"></div>`;
 
