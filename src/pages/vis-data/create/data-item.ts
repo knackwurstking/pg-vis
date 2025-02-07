@@ -61,7 +61,7 @@ export function dataItem(props: GistItemProps): types.Component<HTMLLIElement> {
         if (!!props.entry.thickness) {
             gridRow.innerHTML += html`
                 <div class="ui-flex-grid-item" style="--flex: 0;">
-                    <code>${props.entry.thickness}</code>
+                    <code>${props.entry.thickness}</code><span style="display: none">mm</span>
                 </div>
             `;
         }
