@@ -5,6 +5,10 @@
 > - Replace "pg-vis.github.io" with "pg-vis-dev.github.io"
 > - Change store prefix from "pg-vis:" to "pg-vis-dev:"
 
+## v2.0.4 [2025-02-07]
+
+- Fixed vis conversion for thickness floats
+
 ## v2.0.3 [2025-02-07]
 
 - Re-render metal sheet page after edit sheet dialog submission if list key remains unchanged.
@@ -293,7 +297,7 @@
 
 - Add pull and push handler for Gist IDs
 
-  - Allow "push" to files instead of gist
+    - Allow "push" to files instead of gist
 
 ## v0.0.16 — [2024-07-05]
 
