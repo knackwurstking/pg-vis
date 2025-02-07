@@ -197,7 +197,7 @@ drawerGistIDsButton.onclick = () => {
 
             // Initialize action button "import-from-file" - Open file picker
             group.actions.importFromFile!.onclick = () => {
-                utils.importFromFile(".txt", "vis");
+                utils.importFromFile(".txt,.json", "vis");
             };
 
             // Initialize action button "add" - Create a new vis list

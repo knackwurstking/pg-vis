@@ -49,7 +49,7 @@ export async function downloadZIP(storeKey: types.DrawerGroups) {
     FileSaver.saveAs(await zip.generateAsync({ type: "blob" }), listsStore.zipFileName());
 }
 
-export async function importFromFile(fileType: ".txt" | ".json", storeKey: types.DrawerGroups) {
+export async function importFromFile(fileType: string, storeKey: types.DrawerGroups) {
     const input = document.createElement("input");
 
     input.type = "file";
