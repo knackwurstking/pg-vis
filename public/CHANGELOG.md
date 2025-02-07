@@ -7,7 +7,7 @@
 
 ## v2.0.4 [2025-02-07]
 
-- Fixed metal sheet entry dialog, name field removed
+- Fixed metal sheet entry dialog form input for thickness
 - Fixed vis conversion for thickness floats
 
 ## v2.0.3 [2025-02-07]
@@ -298,7 +298,7 @@
 
 - Add pull and push handler for Gist IDs
 
-  - Allow "push" to files instead of gist
+    - Allow "push" to files instead of gist
 
 ## v0.0.16 — [2024-07-05]
 
