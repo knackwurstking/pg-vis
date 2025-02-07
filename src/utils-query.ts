@@ -77,28 +77,6 @@ export function drawerBackdrop(): HTMLElement {
 
 // Dialog Elements
 
-export function dialog_MetalSheet(): {
-    root: HTMLDialogElement;
-    close: HTMLButtonElement;
-    format: HTMLInputElement;
-    toolID: HTMLInputElement;
-    press: HTMLSelectElement;
-    filters: NodeListOf<HTMLLIElement>;
-    reset: HTMLInputElement;
-} {
-    const root = document.querySelector<HTMLDialogElement>(`dialog[name="metal-sheet"]`)!;
-
-    return {
-        root,
-        close: root.querySelector(`button.close`)!,
-        format: root.querySelector(`input#metalSheetDialog_Format`)!,
-        toolID: root.querySelector(`input#metalSheetDialog_ToolID`)!,
-        press: root.querySelector(`select#metalSheetDialog_Press`)!,
-        filters: root.querySelectorAll(`.filters .filter`),
-        reset: root.querySelector(`input[type="reset"]`)!,
-    };
-}
-
 export function dialog_MetalSheetTableEntry(): {
     root: HTMLDialogElement;
     close: HTMLButtonElement;
@@ -164,22 +142,6 @@ export function dialog_VISData(): {
         close: root.querySelector(`button.close`)!,
         inputs: root.querySelectorAll(`input[type="text"]`)!,
         reset: root.querySelector(`input[type="reset"]`)!,
-    };
-}
-
-export function dialog_Choose(): {
-    root: HTMLDialogElement;
-    close: HTMLButtonElement;
-    title: HTMLElement;
-    choices: HTMLDivElement;
-} {
-    const root = document.querySelector<HTMLDialogElement>(`dialog[name="choose"]`)!;
-
-    return {
-        root,
-        close: root.querySelector(`button.close`)!,
-        title: root.querySelector(`.title`)!,
-        choices: root.querySelector(`.choices`)!,
     };
 }
 

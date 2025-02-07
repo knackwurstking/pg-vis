@@ -1,86 +1,117 @@
 import * as globals from "../globals";
 import * as types from "../types";
-import * as query from "../utils-query";
 
-function init(metalSheet?: types.MetalSheet | null): Promise<types.MetalSheet | null> {
-    return new Promise((resolve, _reject) => {
-        // Open the edit metal sheet dialog for changing "format", "toolID" and filters
-        const dialog = query.dialog_MetalSheet();
+function init(metalSheet?: types.MetalSheet | null): types.Component<
+    HTMLDialogElement,
+    {
+        close: HTMLButtonElement;
+        format: HTMLInputElement;
+        toolID: HTMLInputElement;
+        press: HTMLSelectElement;
+        filters: NodeListOf<HTMLLIElement>;
+        reset: HTMLInputElement;
+    },
+    { open: () => Promise<types.MetalSheet | null> }
+> {
+    const root = document.querySelector<HTMLDialogElement>(`dialog[name="metal-sheet"]`)!;
 
-        let canceled = false;
-        dialog.close.onclick = () => {
-            canceled = true;
-            dialog.root.close();
-        };
+    const query = {
+        close: root.querySelector<HTMLButtonElement>(`button.close`)!,
+        format: root.querySelector<HTMLInputElement>(`input#metalSheetDialog_Format`)!,
+        toolID: root.querySelector<HTMLInputElement>(`input#metalSheetDialog_ToolID`)!,
+        press: root.querySelector<HTMLSelectElement>(`select#metalSheetDialog_Press`)!,
+        filters: root.querySelectorAll<HTMLLIElement>(`.filters .filter`)!,
+        reset: root.querySelector<HTMLInputElement>(`input[type="reset"]`)!,
+    };
 
-        dialog.root.onclose = () => {
-            if (canceled) {
-                resolve(null);
-                return;
-            }
+    const open: () => Promise<types.MetalSheet | null> = () => {
+        return new Promise((resolve, _reject) => {
+            let canceled = false;
+            query.close.onclick = () => {
+                canceled = true;
+                root.close();
+            };
 
-            // Get the values from the dialog form inputs
-            const format = dialog.format.value;
-            const toolID = dialog.toolID.value;
-            const press = parseInt(
-                (dialog.press.children[dialog.press.selectedIndex] as HTMLOptionElement).value,
-                10,
-            );
-
-            // Get filter from the dialog form inputs
-            const filteredIndexes: number[] = [];
-            dialog.filters.forEach((filter) => {
-                const checkbox = filter.querySelector<HTMLInputElement>(`input[type="checkbox"]`)!;
-
-                if (checkbox.checked) {
+            root.onclose = () => {
+                if (canceled) {
+                    resolve(null);
                     return;
                 }
 
-                const indexToHide = parseInt(checkbox.getAttribute("data-index")!, 10);
-                filteredIndexes!.push(indexToHide);
-            });
+                // Get the values from the dialog form inputs
+                const format = query.format.value;
+                const toolID = query.toolID.value;
+                const press = parseInt(
+                    (query.press.children[query.press.selectedIndex] as HTMLOptionElement).value,
+                    10,
+                );
 
-            resolve({
-                format,
-                toolID,
-                data: {
-                    press: press,
-                    table: {
-                        filter: filteredIndexes,
-                        data: metalSheet?.data.table.data || [],
-                    },
-                },
-            });
-        };
-
-        const initForm = () => {
-            if (!!metalSheet) {
-                dialog.format.value = metalSheet.format;
-                dialog.toolID.value = metalSheet.toolID;
-                dialog.press.selectedIndex = metalSheet.data.press + 1;
-                dialog.filters.forEach((filter, index) => {
-                    filter.querySelector<HTMLInputElement>(`label > span`)!.innerText =
-                        globals.metalSheetSlots[index] || "";
-
+                // Get filter from the dialog form inputs
+                const filteredIndexes: number[] = [];
+                query.filters.forEach((filter) => {
                     const checkbox =
                         filter.querySelector<HTMLInputElement>(`input[type="checkbox"]`)!;
 
+                    if (checkbox.checked) {
+                        return;
+                    }
+
                     const indexToHide = parseInt(checkbox.getAttribute("data-index")!, 10);
-                    checkbox.checked = !metalSheet.data.table.filter?.includes(indexToHide);
+                    filteredIndexes!.push(indexToHide);
                 });
-            }
-        };
 
-        initForm();
+                resolve({
+                    format,
+                    toolID,
+                    data: {
+                        press: press,
+                        table: {
+                            filter: filteredIndexes,
+                            data: metalSheet?.data.table.data || [],
+                        },
+                    },
+                });
+            };
 
-        dialog.reset.onclick = (e) => {
-            if (!metalSheet) return;
-            e.preventDefault();
+            const initForm = () => {
+                if (!!metalSheet) {
+                    query.format.value = metalSheet.format;
+                    query.toolID.value = metalSheet.toolID;
+                    query.press.selectedIndex = metalSheet.data.press + 1;
+
+                    query.filters.forEach((filter, index) => {
+                        filter.querySelector<HTMLInputElement>(`label > span`)!.innerText =
+                            globals.metalSheetSlots[index] || "";
+
+                        const checkbox =
+                            filter.querySelector<HTMLInputElement>(`input[type="checkbox"]`)!;
+
+                        const indexToHide = parseInt(checkbox.getAttribute("data-index")!, 10);
+                        checkbox.checked = !metalSheet.data.table.filter?.includes(indexToHide);
+                    });
+                }
+            };
+
             initForm();
-        };
 
-        dialog.root.showModal();
-    });
+            query.reset.onclick = (e) => {
+                if (!metalSheet) return;
+                e.preventDefault();
+                initForm();
+            };
+
+            root.showModal();
+        });
+    };
+
+    return {
+        element: root,
+        query,
+        utils: {
+            open,
+        },
+        destroy() {},
+    };
 }
 
 export default init;

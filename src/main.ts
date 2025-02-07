@@ -3,13 +3,13 @@ import "bootstrap-icons/font/bootstrap-icons.min.css";
 import * as ui from "ui";
 import { registerSW } from "virtual:pwa-register";
 
-import * as utils from "./utils";
 import * as dialogs from "./dialogs";
 import * as drawer from "./drawer";
 import * as globals from "./globals";
 import * as listStores from "./list-stores";
 import * as pages from "./pages";
 import * as types from "./types";
+import * as utils from "./utils";
 import * as query from "./utils-query";
 
 // PWA Updates
@@ -132,22 +132,22 @@ drawerGistIDsButton.onclick = () => {
 
             // This will open the metal-sheet dialog
             group.actions.add!.onclick = async () => {
-                const data = await dialogs.metalSheet();
-                const formatInput = query.dialog_MetalSheet().format;
+                const dialog = dialogs.metalSheet();
+                const data = await dialog.utils!.open();
 
                 if (!data) {
-                    formatInput.ariaInvalid = null;
+                    dialog.query!.format.ariaInvalid = null;
                     return;
                 }
 
                 // Format should not be empty
                 if (!data.format) {
                     group.actions.add!.click();
-                    formatInput.ariaInvalid = "";
+                    dialog.query!.format.ariaInvalid = "";
                     return;
                 }
 
-                formatInput.ariaInvalid = null;
+                dialog.query!.format.ariaInvalid = null;
 
                 const ls = listStores.get("metal-sheets");
                 try {

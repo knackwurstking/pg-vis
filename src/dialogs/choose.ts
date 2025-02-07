@@ -1,41 +1,78 @@
-import * as query from "../utils-query";
+import * as types from "../types";
 
-function init(title: string, choices: string[]): Promise<string | null> {
-    return new Promise((resolve, _reject) => {
-        const dialog = query.dialog_Choose();
+function init(
+    title: string,
+    choices: string[],
+): types.Component<
+    HTMLDialogElement,
+    {
+        close: () => HTMLButtonElement;
+        title: () => HTMLElement;
+        choices: () => HTMLElement;
+    },
+    {
+        open: () => Promise<string | null>;
+    }
+> {
+    const root = document.querySelector<HTMLDialogElement>(`dialog[name="choose"]`)!;
 
-        let currentChoice: string | null = null;
+    const query = {
+        close(): HTMLButtonElement {
+            return root.querySelector(`button.close`)!;
+        },
+        title(): HTMLElement {
+            return root.querySelector(`.title`)!;
+        },
+        choices(): HTMLElement {
+            return root.querySelector(`.choices`)!;
+        },
+    };
 
-        dialog.close.onclick = () => {
-            dialog.root.close();
-        };
+    const open: () => Promise<string | null> = () => {
+        return new Promise((resolve, _reject) => {
+            let currentChoice: string | null = null;
 
-        dialog.root.onclose = () => {
-            resolve(currentChoice);
-        };
-
-        dialog.title.innerText = title;
-
-        // Create dialog button for each choice
-        dialog.choices.innerHTML = "";
-        for (const choice of choices) {
-            const button = document.createElement("button");
-
-            button.innerText = choice;
-
-            button.setAttribute("variant", "ghost");
-            button.setAttribute("color", "secondary");
-
-            button.onclick = () => {
-                currentChoice = button.innerText;
-                dialog.root.close();
+            query.close().onclick = () => {
+                root.close();
             };
 
-            dialog.choices.appendChild(button);
-        }
+            root.onclose = () => {
+                resolve(currentChoice);
+            };
 
-        dialog.root.showModal();
-    });
+            query.title().innerText = title;
+
+            // Create dialog button for each choice
+            const choicesElement = query.choices();
+            choicesElement.innerHTML = "";
+            for (const choice of choices) {
+                const button = document.createElement("button");
+
+                button.innerText = choice;
+
+                button.setAttribute("variant", "ghost");
+                button.setAttribute("color", "secondary");
+
+                button.onclick = () => {
+                    currentChoice = button.innerText;
+                    root.close();
+                };
+
+                choicesElement.appendChild(button);
+            }
+
+            root.showModal();
+        });
+    };
+
+    return {
+        element: root,
+        query,
+        utils: {
+            open,
+        },
+        destroy() {},
+    };
 }
 
 export default init;

@@ -105,21 +105,21 @@ function setupAppBarEditSheetButton(metalSheet: types.MetalSheet) {
     // Enable app bar button for editing the current sheet
     const listEditButton = query.appBar_ButtonListEdit();
     listEditButton.onclick = async () => {
-        const data = await dialogs.metalSheet(metalSheet);
-        const formatInput = query.dialog_MetalSheet().format;
+        const dialog = dialogs.metalSheet(metalSheet);
+        const data = await dialog.utils?.open();
 
         if (!data) {
-            formatInput.ariaInvalid = null;
+            dialog.query!.format.ariaInvalid = null;
             return;
         }
 
         if (!data.format) {
             listEditButton.click();
-            formatInput.ariaInvalid = "";
+            dialog.query!.format.ariaInvalid = "";
             return;
         }
 
-        formatInput.ariaInvalid = null;
+        dialog.query!.format.ariaInvalid = null;
 
         try {
             const ls = listStores.get("metal-sheets");

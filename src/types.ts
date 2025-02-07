@@ -20,9 +20,14 @@ export interface Bookmarks {
     data: Product[];
 }
 
-export interface Component<T extends HTMLElement, E extends { [key: string]: () => HTMLElement }> {
+export interface Component<
+    T extends HTMLElement,
+    E = { [key: string]: () => HTMLElement },
+    C = { [key: string]: any },
+> {
     element: T;
     query?: E;
+    utils?: C;
     destroy(): void;
 }
 

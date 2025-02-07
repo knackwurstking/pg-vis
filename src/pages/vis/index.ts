@@ -124,7 +124,9 @@ function render(vis: types.Vis, listKey: string) {
             item.element.oncontextmenu = async (e) => {
                 e.preventDefault();
 
-                const choice = await dialogs.choose(`${product.lotto}`, ["Bearbeiten", "Löschen"]);
+                const choice = await dialogs
+                    .choose(`${product.lotto}`, ["Bearbeiten", "Löschen"])
+                    .utils!.open();
 
                 switch (choice) {
                     case "Bearbeiten":
