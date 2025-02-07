@@ -87,8 +87,7 @@ export function getAlert(listKey: string, index: number): types.Alert | null {
 }
 
 function createStore(): types.PGStore {
-    console.debug("create store");
-    const storePrefix = "pg-vis-dev:";
+    const storePrefix = "pg-vis:";
     const store: types.PGStore = new ui.Store(storePrefix);
 
     store.set("alert-lists", { gist: null, lists: [] }, true);
