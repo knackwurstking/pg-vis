@@ -44,7 +44,7 @@ export function toVis(dataString: string): types.Vis | null {
         }
         product.format = fixFormatString(product.format);
 
-        product.thickness = parseFloat(lineTabSplit[3] || "-1");
+        product.thickness = parseFloat(lineTabSplit[3].replace(/,/g, ".") || "-1");
         if (product.thickness === -1) {
             throw new Error(`product thickness not found in "${line}"`);
         }
@@ -68,8 +68,8 @@ export function fixFormatString(format: string): string {
         const wSuffix = formatSplit[0].match(/[0-9]+(.*)/i)?.[1] || "";
         const hSuffix = formatSplit[1].match(/[0-9]+(.*)/i)?.[1] || "";
 
-        const w = parseFloat(formatSplit[0]);
-        const h = parseFloat(formatSplit[1]);
+        const w = parseFloat(formatSplit[0].replace(/,/g, "."));
+        const h = parseFloat(formatSplit[1].replace(/,/g, "."));
         format = w > h ? `${w}${wSuffix}X${h}${hSuffix}` : `${h}${wSuffix}X${w}${hSuffix}`;
     } catch (err) {
         console.warn(`Fix product format "${format}": ${err}`);
