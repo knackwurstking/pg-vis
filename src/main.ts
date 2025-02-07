@@ -133,25 +133,18 @@ drawerGistIDsButton.onclick = () => {
             // This will open the metal-sheet dialog
             group.actions.add!.onclick = async () => {
                 const dialog = dialogs.metalSheet();
-                const data = await dialog.utils!.open(); // TODO: Use dialog validations method
 
-                if (!data) {
-                    dialog.query!.format.ariaInvalid = null;
-                    return;
-                }
+                const data = await dialog.utils!.open();
+                if (!data) return;
 
                 // Format should not be empty
-                if (!data.format) {
+                if (!dialog.utils!.validate()) {
                     group.actions.add!.click();
-                    dialog.query!.format.ariaInvalid = "";
                     return;
                 }
 
-                dialog.query!.format.ariaInvalid = null;
-
-                const ls = listStores.get("metal-sheets");
                 try {
-                    ls.addToStore([data]);
+                    listStores.get("metal-sheets").addToStore([data]);
                 } catch (err) {
                     alert(err);
                     group.actions.add!.click();
@@ -292,26 +285,22 @@ drawerGistIDsButton.onclick = () => {
 
             // Initialize action button "add" - Create a new vis list
             group.actions.add!.onclick = async () => {
-                const dialog = dialogs.visData(); // TODO: Use dialog validations method
-                const data = await dialog.utils!.open();
+                const dialog = dialogs.visData();
 
+                const data = await dialog.utils!.open();
                 if (!data) {
-                    dialog.query!.inputs[0].ariaInvalid = null;
                     return;
                 }
 
-                if (!data.title) {
-                    dialog.query!.inputs[0].ariaInvalid = "";
+                if (!dialog.utils!.validate()) {
                     group.actions.add!.click();
                     return;
                 }
 
-                const ls = listStores.get("vis-data");
                 try {
-                    ls.addToStore([data]);
-                    dialog.query!.inputs[0].ariaInvalid = null;
+                    listStores.get("vis-data").addToStore([data]);
                 } catch (err) {
-                    dialog.query!.inputs[0].ariaInvalid = "";
+                    dialog.query!.inputs[0].ariaInvalid = ""; // title input element
                     alert(err);
                     group.actions.add!.click();
                     return;

@@ -51,14 +51,21 @@ function setupAppBarEditButton(visData: types.VisData) {
     const listEditButton = query.appBar_ButtonListEdit();
 
     listEditButton.onclick = async () => {
-        const data = await dialogs.visData(visData).utils!.open(); // TODO: Use dialog validations method
+        const dialog = dialogs.visData(visData);
 
+        const data = await dialog.utils!.open();
         if (!data) {
+            return;
+        }
+
+        if (!dialog.utils!.validate()) {
+            listEditButton.click();
             return;
         }
 
         try {
             const ls = listStores.get("vis-data");
+
             ls.replaceInStore(data, visData);
             ui.router.hash.goTo(
                 {
@@ -67,6 +74,7 @@ function setupAppBarEditButton(visData: types.VisData) {
                 "vis-data",
             );
         } catch (err) {
+            dialog.query!.inputs[0].ariaInvalid = ""; // title input element
             alert(err);
             listEditButton.click();
             return;
@@ -85,28 +93,21 @@ function setupAppBarAddButton(visData: types.VisData) {
     const addButton = query.appBar_ButtonAdd();
 
     addButton.onclick = async () => {
-        const dialog = dialogs.visDataEntry(); // TODO: Use dialog validations method
-        const data = await dialog.utils!.open();
-        const valueInputElement = dialog.query!.inputs[1];
+        const dialog = dialogs.visDataEntry();
 
+        const data = await dialog.utils!.open();
         if (!data) {
-            valueInputElement.ariaInvalid = null;
             return;
         }
 
         // Validate data, "value" cannot be empty
-        if (!data.value) {
-            // Set input invalid and reopen
-            valueInputElement.ariaInvalid = "";
+        if (!dialog.utils!.validate()) {
             addButton.onclick!(new MouseEvent("click"));
             return;
         }
 
-        valueInputElement.ariaInvalid = null;
         visData.data.push(data);
-
-        const ls = listStores.get("vis-data");
-        ls.replaceInStore(visData);
+        listStores.get("vis-data").replaceInStore(visData);
         reload();
     };
 
@@ -149,25 +150,21 @@ function render(visData: types.VisData) {
         };
 
         item.element.onclick = async () => {
-            const dialog = dialogs.visDataEntry(entry); // TODO: Use dialog validations method
+            const dialog = dialogs.visDataEntry(entry);
+
             const newEntry = await dialog.utils!.open();
-            const valueInputElement = dialog.query!.inputs[1];
 
             if (!newEntry) {
-                valueInputElement.ariaInvalid = null;
                 return;
             }
 
-            if (!newEntry.value) {
-                valueInputElement.ariaInvalid = "";
-                item.element.onclick!(new MouseEvent("click"));
+            if (!dialog.utils!.validate()) {
+                item.element.click();
                 return;
             }
 
-            valueInputElement.ariaInvalid = null;
-            const ls = listStores.get("vis-data");
             visData.data[index] = newEntry;
-            ls.replaceInStore(visData);
+            listStores.get("vis-data").replaceInStore(visData);
             reload();
         };
 

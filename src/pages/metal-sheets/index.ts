@@ -105,21 +105,15 @@ function setupAppBarEditSheetButton(metalSheet: types.MetalSheet) {
     // Enable app bar button for editing the current sheet
     const listEditButton = query.appBar_ButtonListEdit();
     listEditButton.onclick = async () => {
-        const dialog = dialogs.metalSheet(metalSheet); // TODO: Use dialog validations method
+        const dialog = dialogs.metalSheet(metalSheet);
+
         const data = await dialog.utils?.open();
+        if (!data) return;
 
-        if (!data) {
-            dialog.query!.format.ariaInvalid = null;
-            return;
-        }
-
-        if (!data.format) {
+        if (!dialog.utils!.validate()) {
             listEditButton.click();
-            dialog.query!.format.ariaInvalid = "";
             return;
         }
-
-        dialog.query!.format.ariaInvalid = null;
 
         try {
             const ls = listStores.get("metal-sheets");
@@ -131,6 +125,8 @@ function setupAppBarEditSheetButton(metalSheet: types.MetalSheet) {
                 "metal-sheets",
             );
         } catch (err) {
+            dialog.query!.format.ariaInvalid = "";
+            dialog.query!.toolID.ariaInvalid = "";
             alert(err);
             listEditButton.click();
             return;

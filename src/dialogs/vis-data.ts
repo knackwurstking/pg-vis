@@ -7,7 +7,10 @@ function init(visData?: types.VisData | null): types.Component<
         inputs: NodeListOf<HTMLInputElement>;
         reset: HTMLInputElement;
     },
-    { open: () => Promise<types.VisData | null> }
+    {
+        open: () => Promise<types.VisData | null>;
+        validate: () => boolean;
+    }
 > {
     const root = document.querySelector<HTMLDialogElement>(`dialog[name="vis-data"]`)!;
 
@@ -63,6 +66,18 @@ function init(visData?: types.VisData | null): types.Component<
         query,
         utils: {
             open,
+            validate() {
+                let valid = true;
+
+                if (query.inputs[0].value) {
+                    query.inputs[0].ariaInvalid = "";
+                    valid = false;
+                } else {
+                    query.inputs[0].ariaInvalid = null;
+                }
+
+                return valid;
+            },
         },
         destroy() {},
     };

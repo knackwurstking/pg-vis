@@ -11,7 +11,10 @@ function init(metalSheet?: types.MetalSheet | null): types.Component<
         filters: NodeListOf<HTMLLIElement>;
         reset: HTMLInputElement;
     },
-    { open: () => Promise<types.MetalSheet | null> }
+    {
+        open: () => Promise<types.MetalSheet | null>;
+        validate: () => boolean;
+    }
 > {
     const root = document.querySelector<HTMLDialogElement>(`dialog[name="metal-sheet"]`)!;
 
@@ -34,13 +37,14 @@ function init(metalSheet?: types.MetalSheet | null): types.Component<
 
             root.onclose = () => {
                 if (canceled) {
+                    // Reset validations
+                    query.format.ariaInvalid = null;
+                    query.toolID.ariaInvalid = null;
                     resolve(null);
                     return;
                 }
 
                 // Get the values from the dialog form inputs
-                const format = query.format.value;
-                const toolID = query.toolID.value;
                 const press = parseInt(
                     (query.press.children[query.press.selectedIndex] as HTMLOptionElement).value,
                     10,
@@ -61,8 +65,8 @@ function init(metalSheet?: types.MetalSheet | null): types.Component<
                 });
 
                 resolve({
-                    format,
-                    toolID,
+                    format: query.format.value,
+                    toolID: query.toolID.value,
                     data: {
                         press: press,
                         table: {
@@ -109,7 +113,25 @@ function init(metalSheet?: types.MetalSheet | null): types.Component<
         query,
         utils: {
             open,
-            // TODO: Add input validation method
+            validate() {
+                let valid = true;
+
+                if (!query.format.value) {
+                    query.format.ariaInvalid = "";
+                    valid = false;
+                } else {
+                    query.format.ariaInvalid = null;
+                }
+
+                if (!query.toolID.value) {
+                    query.toolID.ariaInvalid = "";
+                    valid = false;
+                } else {
+                    query.toolID.ariaInvalid = null;
+                }
+
+                return valid;
+            },
         },
         destroy() {},
     };
