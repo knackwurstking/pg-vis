@@ -5,13 +5,10 @@
 > - Replace "pg-vis.github.io" with "pg-vis-dev.github.io"
 > - Change store prefix from "pg-vis:" to "pg-vis-dev:"
 
-## v2.0.0 [unreleased]
-
-> I can't release this until [ui v2.0.0](https://github.com/knackwurstking/ui/tree/dev?tab=readme-ov-file) is complete
-
-**Updated**:
+## v2.0.0 [2025-02-07]
 
 - Updated UI library to [v2.0.0](https://github.com/knackwurstking/ui/tree/dev?tab=readme-ov-file)
+- Kicked lit library
 
 ## v1.2.1 [2024-01-16]
 
