@@ -203,7 +203,7 @@ drawerGistIDsButton.onclick = () => {
             // Initialize action button "add" - Create a new vis list
             group.actions.add!.onclick = async () => {
                 // Open dialog choosing load from file or create new vis list
-                const data = await dialogs.vis();
+                const data = await dialogs.vis().utils!.open();
 
                 if (!data) {
                     return;
