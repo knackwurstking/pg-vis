@@ -51,7 +51,7 @@ function setupAppBarEditButton(visData: types.VisData) {
     const listEditButton = query.appBar_ButtonListEdit();
 
     listEditButton.onclick = async () => {
-        const data = await dialogs.visData(visData);
+        const data = await dialogs.visData(visData).utils!.open();
 
         if (!data) {
             return;

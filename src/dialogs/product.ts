@@ -1,54 +1,78 @@
-import * as query from "../utils-query";
 import * as types from "../types";
 
-function init(product?: types.Product | null): Promise<types.Product | null> {
-    return new Promise((resolve, _reject) => {
-        const dialog = query.dialog_Product();
+function init(product?: types.Product | null): types.Component<
+    HTMLDialogElement,
+    {
+        close: HTMLButtonElement;
+        inputs: NodeListOf<HTMLInputElement>;
+        reset: HTMLInputElement;
+    },
+    { open: () => Promise<types.Product | null> }
+> {
+    const root = document.querySelector<HTMLDialogElement>(`dialog[name="product"]`)!;
 
-        let canceled = false;
-        dialog.close.onclick = () => {
-            canceled = true;
-            dialog.root.close();
-        };
+    const query = {
+        close: root.querySelector<HTMLButtonElement>(`button.close`)!,
+        inputs: root.querySelectorAll<HTMLInputElement>(`.product-input`)!,
+        reset: root.querySelector<HTMLInputElement>(`input[type="reset"]`)!,
+    };
 
-        dialog.root.onclose = () => {
-            if (canceled) {
-                resolve(null);
-                return;
-            }
-
-            // Get the values from the dialog form inputs
-            const result: types.Product = {
-                lotto: dialog.inputs[0].value,
-                name: dialog.inputs[1].value,
-                format: dialog.inputs[2].value,
-                thickness: parseFloat(dialog.inputs[3].value || "0"),
-                stamp: dialog.inputs[4].value,
+    const open: () => Promise<types.Product | null> = () => {
+        return new Promise((resolve, _reject) => {
+            let canceled = false;
+            query.close.onclick = () => {
+                canceled = true;
+                root.close();
             };
 
-            resolve(result);
-        };
+            root.onclose = () => {
+                if (canceled) {
+                    resolve(null);
+                    return;
+                }
 
-        const initForm = () => {
-            if (!!product) {
-                dialog.inputs[0].value = product.lotto;
-                dialog.inputs[1].value = product.name;
-                dialog.inputs[2].value = product.format;
-                dialog.inputs[3].value = product.thickness.toString();
-                dialog.inputs[4].value = product.stamp;
-            }
-        };
+                // Get the values from the dialog form inputs
+                const result: types.Product = {
+                    lotto: query.inputs[0].value,
+                    name: query.inputs[1].value,
+                    format: query.inputs[2].value,
+                    thickness: parseFloat(query.inputs[3].value || "0"),
+                    stamp: query.inputs[4].value,
+                };
 
-        initForm();
+                resolve(result);
+            };
 
-        dialog.reset.onclick = (e) => {
-            if (!product) return;
-            e.preventDefault();
+            const initForm = () => {
+                if (!!product) {
+                    query.inputs[0].value = product.lotto;
+                    query.inputs[1].value = product.name;
+                    query.inputs[2].value = product.format;
+                    query.inputs[3].value = product.thickness.toString();
+                    query.inputs[4].value = product.stamp;
+                }
+            };
+
             initForm();
-        };
 
-        dialog.root.showModal();
-    });
+            query.reset.onclick = (e) => {
+                if (!product) return;
+                e.preventDefault();
+                initForm();
+            };
+
+            root.showModal();
+        });
+    };
+
+    return {
+        element: root,
+        query,
+        utils: {
+            open,
+        },
+        destroy() {},
+    };
 }
 
 export default init;

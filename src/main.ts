@@ -292,17 +292,16 @@ drawerGistIDsButton.onclick = () => {
 
             // Initialize action button "add" - Create a new vis list
             group.actions.add!.onclick = async () => {
-                // Open dialog choosing load from file or create new vis list
-                const data = await dialogs.visData();
-                const titleInput = query.dialog_VISData().inputs[0];
+                const dialog = dialogs.visData();
+                const data = await dialog.utils!.open();
 
                 if (!data) {
-                    titleInput.ariaInvalid = null;
+                    dialog.query!.inputs[0].ariaInvalid = null;
                     return;
                 }
 
                 if (!data.title) {
-                    titleInput.ariaInvalid = "";
+                    dialog.query!.inputs[0].ariaInvalid = "";
                     group.actions.add!.click();
                     return;
                 }
@@ -310,9 +309,9 @@ drawerGistIDsButton.onclick = () => {
                 const ls = listStores.get("vis-data");
                 try {
                     ls.addToStore([data]);
-                    titleInput.ariaInvalid = null;
+                    dialog.query!.inputs[0].ariaInvalid = null;
                 } catch (err) {
-                    titleInput.ariaInvalid = "";
+                    dialog.query!.inputs[0].ariaInvalid = "";
                     alert(err);
                     group.actions.add!.click();
                     return;

@@ -1,47 +1,71 @@
 import * as types from "../types";
-import * as query from "../utils-query";
 
-function init(visData?: types.VisData | null): Promise<types.VisData | null> {
-    return new Promise((resolve, _reject) => {
-        const dialog = query.dialog_VISData();
+function init(visData?: types.VisData | null): types.Component<
+    HTMLDialogElement,
+    {
+        close: HTMLButtonElement;
+        inputs: NodeListOf<HTMLInputElement>;
+        reset: HTMLInputElement;
+    },
+    { open: () => Promise<types.VisData | null> }
+> {
+    const root = document.querySelector<HTMLDialogElement>(`dialog[name="vis-data"]`)!;
 
-        let canceled = false;
-        dialog.close.onclick = () => {
-            canceled = true;
-            dialog.root.close();
-        };
+    const query = {
+        close: root.querySelector<HTMLButtonElement>(`button.close`)!,
+        inputs: root.querySelectorAll<HTMLInputElement>(`input[type="text"]`)!,
+        reset: root.querySelector<HTMLInputElement>(`input[type="reset"]`)!,
+    };
 
-        dialog.root.onclose = () => {
-            if (canceled) {
-                resolve(null);
-                return;
-            }
+    const open: () => Promise<types.VisData | null> = () => {
+        return new Promise((resolve, _reject) => {
+            let canceled = false;
+            query.close.onclick = () => {
+                canceled = true;
+                root.close();
+            };
 
-            const titleInput = dialog.inputs[0];
+            root.onclose = () => {
+                if (canceled) {
+                    resolve(null);
+                    return;
+                }
 
-            resolve({
-                title: titleInput.value,
-                data: [],
-            });
-        };
+                const titleInput = query.inputs[0];
 
-        const initForm = () => {
-            if (!!visData) {
-                const titleInput = dialog.inputs[0];
-                titleInput.value = visData.title;
-            }
-        };
+                resolve({
+                    title: titleInput.value,
+                    data: [],
+                });
+            };
 
-        initForm();
+            const initForm = () => {
+                if (!!visData) {
+                    const titleInput = query.inputs[0];
+                    titleInput.value = visData.title;
+                }
+            };
 
-        dialog.reset.onclick = (e) => {
-            if (!visData) return;
-            e.preventDefault();
             initForm();
-        };
 
-        dialog.root.showModal();
-    });
+            query.reset.onclick = (e) => {
+                if (!visData) return;
+                e.preventDefault();
+                initForm();
+            };
+
+            root.showModal();
+        });
+    };
+
+    return {
+        element: root,
+        query,
+        utils: {
+            open,
+        },
+        destroy() {},
+    };
 }
 
 export default init;

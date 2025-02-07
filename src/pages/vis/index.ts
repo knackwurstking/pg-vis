@@ -85,7 +85,7 @@ function setupAppBarAddProductButton(vis: types.Vis) {
     const addButton = query.appBar_ButtonAdd();
 
     addButton.onclick = async () => {
-        const data: types.Product | null = await dialogs.product();
+        const data: types.Product | null = await dialogs.product().utils!.open();
         if (!data) {
             return;
         }
@@ -131,7 +131,7 @@ function render(vis: types.Vis, listKey: string) {
                 switch (choice) {
                     case "Bearbeiten":
                         {
-                            const data = await dialogs.product(product);
+                            const data = await dialogs.product(product).utils!.open();
                             if (!data) {
                                 return;
                             }

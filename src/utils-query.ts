@@ -77,38 +77,6 @@ export function drawerBackdrop(): HTMLElement {
 
 // Dialog Elements
 
-export function dialog_Product(): {
-    root: HTMLDialogElement;
-    close: HTMLButtonElement;
-    inputs: NodeListOf<HTMLInputElement>;
-    reset: HTMLInputElement;
-} {
-    const root = document.querySelector<HTMLDialogElement>(`dialog[name="product"]`)!;
-
-    return {
-        root,
-        close: root.querySelector(`button.close`)!,
-        inputs: root.querySelectorAll(`.product-input`)!,
-        reset: root.querySelector(`input[type="reset"]`)!,
-    };
-}
-
-export function dialog_VISData(): {
-    root: HTMLDialogElement;
-    close: HTMLButtonElement;
-    inputs: NodeListOf<HTMLInputElement>;
-    reset: HTMLInputElement;
-} {
-    const root = document.querySelector<HTMLDialogElement>(`dialog[name="vis-data"]`)!;
-
-    return {
-        root,
-        close: root.querySelector(`button.close`)!,
-        inputs: root.querySelectorAll(`input[type="text"]`)!,
-        reset: root.querySelector(`input[type="reset"]`)!,
-    };
-}
-
 export function dialog_ProductBookmark(): {
     root: HTMLDialogElement;
     close: HTMLButtonElement;
