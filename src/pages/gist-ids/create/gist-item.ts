@@ -31,7 +31,7 @@ export function gistItem(props: GistItemProps): types.Component<HTMLLIElement> {
                     <span>Local Rev.: </span>
                     <span
                         id="gistID_LocalRevision_${props.storeKey}"
-                        style="--wght: 450; color: green"
+                        style="--wght: 450; color: var(--ui-text)"
                     >
                         ${globals.store.get(props.storeKey)!.gist?.revision || "?"}
                     </span>
@@ -82,36 +82,8 @@ export function gistItem(props: GistItemProps): types.Component<HTMLLIElement> {
         </div>
     `;
 
-    const localRevSpan = el.querySelector<HTMLSpanElement>(
-        `#gistID_LocalRevision_${props.storeKey}`,
-    )!;
-    const remoteRevSpan = el.querySelector<HTMLSpanElement>(
-        `#gistID_RemoteRevision_${props.storeKey}`,
-    )!;
-
-    const inputGistID = el.querySelector<HTMLInputElement>(`#gistID_${props.storeKey}`)!;
-    const updateButton = el.querySelector<HTMLButtonElement>(`button.update`)!;
-
-    const inputAPIToken = el.querySelector<HTMLInputElement>(`#apiToken_${props.storeKey}`)!;
-    const pushButton = el.querySelector<HTMLButtonElement>(`button.push`)!;
-
-    initNormalMode(
-        props.storeKey,
-        localRevSpan,
-        remoteRevSpan,
-        inputGistID,
-        inputAPIToken,
-        updateButton,
-    );
-
-    initDevMode(
-        props.storeKey,
-        localRevSpan,
-        remoteRevSpan,
-        inputGistID,
-        inputAPIToken,
-        pushButton,
-    );
+    initNormalMode(el, props);
+    initDevMode(el, props);
 
     return {
         element: el,
@@ -119,35 +91,29 @@ export function gistItem(props: GistItemProps): types.Component<HTMLLIElement> {
     };
 }
 
-async function initNormalMode(
-    storeKey: types.DrawerGroups,
-    localRevSpan: HTMLSpanElement,
-    remoteRevSpan: HTMLSpanElement,
-    inputPull: HTMLInputElement,
-    inputPush: HTMLInputElement,
-    button: HTMLButtonElement,
-) {
-    inputPull.onchange = async () => button.click();
+async function initNormalMode(item: HTMLLIElement, props: GistItemProps) {
+    const elements = queryElements(item, props);
+    elements.inputGistID.onchange = async () => elements.updateButton.click();
 
     let inProgress: boolean = false;
-    button.onclick = async () => {
+    elements.updateButton.onclick = async () => {
         if (inProgress) {
             return;
         }
 
         inProgress = true;
-        button.classList.add("active");
+        elements.updateButton.classList.add("active");
         const cleanUp = () => {
             setTimeout(() => {
                 inProgress = false;
-                button.classList.remove("active");
+                elements.updateButton.classList.remove("active");
             });
         };
 
-        const gistID = inputPull.value;
+        const gistID = elements.inputGistID.value;
 
         if (!gistID) {
-            globals.store.update(storeKey, (data) => {
+            globals.store.update(props.storeKey, (data) => {
                 data.gist = null;
                 return data;
             });
@@ -155,101 +121,101 @@ async function initNormalMode(
             return cleanUp();
         }
 
-        globals.store.update(storeKey, (data) => {
+        globals.store.update(props.storeKey, (data) => {
             data.gist = {
                 id: gistID,
                 revision: null,
-                token: inputPush.value,
+                token: elements.inputAPIToken.value,
             };
             return data;
         });
 
         try {
-            const data = await gist.pull(storeKey, gistID);
-            globals.store.set(storeKey, data);
-            remoteRevSpan.innerText = localRevSpan.innerText = `${data.gist?.revision || "?"}`;
-            localRevSpan.style.color = "green";
-            inputPull.ariaInvalid = null;
+            const data = await gist.pull(props.storeKey, gistID);
+            globals.store.set(props.storeKey, data);
+
+            elements.remoteRevSpan.innerText =
+                elements.localRevSpan.innerText = `${data.gist?.revision || "?"}`;
+
+            elements.localRevSpan.style.color = "green";
+            elements.updateButton.ariaInvalid = null;
         } catch (err) {
-            const message = `Pull from gist failed for "${storeKey}" ("${gistID}"): ${err}`;
+            const message = `Pull from gist failed for "${props.storeKey}" ("${gistID}"): ${err}`;
             console.error(message);
             alert(message);
-            inputPull.ariaInvalid = "";
+            elements.updateButton.ariaInvalid = "";
         }
 
         return cleanUp();
     };
 
-    if (!!inputPull.value) {
+    if (!!elements.inputGistID.value) {
         setTimeout(async () => {
-            try {
-                let remoteRev =
-                    globals.store.get("runtime")!.lists[inputPull.value]?.remoteRevision || null;
-                if (!remoteRev) {
-                    remoteRev = await gist.getRevision(inputPull.value);
+            let remoteRev =
+                globals.store.get("runtime")!.lists[elements.inputGistID.value]?.remoteRevision ||
+                null;
+            if (!remoteRev) {
+                try {
+                    remoteRev = await gist.getRevision(elements.inputGistID.value);
+
                     globals.store.update("runtime", (data) => {
-                        data.lists[inputPull.value] = {
+                        data.lists[elements.inputGistID.value] = {
                             remoteRevision: remoteRev,
                         };
                         return data;
                     });
-                }
+                } catch (err) {
+                    elements.inputGistID.ariaInvalid = "";
 
-                remoteRevSpan.innerText = `${remoteRev || "?"}`;
-                inputPull.ariaInvalid = null;
-
-                if (
-                    gist.shouldUpdate(
-                        remoteRev,
-                        globals.store.get(storeKey)!.gist?.revision || null,
-                    )
-                ) {
-                    localRevSpan.style.color = "red";
-                } else {
-                    localRevSpan.style.color = "green";
+                    console.error(
+                        `Update failed for "${props.storeKey}" ("${elements.inputGistID.value}"): ${err}`,
+                    );
                 }
-            } catch (err) {
-                inputPull.ariaInvalid = "";
-                console.debug(`Update failed for "${storeKey}" ("${inputPull.value}"): ${err}`);
+            }
+
+            elements.remoteRevSpan.innerText = `${remoteRev || "?"}`;
+            elements.inputGistID.ariaInvalid = null;
+
+            if (remoteRev === null) {
+                elements.localRevSpan.style.color = "var(--ui-text)";
+            } else if (remoteRev !== globals.store.get(props.storeKey)!.gist?.revision || null) {
+                elements.localRevSpan.style.color = "red";
+            } else {
+                elements.localRevSpan.style.color = "green";
             }
         });
     }
 }
 
-async function initDevMode(
-    storeKey: types.DrawerGroups,
-    localRevSpan: HTMLSpanElement,
-    remoteRevSpan: HTMLSpanElement,
-    inputPull: HTMLInputElement,
-    inputPush: HTMLInputElement,
-    button: HTMLButtonElement,
-) {
-    inputPush.oninput = () => {
-        if (!!inputPush.value) {
-            button.removeAttribute("disabled");
+async function initDevMode(item: HTMLLIElement, props: GistItemProps) {
+    const elements = queryElements(item, props);
+
+    elements.inputAPIToken.oninput = () => {
+        if (!!elements.inputAPIToken.value) {
+            elements.pushButton.removeAttribute("disabled");
         } else {
-            button.setAttribute("disabled", "");
+            elements.pushButton.setAttribute("disabled", "");
         }
 
-        globals.store.update(storeKey, (data) => {
+        globals.store.update(props.storeKey, (data) => {
             if (!data.gist) {
                 data.gist = {
                     id: "",
                     revision: null,
-                    token: inputPush.value,
+                    token: elements.inputAPIToken.value,
                 };
             } else {
-                data.gist.token = inputPush.value;
+                data.gist.token = elements.inputAPIToken.value;
             }
 
             return data;
         });
     };
-    inputPush.oninput(new Event("input"));
+    elements.inputAPIToken.oninput(new Event("input"));
 
     let pushInProgress = false;
-    button.onclick = async () => {
-        if (!inputPush.value) {
+    elements.pushButton.onclick = async () => {
+        if (!elements.inputAPIToken.value) {
             return;
         }
 
@@ -258,28 +224,48 @@ async function initDevMode(
         }
 
         pushInProgress = true;
-        button.classList.add("active");
+        elements.pushButton.classList.add("active");
         const cleanUp = () => {
             setTimeout(() => {
                 pushInProgress = false;
-                button.classList.remove("active");
+                elements.pushButton.classList.remove("active");
             });
         };
 
-        const gistID = inputPull.value;
-        const apiToken = inputPush.value;
+        const gistID = elements.inputGistID.value;
+        const apiToken = elements.inputAPIToken.value;
 
         try {
-            const data = await gist.push(storeKey, apiToken, gistID);
-            globals.store.set(storeKey, data);
-            remoteRevSpan.innerText = localRevSpan.innerText = `${data.gist?.revision || "?"}`;
-            localRevSpan.style.color = "green";
+            const data = await gist.push(props.storeKey, apiToken, gistID);
+            globals.store.set(props.storeKey, data);
+
+            elements.remoteRevSpan.innerText =
+                elements.localRevSpan.innerText = `${data.gist?.revision || "?"}`;
+
+            elements.localRevSpan.style.color = "green";
         } catch (err) {
-            const message = `Push to gist failed for "${storeKey}" ("${gistID}"): ${err}`;
+            const message = `Push to gist failed for "${props.storeKey}" ("${gistID}"): ${err}`;
             console.error(message);
             alert(message);
         }
 
         return cleanUp();
+    };
+}
+
+function queryElements(item: HTMLLIElement, props: GistItemProps) {
+    return {
+        localRevSpan: item.querySelector<HTMLSpanElement>(
+            `#gistID_LocalRevision_${props.storeKey}`,
+        )!,
+        remoteRevSpan: item.querySelector<HTMLSpanElement>(
+            `#gistID_RemoteRevision_${props.storeKey}`,
+        )!,
+
+        inputGistID: item.querySelector<HTMLInputElement>(`#gistID_${props.storeKey}`)!,
+        updateButton: item.querySelector<HTMLButtonElement>(`button.update`)!,
+
+        inputAPIToken: item.querySelector<HTMLInputElement>(`#apiToken_${props.storeKey}`)!,
+        pushButton: item.querySelector<HTMLButtonElement>(`button.push`)!,
     };
 }

@@ -59,35 +59,29 @@ export async function push(
     };
 }
 
-export async function getRevision(gistID: string): Promise<number | null> {
-    const octokit = new Octokit();
-    octokit.log.warn = (message: string) => {
-        alert(`Get gist revision failed: ${gistID}: ${message}`);
-    };
+export function getRevision(gistID: string): Promise<number | null> {
+    return new Promise(async (resolve, reject) => {
+        const octokit = new Octokit();
+        octokit.log.error = (message: string) => {
+            return reject(new Error(message));
+        };
 
-    console.debug("fetch revision...");
-    return 0; // TODO: This needs to be removed after dev is done
+        console.debug("fetch revision...");
+        return 0; // TODO: This needs to be removed after dev is done
 
-    const resp = await octokit.request("GET /gists/{gist_id}/commits", {
-        gist_id: gistID,
-        headers: {
-            "X-GitHub-Api-Version": "2022-11-28",
-        },
+        const resp = await octokit.request("GET /gists/{gist_id}/commits", {
+            gist_id: gistID,
+            headers: {
+                "X-GitHub-Api-Version": "2022-11-28",
+            },
+        });
+
+        if (resp.status !== 200) {
+            reject(new Error(`GET ${resp.url} ${resp.status}`));
+        }
+
+        return resolve(resp.data.length);
     });
-
-    if (resp.status !== 200) {
-        throw new Error(`GET ${resp.url} ${resp.status}`);
-    }
-
-    return resp.data.length;
-}
-
-export function shouldUpdate(remoteRev: number | null, currentRev: number | null): boolean {
-    if (remoteRev === null) {
-        return false;
-    }
-
-    return remoteRev !== currentRev || remoteRev === 1;
 }
 
 async function getGist(gistID: string): Promise<
