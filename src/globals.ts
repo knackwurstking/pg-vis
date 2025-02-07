@@ -96,44 +96,30 @@ function createStore(): types.PGStore {
     store.set("vis", { gist: null, lists: [] }, true);
     store.set("vis-data", { gist: null, lists: [] }, true);
 
-    store.set(
-        "vis-bookmarks",
-        {
-            gist: null,
-            lists: [
-                {
-                    title: "Presse 0",
-                    allowDeletion: false,
-                    data: [],
-                },
-                {
-                    title: "Presse 2",
-                    allowDeletion: false,
-                    data: [],
-                },
-                {
-                    title: "Presse 3",
-                    allowDeletion: false,
-                    data: [],
-                },
-                {
-                    title: "Presse 4",
-                    allowDeletion: false,
-                    data: [],
-                },
-                {
-                    title: "Presse 5",
-                    allowDeletion: false,
-                    data: [],
-                },
-            ],
-        },
-        true,
-    );
+    createBookmarksStore(store);
 
     store.set("special", { gist: null, lists: [] }, true);
 
     store.set("runtime", { lists: {} }, false);
 
     return store;
+}
+
+function createBookmarksStore(store: types.PGStore) {
+    const defaultListTitles = ["Presse 0", "Presse 2", "Presse 3", "Presse 4", "Presse 5"];
+
+    if (store.get("vis-bookmarks")?.lists.length || 0 === 0) {
+        store.delete("vis-bookmarks");
+    }
+
+    store.set(
+        "vis-bookmarks",
+        {
+            gist: null,
+            lists: [
+                ...defaultListTitles.map((title) => ({ title, allowDeletion: false, data: [] })),
+            ],
+        },
+        true,
+    );
 }
