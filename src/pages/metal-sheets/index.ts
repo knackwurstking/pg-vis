@@ -1,11 +1,13 @@
+import * as jspdf from "jspdf";
+import jsPDFAutotable from "jspdf-autotable";
 import * as ui from "ui";
 
-import * as globals from "../../globals";
-import * as query from "../../utils-query";
 import * as dialogs from "../../dialogs";
+import * as globals from "../../globals";
 import * as listStores from "../../list-stores";
 import * as types from "../../types";
 import * as utils from "../../utils";
+import * as query from "../../utils-query";
 
 interface Param {
     listKey?: string;
@@ -41,6 +43,7 @@ export async function onMount() {
 
     metalSheet.data.table.data = sortTableData(metalSheet.data.table.data);
 
+    setupAppBarPrinterButton(metalSheet);
     setupAppBarEditSheetButton(metalSheet);
     setupAppBarAddTableEntryButton(metalSheet);
     render(metalSheet);
@@ -49,6 +52,53 @@ export async function onMount() {
 export async function onDestroy() {
     cleanup.forEach((fn) => fn());
     cleanup = [];
+}
+
+function setupAppBarPrinterButton(metalSheet: types.MetalSheet) {
+    const printerButton = query.appBar_ButtonPrinter();
+
+    printerButton.onclick = async () => {
+        const pdf = new jspdf.jsPDF();
+        const listStore = listStores.get("metal-sheets");
+
+        jsPDFAutotable(pdf, {
+            head: [
+                [
+                    {
+                        content: `${listStore.listKey(metalSheet)}`,
+                        colSpan: globals.metalSheetSlots.length,
+                        styles: {
+                            fillColor: [255, 255, 255],
+                            textColor: [0, 0, 0],
+                        },
+                    },
+                ],
+                globals.metalSheetSlots,
+            ],
+            body: metalSheet.data.table.data,
+            theme: "grid",
+            styles: {
+                valign: "middle",
+                halign: "center",
+                font: "Courier",
+                fontStyle: "bold",
+                fontSize: 12,
+            },
+            headStyles: {
+                fillColor: [0, 0, 0],
+                textColor: [255, 255, 255],
+            },
+        });
+
+        pdf.save(listStore.fileName(metalSheet).replace(/(\.json)$/, ".pdf"));
+    };
+
+    printerButton.style.display = "inline-flex";
+
+    cleanup.push(() => {
+        printerButton.style.display = "none";
+        printerButton.onclick = null;
+    });
 }
 
 function setupAppBarEditSheetButton(metalSheet: types.MetalSheet) {
