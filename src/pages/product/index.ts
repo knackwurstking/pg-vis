@@ -129,7 +129,7 @@ function isStamp(match: string | null, stamp: string) {
 function isThickness(match: string | null, thickness: number) {
     if (match === null) return true;
 
-    return new RegExp(match, "i").test(thickness.toString());
+    return new RegExp(match, "i").test(`${thickness}mm`);
 }
 
 function routerTargetElements() {
