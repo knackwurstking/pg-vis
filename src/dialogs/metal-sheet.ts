@@ -81,7 +81,17 @@ function init(metalSheet?: types.MetalSheet | null): types.Component<
                 if (!!metalSheet) {
                     query.format.value = metalSheet.format;
                     query.toolID.value = metalSheet.toolID;
-                    query.press.selectedIndex = metalSheet.data.press + 1;
+
+                    query.press.selectedIndex = 0;
+                    let index = 0;
+                    for (const option of query.press.options) {
+                        if (option.value === metalSheet.data.press.toString()) {
+                            query.press.selectedIndex = index;
+                            break;
+                        }
+
+                        index++;
+                    }
 
                     query.filters.forEach((filter, index) => {
                         filter.querySelector<HTMLInputElement>(`label > span`)!.innerText =
