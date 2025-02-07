@@ -6,9 +6,9 @@ function init(
 ): types.Component<
     HTMLDialogElement,
     {
-        close: () => HTMLButtonElement;
-        title: () => HTMLElement;
-        choices: () => HTMLElement;
+        close: HTMLButtonElement;
+        title: HTMLElement;
+        choices: HTMLElement;
     },
     {
         open: () => Promise<string | null>;
@@ -17,22 +17,16 @@ function init(
     const root = document.querySelector<HTMLDialogElement>(`dialog[name="choose"]`)!;
 
     const query = {
-        close(): HTMLButtonElement {
-            return root.querySelector(`button.close`)!;
-        },
-        title(): HTMLElement {
-            return root.querySelector(`.title`)!;
-        },
-        choices(): HTMLElement {
-            return root.querySelector(`.choices`)!;
-        },
+        close: root.querySelector<HTMLButtonElement>(`button.close`)!,
+        title: root.querySelector<HTMLElement>(`.title`)!,
+        choices: root.querySelector<HTMLElement>(`.choices`)!,
     };
 
     const open: () => Promise<string | null> = () => {
         return new Promise((resolve, _reject) => {
             let currentChoice: string | null = null;
 
-            query.close().onclick = () => {
+            query.close.onclick = () => {
                 root.close();
             };
 
@@ -40,10 +34,10 @@ function init(
                 resolve(currentChoice);
             };
 
-            query.title().innerText = title;
+            query.title.innerText = title;
 
             // Create dialog button for each choice
-            const choicesElement = query.choices();
+            const choicesElement = query.choices;
             choicesElement.innerHTML = "";
             for (const choice of choices) {
                 const button = document.createElement("button");
