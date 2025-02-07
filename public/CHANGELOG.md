@@ -8,6 +8,7 @@
 ## v2.1.0 [unreleased]
 
 - [ ] Added highlighting for drawer items on active pages
+- Re-render metal sheet page after edit sheet dialog submission if list key remains unchanged.
 
 ## v2.0.2 [2025-02-07]
 
