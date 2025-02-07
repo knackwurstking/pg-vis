@@ -1,54 +1,83 @@
 import * as globals from "../globals";
-import * as query from "../utils-query";
+import * as types from "../types";
 
-function init(data?: string[] | null): Promise<string[] | null> {
-    return new Promise((resolve, _reject) => {
-        const dialog = query.dialog_MetalSheetTableEntry();
+function init(data?: string[] | null): types.Component<
+    HTMLDialogElement,
+    {
+        close: HTMLButtonElement;
+        labels: NodeListOf<HTMLLabelElement>;
+        inputs: NodeListOf<HTMLInputElement>;
+        reset: HTMLInputElement;
+    },
+    { open: () => Promise<string[] | null> }
+> {
+    const root = document.querySelector<HTMLDialogElement>(
+        `dialog[name="metal-sheet-table-entry"]`,
+    )!;
 
-        let canceled = false;
-        dialog.close.onclick = () => {
-            canceled = true;
-            dialog.root.close();
-        };
+    const query = {
+        close: root.querySelector<HTMLButtonElement>(`button.close`)!,
+        labels: root.querySelectorAll<HTMLLabelElement>(`label[for]`)!,
+        inputs: root.querySelectorAll<HTMLInputElement>(`input[type="text"]`)!,
+        reset: root.querySelector<HTMLInputElement>(`input[type="reset"]`)!,
+    };
 
-        dialog.root.onclose = () => {
-            if (canceled) {
-                resolve(null);
-                return;
-            }
+    const open: () => Promise<string[] | null> = () => {
+        return new Promise((resolve, _reject) => {
+            let canceled = false;
+            query.close.onclick = () => {
+                canceled = true;
+                root.close();
+            };
 
-            // Get the values from the dialog form inputs
-            const result: string[] = [];
-            dialog.inputs.forEach((input) => {
-                result.push(input.value);
-            });
+            root.onclose = () => {
+                if (canceled) {
+                    resolve(null);
+                    return;
+                }
 
-            resolve(result);
-        };
-
-        const initForm = () => {
-            dialog.labels.forEach((label, index) => {
-                label.innerText = globals.metalSheetSlots[index] || "";
-            });
-
-            if (!!data) {
-                data.forEach((value, index) => {
-                    dialog.inputs[index].value = value;
+                // Get the values from the dialog form inputs
+                const result: string[] = [];
+                query.inputs.forEach((input) => {
+                    result.push(input.value);
                 });
-            }
-        };
 
-        initForm();
+                resolve(result);
+            };
 
-        dialog.reset.onclick = (e) => {
-            if (!data) return;
+            const initForm = () => {
+                query.labels.forEach((label, index) => {
+                    label.innerText = globals.metalSheetSlots[index] || "";
+                });
 
-            e.preventDefault();
+                if (!!data) {
+                    data.forEach((value, index) => {
+                        query.inputs[index].value = value;
+                    });
+                }
+            };
+
             initForm();
-        };
 
-        dialog.root.showModal();
-    });
+            query.reset.onclick = (e) => {
+                if (!data) return;
+
+                e.preventDefault();
+                initForm();
+            };
+
+            root.showModal();
+        });
+    };
+
+    return {
+        element: root,
+        query,
+        utils: {
+            open,
+        },
+        destroy() {},
+    };
 }
 
 export default init;

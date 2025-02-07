@@ -146,10 +146,12 @@ function setupAppBarEditSheetButton(metalSheet: types.MetalSheet) {
 function setupAppBarAddTableEntryButton(metalSheet: types.MetalSheet) {
     const addButton = query.appBar_ButtonAdd();
     addButton.onclick = async () => {
-        const data = await dialogs.metalSheetTableEntry();
+        const data = await dialogs.metalSheetTableEntry().utils!.open();
+
         if (!data) {
             return;
         }
+
         metalSheet.data.table.data.push(data);
 
         const ls = listStores.get("metal-sheets");
@@ -208,7 +210,7 @@ function render(metalSheet: types.MetalSheet) {
 
         // Edit row on click
         tr.onclick = async () => {
-            const data = await dialogs.metalSheetTableEntry(row);
+            const data = await dialogs.metalSheetTableEntry(row).utils!.open();
             if (!data) {
                 return;
             }

@@ -77,26 +77,6 @@ export function drawerBackdrop(): HTMLElement {
 
 // Dialog Elements
 
-export function dialog_MetalSheetTableEntry(): {
-    root: HTMLDialogElement;
-    close: HTMLButtonElement;
-    labels: NodeListOf<HTMLLabelElement>;
-    inputs: NodeListOf<HTMLInputElement>;
-    reset: HTMLInputElement;
-} {
-    const root = document.querySelector<HTMLDialogElement>(
-        `dialog[name="metal-sheet-table-entry"]`,
-    )!;
-
-    return {
-        root,
-        close: root.querySelector(`button.close`)!,
-        labels: root.querySelectorAll(`label[for]`)!,
-        inputs: root.querySelectorAll(`input[type="text"]`)!,
-        reset: root.querySelector(`input[type="reset"]`)!,
-    };
-}
-
 export function dialog_VIS(): {
     root: HTMLDialogElement;
     close: HTMLButtonElement;
