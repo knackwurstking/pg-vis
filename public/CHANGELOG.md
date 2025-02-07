@@ -7,6 +7,7 @@
 
 ## v2.0.1 [2025-02-07]
 
+- Updated confirmation message for updating
 - Changed overflow behavior to only block the y axis
 
 ## v2.0.0 [2025-02-07]
