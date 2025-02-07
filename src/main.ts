@@ -16,7 +16,7 @@ import * as query from "./utils-query";
 
 const updateSW = registerSW({
     async onNeedRefresh() {
-        if (confirm(`Update available`)) {
+        if (confirm(`Update verfügbar. Zum Aktualisieren bestätigen.`)) {
             await updateSW();
         }
     },
