@@ -109,6 +109,7 @@ function init(metalSheet?: types.MetalSheet | null): types.Component<
         query,
         utils: {
             open,
+            // TODO: Add input validation method
         },
         destroy() {},
     };

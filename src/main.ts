@@ -133,7 +133,7 @@ drawerGistIDsButton.onclick = () => {
             // This will open the metal-sheet dialog
             group.actions.add!.onclick = async () => {
                 const dialog = dialogs.metalSheet();
-                const data = await dialog.utils!.open();
+                const data = await dialog.utils!.open(); // TODO: Use dialog validations method
 
                 if (!data) {
                     dialog.query!.format.ariaInvalid = null;
@@ -292,7 +292,7 @@ drawerGistIDsButton.onclick = () => {
 
             // Initialize action button "add" - Create a new vis list
             group.actions.add!.onclick = async () => {
-                const dialog = dialogs.visData();
+                const dialog = dialogs.visData(); // TODO: Use dialog validations method
                 const data = await dialog.utils!.open();
 
                 if (!data) {

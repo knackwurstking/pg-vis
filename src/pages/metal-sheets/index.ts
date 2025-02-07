@@ -105,7 +105,7 @@ function setupAppBarEditSheetButton(metalSheet: types.MetalSheet) {
     // Enable app bar button for editing the current sheet
     const listEditButton = query.appBar_ButtonListEdit();
     listEditButton.onclick = async () => {
-        const dialog = dialogs.metalSheet(metalSheet);
+        const dialog = dialogs.metalSheet(metalSheet); // TODO: Use dialog validations method
         const data = await dialog.utils?.open();
 
         if (!data) {

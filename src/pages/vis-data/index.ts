@@ -51,7 +51,7 @@ function setupAppBarEditButton(visData: types.VisData) {
     const listEditButton = query.appBar_ButtonListEdit();
 
     listEditButton.onclick = async () => {
-        const data = await dialogs.visData(visData).utils!.open();
+        const data = await dialogs.visData(visData).utils!.open(); // TODO: Use dialog validations method
 
         if (!data) {
             return;
@@ -85,7 +85,7 @@ function setupAppBarAddButton(visData: types.VisData) {
     const addButton = query.appBar_ButtonAdd();
 
     addButton.onclick = async () => {
-        const dialog = dialogs.visDataEntry();
+        const dialog = dialogs.visDataEntry(); // TODO: Use dialog validations method
         const data = await dialog.utils!.open();
         const valueInputElement = dialog.query!.inputs[1];
 
@@ -149,7 +149,7 @@ function render(visData: types.VisData) {
         };
 
         item.element.onclick = async () => {
-            const dialog = dialogs.visDataEntry(entry);
+            const dialog = dialogs.visDataEntry(entry); // TODO: Use dialog validations method
             const newEntry = await dialog.utils!.open();
             const valueInputElement = dialog.query!.inputs[1];
 
