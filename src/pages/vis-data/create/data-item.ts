@@ -10,6 +10,9 @@ export interface GistItemProps {
 
 export function dataItem(props: GistItemProps): types.Component<HTMLLIElement> {
     const li = document.createElement("li");
+
+    li.style.borderBottom = "var(--ui-border-width) var(--ui-border-style) var(--ui-border-color)";
+
     li.innerHTML = html`<div class="ui-flex-grid"></div>`;
 
     const grid = li.querySelector(".ui-flex-grid")!;
