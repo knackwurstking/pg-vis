@@ -118,12 +118,17 @@ function setupAppBarEditSheetButton(metalSheet: types.MetalSheet) {
         try {
             const ls = listStores.get("metal-sheets");
             ls.replaceInStore(data, metalSheet);
-            ui.router.hash.goTo(
-                {
-                    listKey: ls.listKey(data),
-                },
-                "metal-sheets",
-            );
+
+            if (ls.listKey(data) !== ls.listKey(metalSheet)) {
+                ui.router.hash.goTo(
+                    {
+                        listKey: ls.listKey(data),
+                    },
+                    "metal-sheets",
+                );
+            } else {
+                reload();
+            }
         } catch (err) {
             dialog.query!.format.ariaInvalid = "";
             dialog.query!.toolID.ariaInvalid = "";
