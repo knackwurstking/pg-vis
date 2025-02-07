@@ -5,6 +5,10 @@
 > - Replace "pg-vis.github.io" with "pg-vis-dev.github.io"
 > - Change store prefix from "pg-vis:" to "pg-vis-dev:"
 
+## v2.0.2 [2025-02-07]
+
+- Fixed wrong press initialization for metal sheet dialog
+
 ## v2.0.1 [2025-02-07]
 
 - Updated confirmation message for updating
