@@ -5,9 +5,8 @@
 > - Replace "pg-vis.github.io" with "pg-vis-dev.github.io"
 > - Change store prefix from "pg-vis:" to "pg-vis-dev:"
 
-## v2.1.0 [unreleased]
+## v2.0.3 [2025-02-07]
 
-- [ ] Added highlighting for drawer items on active pages
 - Re-render metal sheet page after edit sheet dialog submission if list key remains unchanged.
 
 ## v2.0.2 [2025-02-07]
