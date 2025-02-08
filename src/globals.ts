@@ -107,8 +107,11 @@ function createStore(): types.PGStore {
 function createBookmarksStore(store: types.PGStore) {
     const defaultListTitles = ["Presse 0", "Presse 2", "Presse 3", "Presse 4", "Presse 5"];
 
-    if (store.get("vis-bookmarks")?.lists.length || 0 === 0) {
-        store.delete("vis-bookmarks");
+    const bookmarks = store.get("vis-bookmarks");
+    if (!!bookmarks) {
+        if (bookmarks.lists.length === 0) {
+            store.delete("vis-bookmarks");
+        }
     }
 
     store.set(
