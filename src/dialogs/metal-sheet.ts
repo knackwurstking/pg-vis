@@ -92,18 +92,20 @@ function init(metalSheet?: types.MetalSheet | null): types.Component<
 
                         index++;
                     }
+                }
 
-                    query.filters.forEach((filter, index) => {
-                        filter.querySelector<HTMLInputElement>(`label > span`)!.innerText =
-                            globals.metalSheetSlots[index] || "";
+                query.filters.forEach((filter, index) => {
+                    filter.querySelector<HTMLInputElement>(`label > span`)!.innerText =
+                        globals.metalSheetSlots[index] || "";
 
+                    if (!!metalSheet) {
                         const checkbox =
                             filter.querySelector<HTMLInputElement>(`input[type="checkbox"]`)!;
 
                         const indexToHide = parseInt(checkbox.getAttribute("data-index")!, 10);
                         checkbox.checked = !metalSheet.data.table.filter?.includes(indexToHide);
-                    });
-                }
+                    }
+                });
             };
 
             initForm();
