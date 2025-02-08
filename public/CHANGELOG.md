@@ -5,6 +5,10 @@
 > - Replace "pg-vis.github.io" with "pg-vis-dev.github.io"
 > - Change store prefix from "pg-vis:" to "pg-vis-dev:"
 
+## v2.0.5 [unreleased]
+
+- Fixed bookmarks store initialization, always resets even if available
+
 ## v2.0.4 [2025-02-07]
 
 - Fixed metal sheet entry dialog form input for thickness
