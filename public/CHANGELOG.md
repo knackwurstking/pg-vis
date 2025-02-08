@@ -7,6 +7,7 @@
 
 ## v2.0.5 [unreleased]
 
+- Fixed flakes (special) dialog, switched inputs main - c1
 - Fixed bookmarks store initialization, always resets even if available
 
 ## v2.0.4 [2025-02-07]
