@@ -44,11 +44,11 @@ function init(entry?: types.SpecialFlakesEntry | null): types.Component<
                         (select.options[select.selectedIndex]
                             .value as types.SpecialFlakes_PressSlot),
 
-                    compatatore: parseInt(inputs[0].value, 10),
+                    compatatore: parseInt(inputs[1].value, 10),
 
                     primary: {
                         ...(entry?.primary || {}),
-                        value: parseInt(inputs[1].value || "0", 10),
+                        value: parseInt(inputs[0].value || "0", 10),
                         percent: 0,
                     },
 
