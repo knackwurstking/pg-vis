@@ -23,6 +23,8 @@ function init(metalSheet?: types.MetalSheet | null): types.Component<
     const open: () => Promise<types.MetalSheet | null> = () => {
         return new Promise((resolve, _reject) => {
             root.onclose = () => {
+                // TODO: Need to check if submit button was pressed before resolving the result
+
                 const press = parseInt(
                     (query.press.children[query.press.selectedIndex] as HTMLOptionElement).value,
                     10,

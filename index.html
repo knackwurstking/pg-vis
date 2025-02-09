@@ -318,15 +318,7 @@
             </form>
         </dialog>
 
-        <!-- TODO: Clean up here -->
-        <dialog name="metal-sheet-table-entry" oncancel="event.preventDefault()">
-            <div class="ui-flex-grid-row">
-                <h4 class="ui-flex-grid-item">Eintrag</h4>
-                <button class="close" variant="ghost" color="primary" icon>
-                    <i class="bi bi-x-lg"></i>
-                </button>
-            </div>
-
+        <dialog name="metal-sheet-table-entry">
             <form method="dialog">
                 <div class="ui-flex-grid">
                     <div class="ui-flex-grid-row" style="--align: center; --justify: space-between">
@@ -361,7 +353,7 @@
                 </div>
 
                 <div class="ui-flex-grid-row" style="--justify: flex-end">
-                    <input type="reset" />
+                    <!-- TODO: Need a close button here, or cancel -->
                     <input type="submit" />
                 </div>
             </form>

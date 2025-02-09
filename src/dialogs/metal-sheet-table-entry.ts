@@ -4,10 +4,8 @@ import * as types from "../types";
 function init(data?: string[] | null): types.Component<
     HTMLDialogElement,
     {
-        close: HTMLButtonElement;
         labels: NodeListOf<HTMLLabelElement>;
         inputs: NodeListOf<HTMLInputElement>;
-        reset: HTMLInputElement;
     },
     { open: () => Promise<string[] | null> }
 > {
@@ -16,25 +14,14 @@ function init(data?: string[] | null): types.Component<
     )!;
 
     const query = {
-        close: root.querySelector<HTMLButtonElement>(`button.close`)!,
         labels: root.querySelectorAll<HTMLLabelElement>(`label[for]`)!,
         inputs: root.querySelectorAll<HTMLInputElement>(`input[type="text"]`)!,
-        reset: root.querySelector<HTMLInputElement>(`input[type="reset"]`)!,
     };
 
     const open: () => Promise<string[] | null> = () => {
         return new Promise((resolve, _reject) => {
-            let canceled = false;
-            query.close.onclick = () => {
-                canceled = true;
-                root.close();
-            };
-
             root.onclose = () => {
-                if (canceled) {
-                    resolve(null);
-                    return;
-                }
+                // TODO: Need to check if submit button was pressed before resolving the result
 
                 // Get the values from the dialog form inputs
                 const result: string[] = [];
@@ -45,26 +32,15 @@ function init(data?: string[] | null): types.Component<
                 resolve(result);
             };
 
-            const initForm = () => {
-                query.labels.forEach((label, index) => {
-                    label.innerText = globals.metalSheetSlots[index] || "";
+            query.labels.forEach((label, index) => {
+                label.innerText = globals.metalSheetSlots[index] || "";
+            });
+
+            if (!!data) {
+                data.forEach((value, index) => {
+                    query.inputs[index].value = value;
                 });
-
-                if (!!data) {
-                    data.forEach((value, index) => {
-                        query.inputs[index].value = value;
-                    });
-                }
-            };
-
-            initForm();
-
-            query.reset.onclick = (e) => {
-                if (!data) return;
-
-                e.preventDefault();
-                initForm();
-            };
+            }
 
             root.showModal();
         });
