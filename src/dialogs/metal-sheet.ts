@@ -3,6 +3,7 @@ import * as types from "../types";
 function init(metalSheet?: types.MetalSheet | null): types.Component<
     HTMLDialogElement,
     {
+        form: HTMLFormElement;
         format: HTMLInputElement;
         toolID: HTMLInputElement;
         press: HTMLSelectElement;
@@ -15,6 +16,7 @@ function init(metalSheet?: types.MetalSheet | null): types.Component<
     const root = document.querySelector<HTMLDialogElement>(`dialog[name="metal-sheet"]`)!;
 
     const query = {
+        form: root.querySelector<HTMLFormElement>(`form`)!,
         format: root.querySelector<HTMLInputElement>(`input#metalSheetDialog_Format`)!,
         toolID: root.querySelector<HTMLInputElement>(`input#metalSheetDialog_ToolID`)!,
         press: root.querySelector<HTMLSelectElement>(`select#metalSheetDialog_Press`)!,
@@ -22,15 +24,19 @@ function init(metalSheet?: types.MetalSheet | null): types.Component<
 
     const open: () => Promise<types.MetalSheet | null> = () => {
         return new Promise((resolve, _reject) => {
-            root.onclose = () => {
-                // TODO: Need to check if submit button was pressed before resolving the result
+            let result: types.MetalSheet | null = null;
 
+            root.onclose = () => {
+                resolve(result);
+            };
+
+            query.form.onsubmit = () => {
                 const press = parseInt(
                     (query.press.children[query.press.selectedIndex] as HTMLOptionElement).value,
                     10,
                 );
 
-                resolve({
+                result = {
                     format: query.format.value,
                     toolID: query.toolID.value,
                     data: {
@@ -40,7 +46,7 @@ function init(metalSheet?: types.MetalSheet | null): types.Component<
                             data: metalSheet?.data.table.data || [],
                         },
                     },
-                });
+                };
             };
 
             if (!!metalSheet) {

@@ -4,6 +4,7 @@ import * as types from "../types";
 function init(data?: string[] | null): types.Component<
     HTMLDialogElement,
     {
+        form: HTMLFormElement;
         labels: NodeListOf<HTMLLabelElement>;
         inputs: NodeListOf<HTMLInputElement>;
     },
@@ -14,22 +15,25 @@ function init(data?: string[] | null): types.Component<
     )!;
 
     const query = {
+        form: root.querySelector<HTMLFormElement>(`form`)!,
         labels: root.querySelectorAll<HTMLLabelElement>(`label[for]`)!,
         inputs: root.querySelectorAll<HTMLInputElement>(`input[type="text"]`)!,
     };
 
     const open: () => Promise<string[] | null> = () => {
         return new Promise((resolve, _reject) => {
+            let result: string[] | null = null;
+
             root.onclose = () => {
-                // TODO: Need to check if submit button was pressed before resolving the result
-
-                // Get the values from the dialog form inputs
-                const result: string[] = [];
-                query.inputs.forEach((input) => {
-                    result.push(input.value);
-                });
-
                 resolve(result);
+            };
+
+            query.form.onsubmit = () => {
+                // Get the values from the dialog form inputs
+                result = [];
+                query.inputs.forEach((input) => {
+                    result!.push(input.value);
+                });
             };
 
             query.labels.forEach((label, index) => {
