@@ -12,7 +12,7 @@ function init(filter?: number[] | null): types.Component<
         open: () => Promise<number[] | null>;
     }
 > {
-    const root = document.querySelector<HTMLDialogElement>(`dialog[name="metal-sheet"]`)!;
+    const root = document.querySelector<HTMLDialogElement>(`dialog[name="metal-sheet-filter"]`)!;
 
     const query = {
         filters: root.querySelector<HTMLUListElement>(`ul.filters`)!,
@@ -35,6 +35,8 @@ function init(filter?: number[] | null): types.Component<
                 resolve(newFilter || []);
             };
 
+            query.filters.innerHTML = "";
+
             globals.metalSheetSlots.forEach((slot, index) => {
                 const li = document.createElement("li");
                 li.className = "filter";
@@ -48,6 +50,8 @@ function init(filter?: number[] | null): types.Component<
                 li.querySelector<HTMLElement>(`.name`)!.innerText = slot;
                 li.querySelector<HTMLInputElement>(`input[type="checkbox"]`)!.checked =
                     !filter?.includes(index);
+
+                query.filters.appendChild(li);
             });
 
             root.showModal();
