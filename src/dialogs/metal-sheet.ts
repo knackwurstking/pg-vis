@@ -1,15 +1,11 @@
-import * as globals from "../globals";
 import * as types from "../types";
 
 function init(metalSheet?: types.MetalSheet | null): types.Component<
     HTMLDialogElement,
     {
-        close: HTMLButtonElement;
         format: HTMLInputElement;
         toolID: HTMLInputElement;
         press: HTMLSelectElement;
-        filters: NodeListOf<HTMLLIElement>;
-        reset: HTMLInputElement;
     },
     {
         open: () => Promise<types.MetalSheet | null>;
@@ -19,50 +15,18 @@ function init(metalSheet?: types.MetalSheet | null): types.Component<
     const root = document.querySelector<HTMLDialogElement>(`dialog[name="metal-sheet"]`)!;
 
     const query = {
-        close: root.querySelector<HTMLButtonElement>(`button.close`)!,
         format: root.querySelector<HTMLInputElement>(`input#metalSheetDialog_Format`)!,
         toolID: root.querySelector<HTMLInputElement>(`input#metalSheetDialog_ToolID`)!,
         press: root.querySelector<HTMLSelectElement>(`select#metalSheetDialog_Press`)!,
-        filters: root.querySelectorAll<HTMLLIElement>(`.filters .filter`)!,
-        reset: root.querySelector<HTMLInputElement>(`input[type="reset"]`)!,
     };
 
     const open: () => Promise<types.MetalSheet | null> = () => {
         return new Promise((resolve, _reject) => {
-            let canceled = false;
-            query.close.onclick = () => {
-                canceled = true;
-                root.close();
-            };
-
             root.onclose = () => {
-                if (canceled) {
-                    // Reset validations
-                    query.format.ariaInvalid = null;
-                    query.toolID.ariaInvalid = null;
-                    resolve(null);
-                    return;
-                }
-
-                // Get the values from the dialog form inputs
                 const press = parseInt(
                     (query.press.children[query.press.selectedIndex] as HTMLOptionElement).value,
                     10,
                 );
-
-                // Get filter from the dialog form inputs
-                const filteredIndexes: number[] = [];
-                query.filters.forEach((filter) => {
-                    const checkbox =
-                        filter.querySelector<HTMLInputElement>(`input[type="checkbox"]`)!;
-
-                    if (checkbox.checked) {
-                        return;
-                    }
-
-                    const indexToHide = parseInt(checkbox.getAttribute("data-index")!, 10);
-                    filteredIndexes!.push(indexToHide);
-                });
 
                 resolve({
                     format: query.format.value,
@@ -70,51 +34,28 @@ function init(metalSheet?: types.MetalSheet | null): types.Component<
                     data: {
                         press: press,
                         table: {
-                            filter: filteredIndexes,
+                            filter: metalSheet?.data.table.filter || [],
                             data: metalSheet?.data.table.data || [],
                         },
                     },
                 });
             };
 
-            const initForm = () => {
-                if (!!metalSheet) {
-                    query.format.value = metalSheet.format;
-                    query.toolID.value = metalSheet.toolID;
+            if (!!metalSheet) {
+                query.format.value = metalSheet.format;
+                query.toolID.value = metalSheet.toolID;
 
-                    query.press.selectedIndex = 0;
-                    let index = 0;
-                    for (const option of query.press.options) {
-                        if (option.value === metalSheet.data.press.toString()) {
-                            query.press.selectedIndex = index;
-                            break;
-                        }
-
-                        index++;
+                query.press.selectedIndex = 0;
+                let index = 0;
+                for (const option of query.press.options) {
+                    if (option.value === metalSheet.data.press.toString()) {
+                        query.press.selectedIndex = index;
+                        break;
                     }
+
+                    index++;
                 }
-
-                query.filters.forEach((filter, index) => {
-                    filter.querySelector<HTMLInputElement>(`label > span`)!.innerText =
-                        globals.metalSheetSlots[index] || "";
-
-                    if (!!metalSheet) {
-                        const checkbox =
-                            filter.querySelector<HTMLInputElement>(`input[type="checkbox"]`)!;
-
-                        const indexToHide = parseInt(checkbox.getAttribute("data-index")!, 10);
-                        checkbox.checked = !metalSheet.data.table.filter?.includes(indexToHide);
-                    }
-                });
-            };
-
-            initForm();
-
-            query.reset.onclick = (e) => {
-                if (!metalSheet) return;
-                e.preventDefault();
-                initForm();
-            };
+            }
 
             root.showModal();
         });

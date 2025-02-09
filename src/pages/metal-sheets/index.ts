@@ -43,6 +43,7 @@ export async function onMount() {
 
     metalSheet.data.table.data = sortTableData(metalSheet.data.table.data);
 
+    setupAppBarFilterButton(metalSheet);
     setupAppBarPrinterButton(metalSheet);
     setupAppBarEditSheetButton(metalSheet);
     setupAppBarAddTableEntryButton(metalSheet);
@@ -52,6 +53,38 @@ export async function onMount() {
 export async function onDestroy() {
     cleanup.forEach((fn) => fn());
     cleanup = [];
+}
+
+function setupAppBarFilterButton(metalSheet: types.MetalSheet) {
+    const filterButton = query.appBar_ButtonFilter();
+
+    filterButton.onclick = async () => {
+        const dialog = dialogs.metalSheetFilter(metalSheet.data.table.filter);
+
+        const data = await dialog.utils?.open();
+        if (!data) return;
+
+        metalSheet.data.table.filter = data;
+
+        const ls = listStores.get("metal-sheets");
+
+        try {
+            ls.replaceInStore(metalSheet);
+        } catch (err) {
+            alert(err);
+            filterButton.click();
+            return;
+        }
+
+        reload();
+    };
+
+    filterButton.style.display = "inline-flex";
+
+    cleanup.push(() => {
+        filterButton.style.display = "none";
+        filterButton.onclick = null;
+    });
 }
 
 function setupAppBarPrinterButton(metalSheet: types.MetalSheet) {
@@ -104,6 +137,7 @@ function setupAppBarPrinterButton(metalSheet: types.MetalSheet) {
 function setupAppBarEditSheetButton(metalSheet: types.MetalSheet) {
     // Enable app bar button for editing the current sheet
     const listEditButton = query.appBar_ButtonListEdit();
+
     listEditButton.onclick = async () => {
         const dialog = dialogs.metalSheet(metalSheet);
 
@@ -137,7 +171,9 @@ function setupAppBarEditSheetButton(metalSheet: types.MetalSheet) {
             return;
         }
     };
+
     listEditButton.style.display = "inline-flex";
+
     cleanup.push(() => {
         listEditButton.style.display = "none";
         listEditButton.onclick = null;

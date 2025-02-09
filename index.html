@@ -56,6 +56,16 @@
 
             <div class="right">
                 <button
+                    id="appBarButtonFilter"
+                    style="display: none"
+                    variant="ghost"
+                    color="primary"
+                    icon
+                >
+                    <div class="bi bi-filter-square"></div>
+                </button>
+
+                <button
                     id="appBarButtonPrinter"
                     style="display: none"
                     variant="ghost"
@@ -269,94 +279,45 @@
             </div>
         </aside>
 
-        <!-- This dialog can be used for editing and creating a new list -->
-        <dialog name="metal-sheet" oncancel="event.preventDefault()">
-            <div class="ui-flex-grid-row">
-                <h4 class="ui-flex-grid-item">Blech Liste</h4>
-                <button class="close" variant="ghost" color="primary" icon>
-                    <i class="bi bi-x-lg"></i>
-                </button>
-            </div>
-
+        <dialog name="metal-sheet">
             <form method="dialog">
-                <div class="ui-flex-grid">
-                    <div class="ui-flex-grid-row" style="--align: center">
-                        <label for="metalSheetDialog_Format">Format</label>
-                        <input id="metalSheetDialog_Format" style="width: 100%" type="text" />
-                    </div>
+                <label for="metalSheetDialog_Format">Format</label>
+                <input id="metalSheetDialog_Format" style="width: 100%" type="text" />
 
-                    <div class="ui-flex-grid-row" style="--align: center">
-                        <label for="metalSheetDialog_ToolID">Tool ID (Unterteil)</label>
-                        <input id="metalSheetDialog_ToolID" style="width: 100%" type="text" />
-                    </div>
+                <label for="metalSheetDialog_ToolID">Tool ID (Unterteil)</label>
+                <input id="metalSheetDialog_ToolID" style="width: 100%" type="text" />
 
-                    <div class="ui-flex-grid-row" style="--align: center; --justify: space-between">
-                        <label for="metalSheetDialog_Press"> Presse </label>
-                        <select id="metalSheetDialog_Press">
-                            <option value="-1">-</option>
-                            <option value="0">0</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                        </select>
-                    </div>
-
-                    <br />
-
-                    <!-- Filter Checklist -->
-                    <div class="ui-flex-grid-item" style="width: 100%">
-                        <h5>Filter Checklist</h5>
-                        <p>Bei Bedarf einige Einträge Deaktivieren</p>
-                        <ul class="filters" style="padding-top: 0">
-                            <li class="filter">
-                                <label>
-                                    <input type="checkbox" data-index="0" checked />
-                                    <span></span>
-                                </label>
-                            </li>
-                            <li class="filter">
-                                <label>
-                                    <input type="checkbox" data-index="1" checked />
-                                    <span></span>
-                                </label>
-                            </li>
-                            <li class="filter">
-                                <label>
-                                    <input type="checkbox" data-index="2" checked />
-                                    <span></span>
-                                </label>
-                            </li>
-                            <li class="filter">
-                                <label>
-                                    <input type="checkbox" data-index="3" checked />
-                                    <span></span>
-                                </label>
-                            </li>
-                            <li class="filter">
-                                <label>
-                                    <input type="checkbox" data-index="4" checked />
-                                    <span></span>
-                                </label>
-                            </li>
-                            <li class="filter">
-                                <label>
-                                    <input type="checkbox" data-index="5" checked />
-                                    <span></span>
-                                </label>
-                            </li>
-                        </ul>
-                    </div>
+                <div class="ui-flex-grid-row" style="--justify: space-between">
+                    <label for="metalSheetDialog_Press"> Presse </label>
+                    <select id="metalSheetDialog_Press">
+                        <option value="-1">-</option>
+                        <option value="0">0</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
                 </div>
 
                 <div class="ui-flex-grid-row" style="--justify: flex-end">
-                    <input type="reset" />
                     <input type="submit" />
                 </div>
             </form>
         </dialog>
 
-        <!-- This dialog can be used for editing and creating a new table entry -->
+        <dialog name="metal-sheet-filter">
+            <form method="dialog">
+                <h5>Filter Checklist</h5>
+                <p>Bei Bedarf einige Einträge Deaktivieren</p>
+                <ul class="filters" style="padding-top: 0"></ul>
+
+                <div class="ui-flex-grid-row" style="--justify: flex-end">
+                    <input type="submit" />
+                </div>
+            </form>
+        </dialog>
+
+        <!-- TODO: Clean up here -->
         <dialog name="metal-sheet-table-entry" oncancel="event.preventDefault()">
             <div class="ui-flex-grid-row">
                 <h4 class="ui-flex-grid-item">Eintrag</h4>
@@ -405,6 +366,7 @@
             </form>
         </dialog>
 
+        <!-- TODO: Clean up here -->
         <dialog name="vis" oncancel="event.preventDefault()">
             <div class="ui-flex-grid-row">
                 <h4 class="ui-flex-grid-item">VIS</h4>
@@ -428,6 +390,7 @@
             </form>
         </dialog>
 
+        <!-- TODO: Clean up here -->
         <dialog name="product" oncancel="event.preventDefault()">
             <div class="ui-flex-grid-row">
                 <h4 class="ui-flex-grid-item">Produkt</h4>
@@ -486,6 +449,7 @@
             </form>
         </dialog>
 
+        <!-- TODO: Clean up here -->
         <dialog name="vis-data" oncancel="event.preventDefault()">
             <div class="ui-flex-grid-row">
                 <h4 class="ui-flex-grid-item">VIS: Data</h4>
@@ -509,6 +473,7 @@
             </form>
         </dialog>
 
+        <!-- TODO: Clean up here -->
         <dialog name="choose">
             <div class="ui-flex-grid-row">
                 <h4 class="title ui-flex-grid-item"></h4>
@@ -520,6 +485,7 @@
             <div class="choices ui-flex-grid-row" style="--warp: wrap"></div>
         </dialog>
 
+        <!-- TODO: Clean up here -->
         <dialog name="product-bookmark">
             <div class="ui-flex-grid-row">
                 <h4 class="title ui-flex-grid-item"></h4>
@@ -531,6 +497,7 @@
             <ul class="checkboxes"></ul>
         </dialog>
 
+        <!-- TODO: Clean up here -->
         <dialog name="vis-data-entry" style="width: 100%" oncancel="event.preventDefault()">
             <div class="ui-flex-grid-row">
                 <h4 class="ui-flex-grid-item">Vis Data Eintrag</h4>
@@ -605,6 +572,7 @@
             </form>
         </dialog>
 
+        <!-- TODO: Clean up here -->
         <dialog name="special-flakes-entry" oncancel="event.preventDefault()">
             <div class="ui-flex-grid-row">
                 <h4 class="ui-flex-grid-item">Flakes</h4>

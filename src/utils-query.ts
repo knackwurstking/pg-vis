@@ -40,6 +40,10 @@ export function appBar_ButtonPrinter(): HTMLButtonElement {
     return document.querySelector(`#appBarButtonPrinter`)!;
 }
 
+export function appBar_ButtonFilter(): HTMLButtonElement {
+    return document.querySelector(`#appBarButtonFilter`)!;
+}
+
 // Drawer Elements
 
 export function drawer(): HTMLElement {
