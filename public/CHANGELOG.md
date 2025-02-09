@@ -5,8 +5,10 @@
 > - Replace "pg-vis.github.io" with "pg-vis-dev.github.io"
 > - Change store prefix from "pg-vis:" to "pg-vis-dev:"
 
-## v2.0.5 [unreleased]
+## v2.1.0 [unreleased]
 
+- Added new dialog for metal sheet filters
+- Changed dialogs
 - Fixed flakes (special) dialog, switched inputs main - c1
 - Fixed bookmarks store initialization, always resets even if available
 
