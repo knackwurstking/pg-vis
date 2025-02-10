@@ -64,7 +64,7 @@ function init(product?: types.VisDataEntry | null): types.Component<
             if (!!product) {
                 query.inputs.key.value = product.key || "";
                 query.inputs.value.value = product.value || "";
-                query.inputs.value.value = product.lotto || "";
+                query.inputs.lotto.value = product.lotto || "";
                 query.inputs.format.value = product.format || "";
                 query.inputs.thickness.value = product.thickness || "";
                 query.inputs.stamp.value = product.stamp || "";
