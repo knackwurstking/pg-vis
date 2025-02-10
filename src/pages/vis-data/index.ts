@@ -74,7 +74,7 @@ function setupAppBarEditButton(visData: types.VisData) {
                 "vis-data",
             );
         } catch (err) {
-            dialog.query!.inputs[0].ariaInvalid = ""; // title input element
+            dialog.query!.inputs.title.ariaInvalid = ""; // title input element
             alert(err);
             listEditButton.click();
             return;

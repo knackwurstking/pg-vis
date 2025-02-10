@@ -3,9 +3,15 @@ import * as types from "../types";
 function init(product?: types.VisDataEntry | null): types.Component<
     HTMLDialogElement,
     {
-        close: HTMLButtonElement;
-        inputs: NodeListOf<HTMLInputElement>;
-        reset: HTMLInputElement;
+        form: HTMLFormElement;
+        inputs: {
+            key: HTMLInputElement;
+            value: HTMLInputElement;
+            lotto: HTMLInputElement;
+            format: HTMLInputElement;
+            thickness: HTMLInputElement;
+            stamp: HTMLInputElement;
+        };
     },
     {
         open: () => Promise<types.VisDataEntry | null>;
@@ -15,56 +21,54 @@ function init(product?: types.VisDataEntry | null): types.Component<
     const root = document.querySelector<HTMLDialogElement>(`dialog[name="vis-data-entry"]`)!;
 
     const query = {
-        close: root.querySelector<HTMLButtonElement>(`button.close`)!,
-        inputs: root.querySelectorAll<HTMLInputElement>(`.vis-data-entry-input`)!,
-        reset: root.querySelector<HTMLInputElement>(`input[type="reset"]`)!,
+        form: root.querySelector<HTMLFormElement>(`form`)!,
+        inputs: {
+            key: root.querySelector<HTMLInputElement>(`.vis-data-entry-input#visDataEntry_Key`)!,
+            value: root.querySelector<HTMLInputElement>(
+                `.vis-data-entry-input#visDataEntry_Value`,
+            )!,
+            lotto: root.querySelector<HTMLInputElement>(
+                `.vis-data-entry-input#visDataEntry_Lotto`,
+            )!,
+            format: root.querySelector<HTMLInputElement>(
+                `.vis-data-entry-input#visDataEntry_Format`,
+            )!,
+            thickness: root.querySelector<HTMLInputElement>(
+                `.vis-data-entry-input#visDataEntry_Thickness`,
+            )!,
+            stamp: root.querySelector<HTMLInputElement>(
+                `.vis-data-entry-input#visDataEntry_Stamp`,
+            )!,
+        },
     };
 
     const open: () => Promise<types.VisDataEntry | null> = () => {
         return new Promise((resolve, _reject) => {
-            let canceled = false;
-            query.close.onclick = () => {
-                canceled = true;
-                root.close();
-            };
+            let result: types.VisDataEntry | null = null;
 
             root.onclose = () => {
-                if (canceled) {
-                    resolve(null);
-                    return;
-                }
-
-                // Get the values from the dialog form inputs
-                const result: types.VisDataEntry = {
-                    key: query.inputs[0].value || null,
-                    value: query.inputs[1].value,
-                    lotto: query.inputs[2].value || null,
-                    format: query.inputs[3].value || null,
-                    thickness: query.inputs[4].value || null,
-                    stamp: query.inputs[5].value || null,
-                };
-
                 resolve(result);
             };
 
-            const initForm = () => {
-                if (!!product) {
-                    query.inputs[0].value = product.key || "";
-                    query.inputs[1].value = product.value || "";
-                    query.inputs[2].value = product.lotto || "";
-                    query.inputs[3].value = product.format || "";
-                    query.inputs[4].value = product.thickness || "";
-                    query.inputs[5].value = product.stamp || "";
-                }
+            query.form.onsubmit = () => {
+                result = {
+                    key: query.inputs.key.value || null,
+                    value: query.inputs.value.value,
+                    lotto: query.inputs.lotto.value || null,
+                    format: query.inputs.format.value || null,
+                    thickness: query.inputs.thickness.value || null,
+                    stamp: query.inputs.stamp.value || null,
+                };
             };
 
-            initForm();
-
-            query.reset.onclick = (e) => {
-                if (!product) return;
-                e.preventDefault();
-                initForm();
-            };
+            if (!!product) {
+                query.inputs.key.value = product.key || "";
+                query.inputs.value.value = product.value || "";
+                query.inputs.value.value = product.lotto || "";
+                query.inputs.format.value = product.format || "";
+                query.inputs.thickness.value = product.thickness || "";
+                query.inputs.stamp.value = product.stamp || "";
+            }
 
             root.showModal();
         });
@@ -76,10 +80,10 @@ function init(product?: types.VisDataEntry | null): types.Component<
         utils: {
             open,
             validate() {
-                if (!query.inputs[1].value) query.inputs[1].ariaInvalid = "";
-                else query.inputs[1].ariaInvalid = null;
+                if (!query.inputs.value.value) query.inputs.value.ariaInvalid = "";
+                else query.inputs.value.ariaInvalid = null;
 
-                return query.inputs[1].ariaInvalid === null;
+                return query.inputs.value.ariaInvalid === null;
             },
         },
         destroy() {},
