@@ -5,7 +5,7 @@
 > - Replace "pg-vis.github.io" with "pg-vis-dev.github.io"
 > - Change store prefix from "pg-vis:" to "pg-vis-dev:"
 
-## v2.1.0 [unreleased]
+## v2.1.0 [2025-02-10]
 
 - Clean up dialogues
 - Added new dialog for metal sheet filters
@@ -305,7 +305,7 @@
 
 - Add pull and push handler for Gist IDs
 
-  - Allow "push" to files instead of gist
+    - Allow "push" to files instead of gist
 
 ## v0.0.16 — [2024-07-05]
 
