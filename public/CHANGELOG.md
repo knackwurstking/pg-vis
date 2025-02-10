@@ -7,7 +7,7 @@
 
 ## v2.1.0 [unreleased]
 
-- Clean up dialogs
+- Clean up dialogues
 - Added new dialog for metal sheet filters
 - Fixed flakes (special) dialog, switched inputs main - c1
 - Fixed bookmarks store initialization, always resets even if available
