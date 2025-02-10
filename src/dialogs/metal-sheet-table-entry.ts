@@ -7,6 +7,7 @@ function init(data?: string[] | null): types.Component<
         form: HTMLFormElement;
         labels: NodeListOf<HTMLLabelElement>;
         inputs: NodeListOf<HTMLInputElement>;
+        cancelButton: HTMLButtonElement;
     },
     { open: () => Promise<string[] | null> }
 > {
@@ -18,6 +19,7 @@ function init(data?: string[] | null): types.Component<
         form: root.querySelector<HTMLFormElement>(`form`)!,
         labels: root.querySelectorAll<HTMLLabelElement>(`label[for]`)!,
         inputs: root.querySelectorAll<HTMLInputElement>(`input[type="text"]`)!,
+        cancelButton: root.querySelector<HTMLButtonElement>(`button.cancel`)!,
     };
 
     const open: () => Promise<string[] | null> = () => {
@@ -26,6 +28,11 @@ function init(data?: string[] | null): types.Component<
 
             root.onclose = () => {
                 resolve(result);
+            };
+
+            query.cancelButton.onclick = (e) => {
+                e.preventDefault();
+                root.close();
             };
 
             query.form.onsubmit = () => {

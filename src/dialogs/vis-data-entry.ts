@@ -12,6 +12,7 @@ function init(product?: types.VisDataEntry | null): types.Component<
             thickness: HTMLInputElement;
             stamp: HTMLInputElement;
         };
+        cancelButton: HTMLButtonElement;
     },
     {
         open: () => Promise<types.VisDataEntry | null>;
@@ -40,6 +41,7 @@ function init(product?: types.VisDataEntry | null): types.Component<
                 `.vis-data-entry-input#visDataEntry_Stamp`,
             )!,
         },
+        cancelButton: root.querySelector<HTMLButtonElement>(`button.cancel`)!,
     };
 
     const open: () => Promise<types.VisDataEntry | null> = () => {
@@ -48,6 +50,11 @@ function init(product?: types.VisDataEntry | null): types.Component<
 
             root.onclose = () => {
                 resolve(result);
+            };
+
+            query.cancelButton.onclick = (e) => {
+                e.preventDefault();
+                root.close();
             };
 
             query.form.onsubmit = () => {

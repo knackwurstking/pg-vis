@@ -6,14 +6,18 @@ const html = String.raw;
 function init(entry?: types.SpecialFlakesEntry | null): types.Component<
     HTMLDialogElement,
     {
+        form: HTMLFormElement;
         inputContainer: HTMLElement;
+        cancelButton: HTMLButtonElement;
     },
     { open: () => Promise<types.SpecialFlakesEntry | null> }
 > {
     const root = document.querySelector<HTMLDialogElement>(`dialog[name="special-flakes-entry"]`)!;
 
     const query = {
+        form: root.querySelector<HTMLFormElement>(`form`)!,
         inputContainer: root.querySelector<HTMLElement>(`.input-container`)!,
+        cancelButton: root.querySelector<HTMLButtonElement>(`button.cancel`)!,
     };
 
     const open: () => Promise<types.SpecialFlakesEntry | null> = () => {
@@ -24,7 +28,12 @@ function init(entry?: types.SpecialFlakesEntry | null): types.Component<
                 resolve(result);
             };
 
-            root.onclose = () => {
+            query.cancelButton.onclick = (e) => {
+                e.preventDefault();
+                root.close();
+            };
+
+            query.form.onsubmit = () => {
                 // Get the values from the dialog form inputs
                 const inputElements = query.inputContainer.querySelectorAll(`input`);
                 const select = query.inputContainer.querySelector<HTMLSelectElement>("select")!;

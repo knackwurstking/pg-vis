@@ -11,6 +11,7 @@ function init(product?: types.Product | null): types.Component<
             thickness: HTMLInputElement;
             stamp: HTMLInputElement;
         };
+        cancelButton: HTMLButtonElement;
     },
     { open: () => Promise<types.Product | null> }
 > {
@@ -25,6 +26,7 @@ function init(product?: types.Product | null): types.Component<
             thickness: root.querySelector<HTMLInputElement>(`.product-input#product_Thickness`)!,
             stamp: root.querySelector<HTMLInputElement>(`.product-input#product_Stamp`)!,
         },
+        cancelButton: root.querySelector<HTMLButtonElement>(`button.cancel`)!,
     };
 
     const open: () => Promise<types.Product | null> = () => {
@@ -33,6 +35,11 @@ function init(product?: types.Product | null): types.Component<
 
             root.onclose = () => {
                 resolve(result);
+            };
+
+            query.cancelButton.onclick = (e) => {
+                e.preventDefault();
+                root.close();
             };
 
             query.form.onsubmit = () => {

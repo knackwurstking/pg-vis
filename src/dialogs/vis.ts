@@ -7,6 +7,7 @@ function init(vis?: types.Vis | null): types.Component<
         inputs: {
             title: HTMLInputElement;
         };
+        cancelButton: HTMLButtonElement;
     },
     { open: () => Promise<types.Vis | null> }
 > {
@@ -17,6 +18,7 @@ function init(vis?: types.Vis | null): types.Component<
         inputs: {
             title: root.querySelector<HTMLInputElement>(`input[type="text"]`)!,
         },
+        cancelButton: root.querySelector<HTMLButtonElement>(`button.cancel`)!,
     };
 
     const open: () => Promise<types.Vis | null> = () => {
@@ -25,6 +27,11 @@ function init(vis?: types.Vis | null): types.Component<
 
             root.onclose = () => {
                 resolve(result);
+            };
+
+            query.cancelButton.onclick = (e) => {
+                e.preventDefault();
+                root.close();
             };
 
             query.form.onsubmit = () => {
