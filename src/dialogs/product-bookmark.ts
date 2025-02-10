@@ -23,8 +23,9 @@ function init(product: types.Product): types.Component<
 
     const open: () => Promise<null> = () => {
         return new Promise((resolve, _reject) => {
-            query.close.onclick = () => root.close();
             root.onclose = () => resolve(null);
+            query.close.onclick = () => root.close();
+
             query.title.innerText = product.lotto;
 
             // For each bookmarks list

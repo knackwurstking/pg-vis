@@ -108,7 +108,6 @@ function init(entry?: types.SpecialFlakesEntry | null): types.Component<
                     globals.flakesPressSlots.indexOf(entry?.press || globals.flakesPressSlots[0]);
             }
 
-            // FIXME: The following elements are overflowing
             globals.flakesTowerSlots.forEach((slot) => {
                 const { percent, value } = entry?.secondary.find((e) => e.slot === slot) || {
                     percent: 0,
@@ -119,35 +118,37 @@ function init(entry?: types.SpecialFlakesEntry | null): types.Component<
                 query.inputContainer.appendChild(item);
 
                 item.className = "ui-flex-grid-item";
+
+                item.style.setProperty("--flex", "0");
+                item.style.width = "100%";
+
                 item.innerHTML = html`
-                    <div class="tower-slot ui-flex-grid-item">
-                        <h5>${slot}</h5>
+                    <h5>${slot}</h5>
 
-                        <div
-                            class="ui-flex-grid-row"
-                            style="--align: center; --justify: space-between"
-                        >
-                            <div class="ui-flex-grid" style="--gap: 0">
-                                <label>Prozent</label>
-                                <input
-                                    class="input"
-                                    id="specialFlakesEntry_${slot}-percent"
-                                    style="text-align: center;"
-                                    type="number"
-                                    value="${percent || ""}"
-                                />
-                            </div>
+                    <div
+                        class="ui-flex-grid-row"
+                        style="--align: center; --justify: space-between; width: 100%"
+                    >
+                        <div class="ui-flex-grid-item" style="--flex: 1;">
+                            <label>Prozent</label>
+                            <input
+                                class="input"
+                                id="specialFlakesEntry_${slot}-percent"
+                                style="text-align: center; width: 100%;"
+                                type="number"
+                                value="${percent || ""}"
+                            />
+                        </div>
 
-                            <div class="ui-flex-grid" style="--gap: 0">
-                                <label>Geschwindigkeit</label>
-                                <input
-                                    class="input"
-                                    id="specialFlakesEntry_${slot}-speed"
-                                    style="text-align: center;"
-                                    type="number"
-                                    value="${value || ""}"
-                                />
-                            </div>
+                        <div class="ui-flex-grid-item" style="--flex: 1;">
+                            <label>Geschwindigkeit</label>
+                            <input
+                                class="input"
+                                id="specialFlakesEntry_${slot}-speed"
+                                style="text-align: center; width: 100%;"
+                                type="number"
+                                value="${value || ""}"
+                            />
                         </div>
                     </div>
                 `;
