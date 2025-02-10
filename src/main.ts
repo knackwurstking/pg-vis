@@ -300,7 +300,7 @@ drawerGistIDsButton.onclick = () => {
                 try {
                     listStores.get("vis-data").addToStore([data]);
                 } catch (err) {
-                    dialog.query!.inputs[0].ariaInvalid = ""; // title input element
+                    dialog.query!.inputs.title.ariaInvalid = ""; // title input element
                     alert(err);
                     group.actions.add!.click();
                     return;

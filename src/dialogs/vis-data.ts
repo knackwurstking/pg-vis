@@ -3,9 +3,10 @@ import * as types from "../types";
 function init(visData?: types.VisData | null): types.Component<
     HTMLDialogElement,
     {
-        close: HTMLButtonElement;
-        inputs: NodeListOf<HTMLInputElement>;
-        reset: HTMLInputElement;
+        form: HTMLFormElement;
+        inputs: {
+            title: HTMLInputElement;
+        };
     },
     {
         open: () => Promise<types.VisData | null>;
@@ -15,47 +16,30 @@ function init(visData?: types.VisData | null): types.Component<
     const root = document.querySelector<HTMLDialogElement>(`dialog[name="vis-data"]`)!;
 
     const query = {
-        close: root.querySelector<HTMLButtonElement>(`button.close`)!,
-        inputs: root.querySelectorAll<HTMLInputElement>(`input[type="text"]`)!,
-        reset: root.querySelector<HTMLInputElement>(`input[type="reset"]`)!,
+        form: root.querySelector<HTMLFormElement>(`form`)!,
+        inputs: {
+            title: root.querySelector<HTMLInputElement>(`input[type="text"]`)!,
+        },
     };
 
     const open: () => Promise<types.VisData | null> = () => {
         return new Promise((resolve, _reject) => {
-            let canceled = false;
-            query.close.onclick = () => {
-                canceled = true;
-                root.close();
-            };
+            let result: types.VisData | null = null;
 
             root.onclose = () => {
-                if (canceled) {
-                    resolve(null);
-                    return;
-                }
+                resolve(result);
+            };
 
-                const titleInput = query.inputs[0];
-
-                resolve({
-                    title: titleInput.value,
+            query.form.onsubmit = () => {
+                result = {
+                    title: query.inputs.title.value,
                     data: [],
-                });
+                };
             };
 
-            const initForm = () => {
-                if (!!visData) {
-                    const titleInput = query.inputs[0];
-                    titleInput.value = visData.title;
-                }
-            };
-
-            initForm();
-
-            query.reset.onclick = (e) => {
-                if (!visData) return;
-                e.preventDefault();
-                initForm();
-            };
+            if (!!visData) {
+                query.inputs.title.value = visData.title;
+            }
 
             root.showModal();
         });
@@ -69,11 +53,11 @@ function init(visData?: types.VisData | null): types.Component<
             validate() {
                 let valid = true;
 
-                if (query.inputs[0].value) {
-                    query.inputs[0].ariaInvalid = "";
+                if (query.inputs.title.value) {
+                    query.inputs.title.ariaInvalid = "";
                     valid = false;
                 } else {
-                    query.inputs[0].ariaInvalid = null;
+                    query.inputs.title.ariaInvalid = null;
                 }
 
                 return valid;

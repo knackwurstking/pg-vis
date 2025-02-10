@@ -4,9 +4,11 @@ function init(metalSheet?: types.MetalSheet | null): types.Component<
     HTMLDialogElement,
     {
         form: HTMLFormElement;
-        format: HTMLInputElement;
-        toolID: HTMLInputElement;
-        press: HTMLSelectElement;
+        inputs: {
+            format: HTMLInputElement;
+            toolID: HTMLInputElement;
+            press: HTMLSelectElement;
+        };
     },
     {
         open: () => Promise<types.MetalSheet | null>;
@@ -17,9 +19,11 @@ function init(metalSheet?: types.MetalSheet | null): types.Component<
 
     const query = {
         form: root.querySelector<HTMLFormElement>(`form`)!,
-        format: root.querySelector<HTMLInputElement>(`input#metalSheetDialog_Format`)!,
-        toolID: root.querySelector<HTMLInputElement>(`input#metalSheetDialog_ToolID`)!,
-        press: root.querySelector<HTMLSelectElement>(`select#metalSheetDialog_Press`)!,
+        inputs: {
+            format: root.querySelector<HTMLInputElement>(`input#metalSheetDialog_Format`)!,
+            toolID: root.querySelector<HTMLInputElement>(`input#metalSheetDialog_ToolID`)!,
+            press: root.querySelector<HTMLSelectElement>(`select#metalSheetDialog_Press`)!,
+        },
     };
 
     const open: () => Promise<types.MetalSheet | null> = () => {
@@ -32,13 +36,17 @@ function init(metalSheet?: types.MetalSheet | null): types.Component<
 
             query.form.onsubmit = () => {
                 const press = parseInt(
-                    (query.press.children[query.press.selectedIndex] as HTMLOptionElement).value,
+                    (
+                        query.inputs.press.children[
+                            query.inputs.press.selectedIndex
+                        ] as HTMLOptionElement
+                    ).value,
                     10,
                 );
 
                 result = {
-                    format: query.format.value,
-                    toolID: query.toolID.value,
+                    format: query.inputs.format.value,
+                    toolID: query.inputs.toolID.value,
                     data: {
                         press: press,
                         table: {
@@ -50,14 +58,14 @@ function init(metalSheet?: types.MetalSheet | null): types.Component<
             };
 
             if (!!metalSheet) {
-                query.format.value = metalSheet.format;
-                query.toolID.value = metalSheet.toolID;
+                query.inputs.format.value = metalSheet.format;
+                query.inputs.toolID.value = metalSheet.toolID;
 
-                query.press.selectedIndex = 0;
+                query.inputs.press.selectedIndex = 0;
                 let index = 0;
-                for (const option of query.press.options) {
+                for (const option of query.inputs.press.options) {
                     if (option.value === metalSheet.data.press.toString()) {
-                        query.press.selectedIndex = index;
+                        query.inputs.press.selectedIndex = index;
                         break;
                     }
 
@@ -77,18 +85,18 @@ function init(metalSheet?: types.MetalSheet | null): types.Component<
             validate() {
                 let valid = true;
 
-                if (!query.format.value) {
-                    query.format.ariaInvalid = "";
+                if (!query.inputs.format.value) {
+                    query.inputs.format.ariaInvalid = "";
                     valid = false;
                 } else {
-                    query.format.ariaInvalid = null;
+                    query.inputs.format.ariaInvalid = null;
                 }
 
-                if (!query.toolID.value) {
-                    query.toolID.ariaInvalid = "";
+                if (!query.inputs.toolID.value) {
+                    query.inputs.toolID.ariaInvalid = "";
                     valid = false;
                 } else {
-                    query.toolID.ariaInvalid = null;
+                    query.inputs.toolID.ariaInvalid = null;
                 }
 
                 return valid;

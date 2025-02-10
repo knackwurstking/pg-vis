@@ -3,60 +3,44 @@ import * as types from "../types";
 function init(vis?: types.Vis | null): types.Component<
     HTMLDialogElement,
     {
-        close: HTMLButtonElement;
-        inputs: NodeListOf<HTMLInputElement>;
-        reset: HTMLInputElement;
+        form: HTMLFormElement;
+        inputs: {
+            title: HTMLInputElement;
+        };
     },
     { open: () => Promise<types.Vis | null> }
 > {
     const root = document.querySelector<HTMLDialogElement>(`dialog[name="vis"]`)!;
 
     const query = {
-        close: root.querySelector<HTMLButtonElement>(`button.close`)!,
-        inputs: root.querySelectorAll<HTMLInputElement>(`input[type="text"]`)!,
-        reset: root.querySelector<HTMLInputElement>(`input[type="reset"]`)!,
+        form: root.querySelector<HTMLFormElement>(`form`)!,
+        inputs: {
+            title: root.querySelector<HTMLInputElement>(`input[type="text"]`)!,
+        },
     };
 
     const open: () => Promise<types.Vis | null> = () => {
         return new Promise((resolve, _reject) => {
-            let canceled = false;
-            query.close.onclick = () => {
-                canceled = true;
-                root.close();
-            };
+            let result: types.Vis | null = null;
 
             root.onclose = () => {
-                if (canceled) {
-                    resolve(null);
-                    return;
-                }
+                resolve(result);
+            };
 
-                const titleInput = query.inputs[0];
+            query.form.onsubmit = () => {
                 const date = new Date();
 
-                resolve({
+                result = {
                     date: date.getTime(),
-                    title: titleInput.value || generateDefaultTitle(date),
+                    title: query.inputs.title.value || generateDefaultTitle(date),
                     data: [],
-                });
+                };
             };
 
-            const initForm = () => {
-                if (!!vis) {
-                    const titleInput = query.inputs[0];
-
-                    // Set title input (default: YYYY-MM-DD)
-                    titleInput.value = vis.title || generateDefaultTitle(new Date());
-                }
-            };
-
-            initForm();
-
-            query.reset.onclick = (e) => {
-                if (!vis) return;
-                e.preventDefault();
-                initForm();
-            };
+            if (!!vis) {
+                // Set title input (default: YYYY-MM-DD)
+                query.inputs.title.value = vis.title || generateDefaultTitle(new Date());
+            }
 
             root.showModal();
         });

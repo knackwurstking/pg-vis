@@ -164,8 +164,8 @@ function setupAppBarEditSheetButton(metalSheet: types.MetalSheet) {
                 reload();
             }
         } catch (err) {
-            dialog.query!.format.ariaInvalid = "";
-            dialog.query!.toolID.ariaInvalid = "";
+            dialog.query!.inputs.format.ariaInvalid = "";
+            dialog.query!.inputs.toolID.ariaInvalid = "";
             alert(err);
             listEditButton.click();
             return;
