@@ -53,7 +53,7 @@ function init(visData?: types.VisData | null): types.Component<
             validate() {
                 let valid = true;
 
-                if (query.inputs.title.value) {
+                if (!query.inputs.title.value) {
                     query.inputs.title.ariaInvalid = "";
                     valid = false;
                 } else {
