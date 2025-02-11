@@ -40,7 +40,7 @@ function init(vis?: types.Vis | null): types.Component<
                 result = {
                     date: date.getTime(),
                     title: query.inputs.title.value || generateDefaultTitle(date),
-                    data: [],
+                    data: vis?.data || [],
                 };
             };
 

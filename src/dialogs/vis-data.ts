@@ -40,7 +40,7 @@ function init(visData?: types.VisData | null): types.Component<
             query.form.onsubmit = () => {
                 result = {
                     title: query.inputs.title.value,
-                    data: [],
+                    data: visData?.data || [],
                 };
             };
 

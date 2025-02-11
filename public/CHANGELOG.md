@@ -5,6 +5,10 @@
 > - Replace "pg-vis.github.io" with "pg-vis-dev.github.io"
 > - Change store prefix from "pg-vis:" to "pg-vis-dev:"
 
+## v2.1.1 [2025-02-11]
+
+- Fixed vis and vis-data dialog resolve, missing data in edit mode
+
 ## v2.1.0 [2025-02-10]
 
 - Clean up dialogues
