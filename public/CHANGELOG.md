@@ -317,7 +317,7 @@
 
 - Add pull and push handler for Gist IDs
 
-    - Allow "push" to files instead of gist
+  - Allow "push" to files instead of gist
 
 ## v0.0.16 — [2024-07-05]
 
