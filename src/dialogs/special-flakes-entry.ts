@@ -126,7 +126,7 @@ function init(entry?: types.SpecialFlakesEntry | null): types.Component<
                 const item = document.createElement("div");
                 query.inputContainer.appendChild(item);
 
-                item.className = "ui-flex-grid-item";
+                item.className = "tower-slot ui-flex-grid-item";
 
                 item.style.setProperty("--flex", "0");
                 item.style.width = "100%";
