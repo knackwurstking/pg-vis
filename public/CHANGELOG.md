@@ -5,7 +5,7 @@
 > - Replace "pg-vis.github.io" with "pg-vis-dev.github.io"
 > - Change store prefix from "pg-vis:" to "pg-vis-dev:"
 
-## v2.1.4 [unreleased]
+## v2.1.4 [2025-02-27]
 
 - Fixed metal sheet filter data-index
 - Removed unused code for cancel button in dialogs with a from
