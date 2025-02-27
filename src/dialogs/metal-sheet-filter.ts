@@ -42,7 +42,7 @@ function init(filter?: number[] | null): types.Component<
                 li.className = "filter";
                 li.innerHTML = html`
                     <label>
-                        <input type="checkbox" data-index="5" checked />
+                        <input type="checkbox" data-index="${index}" checked />
                         <span class="name"></span>
                     </label>
                 `;
