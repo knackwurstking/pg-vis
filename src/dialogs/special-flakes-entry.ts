@@ -8,7 +8,6 @@ function init(entry?: types.SpecialFlakesEntry | null): types.Component<
     {
         form: HTMLFormElement;
         inputContainer: HTMLElement;
-        cancelButton: HTMLButtonElement;
     },
     { open: () => Promise<types.SpecialFlakesEntry | null> }
 > {
@@ -17,7 +16,6 @@ function init(entry?: types.SpecialFlakesEntry | null): types.Component<
     const query = {
         form: root.querySelector<HTMLFormElement>(`form`)!,
         inputContainer: root.querySelector<HTMLElement>(`.input-container`)!,
-        cancelButton: root.querySelector<HTMLButtonElement>(`button.cancel`)!,
     };
 
     const open: () => Promise<types.SpecialFlakesEntry | null> = () => {
@@ -26,11 +24,6 @@ function init(entry?: types.SpecialFlakesEntry | null): types.Component<
 
             root.onclose = () => {
                 resolve(result);
-            };
-
-            query.cancelButton.onclick = (e) => {
-                e.preventDefault();
-                root.close();
             };
 
             query.form.onsubmit = () => {

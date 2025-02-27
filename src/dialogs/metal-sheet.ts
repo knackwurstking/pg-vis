@@ -9,7 +9,6 @@ function init(metalSheet?: types.MetalSheet | null): types.Component<
             toolID: HTMLInputElement;
             press: HTMLSelectElement;
         };
-        cancelButton: HTMLButtonElement;
     },
     {
         open: () => Promise<types.MetalSheet | null>;
@@ -25,7 +24,6 @@ function init(metalSheet?: types.MetalSheet | null): types.Component<
             toolID: root.querySelector<HTMLInputElement>(`input#metalSheetDialog_ToolID`)!,
             press: root.querySelector<HTMLSelectElement>(`select#metalSheetDialog_Press`)!,
         },
-        cancelButton: root.querySelector<HTMLButtonElement>(`button.cancel`)!,
     };
 
     const open: () => Promise<types.MetalSheet | null> = () => {
@@ -34,11 +32,6 @@ function init(metalSheet?: types.MetalSheet | null): types.Component<
 
             root.onclose = () => {
                 resolve(result);
-            };
-
-            query.cancelButton.onclick = (e) => {
-                e.preventDefault();
-                root.close();
             };
 
             query.form.onsubmit = () => {
