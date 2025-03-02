@@ -11,6 +11,7 @@ function init(vis?: types.Vis | null): types.Component<
     { open: () => Promise<types.Vis | null> }
 > {
     const root = document.querySelector<HTMLDialogElement>(`dialog[name="vis"]`)!;
+    const cancel = root.querySelector<HTMLButtonElement>(`button.cancel`)!;
 
     const query = {
         form: root.querySelector<HTMLFormElement>(`form`)!,
@@ -25,6 +26,11 @@ function init(vis?: types.Vis | null): types.Component<
 
             root.onclose = () => {
                 resolve(result);
+            };
+
+            cancel.onclick = (e) => {
+                e.preventDefault();
+                root.close();
             };
 
             query.form.onsubmit = () => {

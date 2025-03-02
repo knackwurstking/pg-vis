@@ -12,6 +12,7 @@ function init(entry?: types.SpecialFlakesEntry | null): types.Component<
     { open: () => Promise<types.SpecialFlakesEntry | null> }
 > {
     const root = document.querySelector<HTMLDialogElement>(`dialog[name="special-flakes-entry"]`)!;
+    const cancel = root.querySelector<HTMLButtonElement>(`button.cancel`)!;
 
     const query = {
         form: root.querySelector<HTMLFormElement>(`form`)!,
@@ -24,6 +25,11 @@ function init(entry?: types.SpecialFlakesEntry | null): types.Component<
 
             root.onclose = () => {
                 resolve(result);
+            };
+
+            cancel.onclick = (e) => {
+                e.preventDefault();
+                root.close();
             };
 
             query.form.onsubmit = () => {

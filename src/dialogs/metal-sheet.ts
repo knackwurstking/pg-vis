@@ -16,6 +16,7 @@ function init(metalSheet?: types.MetalSheet | null): types.Component<
     }
 > {
     const root = document.querySelector<HTMLDialogElement>(`dialog[name="metal-sheet"]`)!;
+    const cancel = root.querySelector<HTMLButtonElement>(`button.cancel`)!;
 
     const query = {
         form: root.querySelector<HTMLFormElement>(`form`)!,
@@ -32,6 +33,11 @@ function init(metalSheet?: types.MetalSheet | null): types.Component<
 
             root.onclose = () => {
                 resolve(result);
+            };
+
+            cancel.onclick = (e) => {
+                e.preventDefault();
+                root.close();
             };
 
             query.form.onsubmit = () => {

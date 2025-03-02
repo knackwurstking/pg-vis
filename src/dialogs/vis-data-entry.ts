@@ -19,6 +19,7 @@ function init(product?: types.VisDataEntry | null): types.Component<
     }
 > {
     const root = document.querySelector<HTMLDialogElement>(`dialog[name="vis-data-entry"]`)!;
+    const cancel = root.querySelector<HTMLButtonElement>(`button.cancel`)!;
 
     const query = {
         form: root.querySelector<HTMLFormElement>(`form`)!,
@@ -48,6 +49,11 @@ function init(product?: types.VisDataEntry | null): types.Component<
 
             root.onclose = () => {
                 resolve(result);
+            };
+
+            cancel.onclick = (e) => {
+                e.preventDefault();
+                resolve(null);
             };
 
             query.form.onsubmit = () => {

@@ -14,6 +14,8 @@ function init(data?: string[] | null): types.Component<
         `dialog[name="metal-sheet-table-entry"]`,
     )!;
 
+    const cancel = root.querySelector<HTMLButtonElement>(`button.cancel`)!;
+
     const query = {
         form: root.querySelector<HTMLFormElement>(`form`)!,
         labels: root.querySelectorAll<HTMLLabelElement>(`label[for]`)!,
@@ -26,6 +28,11 @@ function init(data?: string[] | null): types.Component<
 
             root.onclose = () => {
                 resolve(result);
+            };
+
+            cancel.onclick = (event) => {
+                event.preventDefault();
+                root.close();
             };
 
             query.form.onsubmit = () => {

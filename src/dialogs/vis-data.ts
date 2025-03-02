@@ -14,6 +14,7 @@ function init(visData?: types.VisData | null): types.Component<
     }
 > {
     const root = document.querySelector<HTMLDialogElement>(`dialog[name="vis-data"]`)!;
+    const cancel = root.querySelector<HTMLButtonElement>(`button.cancel`)!;
 
     const query = {
         form: root.querySelector<HTMLFormElement>(`form`)!,
@@ -28,6 +29,11 @@ function init(visData?: types.VisData | null): types.Component<
 
             root.onclose = () => {
                 resolve(result);
+            };
+
+            cancel.onclick = (e) => {
+                e.preventDefault();
+                root.close();
             };
 
             query.form.onsubmit = () => {

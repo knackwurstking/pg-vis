@@ -15,6 +15,7 @@ function init(product?: types.Product | null): types.Component<
     { open: () => Promise<types.Product | null> }
 > {
     const root = document.querySelector<HTMLDialogElement>(`dialog[name="product"]`)!;
+    const cancel = root.querySelector<HTMLButtonElement>(`button.cancel`)!;
 
     const query = {
         form: root.querySelector<HTMLFormElement>(`form`)!,
@@ -33,6 +34,11 @@ function init(product?: types.Product | null): types.Component<
 
             root.onclose = () => {
                 resolve(result);
+            };
+
+            cancel.onclick = (e) => {
+                e.preventDefault();
+                root.close();
             };
 
             query.form.onsubmit = () => {
