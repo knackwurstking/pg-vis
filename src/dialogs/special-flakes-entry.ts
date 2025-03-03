@@ -88,6 +88,8 @@ function init(entry?: types.SpecialFlakesEntry | null): types.Component<
                             style="width: 12ch; text-align: center;"
                             type="number"
                             value="${entry?.primary.value || ""}"
+                            min="0"
+                            step="0.1"
                         />
                     </div>
 
@@ -99,6 +101,8 @@ function init(entry?: types.SpecialFlakesEntry | null): types.Component<
                             style="width: 6ch; text-align: center;"
                             type="number"
                             value="${entry?.compatatore || 25}"
+                            min="0"
+                            step="1"
                         />
                     </div>
 
@@ -145,6 +149,8 @@ function init(entry?: types.SpecialFlakesEntry | null): types.Component<
                                 style="text-align: center; width: 100%;"
                                 type="number"
                                 value="${percent || ""}"
+                                min="0"
+                                step="0.1"
                             />
                         </div>
 
@@ -156,6 +162,8 @@ function init(entry?: types.SpecialFlakesEntry | null): types.Component<
                                 style="text-align: center; width: 100%;"
                                 type="number"
                                 value="${value || ""}"
+                                min="0"
+                                step="1"
                             />
                         </div>
                     </div>
