@@ -47,14 +47,14 @@ function init(entry?: types.SpecialFlakesEntry | null): types.Component<
 
                     primary: {
                         ...(entry?.primary || {}),
-                        value: parseInt(inputElements[0].value || "0", 10),
+                        value: parseFloat(inputElements[0].value || "0", 10),
                         percent: 0,
                     },
 
                     secondary: [...query.inputContainer.querySelectorAll(`.tower-slot`)]
                         .map((el, index) => {
                             const [inputPercent, inputSpeed] = el.querySelectorAll("input");
-                            const percent = parseInt(inputPercent.value, 10);
+                            const percent = parseFloat(inputPercent.value);
                             const speed = parseInt(inputSpeed.value, 10);
                             return {
                                 percent,
