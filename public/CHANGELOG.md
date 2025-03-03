@@ -5,6 +5,10 @@
 > - Replace "pg-vis.github.io" with "pg-vis-dev.github.io"
 > - Change store prefix from "pg-vis:" to "pg-vis-dev:"
 
+## v2.1.7 [2025-03-03]
+
+- Fix integer parsing for flakes dialog input elements that allow floats.
+
 ## v2.1.6 [2025-03-03]
 
 - Fixed misplaced resolve in cancel button callback for the vis-data-entry dialog
