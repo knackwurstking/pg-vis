@@ -5,6 +5,10 @@
 > - Replace "pg-vis.github.io" with "pg-vis-dev.github.io"
 > - Change store prefix from "pg-vis:" to "pg-vis-dev:"
 
+## v2.1.6 [2025-03-03]
+
+- Fixed misplaced resolve in cancel button callback for the vis-data-entry dialog
+
 ## v2.1.5 [2025-03-02]
 
 - Fixed a bug introduced in v2.1.4

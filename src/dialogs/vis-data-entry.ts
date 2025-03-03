@@ -53,7 +53,7 @@ function init(product?: types.VisDataEntry | null): types.Component<
 
             cancel.onclick = (e) => {
                 e.preventDefault();
-                resolve(null);
+                root.close();
             };
 
             query.form.onsubmit = () => {
