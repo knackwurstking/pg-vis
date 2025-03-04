@@ -5,6 +5,12 @@
 > - Replace "pg-vis.github.io" with "pg-vis-dev.github.io"
 > - Change store prefix from "pg-vis:" to "pg-vis-dev:"
 
+## v2.1.8 [2025-03-04]
+
+**Fixed**:
+
+- Add Bootstrap icons and CSS to the project and update the service worker assets.
+
 ## v2.1.7 [2025-03-03]
 
 - Fix integer parsing for flakes dialog input elements that allow floats.
