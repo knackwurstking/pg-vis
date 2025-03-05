@@ -5,6 +5,12 @@
 > - Replace "pg-vis.github.io" with "pg-vis-dev.github.io"
 > - Change store prefix from "pg-vis:" to "pg-vis-dev:"
 
+## v2.1.10 [2025-03-05]
+
+**Fixed**:
+
+- Missing fonts/ path in font assets path
+
 ## v2.1.9 [2025-03-05]
 
 **Fixed**:
