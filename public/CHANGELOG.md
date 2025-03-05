@@ -5,6 +5,12 @@
 > - Replace "pg-vis.github.io" with "pg-vis-dev.github.io"
 > - Change store prefix from "pg-vis:" to "pg-vis-dev:"
 
+## v2.1.9 [2025-03-05]
+
+**Fixed**:
+
+- Icon asset paths
+
 ## v2.1.8 [2025-03-04]
 
 **Fixed**:
@@ -339,8 +345,7 @@
 **TODO**:
 
 - Add pull and push handler for Gist IDs
-
-  - Allow "push" to files instead of gist
+- Allow "push" to files instead of gist
 
 ## v0.0.16 — [2024-07-05]
 
