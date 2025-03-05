@@ -31,7 +31,11 @@ const screenshots = [];
 const manifestForPlugIn = {
     strategies: "generateSW",
     registerType: "prompt",
-    includeAssets: ["CHANGELOG.md", "assets/bootstrap-icons.woff", "assets/bootstrap-icons.woff2"],
+    includeAssets: [
+        "CHANGELOG.md",
+        "assets/fonts/bootstrap-icons.woff",
+        "assets/fonts/bootstrap-icons.woff2",
+    ],
     manifest: {
         name: "PG: Vis",
         short_name: "pg-vis",
