@@ -6,9 +6,9 @@
     "type": "module",
     "scripts": {
         "test": "jest",
-        "dev": "vite --host",
-        "preview": "vite preview --host",
-        "build": "npm run test && vite build --minify -c vite.config.js --emptyOutDir",
+        "dev": "export PWA=true; export MODE=; vite --host",
+        "preview": "export PWA=true; export MODE=; vite preview --host",
+        "build": "export PWA=false; export MODE=android; npm run test && vite build --minify -c vite.config.js --emptyOutDir",
         "generate-assets": "npx pwa-assets-generator"
     },
     "devDependencies": {
@@ -23,6 +23,8 @@
         "vite-plugin-pwa": "^0.20.0"
     },
     "dependencies": {
+        "@capacitor/android": "^7.1.0",
+        "@capacitor/cli": "^7.1.0",
         "bootstrap-icons": "^1.11.3",
         "file-saver": "^2.0.5",
         "jest": "^29.7.0",

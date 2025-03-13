@@ -12,15 +12,15 @@ import * as types from "./types";
 import * as utils from "./utils";
 import * as query from "./utils-query";
 
-// PWA Updates
-
-const updateSW = registerSW({
-    async onNeedRefresh() {
-        if (confirm(`Update verfügbar. Zum Aktualisieren bestätigen.`)) {
-            await updateSW();
-        }
-    },
-});
+if (process.env.PWA) {
+    const updateSW = registerSW({
+        async onNeedRefresh() {
+            if (confirm(`Update verfügbar. Zum Aktualisieren bestätigen.`)) {
+                await updateSW();
+            }
+        },
+    });
+}
 
 // Initialize AppBar
 
