@@ -1,9 +1,9 @@
 # Changelog
 
-> **NOTE if push to dev**:
->
-> - Replace "pg-vis.github.io" with "pg-vis-dev.github.io"
-> - Change store prefix from "pg-vis:" to "pg-vis-dev:"
+## v2.1.12 [unreleased]
+
+- Fixed metal sheet print to pdf for android build
+- Fixed flakes print to pdf for android build [work-in-progress]
 
 ## v2.1.11 [2025-03-28]
 
