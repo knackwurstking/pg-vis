@@ -5,6 +5,10 @@
 > - Replace "pg-vis.github.io" with "pg-vis-dev.github.io"
 > - Change store prefix from "pg-vis:" to "pg-vis-dev:"
 
+## v2.1.11 [2025-03-28]
+
+- Add android build (capacitor)
+
 ## v2.1.10 [2025-03-05]
 
 **Fixed**:
