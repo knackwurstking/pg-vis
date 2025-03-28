@@ -128,14 +128,14 @@ function setupAppBarPrinterButton(metalSheet: types.MetalSheet) {
         const fileName = listStore.fileName(metalSheet).replace(/(\.json)$/, ".pdf");
 
         if (process.env.CAPACITOR) {
-            const blob = new Blob([pdf.output()], { type: "application/pdf" });
             Share.share({
                 title: fileName,
                 dialogTitle: fileName,
                 url: (
                     await Filesystem.writeFile({
                         path: fileName,
-                        data: blob,
+                        // @ts-ignore
+                        data: pdf.output("datauri"),
                         directory: Directory.Cache,
                     })
                 ).uri,
