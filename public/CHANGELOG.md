@@ -3,7 +3,7 @@
 ## v2.1.12 [unreleased]
 
 - Fixed metal sheet print to pdf for android build
-- Fixed flakes print to pdf for android build [work-in-progress]
+- Fixed flakes print to pdf for android build
 
 ## v2.1.11 [2025-03-28]
 
