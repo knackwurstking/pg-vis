@@ -38,22 +38,22 @@ export function generateRegExp(value: string): RegExp {
 
 export async function downloadZIP(storeKey: types.DrawerGroups) {
     const zip = new JSZip();
-    const listsStore = listStores.get(storeKey);
+    const listStore = listStores.get(storeKey);
 
     const storeData = globals.store.get(storeKey);
     if (storeData === undefined) return;
 
     for (const list of storeData.lists) {
-        const fileName = listsStore.fileName(list);
+        const fileName = listStore.fileName(list);
         zip.file(fileName, JSON.stringify(list, null, 4));
     }
 
-    const fileName = listsStore.zipFileName();
+    const fileName = listStore.zipFileName();
 
     if (process.env.CAPACITOR) {
         const blob = await zip.generateAsync({ type: "base64", compression: "DEFLATE" });
         Share.share({
-            title: listsStore.title(),
+            title: fileName,
             dialogTitle: fileName,
             url: (
                 await Filesystem.writeFile({
