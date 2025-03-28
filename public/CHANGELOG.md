@@ -1,6 +1,6 @@
 # Changelog
 
-## v2.1.12 [unreleased]
+## v2.1.12 [2025-03-28]
 
 - Fixed metal sheet print to pdf for android build
 - Fixed flakes print to pdf for android build
