@@ -1,4 +1,4 @@
-import { Directory, Encoding, Filesystem } from "@capacitor/filesystem";
+import { Directory, Filesystem } from "@capacitor/filesystem";
 import { Share } from "@capacitor/share";
 import FileSaver from "file-saver";
 import JSZip from "jszip";
@@ -49,9 +49,9 @@ export async function downloadZIP(storeKey: types.DrawerGroups) {
     }
 
     const fileName = listsStore.zipFileName();
-    const blob = await zip.generateAsync({ type: "blob" });
 
     if (process.env.CAPACITOR) {
+        const blob = await zip.generateAsync({ type: "base64", compression: "DEFLATE" });
         Share.share({
             title: listsStore.title(),
             dialogTitle: fileName,
@@ -59,12 +59,12 @@ export async function downloadZIP(storeKey: types.DrawerGroups) {
                 await Filesystem.writeFile({
                     path: fileName,
                     data: blob,
-                    encoding: Encoding.UTF8,
                     directory: Directory.Cache,
                 })
             ).uri,
         });
     } else {
+        const blob = await zip.generateAsync({ type: "blob" });
         FileSaver.saveAs(blob, fileName);
     }
 }
