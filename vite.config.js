@@ -61,6 +61,6 @@ export default defineConfig({
 
     define: {
         "process.env.PWA": process.env.PWA || false,
-        "process.env.MODE": JSON.stringify(process.env.MODE),
+        "process.env.CAPACITOR": process.env.CAPACITOR || false,
     },
 });

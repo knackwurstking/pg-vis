@@ -1,10 +1,12 @@
+import { Directory, Encoding, Filesystem } from "@capacitor/filesystem";
+import { Share } from "@capacitor/share";
 import FileSaver from "file-saver";
 import JSZip from "jszip";
 
-import * as types from "./types";
-import * as query from "./utils-query";
 import * as globals from "./globals";
 import * as listStores from "./list-stores";
+import * as types from "./types";
+import * as query from "./utils-query";
 
 export function setAppBarTitle(title: string): types.CleanUp {
     const titleElement = query.appBar_Title();
@@ -46,7 +48,25 @@ export async function downloadZIP(storeKey: types.DrawerGroups) {
         zip.file(fileName, JSON.stringify(list, null, 4));
     }
 
-    FileSaver.saveAs(await zip.generateAsync({ type: "blob" }), listsStore.zipFileName());
+    const fileName = listsStore.zipFileName();
+    const blob = await zip.generateAsync({ type: "blob" });
+
+    if (process.env.CAPACITOR) {
+        Share.share({
+            title: listsStore.title(),
+            dialogTitle: fileName,
+            url: (
+                await Filesystem.writeFile({
+                    path: fileName,
+                    data: blob,
+                    encoding: Encoding.UTF8,
+                    directory: Directory.Cache,
+                })
+            ).uri,
+        });
+    } else {
+        FileSaver.saveAs(blob, fileName);
+    }
 }
 
 export async function importFromFile(fileType: string, storeKey: types.DrawerGroups) {

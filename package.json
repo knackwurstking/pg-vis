@@ -6,12 +6,14 @@
     "type": "module",
     "scripts": {
         "test": "jest",
-        "dev": "export PWA=true; export MODE=; vite --host",
-        "preview": "export PWA=true; export MODE=; vite preview --host",
-        "build": "export PWA=false; export MODE=android; npm run test && vite build --minify -c vite.config.js --emptyOutDir",
+        "dev": "    export PWA=true;  export CAPACITOR=false; vite --host",
+        "preview": "export PWA=true;  export CAPACITOR=false; vite preview --host",
+        "build": "  export PWA=false; export CAPACITOR=true;  npm run test && vite build --minify -c vite.config.js --emptyOutDir",
         "generate-assets": "npx pwa-assets-generator"
     },
     "devDependencies": {
+        "@capacitor/filesystem": "^7.0.0",
+        "@capacitor/share": "^7.0.0",
         "@types/file-saver": "^2.0.7",
         "@types/jest": "^29.5.14",
         "@types/node": "^22.7.4",
