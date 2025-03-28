@@ -1,3 +1,5 @@
+import { Directory, Filesystem } from "@capacitor/filesystem";
+import { Share } from "@capacitor/share";
 import * as jspdf from "jspdf";
 import jsPDFAutotable from "jspdf-autotable";
 import * as ui from "ui";
@@ -123,7 +125,24 @@ function setupAppBarPrinterButton(metalSheet: types.MetalSheet) {
             },
         });
 
-        pdf.save(listStore.fileName(metalSheet).replace(/(\.json)$/, ".pdf"));
+        const fileName = listStore.fileName(metalSheet).replace(/(\.json)$/, ".pdf");
+
+        if (process.env.CAPACITOR) {
+            const blob = new Blob([pdf.output()], { type: "application/pdf" });
+            Share.share({
+                title: fileName,
+                dialogTitle: fileName,
+                url: (
+                    await Filesystem.writeFile({
+                        path: fileName,
+                        data: blob,
+                        directory: Directory.Cache,
+                    })
+                ).uri,
+            });
+        } else {
+            pdf.save(fileName);
+        }
     };
 
     printerButton.style.display = "inline-flex";
