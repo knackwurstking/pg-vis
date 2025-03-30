@@ -31,6 +31,6 @@
         "jest": "^29.7.0",
         "jszip": "^3.10.1",
         "octokit": "^4.0.2",
-        "ui": "knackwurstking/ui#v2.1.1"
+        "ui": "knackwurstking/ui#v2.3.0"
     }
 }
