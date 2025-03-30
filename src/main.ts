@@ -104,7 +104,9 @@ drawerGistIDsButton.onclick = () => {
                 }
 
                 // Sort active lists by press from low to high
-                activeLists = activeLists.sort((a, b) => (a.data.press > b.data.press ? 1 : -1));
+                activeLists = activeLists.sort((a, b) =>
+                    a.data.press > b.data.press ? 1 : -1,
+                );
 
                 group.items.innerHTML = "";
                 for (const list of [...activeLists, ...rest]) {
