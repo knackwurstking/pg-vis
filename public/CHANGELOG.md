@@ -1,5 +1,9 @@
 # Changelog
 
+## v2.1.13 [2025-03-30]
+
+- Fixed app-bar hidden behind the android status bar on top
+
 ## v2.1.12 [2025-03-28]
 
 - Fixed metal sheet print to pdf for android build
