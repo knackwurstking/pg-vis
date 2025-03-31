@@ -1,5 +1,6 @@
 import "./bootstrap-icons.css";
 
+import { App } from "@capacitor/app";
 import * as ui from "ui";
 import { registerSW } from "virtual:pwa-register";
 
@@ -11,6 +12,20 @@ import * as pages from "./pages";
 import * as types from "./types";
 import * as utils from "./utils";
 import * as query from "./utils-query";
+
+if (process.env.CAPACITOR) {
+    App.addListener("backButton", ({ canGoBack }) => {
+        if (!!document.querySelector(`dialog[open]`)) {
+            return;
+        }
+
+        if (!canGoBack) {
+            App.exitApp();
+        } else {
+            window.history.back();
+        }
+    });
+}
 
 if (process.env.PWA) {
     const updateSW = registerSW({

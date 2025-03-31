@@ -1,5 +1,9 @@
 # Changelog
 
+## v2.1.14 [2025-03-31]
+
+- Fixed android system back button handling
+
 ## v2.1.13 [2025-03-30]
 
 - Fixed app-bar hidden behind the android status bar on top
