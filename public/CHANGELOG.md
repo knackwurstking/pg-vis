@@ -1,5 +1,9 @@
 # Changelog
 
+## v2.1.15 [2025-04-01]
+
+- Fixed the revision 30 limit
+
 ## v2.1.14 [2025-03-31]
 
 - Fixed android system back button handling
