@@ -46,6 +46,7 @@ export async function push(
     const ls = listStores.get(storeKey);
 
     // Take store data and push to gist
+    let allowPush = false;
     const data: { [key: string]: { content: string } | null } = {};
     storeData.lists.forEach((list) => {
         data[ls.fileName(list)] = { content: JSON.stringify(list) };
@@ -53,22 +54,42 @@ export async function push(
 
     // Before patching a gist, get the gist and compare + set files no longer
     // existing to null
-    const files = await getGist(gistID);
-    if (!!files) {
-        const dataFileNames = Object.keys(data);
-        Object.entries(files).forEach(([name, _data]) => {
-            if (!dataFileNames.includes(name)) {
-                data[name] = null;
+    const currentGistFiles = await getGist(gistID);
+    if (!!currentGistFiles) {
+        const newFileNames = Object.keys(data);
+        Object.entries(currentGistFiles).forEach(([k, v]) => {
+            if (!newFileNames.includes(k)) {
+                data[k] = null;
+                allowPush = true;
+                return;
+            }
+
+            // Compare files
+            const file = data[k];
+            if (file?.content !== v?.content) allowPush = true;
+        });
+
+        const currentFileNames = Object.keys(currentGistFiles);
+        newFileNames.forEach((name) => {
+            if (!currentFileNames.includes(name)) {
+                allowPush = true;
             }
         });
     }
 
-    await patchGist(apiToken, gistID, data);
+    if (allowPush) await patchGist(apiToken, gistID, data);
+    else {
+        alert("Nichts hat sich geändert!");
+    }
 
     return {
         gist: {
             id: gistID,
-            revision: await getRevision(gistID),
+            revision: !allowPush
+                ? storeData.gist?.revision || null
+                : storeData.gist?.revision
+                  ? storeData.gist.revision + 1
+                  : await getRevision(gistID),
             token: apiToken,
         },
         lists: storeData.lists,
