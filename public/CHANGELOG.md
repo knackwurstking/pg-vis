@@ -1,8 +1,10 @@
 # Changelog
 
-## v2.1.15 [2025-04-01]
+## v2.1.15 [2025-03-01]
 
-- Fixed the revision 30 limit
+- Fixed revision 30 limit.
+- Fixed pushing to gist repo if nothing has changed.
+- Fixed files not removed from gist repo after push.
 
 ## v2.1.14 [2025-03-31]
 
