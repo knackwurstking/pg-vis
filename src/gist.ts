@@ -46,10 +46,23 @@ export async function push(
     const ls = listStores.get(storeKey);
 
     // Take store data and push to gist
-    const data: { [key: string]: { content: string } } = {};
+    const data: { [key: string]: { content: string } | null } = {};
     storeData.lists.forEach((list) => {
         data[ls.fileName(list)] = { content: JSON.stringify(list) };
     });
+
+    // Before patching a gist, get the gist and compare + set files no longer
+    // existing to null
+    const files = await getGist(gistID);
+    if (!!files) {
+        const dataFileNames = Object.keys(data);
+        Object.entries(files).forEach(([name, _data]) => {
+            if (!dataFileNames.includes(name)) {
+                data[name] = null;
+            }
+        });
+    }
+
     await patchGist(apiToken, gistID, data);
 
     return {
@@ -143,7 +156,7 @@ async function getGist(gistID: string): Promise<
 async function patchGist(
     apiToken: string,
     gistID: string,
-    files: { [key: string]: { content: string } },
+    files: { [key: string]: { content: string } | null },
 ): Promise<void> {
     return new Promise(async (resolve, reject) => {
         const octokit = new Octokit();
@@ -156,6 +169,7 @@ async function patchGist(
             const resp = await octokit.request("PATCH /gists/{gist_id}", {
                 gist_id: gistID,
                 description: `Update: ${new Date()}`,
+                // @ts-ignore
                 files: files,
                 headers: {
                     Authorization: `Bearer ${apiToken}`,
