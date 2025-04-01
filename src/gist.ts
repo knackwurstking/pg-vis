@@ -17,7 +17,10 @@ export async function pull(
 
         const data = listsStore.validate(file.content);
         if (data === null) {
-            console.error(`Invalid data for "${listsStore.title()}":`, file.content);
+            console.error(
+                `Invalid data for "${listsStore.title()}":`,
+                file.content,
+            );
             throw new Error(`ungültige Daten für "${listsStore.title()}"!`);
         }
 
@@ -59,7 +62,7 @@ export async function push(
     };
 }
 
-export function getRevision(gistID: string): Promise<number | null> {
+export function getRevision(gistID: string, page: number = 1): Promise<number> {
     return new Promise(async (resolve, reject) => {
         const octokit = new Octokit();
         octokit.log.error = (message: string) => {
@@ -75,13 +78,21 @@ export function getRevision(gistID: string): Promise<number | null> {
             headers: {
                 "X-GitHub-Api-Version": "2022-11-28",
             },
+            per_page: 100,
+            page: page,
         });
 
         if (resp.status !== 200) {
             reject(new Error(`GET ${resp.url} ${resp.status}`));
         }
 
-        return resolve(resp.data.length);
+        if (resp.data.length < 100) {
+            return resolve(resp.data.length);
+        }
+
+        return resolve(
+            (await getRevision(gistID, page + 1)) + resp.data.length,
+        );
     });
 }
 
