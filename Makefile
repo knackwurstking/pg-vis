@@ -17,8 +17,8 @@ init:
 
 build:
 	@cd ui && npm run build || exit $?
-	@go mod tidy || exit $?
-	@go build -v -o ./bin/pg-vis-pwa . || exit $?
+	@go mod tidy -v || exit $?
+	@go build -v -o ./bin/pg-vis-pwa ./cmd/pg-vis-pwa || exit $?
 
 export SYSTEMD_SERVICE_FILE
 linux-install:
