@@ -17,6 +17,15 @@ func init() {
 	if ServerAddr == "" {
 		panic("Environment variable missing: PGVISPWA_SERVER_ADDR")
 	}
+
+	//slog.SetDefault(
+	//	slog.New(
+	//		tint.NewHandler(os.Stderr, &tint.Options{
+	//			AddSource: true,
+	//			Level:     slog.LevelDebug,
+	//		}),
+	//	),
+	//)
 }
 
 func main() {
@@ -24,7 +33,10 @@ func main() {
 
 	setHandlers(e)
 
-	e.Use(middleware.Logger())
+	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
+		Format: "[${time_rfc3339}] ${status} ${method} ${path} (${remote_ip}) ${latency_human}\n",
+		Output: os.Stderr,
+	}))
 
 	if err := e.Start(ServerAddr); err != nil {
 		e.Logger.Fatal(err)
