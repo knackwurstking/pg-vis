@@ -7,7 +7,7 @@
         "test": "jest",
         "dev": "    export PWA=true;  export CAPACITOR=false; vite --host",
         "preview": "export PWA=true;  export CAPACITOR=false; vite preview --host",
-        "build": "  export PWA=false; export CAPACITOR=true;  npm run test && vite build --minify -c vite.config.js --emptyOutDir",
+        "build": "  export PWA=true; export CAPACITOR=false;  npm run test && vite build --minify -c vite.config.js --emptyOutDir",
         "generate-assets": "npx pwa-assets-generator"
     },
     "devDependencies": {

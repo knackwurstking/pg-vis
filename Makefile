@@ -15,6 +15,7 @@ init:
 	@go mod tidy -v || exit $?
 
 build:
+	@cd ui && npm run build || exit $?
 	@go mod tidy || exit $?
 	@go build -v -o ./bin/pg-vis-pwa . || exit $?
 
