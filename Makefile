@@ -12,6 +12,7 @@ WantedBy=default.target
 endef
 
 init:
+	@cd ui && npm install || exit $?
 	@go mod tidy -v || exit $?
 
 build:
