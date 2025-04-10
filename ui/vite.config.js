@@ -46,14 +46,14 @@ const manifestForPlugIn = {
         display: "standalone",
         scope: ".",
         start_url: "./",
-        publicPath: "/",
+        publicPath: process.env.PGVISPWA_SERVER_PATH,
     },
 };
 
 export default defineConfig({
     plugins: [VitePWA(manifestForPlugIn)],
     clearScreen: false,
-    //base: "/pg-vis.github.io/",
+    base: process.env.PGVISPWA_SERVER_PATH,
 
     build: {
         outDir: "dist",
