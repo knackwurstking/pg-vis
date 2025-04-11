@@ -35,6 +35,9 @@ const manifestForPlugIn = {
         "CHANGELOG.md",
         "assets/fonts/bootstrap-icons.woff",
         "assets/fonts/bootstrap-icons.woff2",
+        "assets/icons/icon.png",
+        "assets/icons/favicon.ico",
+        "assets/icons/apple-touch-icon-180x180.png",
     ],
     manifest: {
         name: "PG: Vis",
