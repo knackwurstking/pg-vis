@@ -11,7 +11,9 @@ function init(entry?: types.SpecialFlakesEntry | null): types.Component<
     },
     { open: () => Promise<types.SpecialFlakesEntry | null> }
 > {
-    const root = document.querySelector<HTMLDialogElement>(`dialog[name="special-flakes-entry"]`)!;
+    const root = document.querySelector<HTMLDialogElement>(
+        `dialog[name="special-flakes-entry"]`,
+    )!;
     const cancel = root.querySelector<HTMLButtonElement>(`button.cancel`)!;
 
     const query = {
@@ -34,8 +36,12 @@ function init(entry?: types.SpecialFlakesEntry | null): types.Component<
 
             query.form.onsubmit = () => {
                 // Get the values from the dialog form inputs
-                const inputElements = query.inputContainer.querySelectorAll(`input`);
-                const select = query.inputContainer.querySelector<HTMLSelectElement>("select")!;
+                const inputElements =
+                    query.inputContainer.querySelectorAll(`input`);
+                const select =
+                    query.inputContainer.querySelector<HTMLSelectElement>(
+                        "select",
+                    )!;
 
                 result = {
                     press:
@@ -47,13 +53,16 @@ function init(entry?: types.SpecialFlakesEntry | null): types.Component<
 
                     primary: {
                         ...(entry?.primary || {}),
-                        value: parseFloat(inputElements[0].value || "0", 10),
+                        value: parseFloat(inputElements[0].value || "0"),
                         percent: 0,
                     },
 
-                    secondary: [...query.inputContainer.querySelectorAll(`.tower-slot`)]
+                    secondary: [
+                        ...query.inputContainer.querySelectorAll(`.tower-slot`),
+                    ]
                         .map((el, index) => {
-                            const [inputPercent, inputSpeed] = el.querySelectorAll("input");
+                            const [inputPercent, inputSpeed] =
+                                el.querySelectorAll("input");
                             const percent = parseFloat(inputPercent.value);
                             const speed = parseInt(inputSpeed.value, 10);
                             return {
@@ -66,7 +75,8 @@ function init(entry?: types.SpecialFlakesEntry | null): types.Component<
                 };
 
                 result.primary.percent = eval(
-                    "100 -" + result.secondary.map((e) => `${e.percent}`).join(" - "),
+                    "100 -" +
+                        result.secondary.map((e) => `${e.percent}`).join(" - "),
                 );
             };
 
@@ -80,7 +90,10 @@ function init(entry?: types.SpecialFlakesEntry | null): types.Component<
                 firstRow.style.setProperty("--align", "center");
                 firstRow.style.setProperty("--justify", "space-evenly");
                 firstRow.innerHTML = html`
-                    <div class="ui-flex-grid ui-flex-grid-item" style="--gap: 0; --flex: 0;">
+                    <div
+                        class="ui-flex-grid ui-flex-grid-item"
+                        style="--gap: 0; --flex: 0;"
+                    >
                         <label>Main</label>
                         <input
                             class="input"
@@ -93,7 +106,10 @@ function init(entry?: types.SpecialFlakesEntry | null): types.Component<
                         />
                     </div>
 
-                    <div class="ui-flex-grid ui-flex-grid-item" style="--gap: 0; --flex: 0;">
+                    <div
+                        class="ui-flex-grid ui-flex-grid-item"
+                        style="--gap: 0; --flex: 0;"
+                    >
                         <label>C1</label>
                         <input
                             class="input"
@@ -106,7 +122,10 @@ function init(entry?: types.SpecialFlakesEntry | null): types.Component<
                         />
                     </div>
 
-                    <div class="ui-flex-grid ui-flex-grid-item" style="--gap: 0; --flex: 0;">
+                    <div
+                        class="ui-flex-grid ui-flex-grid-item"
+                        style="--gap: 0; --flex: 0;"
+                    >
                         <label>&nbsp;</label>
                         <select>
                             <option value="P0">Presse 0</option>
@@ -116,12 +135,17 @@ function init(entry?: types.SpecialFlakesEntry | null): types.Component<
                     </div>
                 `;
 
-                firstRow.querySelector<HTMLSelectElement>(`select`)!.selectedIndex =
-                    globals.flakesPressSlots.indexOf(entry?.press || globals.flakesPressSlots[0]);
+                firstRow.querySelector<HTMLSelectElement>(
+                    `select`,
+                )!.selectedIndex = globals.flakesPressSlots.indexOf(
+                    entry?.press || globals.flakesPressSlots[0],
+                );
             }
 
             globals.flakesTowerSlots.forEach((slot) => {
-                const { percent, value } = entry?.secondary.find((e) => e.slot === slot) || {
+                const { percent, value } = entry?.secondary.find(
+                    (e) => e.slot === slot,
+                ) || {
                     percent: 0,
                     value: 0,
                 };
