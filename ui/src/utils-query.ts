@@ -20,6 +20,10 @@ export function appBar_Title(): HTMLHeadingElement {
     return document.querySelector(`#appBarTitle`)!;
 }
 
+export function appBar_ButtonUpdate(): HTMLButtonElement {
+    return document.querySelector(`#appBarButtonUpdate`)!;
+}
+
 export function appBar_ButtonListEdit(): HTMLButtonElement {
     return document.querySelector(`#appBarButtonListEdit`)!;
 }
@@ -69,7 +73,8 @@ export function drawerGroup(name: types.DrawerGroups): {
         actions: {
             download: group.querySelector(`button.download`) || null,
             add: group.querySelector(`button.add`) || null,
-            importFromFile: group.querySelector(`button.import-from-file`) || null,
+            importFromFile:
+                group.querySelector(`button.import-from-file`) || null,
         },
         items: group.querySelector(`ul.items`)!,
     };

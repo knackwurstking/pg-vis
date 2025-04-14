@@ -28,11 +28,14 @@ if (process.env.CAPACITOR) {
 }
 
 if (process.env.PWA) {
+    console.debug("PWA updater registered");
     const updateSW = registerSW({
         async onNeedRefresh() {
-            if (confirm(`Update verfügbar. Zum Aktualisieren bestätigen.`)) {
+            const updateButton = query.appBar_ButtonUpdate();
+            updateButton.style.display = "inline-flex";
+            updateButton.onclick = async () => {
                 await updateSW();
-            }
+            };
         },
     });
 }
