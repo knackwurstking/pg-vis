@@ -481,12 +481,8 @@ function loadPageTemplage(templateSelector: string) {
     routerTarget.innerHTML = "";
     const template =
         document.querySelector<HTMLTemplateElement>(templateSelector)!;
-    routerTarget.append(template.content.cloneNode());
+    routerTarget.append(template.content.cloneNode(true));
 }
-
-//ui.router.hash.init(query.routerTarget(), {
-
-//});
 
 // Event Handlers
 
