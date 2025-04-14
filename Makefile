@@ -11,6 +11,9 @@ ExecStart=pg-vis-pwa
 WantedBy=default.target
 endef
 
+clean:
+	git clean -xfd
+
 init:
 	@cd ui && npm install || exit $?
 	@go mod tidy -v || exit $?
