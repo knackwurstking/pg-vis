@@ -4,7 +4,7 @@
     "version": "2.1.15",
     "type": "module",
     "scripts": {
-        "test": "jest",
+        "test": "tsc && jest",
         "dev": "export PWA=true;  export CAPACITOR=false; vite --host",
         "preview": "export PWA=true;  export CAPACITOR=false; vite preview --host",
         "build": "export PWA=true; export CAPACITOR=false;  npm run test && vite build --minify -c vite.config.js --emptyOutDir",
