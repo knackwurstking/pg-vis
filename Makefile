@@ -15,29 +15,26 @@ clean:
 	git clean -xfd
 
 init:
-	@cd ui && npm install || exit $?
-	@go mod tidy -v || exit $?
+	@cd ui && npm install 
+	@go mod tidy -v 
 
 build:
-	@cd ui && npm run build || exit $?
-	@go mod tidy -v || exit $?
-	@go build -v -o ./bin/pg-vis-pwa ./cmd/pg-vis-pwa || exit $?
+	@cd ui && npm run build 
+	@go mod tidy -v 
+	@go build -v -o ./bin/pg-vis-pwa ./cmd/pg-vis-pwa 
 
 export SYSTEMD_SERVICE_FILE
 linux-install:
-	@echo "$$SYSTEMD_SERVICE_FILE" > ${HOME}/.config/systemd/user/pg-vis-pwa.service || exit $?
-
+	@echo "$$SYSTEMD_SERVICE_FILE" > ${HOME}/.config/systemd/user/pg-vis-pwa.service 
 	@systemctl --user daemon-reload
-
 	@echo "--> Created a service file @ ${HOME}/.config/systemd/user/pg-vis-pwa.service"
-
-	@sudo cp ./bin/pg-vis-pwa /usr/local/bin/ || exit $?
+	@sudo cp ./bin/pg-vis-pwa /usr/local/bin/ 
 
 linux-start:
-	@systemctl --user restart pg-vis-pwa || exit $?
+	@systemctl --user restart pg-vis-pwa 
 
 linux-stop:
-	@systemctl --user stop pg-vis-pwa || exit $?
+	@systemctl --user stop pg-vis-pwa 
 
 linux-log:
 	@journalctl --user -u pg-vis-pwa --follow --output cat
