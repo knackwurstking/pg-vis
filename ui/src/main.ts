@@ -375,124 +375,118 @@ drawerGistIDsButton.onclick = () => {
 
 // Initialize Router
 
-ui.router.hash.init(query.routerTarget(), {
+ui.router.hash.init({
     "/": {
         title: "VIS | Gist IDs",
-        template: {
-            selector: `template[name="gist-ids"]`,
-            onMount() {
-                pages.gistIDs.onMount();
-            },
-            onDestroy() {
-                pages.gistIDs.onDestroy();
-            },
+        onMount() {
+            loadPageTemplage(`template[name="gist-ids"]`);
+            pages.gistIDs.onMount();
+        },
+        onDestroy() {
+            pages.gistIDs.onDestroy();
         },
     },
 
     "alert-lists": {
         title: "VIS | Alarm Listen",
-        template: {
-            selector: `template[name="alert-lists"]`,
-            onMount() {
-                pages.alertLists.onMount();
-            },
-            onDestroy() {
-                pages.alertLists.onDestroy();
-            },
+        onMount() {
+            loadPageTemplage(`template[name="alert-lists"]`);
+            pages.alertLists.onMount();
+        },
+        onDestroy() {
+            pages.alertLists.onDestroy();
         },
     },
 
     alert: {
         title: "VIS | Alarm",
-        template: {
-            selector: `template[name="alert"]`,
-            onMount() {
-                pages.alert.onMount();
-            },
-            onDestroy() {
-                pages.alert.onDestroy();
-            },
+        onMount() {
+            loadPageTemplage(`template[name="alert"]`);
+            pages.alert.onMount();
+        },
+        onDestroy() {
+            pages.alert.onDestroy();
         },
     },
 
     "metal-sheets": {
         title: "VIS | Blech Listen",
-        template: {
-            selector: `template[name="metal-sheets"]`,
-            onMount() {
-                pages.metalSheets.onMount();
-            },
-            onDestroy() {
-                pages.metalSheets.onDestroy();
-            },
+        onMount() {
+            loadPageTemplage(`template[name="metal-sheets"]`);
+            pages.metalSheets.onMount();
+        },
+        onDestroy() {
+            pages.metalSheets.onDestroy();
         },
     },
 
     vis: {
         title: "VIS",
-        template: {
-            selector: `template[name="vis"]`,
-            onMount() {
-                pages.vis.onMount();
-            },
-            onDestroy() {
-                pages.vis.onDestroy();
-            },
+        onMount() {
+            loadPageTemplage(`template[name="vis"]`);
+            pages.vis.onMount();
+        },
+        onDestroy() {
+            pages.vis.onDestroy();
         },
     },
 
     product: {
         title: "VIS | Produkt",
-        template: {
-            selector: `template[name="product"]`,
-            onMount() {
-                pages.product.onMount();
-            },
-            onDestroy() {
-                pages.product.onDestroy();
-            },
+        onMount() {
+            loadPageTemplage(`template[name="product"]`);
+            pages.product.onMount();
+        },
+        onDestroy() {
+            pages.product.onDestroy();
         },
     },
 
     "vis-bookmarks": {
         title: "VIS | Bookmarks",
-        template: {
-            selector: `template[name="vis-bookmarks"]`,
-            onMount() {
-                pages.visBookmarks.onMount();
-            },
-            onDestroy() {
-                pages.visBookmarks.onDestroy();
-            },
+        onMount() {
+            loadPageTemplage(`template[name="vis-bookmarks"]`);
+            pages.visBookmarks.onMount();
+        },
+        onDestroy() {
+            pages.visBookmarks.onDestroy();
         },
     },
 
     "vis-data": {
         title: "VIS | Data",
-        template: {
-            selector: `template[name="vis-data"]`,
-            onMount() {
-                pages.visData.onMount();
-            },
-            onDestroy() {
-                pages.visData.onDestroy();
-            },
+        onMount() {
+            loadPageTemplage(`template[name="vis-data"]`);
+            pages.visData.onMount();
+        },
+        onDestroy() {
+            pages.visData.onDestroy();
         },
     },
 
     "special-flakes": {
         title: "VIS | Flakes",
-        template: {
-            selector: `template[name="special-flakes"]`,
-            onMount() {
-                pages.special.flakes.onMount();
-            },
-            onDestroy() {
-                pages.special.flakes.onDestroy();
-            },
+        onMount() {
+            loadPageTemplage(`template[name="special-flakes"]`);
+            pages.special.flakes.onMount();
+        },
+        onDestroy() {
+            pages.special.flakes.onDestroy();
         },
     },
 });
+
+function loadPageTemplage(templateSelector: string) {
+    const routerTarget = query.routerTarget();
+    routerTarget.innerHTML = "";
+    const template =
+        document.querySelector<HTMLTemplateElement>(templateSelector)!;
+    routerTarget.append(template.content.cloneNode());
+}
+
+//ui.router.hash.init(query.routerTarget(), {
+
+//});
 
 // Event Handlers
 
