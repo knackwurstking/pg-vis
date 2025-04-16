@@ -6,6 +6,7 @@ import * as types from "../../types";
 import * as utils from "../../utils";
 import * as listStores from "../../list-stores";
 import * as visCreate from "../vis/create";
+import * as dialogs from "../../dialogs";
 
 interface Param {
     listKey?: string;
@@ -38,7 +39,7 @@ function render(list: types.Bookmarks) {
     el.products.innerHTML = "";
 
     // Render product items
-    list.data.forEach((product) => {
+    list.data.forEach((product, index) => {
         // Get the product from the vis lists if possible (keys: "lotto" & "name")
         const { visProduct, visListKey, visDataIndex } =
             searchVisForProduct(product);
@@ -53,7 +54,45 @@ function render(list: types.Bookmarks) {
 
         item.element.setAttribute("data-json", JSON.stringify(product));
 
-        // TODO: Add contextmenu handler here, just copy/paste and edit... done :)
+        item.element.oncontextmenu = async (ev) => {
+            ev.preventDefault();
+
+            item.element.classList.add("ui-primary");
+
+            try {
+                const choice = await dialogs
+                    .choose(
+                        "Bookmark",
+                        !enableRouting
+                            ? ["Löschen"]
+                            : ["Löschen", "Bearbeiten"],
+                    )
+                    .utils!.open();
+
+                switch (choice) {
+                    case "Bearbeiten":
+                        if (!!item.element.onclick)
+                            item.element.onclick(new MouseEvent("click"));
+                        break;
+
+                    case "Löschen":
+                        {
+                            list.data = list.data.filter(
+                                (_p, i) => i !== index,
+                            );
+
+                            listStores
+                                .get("vis-bookmarks")
+                                .replaceInStore(list, list);
+
+                            reload();
+                        }
+                        break;
+                }
+            } finally {
+                item.element.classList.remove("ui-primary");
+            }
+        };
 
         if (!!enableRouting) {
             item.element.onclick = () => {
@@ -66,8 +105,7 @@ function render(list: types.Bookmarks) {
                 );
             };
         } else {
-            item.element.setAttribute("disabled", "");
-            // TODO: Need to add a context menu handler here for removing this item from this bookmarks list
+            item.element.style.opacity = "0.45";
         }
 
         el.products.appendChild(item.element);
