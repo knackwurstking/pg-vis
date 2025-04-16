@@ -2,7 +2,13 @@
 
 ## v2.2.0 - unreleased
 
-TODO: ...
+**Changed**:
+
+- UI version to v4.0.0
+
+**Fixed**:
+
+- Bookmarks list item routing on a removed product
 
 ## v2.1.15 [2025-03-01]
 
