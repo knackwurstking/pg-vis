@@ -15,9 +15,6 @@
 
         <title>PG: Vis</title>
 
-        <link rel="stylesheet" href="/node_modules/ui/dist/css/main.css" />
-        <link rel="stylesheet" href="/src/styles.css" />
-
         <script>
             function scrollGroupIntoView(target) {
                 setTimeout(function () {
@@ -34,13 +31,13 @@
     <body class="ui-container">
         <div id="routerTarget" class="ui-auto-scroll ui-hide-scrollbar"></div>
 
-        <div class="ui-app-bar" position="top">
-            <div class="left">
+        <div class="ui-app-bar" data-ui-position="top">
+            <div class="ui-app-bar-left">
                 <button
                     id="appBarButtonOpenDrawer"
-                    variant="ghost"
-                    color="primary"
-                    icon
+                    data-ui-variant="ghost"
+                    data-ui-color="primary"
+                    data-ui-icon
                 >
                     <i class="bi bi-list"></i>
                 </button>
@@ -48,25 +45,25 @@
                 <button
                     id="appBarButtonBack"
                     style="display: none"
-                    variant="ghost"
-                    color="primary"
-                    icon
+                    data-ui-variant="ghost"
+                    data-ui-color="primary"
+                    data-ui-icon
                     onclick="history.back()"
                 >
                     <div class="bi bi-chevron-left"></div>
                 </button>
             </div>
 
-            <div class="center">
+            <div class="ui-app-bar-center">
                 <h4 class="ui-ellipsis" id="appBarTitle">PG: Vis</h4>
             </div>
 
-            <div class="right">
+            <div class="ui-app-bar-right">
                 <button
                     id="appBarButtonUpdate"
                     style="display: none"
-                    variant="ghost"
-                    color="destructive"
+                    data-ui-variant="ghost"
+                    data-ui-color="destructive"
                 >
                     Update
                 </button>
@@ -74,9 +71,9 @@
                 <button
                     id="appBarButtonFilter"
                     style="display: none"
-                    variant="ghost"
-                    color="primary"
-                    icon
+                    data-ui-variant="ghost"
+                    data-ui-color="primary"
+                    data-ui-icon
                 >
                     <div class="bi bi-filter-square"></div>
                 </button>
@@ -84,9 +81,9 @@
                 <button
                     id="appBarButtonPrinter"
                     style="display: none"
-                    variant="ghost"
-                    color="primary"
-                    icon
+                    data-ui-variant="ghost"
+                    data-ui-color="primary"
+                    data-ui-icon
                 >
                     <div class="bi bi-printer"></div>
                 </button>
@@ -94,9 +91,9 @@
                 <button
                     id="appBarButtonListEdit"
                     style="display: none"
-                    variant="ghost"
-                    color="primary"
-                    icon
+                    data-ui-variant="ghost"
+                    data-ui-color="primary"
+                    data-ui-icon
                 >
                     <div class="bi bi-pencil-square"></div>
                 </button>
@@ -104,9 +101,9 @@
                 <button
                     id="appBarButtonAdd"
                     style="display: none"
-                    variant="ghost"
-                    color="primary"
-                    icon
+                    data-ui-variant="ghost"
+                    data-ui-color="primary"
+                    data-ui-icon
                 >
                     <div class="bi bi-plus-square"></div>
                 </button>
@@ -114,9 +111,9 @@
                 <button
                     id="appBarButtonBookmarks"
                     style="display: none"
-                    variant="ghost"
-                    color="primary"
-                    icon
+                    data-ui-variant="ghost"
+                    data-ui-color="primary"
+                    data-ui-icon
                 >
                     <div class="bi bi-bookmarks"></div>
                 </button>
@@ -124,9 +121,9 @@
                 <button
                     id="appBarButtonDataBase"
                     style="display: none"
-                    variant="ghost"
-                    color="primary"
-                    icon
+                    data-ui-variant="ghost"
+                    data-ui-color="primary"
+                    data-ui-icon
                 >
                     <div class="bi bi-database"></div>
                 </button>
@@ -136,7 +133,7 @@
         <div class="ui-drawer-backdrop"></div>
 
         <aside class="ui-drawer">
-            <div class="ui-flex-grid">
+            <div class="ui-flex column gap">
                 <!-- Version/Build -->
                 <div class="app-info">
                     <span title="version">v2.1.15</span>
@@ -145,7 +142,7 @@
 
                 <!-- Gist IDs -->
                 <div
-                    class="ui-flex-grid-item"
+                    class="ui-flex-item"
                     style="width: 100%; padding: var(--ui-spacing)"
                 >
                     <button class="gist-ids" style="width: 100%">
@@ -161,15 +158,12 @@
                 >
                     <summary><h4>Alarm Listen</h4></summary>
 
-                    <div
-                        class="actions ui-flex-grid-row"
-                        style="--justify: flex-end"
-                    >
+                    <div class="actions ui-flex gap justify-end">
                         <button
                             class="download"
-                            variant="ghost"
-                            color="primary"
-                            icon
+                            data-ui-variant="ghost"
+                            data-ui-color="primary"
+                            data-ui-icon
                         >
                             <i
                                 class="bi bi-file-arrow-down"
@@ -179,9 +173,9 @@
 
                         <button
                             class="import-from-file"
-                            variant="ghost"
-                            color="primary"
-                            icon
+                            data-ui-variant="ghost"
+                            data-ui-color="primary"
+                            data-ui-icon
                         >
                             <i
                                 class="bi bi-file-arrow-up"
@@ -192,9 +186,9 @@
                         <!-- TODO: Create new alert list -->
                         <button
                             class="add"
-                            variant="ghost"
-                            color="primary"
-                            icon
+                            data-ui-variant="ghost"
+                            data-ui-color="primary"
+                            data-ui-icon
                             disabled
                         >
                             <i
@@ -204,7 +198,7 @@
                         </button>
                     </div>
 
-                    <div class="ui-flex-grid">
+                    <div class="ui-flex column gap">
                         <ul class="items" style="width: 100%"></ul>
                     </div>
                 </details>
@@ -217,15 +211,12 @@
                 >
                     <summary><h4>Blech Listen</h4></summary>
 
-                    <div
-                        class="actions ui-flex-grid-row"
-                        style="--justify: flex-end"
-                    >
+                    <div class="actions ui-flex gap justify-end">
                         <button
                             class="download"
-                            variant="ghost"
-                            color="primary"
-                            icon
+                            data-ui-variant="ghost"
+                            data-ui-color="primary"
+                            data-ui-icon
                         >
                             <i
                                 class="bi bi-file-arrow-down"
@@ -235,9 +226,9 @@
 
                         <button
                             class="import-from-file"
-                            variant="ghost"
-                            color="primary"
-                            icon
+                            data-ui-variant="ghost"
+                            data-ui-color="primary"
+                            data-ui-icon
                         >
                             <i
                                 class="bi bi-file-arrow-up"
@@ -247,9 +238,9 @@
 
                         <button
                             class="add"
-                            variant="ghost"
-                            color="primary"
-                            icon
+                            data-ui-variant="ghost"
+                            data-ui-color="primary"
+                            data-ui-icon
                         >
                             <i
                                 class="bi bi-plus-square"
@@ -258,7 +249,7 @@
                         </button>
                     </div>
 
-                    <div class="ui-flex-grid">
+                    <div class="ui-flex column gap">
                         <ul class="items" style="width: 100%"></ul>
                     </div>
                 </details>
@@ -271,15 +262,12 @@
                 >
                     <summary><h4>VIS</h4></summary>
 
-                    <div
-                        class="actions ui-flex-grid-row"
-                        style="--justify: flex-end"
-                    >
+                    <div class="actions ui-flex gap justify-end">
                         <button
                             class="download"
-                            variant="ghost"
-                            color="primary"
-                            icon
+                            data-ui-variant="ghost"
+                            data-ui-color="primary"
+                            data-ui-icon
                         >
                             <i
                                 class="bi bi-file-arrow-down"
@@ -289,9 +277,9 @@
 
                         <button
                             class="import-from-file"
-                            variant="ghost"
-                            color="primary"
-                            icon
+                            data-ui-variant="ghost"
+                            data-ui-color="primary"
+                            data-ui-icon
                         >
                             <i
                                 class="bi bi-file-arrow-up"
@@ -301,9 +289,9 @@
 
                         <button
                             class="add"
-                            variant="ghost"
-                            color="primary"
-                            icon
+                            data-ui-variant="ghost"
+                            data-ui-color="primary"
+                            data-ui-icon
                         >
                             <i
                                 class="bi bi-plus-square"
@@ -312,7 +300,7 @@
                         </button>
                     </div>
 
-                    <div class="ui-flex-grid">
+                    <div class="ui-flex column gap">
                         <ul class="items" style="width: 100%"></ul>
                     </div>
                 </details>
@@ -325,7 +313,7 @@
                 >
                     <summary><h4>VIS: Bookmarks</h4></summary>
 
-                    <div class="ui-flex-grid">
+                    <div class="ui-flex column gap">
                         <ul class="items" style="width: 100%"></ul>
                     </div>
                 </details>
@@ -338,15 +326,12 @@
                 >
                     <summary><h4>VIS: Data</h4></summary>
 
-                    <div
-                        class="actions ui-flex-grid-row"
-                        style="--justify: flex-end"
-                    >
+                    <div class="actions ui-flex gap justify-end">
                         <button
                             class="download"
-                            variant="ghost"
-                            color="primary"
-                            icon
+                            data-ui-variant="ghost"
+                            data-ui-color="primary"
+                            data-ui-icon
                         >
                             <i
                                 class="bi bi-file-arrow-down"
@@ -356,9 +341,9 @@
 
                         <button
                             class="import-from-file"
-                            variant="ghost"
-                            color="primary"
-                            icon
+                            data-ui-variant="ghost"
+                            data-ui-color="primary"
+                            data-ui-icon
                         >
                             <i
                                 class="bi bi-file-arrow-up"
@@ -368,9 +353,9 @@
 
                         <button
                             class="add"
-                            variant="ghost"
-                            color="primary"
-                            icon
+                            data-ui-variant="ghost"
+                            data-ui-color="primary"
+                            data-ui-icon
                         >
                             <i
                                 class="bi bi-plus-square"
@@ -379,7 +364,7 @@
                         </button>
                     </div>
 
-                    <div class="ui-flex-grid">
+                    <div class="ui-flex column gap">
                         <ul class="items" style="width: 100%"></ul>
                     </div>
                 </details>
@@ -392,15 +377,12 @@
                 >
                     <summary><h4>Spezial</h4></summary>
 
-                    <div
-                        class="actions ui-flex-grid-row"
-                        style="--justify: flex-end"
-                    >
+                    <div class="actions ui-flex gap justify-end">
                         <button
                             class="download"
-                            variant="ghost"
-                            color="primary"
-                            icon
+                            data-ui-variant="ghost"
+                            data-ui-color="primary"
+                            data-ui-icon
                         >
                             <i
                                 class="bi bi-file-arrow-down"
@@ -410,9 +392,9 @@
 
                         <button
                             class="import-from-file"
-                            variant="ghost"
-                            color="primary"
-                            icon
+                            data-ui-variant="ghost"
+                            data-ui-color="primary"
+                            data-ui-icon
                         >
                             <i
                                 class="bi bi-file-arrow-up"
@@ -423,9 +405,9 @@
                         <!-- TODO: Add new list from (types: "flakes") -->
                         <button
                             class="add"
-                            variant="ghost"
-                            color="primary"
-                            icon
+                            data-ui-variant="ghost"
+                            data-ui-color="primary"
+                            data-ui-icon
                             disabled
                         >
                             <i
@@ -435,7 +417,7 @@
                         </button>
                     </div>
 
-                    <div class="ui-flex-grid">
+                    <div class="ui-flex column gap">
                         <ul class="items" style="width: 100%"></ul>
                     </div>
                 </details>
@@ -458,10 +440,7 @@
                     type="text"
                 />
 
-                <div
-                    class="ui-flex-grid-row"
-                    style="--justify: flex-end; --align: center"
-                >
+                <div class="ui-flex gap justify-end align-center">
                     <label for="metalSheetDialog_Press"> Presse </label>
                     <select id="metalSheetDialog_Press">
                         <option value="-1">-</option>
@@ -473,8 +452,12 @@
                     </select>
                 </div>
 
-                <div class="ui-flex-grid-row" style="--justify: flex-end">
-                    <button class="cancel" variant="full" color="secondary">
+                <div class="ui-flex gap justify-end">
+                    <button
+                        class="cancel"
+                        data-ui-variant="full"
+                        data-ui-color="secondary"
+                    >
                         Cancel
                     </button>
                     <input type="submit" />
@@ -488,7 +471,7 @@
                 <p>Bei Bedarf einige Einträge Deaktivieren</p>
                 <ul class="filters" style="padding-top: 0"></ul>
 
-                <div class="ui-flex-grid-row" style="--justify: flex-end">
+                <div class="ui-flex gap justify-end">
                     <button type="submit">OK</button>
                 </div>
             </form>
@@ -496,58 +479,44 @@
 
         <dialog name="metal-sheet-table-entry">
             <form method="dialog">
-                <div class="ui-flex-grid">
-                    <div
-                        class="ui-flex-grid-row"
-                        style="--align: center; --justify: space-between"
-                    >
+                <div class="ui-flex column gap">
+                    <div class="ui-flex gap justify-between align-center">
                         <label for="metalSheetTableEntry_0"></label>
                         <input id="metalSheetTableEntry_0" type="text" />
                     </div>
 
-                    <div
-                        class="ui-flex-grid-row"
-                        style="--align: center; --justify: space-between"
-                    >
+                    <div class="ui-flex gap justify-between align-center">
                         <label for="metalSheetTableEntry_1"></label>
                         <input id="metalSheetTableEntry_1" type="text" />
                     </div>
 
-                    <div
-                        class="ui-flex-grid-row"
-                        style="--align: center; --justify: space-between"
-                    >
+                    <div class="ui-flex gap justify-between align-center">
                         <label for="metalSheetTableEntry_2"></label>
                         <input id="metalSheetTableEntry_2" type="text" />
                     </div>
 
-                    <div
-                        class="ui-flex-grid-row"
-                        style="--align: center; --justify: space-between"
-                    >
+                    <div class="ui-flex gap justify-between align-center">
                         <label for="metalSheetTableEntry_3"></label>
                         <input id="metalSheetTableEntry_3" type="text" />
                     </div>
 
-                    <div
-                        class="ui-flex-grid-row"
-                        style="--align: center; --justify: space-between"
-                    >
+                    <div class="ui-flex justify-between align-center">
                         <label for="metalSheetTableEntry_4"></label>
                         <input id="metalSheetTableEntry_4" type="text" />
                     </div>
 
-                    <div
-                        class="ui-flex-grid-row"
-                        style="--align: center; --justify: space-between"
-                    >
+                    <div class="ui-flex justify-between align-center">
                         <label for="metalSheetTableEntry_5"></label>
                         <input id="metalSheetTableEntry_5" type="text" />
                     </div>
                 </div>
 
-                <div class="ui-flex-grid-row" style="--justify: flex-end">
-                    <button class="cancel" variant="full" color="secondary">
+                <div class="ui-flex gap justify-end">
+                    <button
+                        class="cancel"
+                        data-ui-variant="full"
+                        data-ui-color="secondary"
+                    >
                         Cancel
                     </button>
                     <input type="submit" />
@@ -557,8 +526,8 @@
 
         <dialog name="vis">
             <form method="dialog">
-                <div class="ui-flex-grid">
-                    <div class="ui-flex-grid-row" style="--align: center">
+                <div class="ui-flex column gap">
+                    <div class="ui-flex gap align-center">
                         <label for="visDialog_Title">Title</label>
                         <input
                             id="visDialog_Title"
@@ -567,8 +536,12 @@
                         />
                     </div>
 
-                    <div class="ui-flex-grid-row" style="--justify: flex-end">
-                        <button class="cancel" variant="full" color="secondary">
+                    <div class="ui-flex gap justify-end">
+                        <button
+                            class="cancel"
+                            data-ui-variant="full"
+                            data-ui-color="secondary"
+                        >
                             Cancel
                         </button>
                         <input type="submit" />
@@ -579,11 +552,8 @@
 
         <dialog name="product">
             <form method="dialog">
-                <div class="ui-flex-grid">
-                    <div
-                        class="ui-flex-grid-row"
-                        style="--align: center; --justify: space-between"
-                    >
+                <div class="ui-flex column gap">
+                    <div class="ui-flex gap justify-between align-center">
                         <label for="product_Lotto">Lotto</label>
                         <input
                             class="product-input"
@@ -592,10 +562,7 @@
                         />
                     </div>
 
-                    <div
-                        class="ui-flex-grid-row"
-                        style="--align: center; --justify: space-between"
-                    >
+                    <div class="ui-flex gap justify-between align-center">
                         <label for="product_Name">Name</label>
                         <input
                             class="product-input"
@@ -604,10 +571,7 @@
                         />
                     </div>
 
-                    <div
-                        class="ui-flex-grid-row"
-                        style="--align: center; --justify: space-between"
-                    >
+                    <div class="ui-flex gap justify-between align-center">
                         <label for="product_Format">Format</label>
                         <input
                             class="product-input"
@@ -617,10 +581,7 @@
                         />
                     </div>
 
-                    <div
-                        class="ui-flex-grid-row"
-                        style="--align: center; --justify: space-between"
-                    >
+                    <div class="ui-flex justify-between align-center">
                         <label for="product_Thickness">Stärke</label>
                         <input
                             class="product-input"
@@ -630,10 +591,7 @@
                         />
                     </div>
 
-                    <div
-                        class="ui-flex-grid-row"
-                        style="--align: center; --justify: space-between"
-                    >
+                    <div class="ui-flex gap justify-between align-center">
                         <label for="product_Stamp">Stempel</label>
                         <input
                             class="product-input"
@@ -644,8 +602,12 @@
                     </div>
                 </div>
 
-                <div class="ui-flex-grid-row" style="--justify: flex-end">
-                    <button class="cancel" variant="full" color="secondary">
+                <div class="ui-flex gap justify-end">
+                    <button
+                        class="cancel"
+                        data-ui-variant="full"
+                        data-ui-color="secondary"
+                    >
                         Cancel
                     </button>
                     <input type="submit" />
@@ -655,8 +617,8 @@
 
         <dialog name="vis-data">
             <form method="dialog">
-                <div class="ui-flex-grid">
-                    <div class="ui-flex-grid-row" style="--align: center">
+                <div class="ui-flex column gap">
+                    <div class="ui-flex gap align-center">
                         <label for="visDialog_Title">Title</label>
                         <input
                             id="visDialog_Title"
@@ -665,8 +627,12 @@
                         />
                     </div>
 
-                    <div class="ui-flex-grid-row" style="--justify: flex-end">
-                        <button class="cancel" variant="full" color="secondary">
+                    <div class="ui-flex gap justify-end">
+                        <button
+                            class="cancel"
+                            data-ui-variant="full"
+                            data-ui-color="secondary"
+                        >
                             Cancel
                         </button>
                         <input type="submit" />
@@ -676,20 +642,30 @@
         </dialog>
 
         <dialog name="choose">
-            <div class="ui-flex-grid-row">
-                <h4 class="title ui-flex-grid-item"></h4>
-                <button class="close" variant="ghost" color="primary" icon>
+            <div class="ui-flex gap">
+                <h4 class="title ui-flex-item"></h4>
+                <button
+                    class="close"
+                    data-ui-variant="ghost"
+                    data-ui-color="primary"
+                    icon
+                >
                     <i class="bi bi-x-lg"></i>
                 </button>
             </div>
 
-            <div class="choices ui-flex-grid-row" style="--warp: wrap"></div>
+            <div class="choices ui-flex gap wrap"></div>
         </dialog>
 
         <dialog name="product-bookmark">
-            <div class="ui-flex-grid-row">
-                <h4 class="title ui-flex-grid-item"></h4>
-                <button class="close" variant="ghost" color="primary" icon>
+            <div class="ui-flex gap">
+                <h4 class="title ui-flex-item"></h4>
+                <button
+                    class="close"
+                    data-ui-variant="ghost"
+                    data-ui-color="primary"
+                    data-ui-icon
+                >
                     <i class="bi bi-x-lg"></i>
                 </button>
             </div>
@@ -703,8 +679,8 @@
             oncancel="event.preventDefault()"
         >
             <form method="dialog">
-                <div class="ui-flex-grid">
-                    <div class="ui-flex-grid" style="--gap: 0">
+                <div class="ui-flex column gap">
+                    <div class="ui-flex column">
                         <label for="visDataEntry_Key">Key</label>
                         <input
                             class="vis-data-entry-input"
@@ -714,7 +690,7 @@
                         />
                     </div>
 
-                    <div class="ui-flex-grid" style="--gap: 0">
+                    <div class="ui-flex">
                         <label for="visDataEntry_Value">Value</label>
                         <textarea
                             class="vis-data-entry-input"
@@ -725,10 +701,7 @@
                         ></textarea>
                     </div>
 
-                    <div
-                        class="ui-flex-grid-row"
-                        style="--align: center; --justify: space-between"
-                    >
+                    <div class="ui-flex gap justify-between align-center">
                         <label for="visDataEntry_Lotto">Lotto</label>
                         <input
                             class="vis-data-entry-input"
@@ -737,10 +710,7 @@
                         />
                     </div>
 
-                    <div
-                        class="ui-flex-grid-row"
-                        style="--align: center; --justify: space-between"
-                    >
+                    <div class="ui-flex gap justify-between align-center">
                         <label for="visDataEntry_Format">Format</label>
                         <input
                             class="vis-data-entry-input"
@@ -750,10 +720,7 @@
                         />
                     </div>
 
-                    <div
-                        class="ui-flex-grid-row"
-                        style="--align: center; --justify: space-between"
-                    >
+                    <div class="ui-flex justify-between align-center">
                         <label for="visDataEntry_Thickness">Stärke</label>
                         <input
                             class="vis-data-entry-input"
@@ -763,10 +730,7 @@
                         />
                     </div>
 
-                    <div
-                        class="ui-flex-grid-row"
-                        style="--align: center; --justify: space-between"
-                    >
+                    <div class="ui-flex gap justify-between align-center">
                         <label for="visDataEntry_Stamp">Stempel</label>
                         <input
                             class="vis-data-entry-input"
@@ -777,8 +741,12 @@
                     </div>
                 </div>
 
-                <div class="ui-flex-grid-row" style="--justify: flex-end">
-                    <button class="cancel" variant="full" color="secondary">
+                <div class="ui-flex gap justify-end">
+                    <button
+                        class="cancel"
+                        data-ui-variant="full"
+                        data-ui-color="secondary"
+                    >
                         Cancel
                     </button>
                     <input type="submit" />
@@ -788,10 +756,14 @@
 
         <dialog name="special-flakes-entry">
             <form method="dialog">
-                <div class="input-container ui-flex-grid"></div>
+                <div class="input-container ui-flex column gap"></div>
 
-                <div class="ui-flex-grid-row" style="--justify: flex-end">
-                    <button class="cancel" variant="full" color="secondary">
+                <div class="ui-flex gap justify-end">
+                    <button
+                        class="cancel"
+                        data-ui-variant="full"
+                        data-ui-color="secondary"
+                    >
                         Cancel
                     </button>
                     <input type="submit" />
@@ -801,23 +773,20 @@
 
         <template name="gist-ids">
             <ul
-                class="gist-ids ui-flex-grid"
+                class="gist-ids ui-flex column gap"
                 style="padding: var(--ui-spacing)"
             ></ul>
         </template>
 
         <template name="alert-lists">
-            <div
-                class="ui-flex-grid"
-                style="--gap: 0; width: 100%; height: 100%"
-            >
+            <div class="ui-flex column" style="width: 100%; height: 100%">
                 <section
                     class="search-bar"
                     style="--gap: var(--ui-spacing); width: 100%"
                 >
                     <fieldset>
                         <legend>Suche nach Alarmen:</legend>
-                        <div class="ui-flex-grid-row">
+                        <div class="ui-flex gap">
                             <input
                                 id="alertListsSearchBar"
                                 style="width: 100%"
@@ -829,8 +798,8 @@
                 </section>
 
                 <div
-                    class="ui-flex-grid-item ui-auto-scroll-y ui-hide-scrollbar"
-                    style="--gap: var(--ui-spacing); width: 100%"
+                    class="ui-flex-item ui-auto-scroll-y ui-hide-scrollbar"
+                    style="width: 100%"
                 >
                     <ul
                         class="alerts"
@@ -841,9 +810,9 @@
         </template>
 
         <template name="alert">
-            <div class="ui-flex-grid">
-                <div class="alert ui-flex-grid-item" style="width: 100%"></div>
-                <div class="desc ui-flex-grid-item" style="width: 100%"></div>
+            <div class="ui-flex column gap">
+                <div class="alert ui-flex-item" style="width: 100%"></div>
+                <div class="desc ui-flex-item" style="width: 100%"></div>
             </div>
         </template>
 
@@ -855,17 +824,11 @@
         </template>
 
         <template name="vis">
-            <div
-                class="ui-flex-grid"
-                style="--gap: 0; width: 100%; height: 100%"
-            >
-                <section
-                    class="search-bar"
-                    style="--gap: var(--ui-spacing); width: 100%"
-                >
+            <div class="ui-flex column gap" style="width: 100%; height: 100%">
+                <section class="search-bar" style="width: 100%">
                     <fieldset>
                         <legend>Suche nach Produkten:</legend>
-                        <div class="ui-flex-grid-row">
+                        <div class="ui-flex gap">
                             <input
                                 id="visSearchBar"
                                 style="width: 100%"
@@ -877,8 +840,8 @@
                 </section>
 
                 <div
-                    class="ui-flex-grid-item ui-auto-scroll-y ui-hide-scrollbar"
-                    style="--gap: var(--ui-spacing); width: 100%"
+                    class="ui-flex-item ui-auto-scroll-y ui-hide-scrollbar"
+                    style="width: 100%"
                 >
                     <ul
                         class="products ui-none-select"
@@ -889,18 +852,12 @@
         </template>
 
         <template name="product">
-            <div
-                class="ui-flex-grid"
-                style="--gap: 0; width: 100%; height: 100%"
-            >
-                <section
-                    class="product-item"
-                    style="--gap: var(--ui-spacing); width: 100%"
-                ></section>
+            <div class="ui-flex column" style="width: 100%; height: 100%">
+                <section class="product-item" style="width: 100%"></section>
 
                 <div
-                    class="ui-flex-grid-item ui-auto-scroll-y ui-hide-scrollbar"
-                    style="--gap: var(--ui-spacing); width: 100%"
+                    class="ui-flex-item ui-auto-scroll-y ui-hide-scrollbar"
+                    style="width: 100%"
                 >
                     <ul
                         class="product-data"
@@ -920,17 +877,11 @@
         </template>
 
         <template name="vis-data">
-            <div
-                class="ui-flex-grid"
-                style="--gap: 0; width: 100%; height: 100%"
-            >
-                <section
-                    class="search-bar"
-                    style="--gap: var(--ui-spacing); width: 100%"
-                >
+            <div class="ui-flex column" style="width: 100%; height: 100%">
+                <section class="search-bar" style="width: 100%">
                     <fieldset>
                         <legend>Suche nach Daten:</legend>
-                        <div class="ui-flex-grid-row">
+                        <div class="ui-flex gap">
                             <input
                                 id="visDataSearchBar"
                                 style="width: 100%"
@@ -942,8 +893,8 @@
                 </section>
 
                 <div
-                    class="ui-flex-grid-item ui-auto-scroll-y ui-hide-scrollbar"
-                    style="--gap: var(--ui-spacing); width: 100%"
+                    class="ui-flex-item ui-auto-scroll-y ui-hide-scrollbar"
+                    style="width: 100%"
                 >
                     <ul
                         class="data-list ui-none-select"
@@ -959,8 +910,8 @@
                 style="width: 100%; height: 100%"
             >
                 <ul
-                    class="table-container ui-flex-grid"
-                    style="--gap: 1.5rem; min-width: 100%; width: fit-content"
+                    class="table-container ui-flex column"
+                    style="gap: 1.5rem; min-width: 100%; width: fit-content"
                 ></ul>
             </div>
         </template>

@@ -1,8 +1,10 @@
+import "../node_modules/ui/dist/ui.css";
+import "./style.css";
 import "./bootstrap-icons.css";
 
+import { registerSW } from "virtual:pwa-register";
 import { App } from "@capacitor/app";
 import * as ui from "ui";
-import { registerSW } from "virtual:pwa-register";
 
 import * as dialogs from "./dialogs";
 import * as drawer from "./drawer";
