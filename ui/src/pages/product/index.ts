@@ -22,17 +22,25 @@ export async function onMount() {
     const param: Param = ui.router.hash.getSearchParam();
 
     // Get product from vis
-    const product = globals.getProduct(param.listKey || "", parseInt(param.index || "-1", 10));
+    const product = globals.getProduct(
+        param.listKey || "",
+        parseInt(param.index || "-1", 10),
+    );
     if (!product) {
-        throw `product with index "${param.index}" from list "${param.listKey}" not found`;
+        console.error(
+            `product with index "${param.index}" from list "${param.listKey}" not found`,
+        );
     }
 
     // Set app bar title
-    cleanup.push(utils.setAppBarTitle(product.lotto));
+    cleanup.push(utils.setAppBarTitle(product?.lotto || "Not Found"));
 
     setupAppBarBackButton();
-    setupAppBarBookmarkButton(product);
-    render(product, param.tags === "true" ? true : false);
+
+    if (!!product) {
+        setupAppBarBookmarkButton(product);
+        render(product, param.tags === "true" ? true : false);
+    }
 }
 
 export async function onDestroy() {

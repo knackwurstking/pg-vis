@@ -126,36 +126,44 @@ function render(vis: types.Vis, listKey: string) {
             item.element.oncontextmenu = async (e) => {
                 e.preventDefault();
 
-                const choice = await dialogs
-                    .choose(`${product.lotto}`, ["Löschen", "Bearbeiten"])
-                    .utils!.open();
+                item.element.classList.add("ui-primary");
 
-                switch (choice) {
-                    case "Bearbeiten":
-                        {
-                            const data = await dialogs
-                                .product(product)
-                                .utils!.open();
-                            if (!data) {
-                                return;
+                try {
+                    const choice = await dialogs
+                        .choose(`${product.lotto}`, ["Löschen", "Bearbeiten"])
+                        .utils!.open();
+
+                    switch (choice) {
+                        case "Bearbeiten":
+                            {
+                                const data = await dialogs
+                                    .product(product)
+                                    .utils!.open();
+                                if (!data) {
+                                    return;
+                                }
+                                vis.data[index] = data;
+
+                                const ls = listStores.get("vis");
+                                ls.replaceInStore(vis);
+                                reload();
                             }
-                            vis.data[index] = data;
+                            break;
 
-                            const ls = listStores.get("vis");
-                            ls.replaceInStore(vis);
-                            reload();
-                        }
-                        break;
+                        case "Löschen":
+                            {
+                                vis.data = vis.data.filter(
+                                    (_p, i) => i !== index,
+                                );
 
-                    case "Löschen":
-                        {
-                            vis.data = vis.data.filter((_p, i) => i !== index);
-
-                            const ls = listStores.get("vis");
-                            ls.replaceInStore(vis);
-                            reload();
-                        }
-                        break;
+                                const ls = listStores.get("vis");
+                                ls.replaceInStore(vis);
+                                reload();
+                            }
+                            break;
+                    }
+                } finally {
+                    item.element.classList.remove("ui-primary");
                 }
             };
 

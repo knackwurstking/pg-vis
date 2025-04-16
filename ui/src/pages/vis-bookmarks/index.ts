@@ -40,23 +40,33 @@ function render(list: types.Bookmarks) {
     // Render product items
     list.data.forEach((product) => {
         // Get the product from the vis lists if possible (keys: "lotto" & "name")
-        const { visProduct, visListKey, visDataIndex } = searchVisForProduct(product);
+        const { visProduct, visListKey, visDataIndex } =
+            searchVisForProduct(product);
+
+        const enableRouting =
+            visDataIndex < 0 ? undefined : { dataIndex: visDataIndex };
 
         const item = visCreate.productItem({
             product: visProduct,
-            enableRouting: { dataIndex: visDataIndex },
+            enableRouting,
         });
 
         item.element.setAttribute("data-json", JSON.stringify(product));
-        item.element.onclick = () => {
-            ui.router.hash.goTo(
-                {
-                    listKey: visListKey,
-                    index: visDataIndex.toString(),
-                },
-                "product",
-            );
-        };
+
+        if (!!enableRouting) {
+            item.element.onclick = () => {
+                ui.router.hash.goTo(
+                    {
+                        listKey: visListKey,
+                        index: visDataIndex.toString(),
+                    },
+                    "product",
+                );
+            };
+        } else {
+            item.element.setAttribute("disabled", "");
+            // TODO: Need to add a context menu handler here for removing this item from this bookmarks list
+        }
 
         el.products.appendChild(item.element);
         cleanup.push(item.destroy);
@@ -69,7 +79,9 @@ function render(list: types.Bookmarks) {
 
             // Update bookmarks data and reload
             Array.from(el.products.children).forEach((child) => {
-                const product: types.Product = JSON.parse(child.getAttribute("data-json")!);
+                const product: types.Product = JSON.parse(
+                    child.getAttribute("data-json")!,
+                );
                 newData.push(product);
             });
 
@@ -84,7 +96,9 @@ function render(list: types.Bookmarks) {
 
 function routerTargetElements() {
     return {
-        products: query.routerTarget().querySelector<HTMLUListElement>(`.products`)!,
+        products: query
+            .routerTarget()
+            .querySelector<HTMLUListElement>(`.products`)!,
     };
 }
 
@@ -99,8 +113,15 @@ function searchVisForProduct(product: types.Product) {
     for (const list of globals.store.get("vis")!.lists) {
         let visDataIndex = 0;
         for (const visProduct of list.data) {
-            if (visProduct.lotto === product.lotto && visProduct.name === product.name) {
-                return { visProduct, visListKey: ls.listKey(list), visDataIndex };
+            if (
+                visProduct.lotto === product.lotto &&
+                visProduct.name === product.name
+            ) {
+                return {
+                    visProduct,
+                    visListKey: ls.listKey(list),
+                    visDataIndex,
+                };
             }
 
             visDataIndex++;

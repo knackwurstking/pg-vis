@@ -12,8 +12,19 @@ export const metalSheetSlots = [
     "Stf. P0",
 ];
 
-export const flakesTowerSlots: types.SpecialFlakes_TowerSlot[] = ["A", "C", "E", "G", "I", "K"];
-export const flakesPressSlots: types.SpecialFlakes_PressSlot[] = ["P0", "P4", "P5"];
+export const flakesTowerSlots: types.SpecialFlakes_TowerSlot[] = [
+    "A",
+    "C",
+    "E",
+    "G",
+    "I",
+    "K",
+];
+export const flakesPressSlots: types.SpecialFlakes_PressSlot[] = [
+    "P0",
+    "P4",
+    "P5",
+];
 export const flakesPressSlotsFull = ["Presse 0", "Presse 4", "Presse 5"];
 
 export const store = createStore();
@@ -38,7 +49,10 @@ export function getVisBookmarks(listKey: string): types.Bookmarks | null {
     return list || null;
 }
 
-export function getProduct(listKey: string, index: number): types.Product | null {
+export function getProduct(
+    listKey: string,
+    index: number,
+): types.Product | null {
     const list = getVis(listKey);
     if (!list) {
         return null;
@@ -105,7 +119,13 @@ function createStore(): types.PGStore {
 }
 
 function createBookmarksStore(store: types.PGStore) {
-    const defaultListTitles = ["Presse 0", "Presse 2", "Presse 3", "Presse 4", "Presse 5"];
+    const defaultListTitles = [
+        "Presse 0",
+        "Presse 2",
+        "Presse 3",
+        "Presse 4",
+        "Presse 5",
+    ];
 
     const bookmarks = store.get("vis-bookmarks");
     if (!!bookmarks) {
@@ -119,7 +139,11 @@ function createBookmarksStore(store: types.PGStore) {
         {
             gist: null,
             lists: [
-                ...defaultListTitles.map((title) => ({ title, allowDeletion: false, data: [] })),
+                ...defaultListTitles.map((title) => ({
+                    title,
+                    allowDeletion: false,
+                    data: [],
+                })),
             ],
         },
         true,
