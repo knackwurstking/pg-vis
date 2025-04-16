@@ -11,35 +11,36 @@ export interface GistItemProps {
 export function dataItem(props: GistItemProps): types.Component<HTMLLIElement> {
     const li = document.createElement("li");
 
-    li.style.borderBottom = "var(--ui-border-width) var(--ui-border-style) var(--ui-border-color)";
+    li.className = "ui-border-bottom";
 
-    li.innerHTML = html`<div class="ui-flex-grid"></div>`;
+    li.innerHTML = html`<div class="grid ui-flex column gap"></div>`;
 
-    const grid = li.querySelector(".ui-flex-grid")!;
+    const grid = li.querySelector("div.grid")!;
 
     // Render (optional) key
     if (!!props.entry.key) {
         const div = document.createElement("div");
-        div.innerHTML = html`<div class="ui-flex-grid-item"><h4>${props.entry.key}<h4></div>`;
+        div.innerHTML = html`<div class="ui-flex-item"><h4>${props.entry.key}<h4></div>`;
         grid.appendChild(div);
     }
 
     // Render tags
     if (props.renderTags) {
         const filterGrid = document.createElement("div");
-        filterGrid.classList.add("ui-flex-grid");
-        filterGrid.style.setProperty("--gap", "0");
+        filterGrid.className = "ui-flex-grid column";
         grid.appendChild(filterGrid);
         filterGrid.innerHTML = html`
-            <div class="ui-flex-grid-item" style="font-size: 0.9rem"><i>Filter:</i></div>
-            <div class="ui-flex-grid-row" style="--gap: var(--ui-spacing);"></div>
+            <div class="ui-flex-item" style="font-size: 0.9rem">
+                <i>Filter:</i>
+            </div>
+            <div class="row ui-flex gap"></div>
         `;
 
-        const gridRow = filterGrid.querySelector(".ui-flex-grid-row")!;
+        const gridRow = filterGrid.querySelector("div.row")!;
 
         if (!!props.entry.lotto) {
             gridRow.innerHTML += html`
-                <div class="ui-flex-grid-item" style="--flex: 0;">
+                <div class="ui-flex-item" style="flex: 0;">
                     <code>${props.entry.lotto}</code>
                 </div>
             `;
@@ -47,7 +48,7 @@ export function dataItem(props: GistItemProps): types.Component<HTMLLIElement> {
 
         if (!!props.entry.format) {
             gridRow.innerHTML += html`
-                <div class="ui-flex-grid-item" style="--flex: 0;">
+                <div class="ui-flex-item" style="flex: 0;">
                     <code>${props.entry.format}</code>
                 </div>
             `;
@@ -55,7 +56,7 @@ export function dataItem(props: GistItemProps): types.Component<HTMLLIElement> {
 
         if (!!props.entry.stamp) {
             gridRow.innerHTML += html`
-                <div class="ui-flex-grid-item" style="--flex: 0;">
+                <div class="ui-flex-item" style="flex: 0;">
                     <code>${props.entry.stamp}</code>
                 </div>
             `;
@@ -63,8 +64,9 @@ export function dataItem(props: GistItemProps): types.Component<HTMLLIElement> {
 
         if (!!props.entry.thickness) {
             gridRow.innerHTML += html`
-                <div class="ui-flex-grid-item" style="--flex: 0;">
-                    <code>${props.entry.thickness}</code><span style="display: none">mm</span>
+                <div class="ui-flex-item" style="flex: 0;">
+                    <code>${props.entry.thickness}</code
+                    ><span style="display: none">mm</span>
                 </div>
             `;
         }
@@ -73,7 +75,7 @@ export function dataItem(props: GistItemProps): types.Component<HTMLLIElement> {
     // Render value
     const div = document.createElement("div");
     div.innerHTML = html`
-        <div class="ui-flex-grid-item" style="width: 100%;">
+        <div class="ui-flex-item" style="width: 100%;">
             <p>${convert.textToHTML(props.entry.value)}</p>
         </div>
     `;

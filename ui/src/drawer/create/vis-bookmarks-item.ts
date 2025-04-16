@@ -27,7 +27,11 @@ export function visBookmarkItem(
             <span>${props.data.data.length} Einträge</span>
         </a>
 
-        <button class="delete" variant="ghost" color="destructive">
+        <button
+            class="delete"
+            data-ui-variant="ghost"
+            data-ui-color="destructive"
+        >
             <i class="bi bi-trash"></i>
         </button>
     `;
@@ -37,7 +41,9 @@ export function visBookmarkItem(
             const key = ls.listKey(props.data);
 
             if (confirm(`"${key}" wirklich löschen?`)) {
-                data.lists = data.lists.filter((list) => ls.listKey(list) !== key);
+                data.lists = data.lists.filter(
+                    (list) => ls.listKey(list) !== key,
+                );
             }
 
             return data;
@@ -50,7 +56,8 @@ export function visBookmarkItem(
     return {
         element: el,
         query: {
-            deleteButton: () => el.querySelector<HTMLButtonElement>(`button.delete`)!,
+            deleteButton: () =>
+                el.querySelector<HTMLButtonElement>(`button.delete`)!,
         },
         destroy() {
             deleteButton.removeEventListener("click", onClickDelete);

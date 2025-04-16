@@ -9,7 +9,9 @@ export interface SpecialItemProps {
     data: types.Special;
 }
 
-export function specialItem(props: SpecialItemProps): types.Component<HTMLLIElement> {
+export function specialItem(
+    props: SpecialItemProps,
+): types.Component<HTMLLIElement> {
     const el = document.createElement("li");
 
     el.className = "ui-flex justify-between";
@@ -25,7 +27,11 @@ export function specialItem(props: SpecialItemProps): types.Component<HTMLLIElem
             <span>${props.data.data.length} Einträge</span>
         </a>
 
-        <button class="delete" variant="ghost" color="destructive">
+        <button
+            class="delete"
+            data-ui-variant="ghost"
+            data-ui-color="destructive"
+        >
             <i class="bi bi-trash"></i>
         </button>
     `;
@@ -35,7 +41,9 @@ export function specialItem(props: SpecialItemProps): types.Component<HTMLLIElem
             const key = ls.listKey(props.data);
 
             if (confirm(`"${key}" wirklich löschen?`)) {
-                data.lists = data.lists.filter((list) => ls.listKey(list) !== key);
+                data.lists = data.lists.filter(
+                    (list) => ls.listKey(list) !== key,
+                );
             }
 
             return data;

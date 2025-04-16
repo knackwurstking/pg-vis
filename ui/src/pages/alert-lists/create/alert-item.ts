@@ -12,14 +12,15 @@ export interface AlertItemProps {
     };
 }
 
-export function alertItem(props: AlertItemProps): types.Component<HTMLLIElement> {
+export function alertItem(
+    props: AlertItemProps,
+): types.Component<HTMLLIElement> {
     const el = document.createElement("li");
 
-    el.className = "alert-item ui-flex nowrap align-center justify-between";
+    el.className =
+        "alert-item ui-flex nowrap align-center justify-between ui-border-bottom ui-padding";
 
     el.style.width = "100%";
-    el.style.padding = "var(--ui-spacing)";
-    el.style.borderBottom = "var(--ui-border-width) var(--ui-border-style) var(--ui-border-color)";
 
     const onClickHandler = () => {
         ui.router.hash.goTo(

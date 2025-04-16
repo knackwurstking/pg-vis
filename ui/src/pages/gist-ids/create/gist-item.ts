@@ -12,15 +12,15 @@ export interface GistItemProps {
 export function gistItem(props: GistItemProps): types.Component<HTMLLIElement> {
     const el = document.createElement("li");
 
-    el.className = "gist-item ui-flex-grid-item ui-border";
+    el.className = "gist-item ui-flex-item ui-border";
     el.style.width = "100%";
 
     el.innerHTML = html`
-        <div class="ui-flex-grid-row" style="--justify: space-between; --align: center;">
+        <div class="ui-flex gap justify-between align-center">
             <h3>${props.title}</h3>
             <div
-                class="ui-flex-grid"
-                style="--align: flex-end; --gap: 0; --mono: 1; font-size: 0.85rem; width: fit-content;"
+                class="ui-flex column align-end"
+                style="--mono: 1; font-size: 0.85rem; width: fit-content;"
             >
                 <span>
                     <span>Remote Rev.: </span>
@@ -33,17 +33,18 @@ export function gistItem(props: GistItemProps): types.Component<HTMLLIElement> {
                         id="gistID_LocalRevision_${props.storeKey}"
                         style="--wght: 450; color: var(--ui-text)"
                     >
-                        ${globals.store.get(props.storeKey)!.gist?.revision || "?"}
+                        ${globals.store.get(props.storeKey)!.gist?.revision ||
+                        "?"}
                     </span>
                 </span>
             </div>
         </div>
 
         <div
-            class="gist-id-container ui-flex-grid-row"
-            style="--align: flex-end; --justify: space-between; width: 100%;"
+            class="gist-id-container ui-flex gap justify-between align-end"
+            style="width: 100%;"
         >
-            <div class="ui-flex-grid-item">
+            <div class="ui-flex-item">
                 <label for="gistID_${props.storeKey}">Gist ID</label>
                 <input
                     id="gistID_${props.storeKey}"
@@ -53,29 +54,40 @@ export function gistItem(props: GistItemProps): types.Component<HTMLLIElement> {
                     value="${globals.store.get(props.storeKey)!.gist?.id || ""}"
                 />
             </div>
-            <div class="ui-flex-grid-item" style="--flex: 0;">
-                <button class="update" variant="ghost" color="primary" icon>
+            <div class="ui-flex-item" style="flex: 0;">
+                <button
+                    class="update"
+                    data-ui-variant="ghost"
+                    data-ui-color="primary"
+                    data-ui-icon
+                >
                     <i class="bi bi-cloud-download"></i>
                 </button>
             </div>
         </div>
 
         <div
-            class="dev-mode ui-flex-grid-row"
-            style="--align: flex-end; --justify: space-between; width: 100%; display: none"
+            class="dev-mode ui-flex row justify-between align-end"
+            style="width: 100%; display: none"
         >
-            <div class="ui-flex-grid-item">
+            <div class="ui-flex-item">
                 <label for="apiToken_${props.storeKey}">API Token</label>
                 <input
                     id="apiToken_${props.storeKey}"
                     style="width: 100%"
                     type="text"
                     placeholder="API Token hier einfügen"
-                    value="${globals.store.get(props.storeKey)!.gist?.token || ""}"
+                    value="${globals.store.get(props.storeKey)!.gist?.token ||
+                    ""}"
                 />
             </div>
-            <div class="ui-flex-grid-item" style="--flex: 0;">
-                <button class="push" variant="ghost" color="primary" icon>
+            <div class="ui-flex-item" style="flex: 0;">
+                <button
+                    class="push"
+                    data-ui-variant="ghost"
+                    data-ui-color="primary"
+                    data-ui-icon
+                >
                     <i class="bi bi-cloud-upload"></i>
                 </button>
             </div>
@@ -152,11 +164,13 @@ async function initNormalMode(item: HTMLLIElement, props: GistItemProps) {
     if (!!elements.inputGistID.value) {
         setTimeout(async () => {
             let remoteRev =
-                globals.store.get("runtime")!.lists[elements.inputGistID.value]?.remoteRevision ||
-                null;
+                globals.store.get("runtime")!.lists[elements.inputGistID.value]
+                    ?.remoteRevision || null;
             if (!remoteRev) {
                 try {
-                    remoteRev = await gist.getRevision(elements.inputGistID.value);
+                    remoteRev = await gist.getRevision(
+                        elements.inputGistID.value,
+                    );
 
                     globals.store.update("runtime", (data) => {
                         data.lists[elements.inputGistID.value] = {
@@ -178,7 +192,11 @@ async function initNormalMode(item: HTMLLIElement, props: GistItemProps) {
 
             if (remoteRev === null) {
                 elements.localRevSpan.style.color = "var(--ui-text)";
-            } else if (remoteRev !== globals.store.get(props.storeKey)!.gist?.revision || null) {
+            } else if (
+                remoteRev !==
+                    globals.store.get(props.storeKey)!.gist?.revision ||
+                null
+            ) {
                 elements.localRevSpan.style.color = "red";
             } else {
                 elements.localRevSpan.style.color = "green";
@@ -262,10 +280,14 @@ function queryElements(item: HTMLLIElement, props: GistItemProps) {
             `#gistID_RemoteRevision_${props.storeKey}`,
         )!,
 
-        inputGistID: item.querySelector<HTMLInputElement>(`#gistID_${props.storeKey}`)!,
+        inputGistID: item.querySelector<HTMLInputElement>(
+            `#gistID_${props.storeKey}`,
+        )!,
         updateButton: item.querySelector<HTMLButtonElement>(`button.update`)!,
 
-        inputAPIToken: item.querySelector<HTMLInputElement>(`#apiToken_${props.storeKey}`)!,
+        inputAPIToken: item.querySelector<HTMLInputElement>(
+            `#apiToken_${props.storeKey}`,
+        )!,
         pushButton: item.querySelector<HTMLButtonElement>(`button.push`)!,
     };
 }

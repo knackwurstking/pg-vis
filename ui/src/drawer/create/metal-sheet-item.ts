@@ -9,12 +9,15 @@ export interface MetalSheetItemProps {
     data: types.MetalSheet;
 }
 
-export function metalSheetItem(props: MetalSheetItemProps): types.Component<HTMLLIElement> {
+export function metalSheetItem(
+    props: MetalSheetItemProps,
+): types.Component<HTMLLIElement> {
     const el = document.createElement("li");
 
     el.className = "ui-flex justify-between";
 
-    const pressString = props.data.data.press > -1 ? `[P${props.data.data.press}]` : "";
+    const pressString =
+        props.data.data.press > -1 ? `[P${props.data.data.press}]` : "";
 
     el.innerHTML = html`
         <a
@@ -22,11 +25,17 @@ export function metalSheetItem(props: MetalSheetItemProps): types.Component<HTML
             style="width: 100%; height: 100%;"
             href="#metal-sheets?listKey=${ls.listKey(props.data)}"
         >
-            <span>${pressString} ${props.data.format} ${props.data.toolID}</span>
+            <span
+                >${pressString} ${props.data.format} ${props.data.toolID}</span
+            >
             <span>${props.data.data.table.data.length} Einträge</span>
         </a>
 
-        <button class="delete" variant="ghost" color="destructive">
+        <button
+            class="delete"
+            data-ui-variant="ghost"
+            data-ui-color="destructive"
+        >
             <i class="bi bi-trash"></i>
         </button>
     `;
@@ -36,7 +45,9 @@ export function metalSheetItem(props: MetalSheetItemProps): types.Component<HTML
             const key = ls.listKey(props.data);
 
             if (confirm(`"${key}" wirklich löschen?`)) {
-                data.lists = data.lists.filter((list) => ls.listKey(list) !== key);
+                data.lists = data.lists.filter(
+                    (list) => ls.listKey(list) !== key,
+                );
             }
 
             return data;
