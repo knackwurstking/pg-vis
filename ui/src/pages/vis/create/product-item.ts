@@ -32,7 +32,7 @@ export function productItem(
     props.product.lotto;
     props.product.name;
     el.innerHTML = html`
-        <div class="ui-flex column gap" style="--mono: 1;">
+        <div class="ui-flex column gap" style="--mono: 1; width: 100%;">
             <div class="ui-flex wrap justify-between" style="gap: 1rem;">
                 <div
                     class="lotto"
