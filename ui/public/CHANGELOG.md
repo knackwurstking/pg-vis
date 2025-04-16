@@ -1,5 +1,9 @@
 # Changelog
 
+## v2.2.0 - unreleased
+
+TODO: ...
+
 ## v2.1.15 [2025-03-01]
 
 - Fixed revision 30 limit.
