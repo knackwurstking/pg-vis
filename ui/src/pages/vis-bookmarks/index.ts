@@ -53,6 +53,8 @@ function render(list: types.Bookmarks) {
 
         item.element.setAttribute("data-json", JSON.stringify(product));
 
+        // TODO: Add contextmenu handler here, just copy/paste and edit... done :)
+
         if (!!enableRouting) {
             item.element.onclick = () => {
                 ui.router.hash.goTo(
