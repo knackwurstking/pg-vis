@@ -137,15 +137,35 @@ function render(visData: types.VisData) {
         item.element.classList.add("ui-none-select");
         item.element.style.cursor = "pointer";
 
-        item.element.oncontextmenu = (e) => {
+        item.element.oncontextmenu = async (e) => {
             e.preventDefault();
 
-            if (confirm(`You want to delete this item?\n${entry.key}\n${entry.value}`)) {
-                visData.data = visData.data.filter((_e, i) => i !== index);
+            item.element.classList.add("ui-primary");
 
-                const ls = listStores.get("vis-data");
-                ls.replaceInStore(visData);
-                reload();
+            try {
+                const choice = await dialogs
+                    .choose("Vis Data Eintrag", ["Löschen", "Bearbeiten"])
+                    .utils!.open();
+
+                switch (choice) {
+                    case "Bearbeiten":
+                        item.element.onclick!(new MouseEvent("click"));
+                        break;
+
+                    case "Löschen":
+                        {
+                            visData.data = visData.data.filter(
+                                (_e, i) => i !== index,
+                            );
+
+                            const ls = listStores.get("vis-data");
+                            ls.replaceInStore(visData);
+                            reload();
+                        }
+                        break;
+                }
+            } finally {
+                item.element.classList.remove("ui-primary");
             }
         };
 
@@ -207,7 +227,9 @@ function routerTargetElements() {
     const rt = query.routerTarget();
 
     return {
-        searchBarInput: rt.querySelector<HTMLInputElement>(`.search-bar input[type="search"]`)!,
+        searchBarInput: rt.querySelector<HTMLInputElement>(
+            `.search-bar input[type="search"]`,
+        )!,
         dataList: rt.querySelector<HTMLUListElement>(`.data-list`)!,
     };
 }

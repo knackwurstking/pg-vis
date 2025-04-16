@@ -85,7 +85,9 @@ function setupAppBarAddProductButton(vis: types.Vis) {
     const addButton = query.appBar_ButtonAdd();
 
     addButton.onclick = async () => {
-        const data: types.Product | null = await dialogs.product().utils!.open();
+        const data: types.Product | null = await dialogs
+            .product()
+            .utils!.open();
         if (!data) {
             return;
         }
@@ -125,13 +127,15 @@ function render(vis: types.Vis, listKey: string) {
                 e.preventDefault();
 
                 const choice = await dialogs
-                    .choose(`${product.lotto}`, ["Bearbeiten", "Löschen"])
+                    .choose(`${product.lotto}`, ["Löschen", "Bearbeiten"])
                     .utils!.open();
 
                 switch (choice) {
                     case "Bearbeiten":
                         {
-                            const data = await dialogs.product(product).utils!.open();
+                            const data = await dialogs
+                                .product(product)
+                                .utils!.open();
                             if (!data) {
                                 return;
                             }
@@ -218,7 +222,9 @@ function routerTargetElements() {
     const rt = query.routerTarget();
 
     return {
-        searchBarInput: rt.querySelector<HTMLInputElement>(`.search-bar input[type="search"]`)!,
+        searchBarInput: rt.querySelector<HTMLInputElement>(
+            `.search-bar input[type="search"]`,
+        )!,
         products: rt.querySelector<HTMLUListElement>(`.products`)!,
     };
 }

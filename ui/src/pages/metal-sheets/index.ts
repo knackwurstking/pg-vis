@@ -125,7 +125,9 @@ function setupAppBarPrinterButton(metalSheet: types.MetalSheet) {
             },
         });
 
-        const fileName = listStore.fileName(metalSheet).replace(/(\.json)$/, ".pdf");
+        const fileName = listStore
+            .fileName(metalSheet)
+            .replace(/(\.json)$/, ".pdf");
 
         if (process.env.CAPACITOR) {
             Share.share({
@@ -249,18 +251,38 @@ function render(metalSheet: types.MetalSheet) {
         tr.style.cursor = "pointer";
 
         // Delete row on right click
-        tr.oncontextmenu = (e) => {
+        tr.oncontextmenu = async (e) => {
             e.preventDefault();
 
-            if (confirm(`You want to delete this item: "${row.join(",")}" ?`)) {
-                const rowJoin = row.join(",");
-                metalSheet.data.table.data = metalSheet.data.table.data.filter(
-                    (r) => r.join(",") !== rowJoin,
-                );
+            tr.classList.add("ui-primary");
 
-                const ls = listStores.get("metal-sheets");
-                ls.replaceInStore(metalSheet);
-                reload();
+            try {
+                const choice = await dialogs
+                    .choose("Blech Listen Eintrag", ["Löschen", "Bearbeiten"])
+                    .utils!.open();
+
+                switch (choice) {
+                    case "Bearbeiten":
+                        tr.onclick!(new MouseEvent("click"));
+                        break;
+
+                    case "Löschen":
+                        {
+                            const rowJoin = row.join(",");
+                            metalSheet.data.table.data =
+                                metalSheet.data.table.data.filter(
+                                    (r) => r.join(",") !== rowJoin,
+                                );
+
+                            const ls = listStores.get("metal-sheets");
+                            ls.replaceInStore(metalSheet);
+
+                            reload();
+                        }
+                        break;
+                }
+            } finally {
+                tr.classList.remove("ui-primary");
             }
         };
 
@@ -311,7 +333,10 @@ function sortTableData(data: string[][]): string[][] {
         if (thicknessA > thicknessB) {
             // Compare thickness
             return 1;
-        } else if (thicknessA === thicknessB && parseFloat(a[1]) > parseFloat(b[1])) {
+        } else if (
+            thicknessA === thicknessB &&
+            parseFloat(a[1]) > parseFloat(b[1])
+        ) {
             // Compare height if thickness is event
             return 1;
         }

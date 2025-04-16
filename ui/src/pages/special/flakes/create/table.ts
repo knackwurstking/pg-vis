@@ -7,7 +7,9 @@ const html = String.raw;
 export function table(
     name: string,
     entries: types.SpecialFlakesEntry[],
-    onUpdated?: ((entries: types.SpecialFlakesEntry[]) => void | Promise<void>) | null,
+    onUpdated?:
+        | ((entries: types.SpecialFlakesEntry[]) => void | Promise<void>)
+        | null,
 ): types.Component<HTMLTableElement, {}> {
     const el = document.createElement("table");
 
@@ -21,7 +23,9 @@ export function table(
             <tr>
                 <th>C1</th>
                 <th>Main</th>
-                ${globals.flakesTowerSlots.map((slot) => html`<th>${slot}</th>`).join("")}
+                ${globals.flakesTowerSlots
+                    .map((slot) => html`<th>${slot}</th>`)
+                    .join("")}
             </tr>
         </thead>
 
@@ -45,17 +49,35 @@ export function table(
             tr.oncontextmenu = async (e) => {
                 e.preventDefault();
 
-                if (
-                    confirm(
-                        `You want to delete this entry: "${entry.press};${entry.compatatore};${entry.primary.value};${entry.secondary.map((s) => `${s.percent}%,${s.value}`).join(";")}" ?`,
-                    )
-                ) {
-                    onUpdated(entries.filter((_e, i) => i !== index));
+                tr.classList.add("ui-primary");
+
+                try {
+                    const choice = await dialogs
+                        .choose("Flakes Eintrag", ["Löschen", "Bearbeiten"])
+                        .utils!.open();
+
+                    switch (choice) {
+                        case "Bearbeiten":
+                            tr.onclick!(new MouseEvent("click"));
+                            break;
+
+                        case "Löschen":
+                            {
+                                onUpdated(
+                                    entries.filter((_e, i) => i !== index),
+                                );
+                            }
+                            break;
+                    }
+                } finally {
+                    tr.classList.remove("ui-primary");
                 }
             };
 
             tr.onclick = async () => {
-                const updatedEntry = await dialogs.specialFlakesEntry(entry).utils!.open();
+                const updatedEntry = await dialogs
+                    .specialFlakesEntry(entry)
+                    .utils!.open();
                 if (!updatedEntry) return;
                 entries[index] = updatedEntry;
                 onUpdated(entries);
