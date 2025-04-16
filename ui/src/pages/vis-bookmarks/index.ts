@@ -54,46 +54,6 @@ function render(list: types.Bookmarks) {
 
         item.element.setAttribute("data-json", JSON.stringify(product));
 
-        item.element.oncontextmenu = async (ev) => {
-            ev.preventDefault();
-
-            item.element.classList.add("ui-primary");
-
-            try {
-                const choice = await dialogs
-                    .choose(
-                        "Bookmark",
-                        !enableRouting
-                            ? ["Löschen"]
-                            : ["Löschen", "Bearbeiten"],
-                    )
-                    .utils!.open();
-
-                switch (choice) {
-                    case "Bearbeiten":
-                        if (!!item.element.onclick)
-                            item.element.onclick(new MouseEvent("click"));
-                        break;
-
-                    case "Löschen":
-                        {
-                            list.data = list.data.filter(
-                                (_p, i) => i !== index,
-                            );
-
-                            listStores
-                                .get("vis-bookmarks")
-                                .replaceInStore(list, list);
-
-                            reload();
-                        }
-                        break;
-                }
-            } finally {
-                item.element.classList.remove("ui-primary");
-            }
-        };
-
         if (!!enableRouting) {
             item.element.onclick = () => {
                 ui.router.hash.goTo(
@@ -106,6 +66,33 @@ function render(list: types.Bookmarks) {
             };
         } else {
             item.element.style.opacity = "0.45";
+            item.element.onclick = async () => {
+                item.element.classList.add("ui-primary");
+
+                try {
+                    const choice = await dialogs
+                        .choose("Not Found", ["Löschen"])
+                        .utils!.open();
+
+                    switch (choice) {
+                        case "Löschen":
+                            {
+                                list.data = list.data.filter(
+                                    (_p, i) => i !== index,
+                                );
+
+                                listStores
+                                    .get("vis-bookmarks")
+                                    .replaceInStore(list, list);
+
+                                reload();
+                            }
+                            break;
+                    }
+                } finally {
+                    item.element.classList.remove("ui-primary");
+                }
+            };
         }
 
         el.products.appendChild(item.element);
