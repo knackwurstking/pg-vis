@@ -86,14 +86,9 @@ function init(entry?: types.SpecialFlakesEntry | null): types.Component<
             query.inputContainer.appendChild(firstRow);
 
             {
-                firstRow.className = "ui-flex-grid-row";
-                firstRow.style.setProperty("--align", "center");
-                firstRow.style.setProperty("--justify", "space-evenly");
+                firstRow.className = "ui-flex gap justify-evenly align-center";
                 firstRow.innerHTML = html`
-                    <div
-                        class="ui-flex-grid ui-flex-grid-item"
-                        style="--gap: 0; --flex: 0;"
-                    >
+                    <div class="ui-flex-item ui-flex column" style="flex: 0;">
                         <label>Main</label>
                         <input
                             class="input"
@@ -106,10 +101,7 @@ function init(entry?: types.SpecialFlakesEntry | null): types.Component<
                         />
                     </div>
 
-                    <div
-                        class="ui-flex-grid ui-flex-grid-item"
-                        style="--gap: 0; --flex: 0;"
-                    >
+                    <div class="ui-flex-item ui-flex column" style="flex: 0;">
                         <label>C1</label>
                         <input
                             class="input"
@@ -122,10 +114,7 @@ function init(entry?: types.SpecialFlakesEntry | null): types.Component<
                         />
                     </div>
 
-                    <div
-                        class="ui-flex-grid ui-flex-grid-item"
-                        style="--gap: 0; --flex: 0;"
-                    >
+                    <div class="ui-flex-item ui-flex column" style="flex: 0;">
                         <label>&nbsp;</label>
                         <select>
                             <option value="P0">Presse 0</option>
@@ -153,19 +142,18 @@ function init(entry?: types.SpecialFlakesEntry | null): types.Component<
                 const item = document.createElement("div");
                 query.inputContainer.appendChild(item);
 
-                item.className = "tower-slot ui-flex-grid-item";
-
-                item.style.setProperty("--flex", "0");
+                item.className = "tower-slot ui-flex-item";
+                item.style.flex = "0";
                 item.style.width = "100%";
 
                 item.innerHTML = html`
                     <h5>${slot}</h5>
 
                     <div
-                        class="ui-flex-grid-row"
-                        style="--align: center; --justify: space-between; width: 100%"
+                        class="ui-flex gap justify-between align-center"
+                        style="width: 100%"
                     >
-                        <div class="ui-flex-grid-item" style="--flex: 1;">
+                        <div class="ui-flex-item">
                             <label>Prozent</label>
                             <input
                                 class="input"
@@ -178,7 +166,7 @@ function init(entry?: types.SpecialFlakesEntry | null): types.Component<
                             />
                         </div>
 
-                        <div class="ui-flex-grid-item" style="--flex: 1;">
+                        <div class="ui-flex-item">
                             <label>Geschwindigkeit</label>
                             <input
                                 class="input"

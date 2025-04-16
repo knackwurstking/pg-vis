@@ -14,7 +14,9 @@ function init(
         open: () => Promise<string | null>;
     }
 > {
-    const root = document.querySelector<HTMLDialogElement>(`dialog[name="choose"]`)!;
+    const root = document.querySelector<HTMLDialogElement>(
+        `dialog[name="choose"]`,
+    )!;
 
     const query = {
         close: root.querySelector<HTMLButtonElement>(`button.close`)!,
@@ -44,8 +46,8 @@ function init(
 
                 button.innerText = choice;
 
-                button.setAttribute("variant", "ghost");
-                button.setAttribute("color", "secondary");
+                button.setAttribute("data-ui-variant", "ghost");
+                button.setAttribute("data-ui-color", "secondary");
 
                 button.onclick = () => {
                     currentChoice = button.innerText;
