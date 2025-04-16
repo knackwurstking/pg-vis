@@ -4,6 +4,8 @@
 
 **Changed**:
 
+- Contextmenu handler will now open a "choose" dialog
+- Contextmenu handler now highlights the selectet item
 - UI version to v4.0.0
 
 **Fixed**:
