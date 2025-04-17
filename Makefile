@@ -1,3 +1,5 @@
+all: init build
+
 define SYSTEMD_SERVICE_FILE
 [Unit]
 Description=PG Vis PWA
