@@ -5,6 +5,7 @@
 **Fixed**:
 
 - Build scripts for the ui
+- Capacitor config
 
 ## v2.2.0 - 2025-04-17
 
