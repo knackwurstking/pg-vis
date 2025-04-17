@@ -64,6 +64,6 @@ export default defineConfig({
     },
 
     define: {
-        "process.env.MODE": process.env.MODE || "",
+        "process.env.MODE": JSON.stringify(process.env.MODE),
     },
 });
