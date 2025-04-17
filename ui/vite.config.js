@@ -32,7 +32,6 @@ const manifestForPlugIn = {
     strategies: "generateSW",
     registerType: "prompt",
     includeAssets: [
-        "CHANGELOG.md",
         "assets/fonts/bootstrap-icons.woff",
         "assets/fonts/bootstrap-icons.woff2",
         "assets/icons/icon.png",
