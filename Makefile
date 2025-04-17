@@ -19,7 +19,7 @@ init:
 	@go mod tidy -v 
 
 build:
-	@cd ui && npm run build 
+	@cd ui && make build-web
 	@go mod tidy -v 
 	@go build -v -o ./bin/pg-vis-pwa ./cmd/pg-vis-pwa 
 
