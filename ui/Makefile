@@ -16,6 +16,7 @@ dev:
 	MODE=; npx vite --host
 
 preview:
+	make build-web
 	MODE=; npx vite preview --host
 
 build:
