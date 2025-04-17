@@ -1,5 +1,11 @@
 # Changelog
 
+## v2.2.1 - 2025-04-17
+
+**Fixed**:
+
+- Build scripts for the ui
+
 ## v2.2.0 - 2025-04-17
 
 **Changed**:
