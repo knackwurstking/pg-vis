@@ -129,7 +129,7 @@ function setupAppBarPrinterButton(metalSheet: types.MetalSheet) {
             .fileName(metalSheet)
             .replace(/(\.json)$/, ".pdf");
 
-        if (process.env.CAPACITOR) {
+        if (process.env.MODE === "capacitor") {
             Share.share({
                 title: fileName,
                 dialogTitle: fileName,

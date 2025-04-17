@@ -50,8 +50,11 @@ export async function downloadZIP(storeKey: types.DrawerGroups) {
 
     const fileName = listStore.zipFileName();
 
-    if (process.env.CAPACITOR) {
-        const blob = await zip.generateAsync({ type: "base64", compression: "DEFLATE" });
+    if (process.env.MODE === "capacitor") {
+        const blob = await zip.generateAsync({
+            type: "base64",
+            compression: "DEFLATE",
+        });
         Share.share({
             title: fileName,
             dialogTitle: fileName,
@@ -69,7 +72,10 @@ export async function downloadZIP(storeKey: types.DrawerGroups) {
     }
 }
 
-export async function importFromFile(fileType: string, storeKey: types.DrawerGroups) {
+export async function importFromFile(
+    fileType: string,
+    storeKey: types.DrawerGroups,
+) {
     const input = document.createElement("input");
 
     input.type = "file";

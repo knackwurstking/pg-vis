@@ -21,7 +21,9 @@ let cleanup: types.CleanUp[] = [];
 export async function onMount() {
     const param: Param = ui.router.hash.getSearchParam();
 
-    const flakes = globals.store.get("special")!.lists.find((list) => list.type === "flakes");
+    const flakes = globals.store
+        .get("special")!
+        .lists.find((list) => list.type === "flakes");
     if (!flakes) {
         throw new Error(`flakes special list "${param.listKey}" not found`);
     }
@@ -63,8 +65,9 @@ function setupAppBarPrinterButton(flakes: types.SpecialFlakes) {
                 ];
 
                 for (const consumption of entry.secondary) {
-                    slots[globals.flakesTowerSlots.indexOf(consumption.slot) + 2] =
-                        `${consumption.percent}%\n${consumption.value}`;
+                    slots[
+                        globals.flakesTowerSlots.indexOf(consumption.slot) + 2
+                    ] = `${consumption.percent}%\n${consumption.value}`;
                 }
 
                 bodyData.push(slots);
@@ -112,7 +115,7 @@ function setupAppBarPrinterButton(flakes: types.SpecialFlakes) {
 
         const fileName = ls.fileName(flakes).replace(/(\.json)$/, ".pdf");
 
-        if (process.env.CAPACITOR) {
+        if (process.env.MODE === "capacitor") {
             Share.share({
                 title: fileName,
                 dialogTitle: fileName,

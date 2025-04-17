@@ -59,11 +59,11 @@ export default defineConfig({
     base: process.env.PGVISPWA_SERVER_PATH,
 
     build: {
-        outDir: "dist",
+        outDir:
+            process.env.MODE === "capacitor" ? "./dist-capacitor" : "./dist",
     },
 
     define: {
-        "process.env.PWA": process.env.PWA || false,
-        "process.env.CAPACITOR": process.env.CAPACITOR || false,
+        "process.env.MODE": process.env.MODE || "",
     },
 });

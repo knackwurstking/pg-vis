@@ -3,14 +3,6 @@
     "private": true,
     "version": "2.2.0",
     "type": "module",
-    "scripts": {
-        "test": "tsc && jest",
-        "dev": "export PWA=true;  export CAPACITOR=false; vite --host",
-        "preview": "export PWA=true;  export CAPACITOR=false; vite preview --host",
-        "build": "export PWA=true; export CAPACITOR=false;  npm run test && vite build --minify -c vite.config.js --emptyOutDir",
-        "build:android": "export PWA=false; export CAPACITOR=true; npm run test && vite build --minify -c vite.config.js --emptyOutDir",
-        "generate-assets": "npx pwa-assets-generator"
-    },
     "devDependencies": {
         "@capacitor/filesystem": "^7.0.0",
         "@capacitor/share": "^7.0.0",

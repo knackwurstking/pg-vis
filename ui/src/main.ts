@@ -15,7 +15,7 @@ import * as types from "./types";
 import * as utils from "./utils";
 import * as query from "./utils-query";
 
-if (process.env.CAPACITOR) {
+if (process.env.MODE === "capacitor") {
     App.addListener("backButton", ({ canGoBack }) => {
         if (!!document.querySelector(`dialog[open]`)) {
             return;
@@ -29,7 +29,7 @@ if (process.env.CAPACITOR) {
     });
 }
 
-if (process.env.PWA) {
+if (process.env.MODE === "capacitor") {
     console.debug("PWA updater registered");
     const updateSW = registerSW({
         async onNeedRefresh() {
