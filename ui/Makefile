@@ -16,17 +16,17 @@ dev:
 	MODE=; npx vite --host
 
 preview:
-	MODE=; vite preview --host
+	MODE=; npx vite preview --host
 
 build:
-	npm run test && \
-		vite build --minify -c vite.config.js --emptyOutDir
+	make test && \
+		npx vite build --minify -c vite.config.js --emptyOutDir
 
 build-web:
-	MODE=; make build
+	MODE= make build
 
 build-capacitor:
-	MODE=capacitor; make build
+	MODE=capacitor make build
 
 android-sync:
 	npx cap sync android
