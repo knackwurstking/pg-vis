@@ -57,6 +57,10 @@ export default defineConfig({
     clearScreen: false,
     base: process.env.PGVISPWA_SERVER_PATH,
 
+    preview: {
+        port: 9021, // NOTE: This is the port is use in my rpi-server-project
+    },
+
     build: {
         outDir:
             process.env.MODE === "capacitor" ? "./dist-capacitor" : "./dist",
