@@ -13,11 +13,11 @@ test:
 	npx tsc && npx jest 
 
 dev:
-	MODE=; npx vite --host
+	MODE= npx vite --host
 
 preview:
 	make build-web
-	MODE=; npx vite preview --host
+	MODE= npx vite preview --host
 
 build:
 	make test && \
