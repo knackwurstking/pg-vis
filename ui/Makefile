@@ -4,7 +4,7 @@ clean:
 	git clean -fxd
 
 init:
-	npm install
+	npm ci
 
 generate-pwa-assets:
 	npx pwa-assets-generator
