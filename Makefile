@@ -17,7 +17,7 @@ clean:
 	git clean -xfd
 
 init:
-	@cd ui && npm install 
+	@cd ui && npm ci
 	@go mod tidy -v 
 
 build:
