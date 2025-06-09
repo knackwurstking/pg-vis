@@ -1,5 +1,10 @@
 # Changelog
 
+## v2.2.2 - 2025-06-09
+
+- Changed the app manifests (PWA) "short_name" to "PG Vis"
+- Fixed the product items thickness alignment
+
 ## v2.2.1 - 2025-04-17
 
 **Fixed**:
