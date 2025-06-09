@@ -40,7 +40,7 @@ const manifestForPlugIn = {
     ],
     manifest: {
         name: "PG: Vis",
-        short_name: "pg-vis",
+        short_name: "PG Vis",
         icons: icons,
         screenshots: screenshots,
         theme_color: "#09090b",
