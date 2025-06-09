@@ -46,12 +46,18 @@ export function productItem(
             </div>
 
             <div class="ui-flex wrap justify-between" style="gap: 1rem;">
-                <div class="ui-flex justify-start" style="width: fit-content">
+                <div
+                    class="ui-flex gap justify-start"
+                    style="width: fit-content"
+                >
                     <div class="format">${props.product.format}</div>
                     <div class="thickness">${props.product.thickness}mm</div>
                 </div>
 
-                <div class="stamp" style="text-wrap: nowrap;">
+                <div
+                    class="stamp ui-flex-item ui-flex justify-end"
+                    style="text-wrap: nowrap;"
+                >
                     ${props.product.stamp}
                 </div>
             </div>
