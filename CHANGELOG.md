@@ -1,5 +1,9 @@
 # Changelog
 
+## v2.2.3 - 2025-06-09
+
+- Upgraded ui from version v4.0.0 to v4.3.0
+
 ## v2.2.2 - 2025-06-09
 
 - Changed the app manifests (PWA) "short_name" to "PG Vis"

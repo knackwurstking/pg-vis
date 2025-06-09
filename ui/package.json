@@ -1,7 +1,7 @@
 {
     "name": "pg",
     "private": true,
-    "version": "2.2.2",
+    "version": "2.2.3",
     "type": "module",
     "devDependencies": {
         "@capacitor/filesystem": "^7.0.0",
