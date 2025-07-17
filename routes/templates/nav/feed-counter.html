@@ -1,25 +1,110 @@
+<!-- ================================================================
+     Feed Counter Template
+     ================================================================
+     This template displays the unread feed count badge in the navigation.
+     It's loaded dynamically via HTMX and updates in real-time as new
+     feed items are added. The counter shows up to 9+ for better UI.
+     ================================================================ -->
+
 {{if gt .Count 0}}
-<span
-    style="
-        position: absolute;
-        color: var(--ui-destructive);
-        background-color: var(--ui-destructive-text);
-        top: 0;
-        right: 0;
-        width: .9rem;
-        height: .9rem;
-        font-size: 0.75rem;
-        border-radius: 50%;
-    "
-    id="feedCounter"
-    class="flex justify-center align-center"
->
-    {{if gt .Count 9}}
-    9+
-    {{else}}
-    {{.Count}}
-    {{end}}
-</span>
+    <!-- Notification Badge with Count -->
+    <span
+        id="feedCounter"
+        class="flex justify-center align-center"
+        style="
+            position: absolute;
+            color: var(--ui-destructive);
+            background-color: var(--ui-destructive-text);
+            top: 0;
+            right: 0;
+            width: 0.9rem;
+            height: 0.9rem;
+            font-size: 0.75rem;
+            font-weight: bold;
+            border-radius: 50%;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+            z-index: 10;
+        "
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+        aria-label="{{.Count}} unread notifications"
+        title="{{.Count}} unread feed items"
+    >
+        {{if gt .Count 9}}
+            <!-- Show 9+ for counts greater than 9 -->
+            <span aria-label="More than 9 unread items">9+</span>
+        {{else}}
+            <!-- Show exact count for 1-9 items -->
+            <span aria-label="{{.Count}} unread items">{{.Count}}</span>
+        {{end}}
+    </span>
 {{else}}
-<span id="feedCounter"></span>
+    <!-- Empty Badge (no unread items) -->
+    <span 
+        id="feedCounter"
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+        aria-label="No unread notifications"
+        title="No unread feed items"
+        style="display: none;"
+    >
+        <!-- Hidden when no notifications -->
+    </span>
 {{end}}
+
+<!-- Enhanced styling for the counter -->
+<style>
+    /* Animation for new notifications */
+    @keyframes bounce-in {
+        0% {
+            transform: scale(0);
+            opacity: 0;
+        }
+        50% {
+            transform: scale(1.2);
+            opacity: 0.8;
+        }
+        100% {
+            transform: scale(1);
+            opacity: 1;
+        }
+    }
+    
+    /* Apply animation when counter appears */
+    #feedCounter:not([style*="display: none"]) {
+        animation: bounce-in 0.3s ease-out;
+    }
+    
+    /* Subtle glow effect for better visibility */
+    #feedCounter {
+        box-shadow: 
+            0 1px 3px rgba(0, 0, 0, 0.2),
+            0 0 0 1px rgba(255, 255, 255, 0.1);
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        #feedCounter {
+            width: 0.8rem !important;
+            height: 0.8rem !important;
+            font-size: 0.65rem !important;
+        }
+    }
+    
+    /* High contrast mode support */
+    @media (prefers-contrast: high) {
+        #feedCounter {
+            border: 1px solid currentColor;
+            box-shadow: none;
+        }
+    }
+    
+    /* Reduced motion support */
+    @media (prefers-reduced-motion: reduce) {
+        #feedCounter {
+            animation: none;
+        }
+    }
+</style>

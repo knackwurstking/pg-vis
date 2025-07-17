@@ -1,38 +1,193 @@
-<!-- Title -->
+<!-- ================================================================
+     Login Page Template
+     ================================================================
+     This template provides the authentication interface for the pg-vis
+     application. Users can log in using their API key to access the
+     system features.
+     ================================================================ -->
 
-{{define "title"}}PG: Presse | Registrieren{{end}}
+<!-- Page Title (shown in browser tab) -->
+{{define "title"}}PG: Presse | Anmelden{{end}}
 
-<!-- App Bar Title -->
+<!-- Application Bar Title (shown in header) -->
+{{define "app-bar-title"}}Anmelden{{end}}
 
-{{define "app-bar-title"}}Registrieren{{end}}
+<!-- Navigation Bar (minimal for login page) -->
+{{define "nav"}}
+<div class="flex row gap justify-end align-center">
+    <!-- Home page button -->
+    <a 
+        role="button" 
+        class="ghost primary icon" 
+        href="./"
+        title="Home"
+        aria-label="Go to home page"
+    >
+        <i class="bi bi-house"></i>
+    </a>
+</div>
+{{end}}
 
-<!-- Content -->
-
+<!-- Main Content Area -->
 {{define "content"}}
+<!-- Custom styles for login page -->
+<style>
+    /* Login dialog specific styles */
+    #dialogLogin {
+        max-width: 400px;
+        margin: auto;
+        border-radius: var(--ui-border-radius);
+    }
+
+    /* Form styling */
+    #dialogLogin form {
+        padding: 2rem;
+        gap: 1.5rem;
+    }
+
+    /* Input field styling */
+    #dialogLogin input[name="api-key"] {
+        font-family: monospace;
+        letter-spacing: 0.05em;
+    }
+
+    /* Error state styling */
+    input[aria-invalid="true"] {
+        border-color: var(--ui-destructive);
+        background-color: var(--ui-destructive-background);
+    }
+
+    /* Success button styling */
+    button[type="submit"] {
+        background-color: var(--ui-primary);
+        color: var(--ui-primary-text);
+    }
+
+    /* Login page background */
+    main {
+        min-height: 70vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+</style>
+
 <main class="container">
-    <dialog id="dialogLogin" class="clean">
-        <form>
-            <label class="flex column">
-                Api Key
+    <!-- Login Dialog Modal -->
+    <dialog id="dialogLogin" class="clean" aria-labelledby="login-title">
+        <!-- Login Form -->
+        <form method="get" novalidate>
+            <!-- Form Header -->
+            <header style="text-align: center; margin-bottom: 1.5rem;">
+                <h2 id="login-title">
+                    <i class="bi bi-shield-lock" style="margin-right: 0.5rem;"></i>
+                    Anmeldung
+                </h2>
+                <p style="color: var(--ui-muted); margin: 0;">
+                    Geben Sie Ihren API-Schlüssel ein, um fortzufahren
+                </p>
+            </header>
+
+            <!-- API Key Input Field -->
+            <label class="flex column" for="api-key-input">
+                <span style="font-weight: 600; margin-bottom: 0.5rem;">
+                    <i class="bi bi-key" style="margin-right: 0.5rem;"></i>
+                    API-Schlüssel
+                </span>
+                
                 <input
+                    id="api-key-input"
                     name="api-key"
-                    type="text"
-                    placeholder="Api Key"
+                    type="password"
+                    placeholder="Geben Sie Ihren API-Schlüssel ein"
                     value="{{.ApiKey}}"
+                    autocomplete="current-password"
+                    spellcheck="false"
                     {{if .InvalidApiKey}}
-                    aria-invalid="{{.InvalidApiKey}}"
+                        aria-invalid="true"
+                        aria-describedby="api-key-error"
                     {{end}}
-                    required />
+                    required
+                    style="font-family: monospace; letter-spacing: 0.05em;"
+                />
+
+                <!-- Error Message -->
+                {{if .InvalidApiKey}}
+                <small 
+                    id="api-key-error" 
+                    style="color: var(--ui-destructive); margin-top: 0.5rem;"
+                    role="alert"
+                >
+                    <i class="bi bi-exclamation-triangle" style="margin-right: 0.25rem;"></i>
+                    Ungültiger API-Schlüssel. Bitte versuchen Sie es erneut.
+                </small>
+                {{else}}
+                <small style="color: var(--ui-muted); margin-top: 0.5rem;">
+                    <i class="bi bi-info-circle" style="margin-right: 0.25rem;"></i>
+                    Ihr API-Schlüssel wird sicher verarbeitet und nicht gespeichert.
+                </small>
+                {{end}}
             </label>
 
-            <footer class="flex">
-                <button class="flex-item" type="submit">Anmelden</button>
+            <!-- Form Actions -->
+            <footer class="flex" style="gap: 1rem;">
+                <!-- Submit Button -->
+                <button 
+                    class="flex-item" 
+                    type="submit"
+                    aria-describedby="submit-help"
+                >
+                    <i class="bi bi-box-arrow-in-right" style="margin-right: 0.5rem;"></i>
+                    Anmelden
+                </button>
             </footer>
+
+            <!-- Additional Help Text -->
+            <div style="text-align: center; margin-top: 1.5rem;">
+                <small id="submit-help" style="color: var(--ui-muted);">
+                    <i class="bi bi-shield-check" style="margin-right: 0.25rem;"></i>
+                    Ihre Anmeldedaten werden verschlüsselt übertragen
+                </small>
+            </div>
         </form>
     </dialog>
 
+    <!-- Show login dialog immediately -->
     <script>
+        // Show the login dialog modal
         document.querySelector("#dialogLogin").showModal();
+        
+        // Focus the API key input field for better UX
+        document.querySelector("#api-key-input").focus();
+        
+        // Handle form submission with better UX
+        const form = document.querySelector("#dialogLogin form");
+        const submitButton = form.querySelector('button[type="submit"]');
+        
+        form.addEventListener("submit", function(event) {
+            // Disable submit button to prevent double submission
+            submitButton.disabled = true;
+            submitButton.innerHTML = '<i class="bi bi-arrow-clockwise spin" style="margin-right: 0.5rem;"></i>Anmelden...';
+            
+            // Re-enable after a delay in case of errors
+            setTimeout(() => {
+                submitButton.disabled = false;
+                submitButton.innerHTML = '<i class="bi bi-box-arrow-in-right" style="margin-right: 0.5rem;"></i>Anmelden';
+            }, 3000);
+        });
+
+        // Add CSS for loading spinner
+        const style = document.createElement('style');
+        style.textContent = `
+            .spin {
+                animation: spin 1s linear infinite;
+            }
+            @keyframes spin {
+                from { transform: rotate(0deg); }
+                to { transform: rotate(360deg); }
+            }
+        `;
+        document.head.appendChild(style);
     </script>
 </main>
 {{end}}

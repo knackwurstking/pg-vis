@@ -1,63 +1,180 @@
-<!-- Title -->
+<!-- ================================================================
+     Home Page Template
+     ================================================================
+     This template defines the home/dashboard page of the pg-vis application.
+     It provides navigation to main features and serves as the entry point
+     for authenticated users.
+     ================================================================ -->
 
+<!-- Page Title (shown in browser tab) -->
 {{define "title"}}PG: Presse | Home{{end}}
 
-<!-- App Bar Title -->
-
+<!-- Application Bar Title (shown in header) -->
 {{define "app-bar-title"}}Home{{end}}
 
-<!-- Nav -->
-
+<!-- Navigation Bar -->
 {{define "nav"}}
 <div class="flex row gap justify-end align-center">
+    <!-- Feed notification button with counter -->
     {{template "nav-feed"}}
 
-    <a role="button" class="ghost primary icon" href="./profile">
+    <!-- Profile page button -->
+    <a 
+        role="button" 
+        class="ghost primary icon" 
+        href="./profile"
+        title="User Profile"
+        aria-label="Go to user profile"
+    >
         <i class="bi bi-person-circle"></i>
     </a>
 
-    <a role="button" class="ghost primary icon" href="./" disabled>
+    <!-- Home page button (disabled - current page) -->
+    <a 
+        role="button" 
+        class="ghost primary icon" 
+        href="./" 
+        disabled
+        title="Home (current page)"
+        aria-label="Home page (current)"
+    >
         <i class="bi bi-house"></i>
     </a>
 </div>
 {{end}}
 
-<!-- Content -->
-
+<!-- Main Content Area -->
 {{define "content"}}
+<!-- Custom styles for this page -->
 <style>
-    details>summary {
+    /* Details summary styling for navigation cards */
+    details > summary {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
         flex-wrap: nowrap;
+        align-items: center;
     }
 
-    details>summary>*:first-child {
+    /* Left content in summary takes full width */
+    details > summary > *:first-child {
         width: 100%;
     }
 
-    details>summary>*:last-child {
+    /* Right content in summary is icon/indicator */
+    details > summary > *:last-child {
         flex: 1;
         width: fit-content;
+    }
+
+    /* Navigation cards styling */
+    .nav-card {
+        width: 100%;
+        text-decoration: none;
+        margin-bottom: var(--ui-spacing);
+    }
+
+    .nav-card:hover {
+        transform: translateY(-2px);
+        transition: transform 0.2s ease;
     }
 </style>
 
 <main class="container fluid">
+    <!-- Welcome Section -->
+    <section>
+        <hgroup>
+            <h2>Willkommen bei PG: Presse</h2>
+            <p>Ihr zentraler Hub für Pressemanagement und Problemberichterstattung</p>
+        </hgroup>
+    </section>
+
+    <!-- Main Navigation -->
     <aside>
         <nav>
-            <ul>
-                <a 
-                    role="button"
-                    class="ghost primary flex row gap justify-between align-center",
-                    style="width: 100%;"
-                    href="./trouble-reports"
-                >
-                    Trouble Reports
-                    <i class="bi bi-chevron-right"></i>
-                </a>
+            <ul style="list-style: none; padding: 0;">
+                <!-- Trouble Reports Navigation Card -->
+                <li>
+                    <a 
+                        role="button"
+                        class="ghost primary flex row gap justify-between align-center nav-card"
+                        href="./trouble-reports"
+                        title="Manage trouble reports and issues"
+                    >
+                        <div class="flex row gap align-center">
+                            <i class="bi bi-exclamation-triangle" style="font-size: 1.2rem;"></i>
+                            <div class="flex column">
+                                <strong>Trouble Reports</strong>
+                                <small>Verwalten Sie Problemberichte und Lösungen</small>
+                            </div>
+                        </div>
+                        <i class="bi bi-chevron-right"></i>
+                    </a>
+                </li>
+
+                <!-- Activity Feed Navigation Card -->
+                <li>
+                    <a 
+                        role="button"
+                        class="ghost primary flex row gap justify-between align-center nav-card"
+                        href="./feed"
+                        title="View recent activity and updates"
+                    >
+                        <div class="flex row gap align-center">
+                            <i class="bi bi-activity" style="font-size: 1.2rem;"></i>
+                            <div class="flex column">
+                                <strong>Activity Feed</strong>
+                                <small>Aktuelle Aktivitäten und Updates</small>
+                            </div>
+                        </div>
+                        <i class="bi bi-chevron-right"></i>
+                    </a>
+                </li>
+
+                <!-- Profile Management Navigation Card -->
+                <li>
+                    <a 
+                        role="button"
+                        class="ghost primary flex row gap justify-between align-center nav-card"
+                        href="./profile"
+                        title="Manage your profile and settings"
+                    >
+                        <div class="flex row gap align-center">
+                            <i class="bi bi-person-gear" style="font-size: 1.2rem;"></i>
+                            <div class="flex column">
+                                <strong>Profile Settings</strong>
+                                <small>Profil und Einstellungen verwalten</small>
+                            </div>
+                        </div>
+                        <i class="bi bi-chevron-right"></i>
+                    </a>
+                </li>
             </ul>
         </nav>
     </aside>
+
+    <!-- Quick Stats Section (optional - could be populated via HTMX) -->
+    <section style="margin-top: 2rem;">
+        <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+            <!-- Quick stat cards could be added here -->
+            <div class="card" style="text-align: center; padding: 1rem;">
+                <i class="bi bi-clipboard-data" style="font-size: 2rem; color: var(--ui-primary);"></i>
+                <h4 style="margin: 0.5rem 0;">Berichte</h4>
+                <p style="margin: 0; color: var(--ui-muted);">Aktuelle Problemberichte verwalten</p>
+            </div>
+
+            <div class="card" style="text-align: center; padding: 1rem;">
+                <i class="bi bi-bell" style="font-size: 2rem; color: var(--ui-primary);"></i>
+                <h4 style="margin: 0.5rem 0;">Benachrichtigungen</h4>
+                <p style="margin: 0; color: var(--ui-muted);">Neue Aktivitäten verfolgen</p>
+            </div>
+
+            <div class="card" style="text-align: center; padding: 1rem;">
+                <i class="bi bi-people" style="font-size: 2rem; color: var(--ui-primary);"></i>
+                <h4 style="margin: 0.5rem 0;">Team</h4>
+                <p style="margin: 0; color: var(--ui-muted);">Zusammenarbeit und Verwaltung</p>
+            </div>
+        </div>
+    </section>
 </main>
 {{end}}

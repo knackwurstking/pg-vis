@@ -2,45 +2,55 @@
 <html lang="de">
 
 <head>
+    <!-- Meta tags for charset and viewport -->
     <meta charset="utf-8" />
-
-    <meta
-        name="viewport"
+    <meta 
+        name="viewport" 
         content="width=device-width, initial-scale=1, maximum-scale=1" />
 
+    <!-- Favicon and app icons -->
     <link rel="icon" href="./favicon.ico" sizes="any" />
     <link rel="apple-touch-icon" href="./apple-touch-icon-180x180.png" />
 
+    <!-- Progressive Web App manifest -->
     <link rel="manifest" href="./manifest.json" />
 
+    <!-- Stylesheets -->
     <link rel="stylesheet" href="./css/bootstrap-icons.min.css" />
     <link rel="stylesheet" href="./ui-dev.min.css" />
 
-    <title>{{block "title" .}}{{end}}</title>
+    <!-- Dynamic page title -->
+    <title>{{block "title" .}}PG: Presse{{end}}</title>
 
+    <!-- Custom CSS variables and component styles -->
     <style>
+        /* CSS Custom Properties */
         :root {
             --ui-hue: 225;
             --ui-saturation: 25%;
         }
 
+        /* Debug mode styling */
         body.debug,
         body.debug * {
             border-color: var(--ui-border-color) !important;
         }
 
+        /* Details/Summary styling with Bootstrap Icons */
         details summary::after {
             font-family: "bootstrap-icons";
-            content: "\f285";
+            content: "\f285"; /* chevron-right */
         }
 
         details[open] summary::after {
-            content: "\f282";
+            content: "\f282"; /* chevron-down */
         }
     </style>
 
+    <!-- JavaScript libraries -->
     <script src="./htmx.min.js"></script>
 
+    <!-- Service Worker registration for PWA functionality -->
     <script>
         if ("serviceWorker" in navigator) {
             window.addEventListener("load", () => {
@@ -64,45 +74,75 @@
 </head>
 
 <body>
+    <!-- Application header with navigation -->
     <header class="container fluid">
         <nav class="flex row gap justify-between">
+            <!-- Left side: Debug button and app title -->
             <div class="flex row gap justify-start align-center">
+                <!-- Debug mode toggle button -->
                 <div>
                     <button
                         style="transform: scale(0.75);"
                         class="ghost secondary icon flex column"
-                        onclick='
-                            document.querySelector("body").classList.toggle("debug");
-                        '
+                        onclick='document.querySelector("body").classList.toggle("debug");'
+                        title="Toggle debug mode to show element borders"
+                        aria-label="Toggle debug mode"
                     >
                         <i class="bi bi-border-all"></i>
                         <small>DEBUG</small>
                     </button>
                 </div>
 
+                <!-- Application title -->
                 <div>
-                    <h5>{{block "app-bar-title" .}}{{end}}</h5>
+                    <h5>{{block "app-bar-title" .}}PG: Presse{{end}}</h5>
                 </div>
             </div>
 
-            {{block "nav" .}}{{end}}
+            <!-- Right side: Page-specific navigation -->
+            {{block "nav" .}}
+                <!-- Default navigation if not overridden -->
+                {{template "basic-nav-elements"}}
+            {{end}}
         </nav>
     </header>
 
-    {{block "content" .}}{{end}}
+    <!-- Main content area - defined by individual pages -->
+    {{block "content" .}}
+        <!-- Default content if not overridden -->
+        <main class="container">
+            <p>Content not defined for this page.</p>
+        </main>
+    {{end}}
 </body>
 
 </html>
 
+<!-- Reusable navigation elements template -->
 {{define "basic-nav-elements"}}
 <div class="flex row gap justify-end align-center">
+    <!-- Feed notification button with counter -->
     {{template "nav-feed"}}
 
-    <a role="button" class="ghost primary icon" href="./profile">
+    <!-- Profile page button -->
+    <a 
+        role="button" 
+        class="ghost primary icon" 
+        href="./profile"
+        title="User Profile"
+        aria-label="Go to user profile"
+    >
         <i class="bi bi-person-circle"></i>
     </a>
 
-    <a role="button" class="ghost primary icon" href="./">
+    <!-- Home page button -->
+    <a 
+        role="button" 
+        class="ghost primary icon" 
+        href="./"
+        title="Home"
+        aria-label="Go to home page"
+    >
         <i class="bi bi-house"></i>
     </a>
 </div>

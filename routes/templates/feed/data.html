@@ -1,22 +1,630 @@
+<!-- ================================================================
+     Feed Data Template
+     ================================================================
+     This template displays the actual feed data with activity entries.
+     It shows a chronological list of system events, user actions, and
+     other activities with proper formatting and accessibility features.
+     ================================================================ -->
+
 {{$data := .}}
 
 {{if ne (len $data.Feeds) 0}}
-<ul id="data">
+<!-- Feed Data Container -->
+<div id="data" role="main" aria-label="Activity Feed Daten">
+    <!-- Custom styles for feed data -->
     <style>
-        footer {
+        /* Feed list styling */
+        .feed-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        /* Feed item styling */
+        .feed-item {
+            background-color: var(--ui-background);
+            border: 1px solid var(--ui-border-color);
+            border-radius: var(--ui-border-radius);
+            margin-bottom: 1rem;
+            overflow: hidden;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+        
+        .feed-item:hover {
+            border-color: var(--ui-primary);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transform: translateY(-1px);
+        }
+        
+        /* Feed item header */
+        .feed-item-header {
+            background-color: var(--ui-background-secondary);
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--ui-border-color);
             display: flex;
-            flex-direction: row;
-            justify-content: flex-end;
+            justify-content: space-between;
             align-items: center;
-            gap: var(--ui-spacing);
+            gap: 1rem;
+        }
+        
+        .feed-item-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .feed-item-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            background-color: var(--ui-primary-background);
+            color: var(--ui-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+        
+        .feed-item-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            min-width: 0;
+        }
+        
+        .feed-item-id {
+            font-weight: 600;
+            color: var(--ui-text);
+            font-size: 0.9rem;
+        }
+        
+        .feed-item-time {
+            color: var(--ui-muted);
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .feed-item-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .feed-action-button {
+            background-color: transparent;
+            border: 1px solid var(--ui-border-color);
+            color: var(--ui-muted);
+            border-radius: var(--ui-border-radius);
+            padding: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 2rem;
+            height: 2rem;
+        }
+        
+        .feed-action-button:hover {
+            background-color: var(--ui-primary);
+            border-color: var(--ui-primary);
+            color: var(--ui-primary-text);
+        }
+        
+        /* Feed item content */
+        .feed-item-content {
+            padding: 1.5rem;
+        }
+        
+        .feed-content-main {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: var(--ui-text);
+        }
+        
+        /* HTML content styling within feed items */
+        .feed-content-main h1,
+        .feed-content-main h2,
+        .feed-content-main h3,
+        .feed-content-main h4,
+        .feed-content-main h5,
+        .feed-content-main h6 {
+            margin: 0 0 0.5rem 0;
+            color: var(--ui-primary);
+        }
+        
+        .feed-content-main p {
+            margin: 0 0 1rem 0;
+        }
+        
+        .feed-content-main p:last-child {
+            margin-bottom: 0;
+        }
+        
+        .feed-content-main a {
+            color: var(--ui-primary);
+            text-decoration: none;
+        }
+        
+        .feed-content-main a:hover {
+            text-decoration: underline;
+        }
+        
+        .feed-content-main strong {
+            font-weight: 600;
+            color: var(--ui-text);
+        }
+        
+        .feed-content-main em {
+            font-style: italic;
+            color: var(--ui-muted);
+        }
+        
+        /* Feed item footer */
+        .feed-item-footer {
+            background-color: var(--ui-background-secondary);
+            padding: 0.75rem 1.5rem;
+            border-top: 1px solid var(--ui-border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            color: var(--ui-muted);
+        }
+        
+        .feed-item-type {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .feed-type-badge {
+            background-color: var(--ui-primary);
+            color: var(--ui-primary-text);
+            padding: 0.2rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.7rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        /* Feed separator */
+        .feed-separator {
+            height: 1px;
+            background: linear-gradient(
+                to right,
+                transparent,
+                var(--ui-border-color),
+                transparent
+            );
+            margin: 2rem 0;
+            position: relative;
+        }
+        
+        .feed-separator::after {
+            content: '•';
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background-color: var(--ui-background);
+            color: var(--ui-muted);
+            padding: 0 1rem;
+            font-size: 1rem;
+        }
+        
+        /* Timeline connector */
+        .feed-timeline {
+            position: relative;
+        }
+        
+        .feed-timeline::before {
+            content: '';
+            position: absolute;
+            left: 3rem;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(
+                to bottom,
+                var(--ui-primary),
+                var(--ui-primary-light)
+            );
+            z-index: 1;
+        }
+        
+        .feed-item {
+            position: relative;
+            margin-left: 2rem;
+        }
+        
+        .feed-item::before {
+            content: '';
+            position: absolute;
+            left: -1.25rem;
+            top: 1.5rem;
+            width: 0.75rem;
+            height: 0.75rem;
+            background-color: var(--ui-primary);
+            border: 2px solid var(--ui-background);
+            border-radius: 50%;
+            z-index: 2;
+            box-shadow: 0 0 0 2px var(--ui-primary);
+        }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .feed-timeline::before {
+                left: 1rem;
+            }
+            
+            .feed-item {
+                margin-left: 0.5rem;
+            }
+            
+            .feed-item::before {
+                left: -0.625rem;
+                top: 1rem;
+                width: 0.5rem;
+                height: 0.5rem;
+            }
+            
+            .feed-item-header {
+                padding: 0.75rem 1rem;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.75rem;
+            }
+            
+            .feed-item-info {
+                width: 100%;
+            }
+            
+            .feed-item-content {
+                padding: 1rem;
+            }
+            
+            .feed-item-footer {
+                padding: 0.5rem 1rem;
+                flex-direction: column;
+                gap: 0.5rem;
+                align-items: flex-start;
+            }
+            
+            .feed-action-button {
+                min-width: 1.75rem;
+                height: 1.75rem;
+                padding: 0.25rem;
+            }
+        }
+        
+        /* Empty feed message */
+        .feed-empty-message {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--ui-muted);
+        }
+        
+        .feed-empty-message i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+        
+        .feed-empty-message h3 {
+            margin: 0 0 0.5rem 0;
+            color: var(--ui-text);
+        }
+        
+        .feed-empty-message p {
+            margin: 0;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.5;
+        }
+        
+        /* Accessibility improvements */
+        @media (prefers-reduced-motion: reduce) {
+            .feed-item {
+                transition: none;
+            }
+            
+            .feed-item:hover {
+                transform: none;
+            }
+        }
+        
+        /* High contrast mode */
+        @media (prefers-contrast: high) {
+            .feed-item {
+                border: 2px solid currentColor;
+            }
+            
+            .feed-action-button {
+                border: 2px solid currentColor;
+            }
+        }
+        
+        /* Focus indicators */
+        .feed-action-button:focus-visible {
+            outline: 2px solid var(--ui-primary);
+            outline-offset: 2px;
         }
     </style>
 
-    {{range $feed := $data.Feeds}}
-        {{$data.Render $feed}}
-        <hr />
-    {{end}}
-</ul>
+    <!-- Feed Timeline Container -->
+    <div class="feed-timeline" role="region" aria-label="Activity Timeline">
+        <ul class="feed-list">
+            {{range $index, $feed := $data.Feeds}}
+            <!-- Individual Feed Item -->
+            <li class="feed-item" data-feed-id="{{$feed.ID}}" role="article">
+                <!-- Feed Item Header -->
+                <header class="feed-item-header">
+                    <div class="feed-item-info">
+                        <!-- Activity Icon -->
+                        <div class="feed-item-icon" aria-hidden="true">
+                            <i class="bi bi-activity"></i>
+                        </div>
+                        
+                        <!-- Feed Metadata -->
+                        <div class="feed-item-meta">
+                            <span class="feed-item-id">
+                                <i class="bi bi-hash" aria-hidden="true"></i>
+                                Feed {{$feed.ID}}
+                            </span>
+                            <time 
+                                class="feed-item-time"
+                                datetime="{{$feed.GetTime.Format "2006-01-02T15:04:05Z07:00"}}"
+                                title="{{$feed.GetTime.Format "Monday, 02. January 2006 um 15:04:05"}}"
+                            >
+                                <i class="bi bi-clock" aria-hidden="true"></i>
+                                {{$feed.GetTime.Format "02.01.2006 15:04"}}
+                            </time>
+                        </div>
+                    </div>
+                    
+                    <!-- Feed Actions -->
+                    <div class="feed-item-actions">
+                        <button 
+                            class="feed-action-button"
+                            title="Feed-Details anzeigen"
+                            aria-label="Details für Feed {{$feed.ID}} anzeigen"
+                            onclick="toggleFeedDetails({{$feed.ID}})"
+                        >
+                            <i class="bi bi-info-circle" aria-hidden="true"></i>
+                        </button>
+                        
+                        <button 
+                            class="feed-action-button"
+                            title="Feed-Link kopieren"
+                            aria-label="Link zu Feed {{$feed.ID}} kopieren"
+                            onclick="copyFeedLink({{$feed.ID}})"
+                        >
+                            <i class="bi bi-link-45deg" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </header>
+                
+                <!-- Feed Item Content -->
+                <div class="feed-item-content">
+                    <div class="feed-content-main" role="main">
+                        {{$data.Render $feed}}
+                    </div>
+                </div>
+                
+                <!-- Feed Item Footer -->
+                <footer class="feed-item-footer">
+                    <div class="feed-item-type">
+                        <span class="feed-type-badge">Activity</span>
+                        <span>System-Ereignis</span>
+                    </div>
+                    
+                    <div class="feed-age" title="Alter: {{$feed.Age.Round (time.Minute)}}">
+                        {{if $feed.IsOlderThan (24 * time.Hour)}}
+                            vor {{$feed.Age.Hours | printf "%.0f"}} Stunden
+                        {{else if $feed.IsOlderThan (time.Hour)}}
+                            vor {{$feed.Age.Hours | printf "%.1f"}} Stunden
+                        {{else}}
+                            vor {{$feed.Age.Minutes | printf "%.0f"}} Minuten
+                        {{end}}
+                    </div>
+                </footer>
+            </li>
+            
+            <!-- Add separator between items (except for the last one) -->
+            {{if ne $index (sub (len $data.Feeds) 1)}}
+            <li class="feed-separator" aria-hidden="true"></li>
+            {{end}}
+            {{end}}
+        </ul>
+    </div>
+    
+    <!-- Feed Summary Footer -->
+    <footer class="feed-summary" style="margin-top: 2rem; padding: 1.5rem; background-color: var(--ui-background-secondary); border-radius: var(--ui-border-radius); text-align: center;">
+        <p style="margin: 0; color: var(--ui-muted);">
+            <i class="bi bi-check-circle" style="margin-right: 0.5rem; color: var(--ui-success);" aria-hidden="true"></i>
+            <strong>{{len $data.Feeds}}</strong> Aktivität{{if ne (len $data.Feeds) 1}}en{{end}} angezeigt
+        </p>
+        <small style="color: var(--ui-muted); margin-top: 0.5rem; display: block;">
+            Zuletzt aktualisiert: {{now.Format "15:04:05"}}
+        </small>
+    </footer>
+</div>
+
 {{else}}
-<span id="data"></span>
+<!-- Empty Feed State -->
+<div id="data" class="feed-empty-message" role="region" aria-label="Keine Feed-Daten verfügbar">
+    <i class="bi bi-inbox" aria-hidden="true"></i>
+    <h3>Keine Aktivitäten gefunden</h3>
+    <p>
+        Es sind noch keine Aktivitäten vorhanden. Sobald Ereignisse im System auftreten,
+        werden sie hier in chronologischer Reihenfolge angezeigt.
+    </p>
+    
+    <!-- Helpful Actions -->
+    <div style="margin-top: 2rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+        <a 
+            href="./trouble-reports" 
+            class="action-button"
+            style="background-color: var(--ui-primary); color: var(--ui-primary-text); text-decoration: none; padding: 0.75rem 1.5rem; border-radius: var(--ui-border-radius); display: flex; align-items: center; gap: 0.5rem;"
+        >
+            <i class="bi bi-plus-lg" aria-hidden="true"></i>
+            Trouble Report erstellen
+        </a>
+        
+        <button 
+            onclick="refreshFeed()" 
+            class="action-button"
+            style="background-color: var(--ui-secondary); color: var(--ui-secondary-text); border: none; padding: 0.75rem 1.5rem; border-radius: var(--ui-border-radius); display: flex; align-items: center; gap: 0.5rem; cursor: pointer;"
+        >
+            <i class="bi bi-arrow-clockwise" aria-hidden="true"></i>
+            Feed aktualisieren
+        </button>
+    </div>
+</div>
 {{end}}
+
+<!-- JavaScript for enhanced feed functionality -->
+<script>
+    // Feed interaction functions
+    function toggleFeedDetails(feedId) {
+        const feedItem = document.querySelector(`[data-feed-id="${feedId}"]`);
+        if (!feedItem) return;
+        
+        // Toggle expanded class for additional details
+        feedItem.classList.toggle('expanded');
+        
+        // Could be extended to show/hide additional metadata
+        console.log(`Toggling details for feed ${feedId}`);
+    }
+    
+    function copyFeedLink(feedId) {
+        const url = `${window.location.origin}${window.location.pathname}#feed-${feedId}`;
+        
+        if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(url).then(() => {
+                showNotification(`Feed-Link kopiert: Feed #${feedId}`, 'success');
+            }).catch(err => {
+                console.error('Failed to copy link:', err);
+                showNotification('Fehler beim Kopieren des Links', 'error');
+            });
+        } else {
+            // Fallback for older browsers
+            const textArea = document.createElement('textarea');
+            textArea.value = url;
+            document.body.appendChild(textArea);
+            textArea.select();
+            
+            try {
+                document.execCommand('copy');
+                showNotification(`Feed-Link kopiert: Feed #${feedId}`, 'success');
+            } catch (err) {
+                console.error('Failed to copy link:', err);
+                showNotification('Fehler beim Kopieren des Links', 'error');
+            }
+            
+            document.body.removeChild(textArea);
+        }
+    }
+    
+    function showNotification(message, type = 'info') {
+        // Create notification element
+        const notification = document.createElement('div');
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: var(--ui-border-radius);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+            animation: slideIn 0.3s ease-out;
+            max-width: 300px;
+        `;
+        
+        // Set colors based on type
+        switch (type) {
+            case 'success':
+                notification.style.backgroundColor = 'var(--ui-success, #10b981)';
+                notification.style.color = 'white';
+                notification.innerHTML = `<i class="bi bi-check-circle"></i>${message}`;
+                break;
+            case 'error':
+                notification.style.backgroundColor = 'var(--ui-destructive, #ef4444)';
+                notification.style.color = 'white';
+                notification.innerHTML = `<i class="bi bi-exclamation-triangle"></i>${message}`;
+                break;
+            default:
+                notification.style.backgroundColor = 'var(--ui-primary)';
+                notification.style.color = 'var(--ui-primary-text)';
+                notification.innerHTML = `<i class="bi bi-info-circle"></i>${message}`;
+        }
+        
+        document.body.appendChild(notification);
+        
+        // Add slide-in animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Remove notification after delay
+        setTimeout(() => {
+            notification.style.animation = 'slideIn 0.3s ease-out reverse';
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+                if (style.parentNode) {
+                    style.parentNode.removeChild(style);
+                }
+            }, 300);
+        }, 3000);
+    }
+    
+    // Keyboard navigation for feed items
+    document.addEventListener('keydown', (event) => {
+        if (event.target.matches('.feed-action-button')) {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                event.target.click();
+            }
+        }
+    });
+    
+    // Scroll to feed item from URL hash
+    if (window.location.hash && window.location.hash.startsWith('#feed-')) {
+        const feedId = window.location.hash.replace('#feed-', '');
+        const feedItem = document.querySelector(`[data-feed-id="${feedId}"]`);
+        if (feedItem) {
+            setTimeout(() => {
+                feedItem.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                feedItem.style.outline = '2px solid var(--ui-primary)';
+                setTimeout(() => {
+                    feedItem.style.outline = '';
+                }, 2000);
+            }, 100);
+        }
+    }
+    
+    // Template helper functions (if not available globally)
+    if (typeof window.sub === 'undefined') {
+        window.sub = function(a, b) { return a - b; };
+    }
+    if (typeof window.now === 'undefined') {
+        window.now = new Date();
+    }
+</script>

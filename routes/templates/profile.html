@@ -1,94 +1,590 @@
-<!-- Title -->
+<!-- ================================================================
+     Profile Page Template
+     ================================================================
+     This template provides the user profile management interface.
+     It allows users to view and edit their profile information,
+     manage active sessions, and access account settings.
+     ================================================================ -->
 
+<!-- Page Title (shown in browser tab) -->
 {{define "title"}}PG: Presse | Profil{{end}}
 
-<!-- App Bar Title -->
-
+<!-- Application Bar Title (shown in header) -->
 {{define "app-bar-title"}}Profil{{end}}
 
-<!-- Nav -->
-
+<!-- Navigation Bar -->
 {{define "nav"}}
 <div class="flex row gap justify-end align-center">
+    <!-- Feed notification button with counter -->
     {{template "nav-feed"}}
 
-    <a role="button" class="ghost primary icon" href="./profile" disabled>
+    <!-- Profile page button (disabled - current page) -->
+    <a 
+        role="button" 
+        class="ghost primary icon" 
+        href="./profile" 
+        disabled
+        title="Profil (aktuelle Seite)"
+        aria-label="Profil (aktuelle Seite)"
+    >
         <i class="bi bi-person-circle"></i>
     </a>
 
-    <a role="button" class="ghost primary icon" href="./">
+    <!-- Home page button -->
+    <a 
+        role="button" 
+        class="ghost primary icon" 
+        href="./"
+        title="Startseite"
+        aria-label="Zur Startseite"
+    >
         <i class="bi bi-house"></i>
     </a>
 </div>
 {{end}}
 
-<!-- Content -->
-
+<!-- Main Content Area -->
 {{define "content"}}
+<!-- Custom styles for profile page -->
 <style>
-    hgroup>.user-name>* {
-        margin: 0;
+    /* Profile header styling */
+    .profile-header {
+        background: linear-gradient(135deg, var(--ui-primary), var(--ui-primary-dark));
+        color: var(--ui-primary-text);
+        padding: 2rem;
+        border-radius: var(--ui-border-radius);
+        margin-bottom: 2rem;
+        position: relative;
+        overflow: hidden;
     }
-
-    hgroup>.user-name {
+    
+    .profile-header::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+        pointer-events: none;
+    }
+    
+    /* User name styling */
+    .user-name-container {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
-        gap: var(--pico-spacing);
+        gap: 1rem;
+        margin-bottom: 1rem;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .user-name-container h1 {
+        margin: 0;
+        font-size: 2rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+    
+    .edit-name-button {
+        background-color: rgba(255, 255, 255, 0.2);
+        color: var(--ui-primary-text);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        width: 3rem;
+        height: 3rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+        cursor: pointer;
+    }
+    
+    .edit-name-button:hover {
+        background-color: rgba(255, 255, 255, 0.3);
+        transform: scale(1.05);
+    }
+    
+    /* Profile metadata */
+    .profile-metadata {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .telegram-id {
+        font-size: 1.1rem;
+        opacity: 0.9;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    /* Logout button styling */
+    .logout-button {
+        background-color: var(--ui-destructive);
+        color: var(--ui-destructive-text);
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: var(--ui-border-radius);
+        font-weight: 500;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.2s ease;
+    }
+    
+    .logout-button:hover {
+        background-color: var(--ui-destructive-dark);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    
+    /* Sessions section styling */
+    .sessions-section {
+        background-color: var(--ui-background);
+        border: 1px solid var(--ui-border-color);
+        border-radius: var(--ui-border-radius);
+        overflow: hidden;
+        margin-top: 2rem;
+    }
+    
+    .sessions-header {
+        background-color: var(--ui-background-secondary);
+        padding: 1.5rem;
+        border-bottom: 1px solid var(--ui-border-color);
+    }
+    
+    .sessions-header h2 {
+        margin: 0 0 0.5rem 0;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--ui-primary);
+    }
+    
+    .sessions-header p {
+        margin: 0;
+        color: var(--ui-muted);
+        font-size: 0.9rem;
+    }
+    
+    /* Dialog styling */
+    #dialogEditUserName {
+        max-width: 500px;
+        border-radius: var(--ui-border-radius);
+        border: none;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        background-color: var(--ui-background);
+        color: var(--ui-text);
+        padding: 0;
+    }
+    
+    .dialog-content {
+        padding: 2rem;
+    }
+    
+    .dialog-content h3 {
+        margin: 0 0 1rem 0;
+        color: var(--ui-primary);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .dialog-content label {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .dialog-content label span {
+        font-weight: 600;
+        color: var(--ui-text);
+    }
+    
+    .dialog-content input {
+        padding: 0.75rem;
+        border: 1px solid var(--ui-border-color);
+        border-radius: var(--ui-border-radius);
+        font-size: 1rem;
+        background-color: var(--ui-background);
+        color: var(--ui-text);
+        transition: border-color 0.2s ease;
+    }
+    
+    .dialog-content input:focus {
+        outline: none;
+        border-color: var(--ui-primary);
+        box-shadow: 0 0 0 2px var(--ui-primary-background);
+    }
+    
+    /* Dialog footer */
+    .dialog-footer {
+        background-color: var(--ui-background-secondary);
+        padding: 1rem 2rem;
+        border-top: 1px solid var(--ui-border-color);
+        display: flex;
+        gap: 1rem;
+        justify-content: flex-end;
+    }
+    
+    .dialog-footer button,
+    .dialog-footer a[role="button"] {
+        padding: 0.75rem 1.5rem;
+        border-radius: var(--ui-border-radius);
+        text-decoration: none;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        border: 1px solid transparent;
+    }
+    
+    .dialog-footer .secondary {
+        background-color: transparent;
+        color: var(--ui-muted);
+        border-color: var(--ui-border-color);
+    }
+    
+    .dialog-footer .secondary:hover {
+        background-color: var(--ui-background-secondary);
+        color: var(--ui-text);
+    }
+    
+    .dialog-footer .primary {
+        background-color: var(--ui-primary);
+        color: var(--ui-primary-text);
+        border-color: var(--ui-primary);
+    }
+    
+    .dialog-footer .primary:hover {
+        background-color: var(--ui-primary-dark);
+        transform: translateY(-1px);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Responsive design */
+    @media (max-width: 768px) {
+        .profile-header {
+            padding: 1.5rem;
+        }
+        
+        .user-name-container {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+        
+        .user-name-container h1 {
+            font-size: 1.5rem;
+        }
+        
+        .profile-metadata {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+        
+        .logout-button {
+            width: 100%;
+            justify-content: center;
+        }
+        
+        .dialog-content {
+            padding: 1.5rem;
+        }
+        
+        .dialog-footer {
+            padding: 1rem 1.5rem;
+            flex-direction: column-reverse;
+        }
+        
+        .dialog-footer button,
+        .dialog-footer a[role="button"] {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+    
+    /* Loading state */
+    .loading {
+        opacity: 0.7;
+        pointer-events: none;
+    }
+    
+    /* Avatar placeholder */
+    .user-avatar {
+        width: 4rem;
+        height: 4rem;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        color: var(--ui-primary-text);
+        margin-right: 1rem;
+    }
+    
+    @media (max-width: 768px) {
+        .user-avatar {
+            width: 3rem;
+            height: 3rem;
+            font-size: 1.2rem;
+            margin-right: 0.5rem;
+        }
     }
 </style>
 
 <main class="container fluid">
-    <hgroup class="flex column gap">
-        <span class="user-name">
-            <h1>{{.User.UserName}}</h1>
+    <!-- Profile Header -->
+    <header class="profile-header">
+        <div class="user-name-container">
+            <h1>
+                <div class="user-avatar">
+                    <i class="bi bi-person-circle" aria-hidden="true"></i>
+                </div>
+                <span>{{.User.UserName}}</span>
+            </h1>
 
             <button
-                class="ghost icon"
-                onclick='
-                    document.querySelector("#dialogEditUserName").showModal();
-                '>
-                <i class="bi bi-pen"></i>
+                class="edit-name-button"
+                onclick='document.querySelector("#dialogEditUserName").showModal();'
+                title="Benutzername bearbeiten"
+                aria-label="Benutzername bearbeiten"
+            >
+                <i class="bi bi-pen" aria-hidden="true"></i>
             </button>
-        </span>
+        </div>
 
-        <div class="flex gap justify-between">
-            <p>Telegram ID: {{.User.TelegramID}}</p>
+        <div class="profile-metadata">
+            <div class="telegram-id">
+                <i class="bi bi-telegram" aria-hidden="true"></i>
+                <span>Telegram ID: <strong>{{.User.TelegramID}}</strong></span>
+            </div>
+            
             <a
-                style="float: right"
                 role="button"
                 href="./logout"
-                class="ghost destructive">
-                Logout
+                class="logout-button"
+                title="Vom System abmelden"
+                aria-label="Abmelden"
+            >
+                <i class="bi bi-box-arrow-right" aria-hidden="true"></i>
+                <span>Abmelden</span>
             </a>
         </div>
-    </hgroup>
+    </header>
 
-    <br />
+    <!-- Active Sessions Section -->
+    <section class="sessions-section">
+        <header class="sessions-header">
+            <h2>
+                <i class="bi bi-shield-lock" aria-hidden="true"></i>
+                Aktive Sitzungen
+            </h2>
+            <p>Verwalten Sie Ihre aktiven Anmeldungen und Geräte</p>
+        </header>
+        
+        <div 
+            id="cookies"
+            hx-get="./profile/cookies"
+            hx-trigger="load"
+            hx-swap="outerHTML"
+            hx-indicator="#sessions-loading"
+            aria-live="polite"
+            aria-label="Aktive Sitzungen werden geladen"
+        >
+            <!-- Sessions will be loaded here via HTMX -->
+            <div id="sessions-loading" class="loading" style="padding: 2rem; text-align: center; color: var(--ui-muted);">
+                <i class="bi bi-arrow-clockwise" style="animation: spin 1s linear infinite; margin-right: 0.5rem;"></i>
+                Sitzungen werden geladen...
+            </div>
+        </div>
+    </section>
 
-    <span
-        id="cookies"
-        hx-get="./profile/cookies"
-        hx-trigger="load"
-        hx-swap="outerHTML"></span>
+    <!-- Edit Username Dialog -->
+    <dialog 
+        id="dialogEditUserName" 
+        class="clean" 
+        oncancel="event.preventDefault()"
+        aria-labelledby="edit-dialog-title"
+        aria-describedby="edit-dialog-description"
+        role="dialog"
+        aria-modal="true"
+    >
+        <form action="./profile" method="post" novalidate>
+            <div class="dialog-content">
+                <h3 id="edit-dialog-title">
+                    <i class="bi bi-pen" aria-hidden="true"></i>
+                    Benutzername ändern
+                </h3>
+                <p id="edit-dialog-description" style="margin: 0 0 1.5rem 0; color: var(--ui-muted);">
+                    Geben Sie einen neuen Benutzername für Ihr Profil ein.
+                </p>
+                
+                <label for="user-name-input">
+                    <span>
+                        <i class="bi bi-person" style="margin-right: 0.25rem;" aria-hidden="true"></i>
+                        Neuer Benutzername
+                    </span>
+                    <input
+                        id="user-name-input"
+                        name="user-name"
+                        type="text"
+                        value="{{.User.UserName}}"
+                        placeholder="Geben Sie einen neuen Benutzername ein"
+                        maxlength="100"
+                        autocomplete="name"
+                        required
+                    />
+                    <small style="color: var(--ui-muted); margin-top: 0.25rem;">
+                        <i class="bi bi-info-circle" style="margin-right: 0.25rem;" aria-hidden="true"></i>
+                        Der Benutzername muss zwischen 1 und 100 Zeichen lang sein.
+                    </small>
+                </label>
+            </div>
 
-    <dialog id="dialogEditUserName" class="clean" oncancel="event.preventDefault()">
-        <form action="./profile">
-            <label class="flex column">
-                User Name
-                <input
-                    name="user-name"
-                    type="text"
-                    value="{{.User.UserName}}"
-                    placeholder="User Name" />
-            </label>
-
-            <footer class="flex row gap justify-end">
-                <a role="button" class="flex-item secondary" href="./profile">Schließen</a>
-                <button type="flex-item submit">Ändern</button>
+            <footer class="dialog-footer">
+                <a 
+                    role="button" 
+                    class="secondary" 
+                    href="./profile"
+                    title="Änderungen verwerfen"
+                >
+                    <i class="bi bi-x-lg" aria-hidden="true"></i>
+                    <span>Abbrechen</span>
+                </a>
+                
+                <button 
+                    type="submit" 
+                    class="primary"
+                    id="save-username-btn"
+                    title="Benutzername speichern"
+                >
+                    <i class="bi bi-check-lg" aria-hidden="true"></i>
+                    <span>Speichern</span>
+                </button>
             </footer>
         </form>
     </dialog>
 </main>
+
+<!-- JavaScript for enhanced functionality -->
+<script>
+    // Add spinning animation for loading indicators
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+    `;
+    document.head.appendChild(style);
+    
+    // Username validation
+    const usernameInput = document.querySelector('#user-name-input');
+    const saveButton = document.querySelector('#save-username-btn');
+    
+    if (usernameInput && saveButton) {
+        function validateUsername() {
+            const value = usernameInput.value.trim();
+            const isValid = value.length >= 1 && value.length <= 100;
+            
+            saveButton.disabled = !isValid;
+            
+            // Update input styling
+            if (value.length > 0 && !isValid) {
+                usernameInput.style.borderColor = 'var(--ui-destructive)';
+            } else {
+                usernameInput.style.borderColor = '';
+            }
+            
+            return isValid;
+        }
+        
+        usernameInput.addEventListener('input', validateUsername);
+        validateUsername(); // Initial validation
+        
+        // Auto-focus and select text when dialog opens
+        const dialog = document.querySelector('#dialogEditUserName');
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.type === 'attributes' && mutation.attributeName === 'open') {
+                    if (dialog.hasAttribute('open')) {
+                        setTimeout(() => {
+                            usernameInput.focus();
+                            usernameInput.select();
+                        }, 100);
+                    }
+                }
+            });
+        });
+        
+        observer.observe(dialog, { attributes: true });
+    }
+    
+    // Keyboard shortcuts
+    document.addEventListener('keydown', function(event) {
+        // Escape to close dialog
+        if (event.key === 'Escape') {
+            const dialog = document.querySelector('#dialogEditUserName');
+            if (dialog && dialog.hasAttribute('open')) {
+                dialog.close();
+                window.location.href = './profile';
+            }
+        }
+        
+        // Enter to submit in dialog
+        if (event.key === 'Enter' && event.target === usernameInput) {
+            event.preventDefault();
+            if (validateUsername()) {
+                saveButton.click();
+            }
+        }
+    });
+    
+    // Form submission handling
+    const form = document.querySelector('#dialogEditUserName form');
+    if (form) {
+        form.addEventListener('submit', function(event) {
+            if (!validateUsername()) {
+                event.preventDefault();
+                usernameInput.focus();
+                return;
+            }
+            
+            // Add loading state
+            saveButton.disabled = true;
+            saveButton.innerHTML = '<i class="bi bi-arrow-clockwise" style="animation: spin 1s linear infinite; margin-right: 0.5rem;"></i><span>Speichern...</span>';
+        });
+    }
+    
+    // Auto-hide success notifications
+    setTimeout(() => {
+        const notifications = document.querySelectorAll('.notification, .alert');
+        notifications.forEach(notification => {
+            notification.style.transition = 'opacity 0.3s ease';
+            notification.style.opacity = '0';
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 300);
+        });
+    }, 5000);
+</script>
 {{end}}

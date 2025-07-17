@@ -1,99 +1,644 @@
-{{if not .Submitted}}
-<dialog id="dialogEdit" class="clean fullscreen" oncancel="event.preventDefault()">
-    <style>
-        form {
-            width: 100%;
-            height: 100%;
-        }
+<!-- ================================================================
+     Trouble Report Edit Dialog Template
+     ================================================================
+     This template provides a fullscreen modal dialog for creating and
+     editing trouble reports. It includes form validation, accessibility
+     features, and responsive design for optimal user experience.
+     ================================================================ -->
 
-        .content {
-            height: 100%;
+{{if not .Submitted}}
+<!-- Edit Dialog Modal -->
+<dialog 
+    id="dialogEdit" 
+    class="clean fullscreen" 
+    oncancel="event.preventDefault()"
+    aria-labelledby="dialog-title"
+    aria-describedby="dialog-description"
+    role="dialog"
+    aria-modal="true"
+>
+    <!-- Custom styles for the edit dialog -->
+    <style>
+        /* Dialog and form layout */
+        #dialogEdit {
+            padding: 0;
+            border: none;
+            background-color: var(--ui-background);
+            color: var(--ui-text);
+            border-radius: 0;
+            max-width: none;
+            max-height: none;
+            width: 100vw;
+            height: 100vh;
             margin: 0;
         }
-
-        label[for="title"] {
-            max-height: fit-content;
-        }
-
-        input[name="title"] {
+        
+        /* Form container */
+        .edit-form {
             width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
         }
-
-        label[for="content"] {
-            height: 100%;
+        
+        /* Dialog header */
+        .dialog-header {
+            background-color: var(--ui-primary);
+            color: var(--ui-primary-text);
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--ui-border-color);
+            flex-shrink: 0;
         }
-
-        textarea[name="content"] {
+        
+        .dialog-header h2 {
+            margin: 0;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .dialog-header p {
+            margin: 0.5rem 0 0 0;
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+        
+        /* Content area */
+        .content {
+            flex: 1;
+            padding: 1.5rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            background-color: var(--ui-background);
+        }
+        
+        /* Form field styling */
+        .form-field {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .form-field label {
+            font-weight: 600;
+            color: var(--ui-text);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .form-field input,
+        .form-field textarea {
             width: 100%;
-            height: 100%;
+            border: 1px solid var(--ui-border-color);
+            border-radius: var(--ui-border-radius);
+            padding: 0.75rem;
+            font-family: inherit;
+            font-size: 1rem;
+            background-color: var(--ui-background);
+            color: var(--ui-text);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .form-field input:focus,
+        .form-field textarea:focus {
+            outline: none;
+            border-color: var(--ui-primary);
+            box-shadow: 0 0 0 2px var(--ui-primary-background);
+        }
+        
+        /* Title field specific styling */
+        .title-field input {
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+        
+        /* Content field specific styling */
+        .content-field {
+            flex: 1;
+            min-height: 0;
+        }
+        
+        .content-field textarea {
             resize: none;
+            min-height: 300px;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            line-height: 1.5;
+        }
+        
+        /* Error states */
+        .form-field input[aria-invalid="true"],
+        .form-field textarea[aria-invalid="true"] {
+            border-color: var(--ui-destructive);
+            background-color: var(--ui-destructive-background);
+        }
+        
+        .error-message {
+            color: var(--ui-destructive);
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            margin-top: 0.25rem;
+        }
+        
+        /* Dialog footer */
+        .dialog-footer {
+            background-color: var(--ui-background-secondary);
+            border-top: 1px solid var(--ui-border-color);
+            padding: 1rem 1.5rem;
+            flex-shrink: 0;
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            align-items: center;
+        }
+        
+        /* Button styling */
+        .dialog-footer button {
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--ui-border-radius);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            min-width: 120px;
+            justify-content: center;
+        }
+        
+        .dialog-footer .secondary {
+            background-color: transparent;
+            color: var(--ui-muted);
+            border: 1px solid var(--ui-border-color);
+        }
+        
+        .dialog-footer .secondary:hover {
+            background-color: var(--ui-background-secondary);
+            color: var(--ui-text);
+        }
+        
+        .dialog-footer .primary {
+            background-color: var(--ui-primary);
+            color: var(--ui-primary-text);
+            border: 1px solid var(--ui-primary);
+        }
+        
+        .dialog-footer .primary:hover {
+            background-color: var(--ui-primary-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .dialog-footer .primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        /* Character counter */
+        .char-counter {
+            font-size: 0.8rem;
+            color: var(--ui-muted);
+            text-align: right;
+            margin-top: 0.25rem;
+        }
+        
+        .char-counter.warning {
+            color: var(--ui-warning);
+        }
+        
+        .char-counter.error {
+            color: var(--ui-destructive);
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .dialog-header,
+            .content,
+            .dialog-footer {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+            
+            .dialog-footer {
+                flex-direction: column-reverse;
+                gap: 0.75rem;
+            }
+            
+            .dialog-footer button {
+                width: 100%;
+            }
+            
+            .content-field textarea {
+                min-height: 200px;
+            }
+        }
+        
+        /* Loading state */
+        .loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+        
+        .loading button {
+            position: relative;
+        }
+        
+        .loading button::after {
+            content: "";
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            margin: auto;
+            border: 2px solid transparent;
+            border-top-color: currentColor;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 
-    <form
+    <!-- Edit Form -->
+    <form 
         {{if gt .ID 0}}
-        hx-put="./trouble-reports/dialog-edit?id={{.ID}}"
+            hx-put="./trouble-reports/dialog-edit?id={{.ID}}"
         {{else}}
-        hx-post="./trouble-reports/dialog-edit"
+            hx-post="./trouble-reports/dialog-edit"
         {{end}}
         hx-trigger="submit"
         hx-target="#dialogEdit"
         hx-swap="outerHTML"
-        class="flex column gap">
-        <div class="content flex-item flex column gap">
-            <label for="title" class="flex column">
-                Titel
+        hx-indicator="#loading-indicator"
+        class="edit-form"
+        novalidate
+    >
+        <!-- Dialog Header -->
+        <header class="dialog-header">
+            <h2 id="dialog-title">
+                {{if gt .ID 0}}
+                    <i class="bi bi-pen" aria-hidden="true"></i>
+                    Trouble Report bearbeiten
+                {{else}}
+                    <i class="bi bi-plus-lg" aria-hidden="true"></i>
+                    Neuen Trouble Report erstellen
+                {{end}}
+            </h2>
+            <p id="dialog-description">
+                {{if gt .ID 0}}
+                    Bearbeiten Sie die Details des Trouble Reports #{{.ID}}
+                {{else}}
+                    Erstellen Sie einen neuen Problembericht mit allen relevanten Informationen
+                {{end}}
+            </p>
+        </header>
+
+        <!-- Form Content -->
+        <div class="content">
+            <!-- Title Field -->
+            <div class="form-field title-field">
+                <label for="title">
+                    <i class="bi bi-type" aria-hidden="true"></i>
+                    <span>Titel <span aria-label="erforderlich" style="color: var(--ui-destructive);">*</span></span>
+                </label>
                 <input
+                    type="text"
                     name="title"
                     id="title"
-                    placeholder="Titel"
+                    placeholder="Kurze, beschreibende Überschrift für das Problem"
                     value="{{.Title}}"
+                    maxlength="500"
+                    autocomplete="off"
                     {{if .InvalidTitle}}
-                    aria-invalid="true"
-                    {{end}} />
-            </label>
+                        aria-invalid="true"
+                        aria-describedby="title-error"
+                    {{end}}
+                    required
+                />
+                {{if .InvalidTitle}}
+                <div id="title-error" class="error-message" role="alert">
+                    <i class="bi bi-exclamation-triangle" aria-hidden="true"></i>
+                    Der Titel ist erforderlich und muss zwischen 1 und 500 Zeichen lang sein.
+                </div>
+                {{end}}
+                <div class="char-counter" id="title-counter">
+                    <span id="title-count">{{len .Title}}</span>/500 Zeichen
+                </div>
+            </div>
 
-            <!-- TODO: Allow embedding attachments -->
-            <label for="content" class="flex-item flex column">
-                Report
+            <!-- Content Field -->
+            <div class="form-field content-field">
+                <label for="content">
+                    <i class="bi bi-file-text" aria-hidden="true"></i>
+                    <span>Problembeschreibung <span aria-label="erforderlich" style="color: var(--ui-destructive);">*</span></span>
+                </label>
                 <textarea
                     name="content"
                     id="content"
-                    placeholder="Report"
+                    placeholder="Detaillierte Beschreibung des Problems:
+
+• Was ist passiert?
+• Wann ist es aufgetreten?
+• Welche Schritte führten zum Problem?
+• Welche Auswirkungen hat es?
+• Vorgeschlagene Lösungsansätze (falls vorhanden)"
+                    maxlength="50000"
                     {{if .InvalidContent}}
-                    aria-invalid="true"
+                        aria-invalid="true"
+                        aria-describedby="content-error"
                     {{end}}
+                    required
                 >{{.Content}}</textarea>
-            </label>
+                {{if .InvalidContent}}
+                <div id="content-error" class="error-message" role="alert">
+                    <i class="bi bi-exclamation-triangle" aria-hidden="true"></i>
+                    Eine Problembeschreibung ist erforderlich und muss zwischen 1 und 50.000 Zeichen lang sein.
+                </div>
+                {{end}}
+                <div class="char-counter" id="content-counter">
+                    <span id="content-count">{{len .Content}}</span>/50.000 Zeichen
+                </div>
+            </div>
+
+            <!-- Attachments Field (Future Enhancement) -->
+            <div class="form-field" style="opacity: 0.5; pointer-events: none;">
+                <label for="attachments">
+                    <i class="bi bi-paperclip" aria-hidden="true"></i>
+                    <span>Anhänge <small>(In Entwicklung)</small></span>
+                </label>
+                <input
+                    type="file"
+                    name="attachments"
+                    id="attachments"
+                    multiple
+                    accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg,.gif"
+                    disabled
+                />
+                <small style="color: var(--ui-muted); margin-top: 0.25rem;">
+                    <i class="bi bi-info-circle" aria-hidden="true"></i>
+                    Die Anhang-Funktion wird in einer zukünftigen Version verfügbar sein.
+                </small>
+            </div>
         </div>
 
-        <footer class="flex row gap justify-end">
+        <!-- Dialog Footer -->
+        <footer class="dialog-footer">
+            <!-- Cancel Button -->
             <button
+                type="button"
                 hx-get="./trouble-reports/dialog-edit?cancel=true"
                 hx-trigger="click"
                 hx-target="#dialogEdit"
                 hx-swap="outerHTML"
-                type="button"
-                class="secondary">
-                Schließen
+                class="secondary"
+                aria-label="Dialog schließen ohne Speichern"
+            >
+                <i class="bi bi-x-lg" aria-hidden="true"></i>
+                <span>Abbrechen</span>
             </button>
 
-            <!-- Set button text based on ID value -->
-            <button type="submit">
-                {{if gt .ID 0}} Aktualisieren {{else}} Erstellen {{end}}
+            <!-- Submit Button -->
+            <button 
+                type="submit" 
+                class="primary"
+                id="submit-button"
+                aria-describedby="submit-help"
+            >
+                {{if gt .ID 0}}
+                    <i class="bi bi-check-lg" aria-hidden="true"></i>
+                    <span>Änderungen speichern</span>
+                {{else}}
+                    <i class="bi bi-plus-lg" aria-hidden="true"></i>
+                    <span>Bericht erstellen</span>
+                {{end}}
             </button>
+            
+            <!-- Loading Indicator -->
+            <div id="loading-indicator" class="htmx-indicator" style="margin-left: 1rem;">
+                <i class="bi bi-arrow-clockwise" style="animation: spin 1s linear infinite;"></i>
+                <span style="margin-left: 0.5rem;">Speichern...</span>
+            </div>
         </footer>
     </form>
 
+    <!-- JavaScript for enhanced functionality -->
     <script>
-        document.querySelector("#dialogEdit").showModal();
+        (function() {
+            // Show dialog immediately
+            const dialog = document.querySelector("#dialogEdit");
+            dialog.showModal();
+            
+            // Focus the first input field
+            const titleInput = document.querySelector("#title");
+            if (titleInput) {
+                titleInput.focus();
+                titleInput.select();
+            }
+            
+            // Character counter functionality
+            function updateCharCounter(inputId, counterId, maxLength) {
+                const input = document.querySelector(`#${inputId}`);
+                const counter = document.querySelector(`#${counterId}`);
+                const countSpan = counter.querySelector('span');
+                
+                if (!input || !counter || !countSpan) return;
+                
+                function updateCount() {
+                    const currentLength = input.value.length;
+                    countSpan.textContent = currentLength;
+                    
+                    // Update counter styling based on usage
+                    counter.classList.remove('warning', 'error');
+                    if (currentLength > maxLength * 0.9) {
+                        counter.classList.add('warning');
+                    }
+                    if (currentLength > maxLength) {
+                        counter.classList.add('error');
+                    }
+                }
+                
+                input.addEventListener('input', updateCount);
+                updateCount(); // Initial count
+            }
+            
+            // Initialize character counters
+            updateCharCounter('title', 'title-counter', 500);
+            updateCharCounter('content', 'content-counter', 50000);
+            
+            // Form validation
+            const form = document.querySelector('.edit-form');
+            const submitButton = document.querySelector('#submit-button');
+            
+            function validateForm() {
+                const titleInput = document.querySelector('#title');
+                const contentInput = document.querySelector('#content');
+                
+                const isValid = titleInput.value.trim().length > 0 && 
+                               contentInput.value.trim().length > 0 &&
+                               titleInput.value.length <= 500 &&
+                               contentInput.value.length <= 50000;
+                
+                submitButton.disabled = !isValid;
+                return isValid;
+            }
+            
+            // Validate on input
+            document.querySelector('#title').addEventListener('input', validateForm);
+            document.querySelector('#content').addEventListener('input', validateForm);
+            
+            // Initial validation
+            validateForm();
+            
+            // Handle form submission
+            form.addEventListener('submit', function(event) {
+                if (!validateForm()) {
+                    event.preventDefault();
+                    return;
+                }
+                
+                // Add loading state
+                form.classList.add('loading');
+                submitButton.disabled = true;
+                
+                // Reset loading state after timeout (fallback)
+                setTimeout(() => {
+                    form.classList.remove('loading');
+                    submitButton.disabled = false;
+                }, 5000);
+            });
+            
+            // Keyboard shortcuts
+            document.addEventListener('keydown', function(event) {
+                // Ctrl+Enter or Cmd+Enter to submit
+                if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
+                    if (validateForm()) {
+                        form.dispatchEvent(new Event('submit'));
+                    }
+                }
+                
+                // Escape to cancel
+                if (event.key === 'Escape') {
+                    const cancelButton = document.querySelector('.secondary');
+                    if (cancelButton) {
+                        cancelButton.click();
+                    }
+                }
+            });
+            
+            // Auto-resize textarea
+            const textarea = document.querySelector('#content');
+            if (textarea) {
+                function autoResize() {
+                    textarea.style.height = 'auto';
+                    textarea.style.height = Math.max(300, textarea.scrollHeight) + 'px';
+                }
+                
+                textarea.addEventListener('input', autoResize);
+                autoResize(); // Initial resize
+            }
+            
+            // Prevent accidental navigation
+            let formChanged = false;
+            
+            document.querySelector('#title').addEventListener('input', () => formChanged = true);
+            document.querySelector('#content').addEventListener('input', () => formChanged = true);
+            
+            window.addEventListener('beforeunload', function(event) {
+                if (formChanged) {
+                    event.preventDefault();
+                    event.returnValue = 'Sie haben ungespeicherte Änderungen. Möchten Sie die Seite wirklich verlassen?';
+                }
+            });
+            
+            // Clear form changed flag on successful submit
+            form.addEventListener('htmx:afterRequest', function(event) {
+                if (event.detail.successful) {
+                    formChanged = false;
+                }
+            });
+        })();
     </script>
 </dialog>
+
 {{else}}
-<span
+<!-- Success State - Reload Data -->
+<div 
+    id="dialogEdit"
     hx-get="./trouble-reports/data"
     hx-trigger="load"
     hx-target="#data"
     hx-swap="outerHTML"
-    id="dialogEdit"></span>
+    aria-live="polite"
+    style="display: none;"
+>
+    <!-- This will trigger a data reload -->
+</div>
+
+<!-- Success Notification (Optional) -->
+<script>
+    // Show a brief success notification
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background-color: var(--ui-success, #10b981);
+        color: white;
+        padding: 1rem 1.5rem;
+        border-radius: var(--ui-border-radius);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        animation: slideIn 0.3s ease-out;
+    `;
+    
+    notification.innerHTML = `
+        <i class="bi bi-check-circle" aria-hidden="true"></i>
+        {{if gt .ID 0}}
+            Trouble Report wurde erfolgreich aktualisiert
+        {{else}}
+            Neuer Trouble Report wurde erstellt
+        {{end}}
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Add slide-in animation
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+    `;
+    document.head.appendChild(style);
+    
+    // Remove notification after 3 seconds
+    setTimeout(() => {
+        notification.style.animation = 'slideIn 0.3s ease-out reverse';
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+            }
+        }, 300);
+    }, 3000);
+</script>
 {{end}}

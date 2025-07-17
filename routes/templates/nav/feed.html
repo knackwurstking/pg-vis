@@ -1,15 +1,31 @@
+<!-- ================================================================
+     Navigation Feed Button Template
+     ================================================================
+     This template defines the feed notification button that appears in
+     the navigation bar. It includes HTMX integration for real-time
+     counter updates and provides visual feedback for unread items.
+     ================================================================ -->
+
 {{define "nav-feed"}}
+<!-- Feed Notification Button with Counter -->
 <a
+    role="button"
+    class="ghost primary icon"
+    href="./feed"
+    title="Activity Feed - Click to view recent activity"
+    aria-label="Activity feed with notification counter"
+    style="position: relative;"
     hx-get="./nav/feed-counter"
     hx-trigger="load"
     hx-target="#feedCounter"
     hx-swap="outerHTML"
-    role="button"
-    class="ghost primary icon"
-    href="./feed"
 >
-    <i class="bi bi-bell"></i>
+    <!-- Bell Icon -->
+    <i class="bi bi-bell" aria-hidden="true"></i>
+    
+    <!-- Notification Counter Badge -->
     <span
+        id="feedCounter"
         style="
             position: absolute;
             color: var(--ui-destructive);
@@ -18,8 +34,48 @@
             right: 0;
             font-size: 0.65rem;
             border-radius: 50%;
+            min-width: 0.9rem;
+            height: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
         "
-        id="feedCounter"
-    ></span>
+        aria-live="polite"
+        aria-atomic="true"
+    >
+        <!-- Counter will be loaded via HTMX -->
+    </span>
 </a>
+
+<!-- Custom CSS for enhanced styling -->
+<style>
+    /* Enhanced hover effect for feed button */
+    a[href="./feed"]:hover {
+        transform: scale(1.05);
+        transition: transform 0.2s ease;
+    }
+    
+    /* Pulse animation for new notifications */
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); }
+    }
+    
+    /* Apply pulse animation when counter updates */
+    #feedCounter:not(:empty) {
+        animation: pulse 0.5s ease-in-out;
+    }
+    
+    /* Ensure proper positioning on different screen sizes */
+    @media (max-width: 768px) {
+        #feedCounter {
+            font-size: 0.6rem;
+            min-width: 0.8rem;
+            height: 0.8rem;
+        }
+    }
+</style>
 {{end}}

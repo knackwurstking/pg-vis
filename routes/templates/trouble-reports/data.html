@@ -1,60 +1,399 @@
-{{$data := .}} {{if ne (len $data.TroubleReports) 0}}
-<ul id="data">
+<!-- ================================================================
+     Trouble Reports Data Template
+     ================================================================
+     This template displays the list of trouble reports with interactive
+     controls for viewing, editing, and deleting reports. It includes
+     admin controls and voting system placeholders for non-admin users.
+     ================================================================ -->
+
+{{$data := .}}
+
+{{if ne (len $data.TroubleReports) 0}}
+<!-- Trouble Reports List Container -->
+<div id="data" role="main" aria-label="Trouble Reports Liste">
+    <!-- Custom styles for trouble reports data -->
     <style>
+        /* Pre-formatted content styling */
         pre {
             text-wrap: wrap;
+            white-space: pre-wrap;
+            word-break: break-word;
+            background-color: var(--ui-background-secondary);
+            padding: 1rem;
+            border-radius: var(--ui-border-radius);
+            border-left: 4px solid var(--ui-primary);
+            font-family: var(--ui-font-family);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin: 1rem 0;
+        }
+        
+        /* Trouble report item styling */
+        .trouble-report-item {
+            margin: 1.5rem 0;
+            border: 1px solid var(--ui-border-color);
+            border-radius: var(--ui-border-radius);
+            background-color: var(--ui-background);
+            transition: all 0.2s ease;
+        }
+        
+        .trouble-report-item:hover {
+            border-color: var(--ui-primary);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Summary styling */
+        .trouble-report-item summary {
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            background-color: var(--ui-background-secondary);
+            border-radius: var(--ui-border-radius) var(--ui-border-radius) 0 0;
+            transition: background-color 0.2s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .trouble-report-item summary:hover {
+            background-color: var(--ui-primary-background);
+        }
+        
+        .trouble-report-item[open] summary {
+            border-bottom: 1px solid var(--ui-border-color);
+            border-radius: var(--ui-border-radius) var(--ui-border-radius) 0 0;
+        }
+        
+        /* Content area styling */
+        .trouble-report-content {
+            padding: 1.5rem;
+        }
+        
+        /* Actions styling */
+        .actions {
+            padding: 1rem 1.5rem;
+            background-color: var(--ui-background-secondary);
+            border-top: 1px solid var(--ui-border-color);
+            border-radius: 0 0 var(--ui-border-radius) var(--ui-border-radius);
+            gap: 0.75rem;
+        }
+        
+        /* Action buttons */
+        .action-button {
+            padding: 0.5rem;
+            border-radius: var(--ui-border-radius);
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 2.5rem;
+            height: 2.5rem;
+        }
+        
+        .action-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Edit button styling */
+        .edit-button {
+            color: var(--ui-primary);
+            border: 1px solid var(--ui-primary);
+        }
+        
+        .edit-button:hover {
+            background-color: var(--ui-primary);
+            color: var(--ui-primary-text);
+        }
+        
+        /* Delete button styling */
+        .delete-button {
+            color: var(--ui-destructive);
+            border: 1px solid var(--ui-destructive);
+        }
+        
+        .delete-button:hover {
+            background-color: var(--ui-destructive);
+            color: var(--ui-destructive-text);
+        }
+        
+        /* Vote button styling */
+        .vote-button {
+            color: var(--ui-warning);
+            border: 1px solid var(--ui-warning);
+            font-size: 0.75rem;
+            flex-direction: column;
+            padding: 0.25rem;
+            min-width: 3rem;
+            height: 3rem;
+        }
+        
+        .vote-button:hover {
+            background-color: var(--ui-warning);
+            color: var(--ui-warning-text);
+        }
+        
+        /* Summary chevron styling */
+        .summary-chevron {
+            transition: transform 0.2s ease;
+            color: var(--ui-muted);
+        }
+        
+        details[open] .summary-chevron {
+            transform: rotate(90deg);
+        }
+        
+        /* Report metadata */
+        .report-metadata {
+            font-size: 0.85rem;
+            color: var(--ui-muted);
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .trouble-report-item summary {
+                padding: 0.75rem 1rem;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+            
+            .trouble-report-content {
+                padding: 1rem;
+            }
+            
+            .actions {
+                padding: 0.75rem 1rem;
+                flex-wrap: wrap;
+            }
+            
+            .action-button {
+                min-width: 2rem;
+                height: 2rem;
+            }
+            
+            .vote-button {
+                min-width: 2.5rem;
+                height: 2.5rem;
+            }
         }
     </style>
 
-    {{range $tr := $data.TroubleReports}}
-    <details id="trouble-report-{{$tr.ID}}" style="margin: var(--ui-spacing) auto" class="data">
-        <summary>{{$tr.Title}}</summary>
-        <pre>{{$tr.Content}}</pre>
-    </details>
+    <!-- Reports List -->
+    <div class="reports-list" role="region" aria-label="Liste der Trouble Reports">
+        {{range $index, $tr := $data.TroubleReports}}
+        <!-- Individual Trouble Report -->
+        <details 
+            id="trouble-report-{{$tr.ID}}" 
+            class="data trouble-report-item"
+            data-report-id="{{$tr.ID}}"
+            {{if eq $index 0}}open{{end}}
+        >
+            <!-- Report Summary -->
+            <summary 
+                role="button"
+                aria-expanded="false"
+                aria-controls="trouble-report-content-{{$tr.ID}}"
+                tabindex="0"
+            >
+                <div class="flex column align-start flex-item">
+                    <!-- Report Title -->
+                    <h3 style="margin: 0; font-size: 1.1rem;">
+                        <i class="bi bi-file-text" style="margin-right: 0.5rem; color: var(--ui-primary);" aria-hidden="true"></i>
+                        {{$tr.Title}}
+                    </h3>
+                    
+                    <!-- Report Metadata -->
+                    <div class="report-metadata">
+                        <span>
+                            <i class="bi bi-hash" aria-hidden="true"></i>
+                            ID: {{$tr.ID}}
+                        </span>
+                        {{if $tr.Modified}}
+                            {{if $tr.Modified.User}}
+                            <span style="margin-left: 1rem;">
+                                <i class="bi bi-person" aria-hidden="true"></i>
+                                Von: {{$tr.Modified.User.UserName}}
+                            </span>
+                            {{end}}
+                            <span style="margin-left: 1rem;">
+                                <i class="bi bi-clock" aria-hidden="true"></i>
+                                {{$tr.Modified.GetTime.Format "02.01.2006 15:04"}}
+                            </span>
+                        {{end}}
+                    </div>
+                </div>
+                
+                <!-- Expand/Collapse Chevron -->
+                <i class="bi bi-chevron-right summary-chevron" aria-hidden="true"></i>
+            </summary>
 
-    <div class="actions flex row gap justify-end align-center">
+            <!-- Report Content -->
+            <div 
+                id="trouble-report-content-{{$tr.ID}}"
+                class="trouble-report-content"
+                role="region"
+                aria-labelledby="trouble-report-{{$tr.ID}}"
+            >
+                <!-- Report Description -->
+                <div class="report-description">
+                    <h4 style="margin: 0 0 1rem 0; color: var(--ui-primary);">
+                        <i class="bi bi-file-text" aria-hidden="true"></i>
+                        Beschreibung
+                    </h4>
+                    <pre aria-label="Trouble Report Beschreibung">{{$tr.Content}}</pre>
+                </div>
 
+                <!-- Attachments Section (if any) -->
+                {{if $tr.LinkedAttachments}}
+                <div class="attachments-section" style="margin-top: 1.5rem;">
+                    <h4 style="margin: 0 0 1rem 0; color: var(--ui-primary);">
+                        <i class="bi bi-paperclip" aria-hidden="true"></i>
+                        Anhänge ({{len $tr.LinkedAttachments}})
+                    </h4>
+                    <ul style="list-style: none; padding: 0; margin: 0;">
+                        {{range $attachment := $tr.LinkedAttachments}}
+                        <li style="margin: 0.5rem 0; padding: 0.5rem; background-color: var(--ui-background-secondary); border-radius: var(--ui-border-radius);">
+                            <a href="{{$attachment.Link}}" target="_blank" style="text-decoration: none; color: var(--ui-primary);">
+                                <i class="bi bi-download" style="margin-right: 0.5rem;" aria-hidden="true"></i>
+                                {{$attachment.Name}}
+                            </a>
+                        </li>
+                        {{end}}
+                    </ul>
+                </div>
+                {{end}}
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="actions flex row gap justify-end align-center">
+                <!-- Edit Button -->
+                <button
+                    hx-get="./trouble-reports/dialog-edit?id={{$tr.ID}}"
+                    hx-trigger="click"
+                    hx-target="#dialogEdit"
+                    hx-swap="outerHTML"
+                    hx-indicator="#loading-indicator"
+                    class="action-button edit-button"
+                    title="Trouble Report bearbeiten"
+                    aria-label="Trouble Report {{$tr.ID}} bearbeiten"
+                >
+                    <i class="bi bi-pen" aria-hidden="true"></i>
+                </button>
+
+                {{if $data.IsAdmin}}
+                    <!-- Admin Delete Button -->
+                    <button
+                        hx-delete="./trouble-reports/data?id={{$tr.ID}}"
+                        hx-trigger="click"
+                        hx-target="#data"
+                        hx-swap="outerHTML"
+                        hx-confirm="Sind Sie sicher, dass Sie diesen Trouble Report löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden."
+                        hx-indicator="#loading-indicator"
+                        class="action-button delete-button"
+                        title="Trouble Report löschen (Admin)"
+                        aria-label="Trouble Report {{$tr.ID}} löschen"
+                    >
+                        <i class="bi bi-trash" aria-hidden="true"></i>
+                    </button>
+                {{else}}
+                    <!-- Non-Admin Vote Button -->
+                    <!-- TODO: Implement voting system for non-admin users -->
+                    <button
+                        id="voteForDelete-{{$tr.ID}}"
+                        hx-post="./trouble-reports/vote?id={{$tr.ID}}&mode=delete"
+                        hx-trigger="click"
+                        hx-swap="outerHTML"
+                        hx-confirm="Möchten Sie für die Löschung dieses Trouble Reports abstimmen?"
+                        class="action-button vote-button"
+                        title="Für Löschung abstimmen (Voting-System)"
+                        aria-label="Für Löschung von Trouble Report {{$tr.ID}} abstimmen"
+                        disabled
+                    >
+                        <i class="bi bi-hand-thumbs-down" aria-hidden="true"></i>
+                        <small>VOTE</small>
+                    </button>
+                {{end}}
+            </div>
+        </details>
+        {{end}}
+    </div>
+
+    <!-- Reports Summary -->
+    <div class="reports-summary" style="margin-top: 2rem; padding: 1rem; background-color: var(--ui-background-secondary); border-radius: var(--ui-border-radius); text-align: center;">
+        <p style="margin: 0; color: var(--ui-muted);">
+            <i class="bi bi-info-circle" style="margin-right: 0.5rem;" aria-hidden="true"></i>
+            <strong>{{len $data.TroubleReports}}</strong> Trouble Report{{if ne (len $data.TroubleReports) 1}}s{{end}} gefunden
+        </p>
+    </div>
+</div>
+
+{{else}}
+<!-- Empty State -->
+<div id="data" class="empty-state" role="region" aria-label="Keine Trouble Reports verfügbar">
+    <div style="text-align: center; padding: 3rem 1rem; color: var(--ui-muted);">
+        <i class="bi bi-clipboard-x" style="font-size: 3rem; margin-bottom: 1rem; display: block;"></i>
+        <h3 style="margin: 0 0 0.5rem 0;">Keine Trouble Reports gefunden</h3>
+        <p style="margin: 0 0 1.5rem 0;">
+            Es sind noch keine Problemberichte vorhanden. 
+            Erstellen Sie den ersten Bericht, um zu beginnen.
+        </p>
         <button
-            hx-get="./trouble-reports/dialog-edit?id={{$tr.ID}}"
+            hx-get="./trouble-reports/dialog-edit"
             hx-trigger="click"
             hx-target="#dialogEdit"
             hx-swap="outerHTML"
-            class="ghost primary icon"
+            class="primary"
+            style="padding: 0.75rem 1.5rem;"
         >
-            <i class="bi bi-pen"></i>
+            <i class="bi bi-plus-lg" style="margin-right: 0.5rem;"></i>
+            Ersten Bericht erstellen
         </button>
-
-        {{if $data.IsAdmin}}
-        <button
-            hx-delete="./trouble-reports/data?id={{$tr.ID}}"
-            hx-trigger="click"
-            hx-target="#data"
-            hx-swap="outerHTML"
-            class="ghost destructive icon"
-        >
-            <i class="bi bi-trash"></i>
-        </button>
-        {{else}}
-        <!-- TODO: User is not an admin, Add voting system for deleting trouble reports -->
-        <!-- TODO: Store this vote somewhere and highlight it somehow -->
-        <button
-            id="voteForDelete"
-            hx-post="./trouble-reports/vote?id={{$tr.ID}}&mode=delete"
-            hx-trigger="click"
-            hx-swap="outerHTML"
-            class="ghost destructive flex column justify-between align-center"
-            style="transform: scale(0.75);"
-        >
-            <i class="bi bi-trash"></i>
-            <small>VOTE</small>
-        </button>
-        {{end}}
-
     </div>
-
-    <hr />
-    {{end}}
-</ul>
-{{else}}
-<span id="data"></span>
+</div>
 {{end}}
+
+<!-- JavaScript for enhanced functionality -->
+<script>
+    // Update search results count when data loads
+    document.addEventListener("DOMContentLoaded", function() {
+        const elements = document.querySelectorAll("details.data");
+        const resultsContainer = document.querySelector("#search-results-count");
+        
+        if (resultsContainer && elements.length > 0) {
+            resultsContainer.textContent = `${elements.length} Berichte gesamt`;
+        }
+    });
+    
+    // Enhanced details toggle for accessibility
+    document.querySelectorAll('details').forEach(details => {
+        const summary = details.querySelector('summary');
+        
+        if (summary) {
+            summary.addEventListener('click', function() {
+                // Update aria-expanded after the toggle
+                setTimeout(() => {
+                    summary.setAttribute('aria-expanded', details.open);
+                }, 0);
+            });
+            
+            // Set initial aria-expanded state
+            summary.setAttribute('aria-expanded', details.open);
+        }
+    });
+    
+    // Keyboard navigation improvements
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            // Close all open details when Escape is pressed
+            document.querySelectorAll('details[open]').forEach(details => {
+                details.removeAttribute('open');
+                const summary = details.querySelector('summary');
+                if (summary) {
+                    summary.setAttribute('aria-expanded', 'false');
+                }
+            });
+        }
+    });
+</script>

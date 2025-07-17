@@ -1,33 +1,547 @@
-<!-- Title -->
+<!-- ================================================================
+     Activity Feed Page Template
+     ================================================================
+     This template provides the main activity feed interface where users
+     can view real-time updates and system activities. It displays a
+     chronological list of events and actions within the system.
+     ================================================================ -->
 
-{{define "title"}}PG: Presse | Feed{{end}}
+<!-- Page Title (shown in browser tab) -->
+{{define "title"}}PG: Presse | Activity Feed{{end}}
 
-<!-- App Bar Title -->
+<!-- Application Bar Title (shown in header) -->
+{{define "app-bar-title"}}Activity Feed{{end}}
 
-{{define "app-bar-title"}}Feed{{end}}
-
-<!-- Nav -->
-
+<!-- Navigation Bar -->
 {{define "nav"}}
 <div class="flex row gap justify-end align-center">
-    <a role="button" class="ghost primary icon" href="./profile">
+    <!-- Feed notification button (disabled - current page) -->
+    <a 
+        role="button" 
+        class="ghost primary icon" 
+        href="./feed" 
+        disabled
+        title="Activity Feed (aktuelle Seite)"
+        aria-label="Activity Feed (aktuelle Seite)"
+        style="position: relative;"
+    >
+        <i class="bi bi-bell" aria-hidden="true"></i>
+        <!-- No counter on current page -->
+        <span id="feedCounter" style="display: none;"></span>
+    </a>
+
+    <!-- Profile page button -->
+    <a 
+        role="button" 
+        class="ghost primary icon" 
+        href="./profile"
+        title="Benutzerprofil"
+        aria-label="Zum Benutzerprofil"
+    >
         <i class="bi bi-person-circle"></i>
     </a>
 
-    <a role="button" class="ghost primary icon" href="./">
+    <!-- Home page button -->
+    <a 
+        role="button" 
+        class="ghost primary icon" 
+        href="./"
+        title="Startseite"
+        aria-label="Zur Startseite"
+    >
         <i class="bi bi-house"></i>
     </a>
 </div>
 {{end}}
 
-<!-- Content -->
-
+<!-- Main Content Area -->
 {{define "content"}}
+<!-- Custom styles for feed page -->
+<style>
+    /* Feed container styling */
+    .feed-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 0 1rem;
+    }
+    
+    /* Feed header styling */
+    .feed-header {
+        background: linear-gradient(135deg, var(--ui-primary), var(--ui-primary-dark));
+        color: var(--ui-primary-text);
+        padding: 2rem;
+        border-radius: var(--ui-border-radius);
+        margin-bottom: 2rem;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .feed-header::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+        pointer-events: none;
+    }
+    
+    .feed-header h1 {
+        margin: 0 0 0.5rem 0;
+        font-size: 2rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .feed-header p {
+        margin: 0;
+        opacity: 0.9;
+        font-size: 1.1rem;
+        position: relative;
+        z-index: 1;
+    }
+    
+    /* Feed controls */
+    .feed-controls {
+        background-color: var(--ui-background);
+        border: 1px solid var(--ui-border-color);
+        border-radius: var(--ui-border-radius);
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+    }
+    
+    .feed-status {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--ui-muted);
+        font-size: 0.9rem;
+    }
+    
+    .status-indicator {
+        width: 0.5rem;
+        height: 0.5rem;
+        border-radius: 50%;
+        background-color: var(--ui-success);
+        animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+        0% { opacity: 1; }
+        50% { opacity: 0.5; }
+        100% { opacity: 1; }
+    }
+    
+    .refresh-button {
+        background-color: var(--ui-primary);
+        color: var(--ui-primary-text);
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: var(--ui-border-radius);
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+    
+    .refresh-button:hover {
+        background-color: var(--ui-primary-dark);
+        transform: translateY(-1px);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Feed data container */
+    .feed-data-container {
+        min-height: 400px;
+        position: relative;
+    }
+    
+    /* Loading state */
+    .feed-loading {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 400px;
+        color: var(--ui-muted);
+        text-align: center;
+    }
+    
+    .feed-loading i {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        animation: spin 2s linear infinite;
+    }
+    
+    @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+    
+    .feed-loading h3 {
+        margin: 0 0 0.5rem 0;
+        color: var(--ui-text);
+    }
+    
+    .feed-loading p {
+        margin: 0;
+        font-size: 0.9rem;
+    }
+    
+    /* Empty state */
+    .feed-empty {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 400px;
+        color: var(--ui-muted);
+        text-align: center;
+        padding: 2rem;
+    }
+    
+    .feed-empty i {
+        font-size: 4rem;
+        margin-bottom: 1.5rem;
+        opacity: 0.5;
+    }
+    
+    .feed-empty h3 {
+        margin: 0 0 0.5rem 0;
+        color: var(--ui-text);
+    }
+    
+    .feed-empty p {
+        margin: 0 0 1.5rem 0;
+        max-width: 400px;
+        line-height: 1.5;
+    }
+    
+    .feed-empty .action-button {
+        background-color: var(--ui-primary);
+        color: var(--ui-primary-text);
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: var(--ui-border-radius);
+        text-decoration: none;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.2s ease;
+    }
+    
+    .feed-empty .action-button:hover {
+        background-color: var(--ui-primary-dark);
+        transform: translateY(-1px);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Auto-refresh indicator */
+    .auto-refresh-info {
+        background-color: var(--ui-background-secondary);
+        border: 1px solid var(--ui-border-color);
+        border-radius: var(--ui-border-radius);
+        padding: 1rem;
+        margin-top: 2rem;
+        text-align: center;
+        font-size: 0.85rem;
+        color: var(--ui-muted);
+    }
+    
+    .auto-refresh-info i {
+        margin-right: 0.5rem;
+        color: var(--ui-primary);
+    }
+    
+    /* Responsive design */
+    @media (max-width: 768px) {
+        .feed-container {
+            padding: 0 0.5rem;
+        }
+        
+        .feed-header {
+            padding: 1.5rem;
+        }
+        
+        .feed-header h1 {
+            font-size: 1.5rem;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .feed-controls {
+            flex-direction: column;
+            gap: 1rem;
+            text-align: center;
+        }
+        
+        .refresh-button {
+            width: 100%;
+            justify-content: center;
+        }
+        
+        .feed-loading,
+        .feed-empty {
+            min-height: 300px;
+            padding: 1rem;
+        }
+        
+        .feed-empty i {
+            font-size: 3rem;
+        }
+    }
+    
+    /* Accessibility improvements */
+    @media (prefers-reduced-motion: reduce) {
+        .status-indicator,
+        .feed-loading i {
+            animation: none;
+        }
+        
+        .refresh-button:hover,
+        .feed-empty .action-button:hover {
+            transform: none;
+        }
+    }
+    
+    /* Focus indicators */
+    .refresh-button:focus-visible,
+    .feed-empty .action-button:focus-visible {
+        outline: 2px solid var(--ui-primary);
+        outline-offset: 2px;
+    }
+</style>
+
 <main class="container fluid">
-    <span id="data" 
-        hx-get="./feed/data" 
-        hx-trigger="load" 
-        hx-swap="outerHTML"
-    ></span>
+    <div class="feed-container">
+        <!-- Feed Header -->
+        <header class="feed-header">
+            <h1>
+                <i class="bi bi-activity" aria-hidden="true"></i>
+                <span>Activity Feed</span>
+            </h1>
+            <p>Bleiben Sie über alle Systemaktivitäten und Updates informiert</p>
+        </header>
+        
+        <!-- Feed Controls -->
+        <section class="feed-controls">
+            <div class="feed-status">
+                <div class="status-indicator" aria-hidden="true"></div>
+                <span>Live-Updates aktiv</span>
+            </div>
+            
+            <button
+                type="button"
+                class="refresh-button"
+                onclick="refreshFeed()"
+                title="Feed manuell aktualisieren"
+                aria-label="Activity Feed aktualisieren"
+            >
+                <i class="bi bi-arrow-clockwise" aria-hidden="true"></i>
+                <span>Aktualisieren</span>
+            </button>
+        </section>
+        
+        <!-- Feed Data Container -->
+        <section class="feed-data-container">
+            <div 
+                id="data"
+                hx-get="./feed/data" 
+                hx-trigger="load"
+                hx-swap="outerHTML"
+                hx-indicator="#feed-loading"
+                aria-live="polite"
+                aria-label="Activity Feed Daten"
+            >
+                <!-- Loading State -->
+                <div id="feed-loading" class="feed-loading">
+                    <i class="bi bi-arrow-clockwise" aria-hidden="true"></i>
+                    <h3>Feed wird geladen...</h3>
+                    <p>Aktuelle Aktivitäten werden abgerufen</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Auto-refresh Information -->
+        <footer class="auto-refresh-info">
+            <i class="bi bi-info-circle" aria-hidden="true"></i>
+            Der Activity Feed wird automatisch alle 30 Sekunden aktualisiert
+        </footer>
+    </div>
 </main>
+
+<!-- JavaScript for enhanced functionality -->
+<script>
+    // Manual refresh function
+    function refreshFeed() {
+        const dataElement = document.querySelector('#data');
+        const refreshButton = document.querySelector('.refresh-button');
+        
+        if (dataElement && refreshButton) {
+            // Disable button during refresh
+            refreshButton.disabled = true;
+            refreshButton.innerHTML = '<i class="bi bi-arrow-clockwise" style="animation: spin 1s linear infinite;"></i><span>Wird aktualisiert...</span>';
+            
+            // Trigger HTMX refresh
+            htmx.trigger(dataElement, 'refresh');
+            
+            // Re-enable button after delay
+            setTimeout(() => {
+                refreshButton.disabled = false;
+                refreshButton.innerHTML = '<i class="bi bi-arrow-clockwise"></i><span>Aktualisieren</span>';
+            }, 2000);
+        }
+    }
+    
+    // Auto-refresh functionality
+    let autoRefreshInterval;
+    let isPageVisible = true;
+    
+    function startAutoRefresh() {
+        clearInterval(autoRefreshInterval);
+        
+        autoRefreshInterval = setInterval(() => {
+            if (isPageVisible && !document.hidden) {
+                const dataElement = document.querySelector('#data');
+                if (dataElement) {
+                    // Only refresh if not currently loading
+                    if (!dataElement.classList.contains('htmx-request')) {
+                        htmx.trigger(dataElement, 'refresh');
+                    }
+                }
+            }
+        }, 30000); // 30 seconds
+    }
+    
+    // Page visibility handling
+    document.addEventListener('visibilitychange', () => {
+        isPageVisible = !document.hidden;
+        
+        if (isPageVisible) {
+            // Page became visible - resume auto-refresh
+            startAutoRefresh();
+            // Immediate refresh when page becomes visible
+            setTimeout(() => {
+                const dataElement = document.querySelector('#data');
+                if (dataElement) {
+                    htmx.trigger(dataElement, 'refresh');
+                }
+            }, 500);
+        } else {
+            // Page became hidden - pause auto-refresh
+            clearInterval(autoRefreshInterval);
+        }
+    });
+    
+    // Keyboard shortcuts
+    document.addEventListener('keydown', (event) => {
+        // R key to refresh
+        if (event.key === 'r' || event.key === 'R') {
+            if (!event.ctrlKey && !event.metaKey && !event.altKey) {
+                event.preventDefault();
+                refreshFeed();
+            }
+        }
+        
+        // F5 alternative
+        if (event.key === 'F5') {
+            event.preventDefault();
+            refreshFeed();
+        }
+    });
+    
+    // HTMX event handling
+    document.addEventListener('htmx:afterRequest', (event) => {
+        if (event.target.id === 'data') {
+            // Update last refresh time
+            const statusText = document.querySelector('.feed-status span');
+            if (statusText) {
+                const now = new Date().toLocaleTimeString();
+                statusText.textContent = `Zuletzt aktualisiert: ${now}`;
+            }
+        }
+    });
+    
+    document.addEventListener('htmx:responseError', (event) => {
+        if (event.target.id === 'data') {
+            console.error('Feed refresh failed:', event.detail);
+            
+            // Show error state
+            event.target.innerHTML = `
+                <div class="feed-empty">
+                    <i class="bi bi-exclamation-triangle"></i>
+                    <h3>Fehler beim Laden</h3>
+                    <p>Der Activity Feed konnte nicht geladen werden. Bitte versuchen Sie es erneut.</p>
+                    <button class="action-button" onclick="refreshFeed()">
+                        <i class="bi bi-arrow-clockwise"></i>
+                        Erneut versuchen
+                    </button>
+                </div>
+            `;
+        }
+    });
+    
+    // Initialize auto-refresh when page loads
+    document.addEventListener('DOMContentLoaded', () => {
+        startAutoRefresh();
+    });
+    
+    // Cleanup on page unload
+    window.addEventListener('beforeunload', () => {
+        clearInterval(autoRefreshInterval);
+    });
+    
+    // Performance optimization: pause auto-refresh when user is idle
+    let idleTimer;
+    let isUserIdle = false;
+    
+    function resetIdleTimer() {
+        clearTimeout(idleTimer);
+        isUserIdle = false;
+        
+        idleTimer = setTimeout(() => {
+            isUserIdle = true;
+            clearInterval(autoRefreshInterval);
+            
+            // Show idle state in status
+            const statusText = document.querySelector('.feed-status span');
+            if (statusText) {
+                statusText.textContent = 'Auto-Update pausiert (inaktiv)';
+            }
+        }, 5 * 60 * 1000); // 5 minutes of inactivity
+    }
+    
+    // Track user activity
+    ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'].forEach(event => {
+        document.addEventListener(event, () => {
+            if (isUserIdle) {
+                // Resume auto-refresh
+                startAutoRefresh();
+                const statusText = document.querySelector('.feed-status span');
+                if (statusText) {
+                    statusText.textContent = 'Live-Updates aktiv';
+                }
+            }
+            resetIdleTimer();
+        }, { passive: true });
+    });
+    
+    // Initialize idle tracking
+    resetIdleTimer();
+</script>
 {{end}}

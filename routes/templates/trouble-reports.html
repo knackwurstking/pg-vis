@@ -1,77 +1,353 @@
-<!-- Title -->
+<!-- ================================================================
+     Trouble Reports Page Template
+     ================================================================
+     This template provides the main interface for managing trouble reports.
+     It includes search functionality, creation buttons, data display via
+     HTMX, and administrative controls for managing system issues.
+     ================================================================ -->
 
+<!-- Page Title (shown in browser tab) -->
 {{define "title"}}PG: Presse | Trouble Reports{{end}}
 
-<!-- App Bar Title -->
-
+<!-- Application Bar Title (shown in header) -->
 {{define "app-bar-title"}}Trouble Reports{{end}}
 
-<!-- Nav -->
+<!-- Navigation Bar -->
+{{define "nav"}}
+    {{template "basic-nav-elements"}}
+{{end}}
 
-{{define "nav"}} {{template "basic-nav-elements"}} {{end}}
-
-<!-- Content -->
-
+<!-- Main Content Area -->
 {{define "content"}}
-<script>
-    function search(event) {
-        const rg = new RegExp(event.currentTarget.value, "si");
-        const elements = document.querySelectorAll("details.data");
+<!-- Custom styles for trouble reports page -->
+<style>
+    /* Search input styling */
+    .search-container {
+        position: relative;
+        width: 100%;
+    }
+    
+    .search-container input[type="search"] {
+        padding-left: 2.5rem;
+        width: 100%;
+    }
+    
+    .search-container .search-icon {
+        position: absolute;
+        left: 0.75rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--ui-muted);
+        pointer-events: none;
+    }
+    
+    /* Create button styling */
+    .create-button {
+        background-color: var(--ui-primary);
+        color: var(--ui-primary-text);
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: var(--ui-border-radius);
+        transition: all 0.2s ease;
+    }
+    
+    .create-button:hover {
+        background-color: var(--ui-primary-dark);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Data container styling */
+    .data-container {
+        min-height: 200px;
+    }
+    
+    /* Loading state */
+    .loading {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 200px;
+        color: var(--ui-muted);
+    }
+    
+    /* TODO section styling */
+    .todo-section {
+        background-color: var(--ui-warning-background);
+        border: 1px solid var(--ui-warning);
+        border-radius: var(--ui-border-radius);
+        padding: 1rem;
+        margin: 1rem 0;
+    }
+    
+    .todo-section h4 {
+        color: var(--ui-warning);
+        margin: 0 0 0.5rem 0;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .todo-section ul {
+        margin: 0;
+        padding-left: 1.5rem;
+    }
+    
+    .todo-section li {
+        margin: 0.25rem 0;
+        color: var(--ui-warning-text);
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .controls-row {
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .create-button {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+</style>
 
+<!-- JavaScript for search functionality -->
+<script>
+    /**
+     * Search function to filter trouble reports in real-time
+     * @param {Event} event - The input change event
+     */
+    function search(event) {
+        const searchTerm = event.currentTarget.value.trim();
+        const elements = document.querySelectorAll("details.data");
+        
+        // Create case-insensitive regex pattern
+        const regex = searchTerm ? new RegExp(searchTerm, "si") : null;
+        
         elements.forEach((element) => {
-            if (rg.test(element.textContent)) {
-                console.debug("match: ", element.textContent);
-                element.style.display = "block"
+            if (!regex || regex.test(element.textContent)) {
+                element.style.display = "block";
+                element.removeAttribute("hidden");
             } else {
-                element.style.display = "none"
+                element.style.display = "none";
+                element.setAttribute("hidden", "");
             }
         });
+        
+        // Update search results count
+        updateSearchResultsCount(elements, regex);
+    }
+    
+    /**
+     * Update the search results counter
+     * @param {NodeList} elements - All trouble report elements
+     * @param {RegExp|null} regex - The search regex pattern
+     */
+    function updateSearchResultsCount(elements, regex) {
+        const resultsContainer = document.querySelector("#search-results-count");
+        if (!resultsContainer) return;
+        
+        if (!regex) {
+            resultsContainer.textContent = `${elements.length} Berichte gesamt`;
+            return;
+        }
+        
+        const visibleCount = Array.from(elements).filter(el => 
+            el.style.display !== "none" && !el.hasAttribute("hidden")
+        ).length;
+        
+        resultsContainer.textContent = `${visibleCount} von ${elements.length} Berichten gefunden`;
+    }
+    
+    /**
+     * Clear search and show all results
+     */
+    function clearSearch() {
+        const searchInput = document.querySelector('input[name="search"]');
+        if (searchInput) {
+            searchInput.value = "";
+            search({ currentTarget: searchInput });
+        }
     }
 </script>
 
 <main class="container fluid">
-    <section style="margin-top: 0" class="flex gap justify-between">
-        <input
-            style="margin: auto 0; width: 100%"
-            type="search"
-            name="search"
-            placeholder="Suche"
-            aria-label="Suche"
-            onchange="search(event)"
-        />
+    <!-- Page Header -->
+    <header style="margin-bottom: 2rem;">
+        <hgroup>
+            <h1>
+                <i class="bi bi-exclamation-triangle" style="margin-right: 0.5rem; color: var(--ui-warning);"></i>
+                Trouble Reports
+            </h1>
+            <p>Verwalten Sie Problemberichte und deren Lösungen</p>
+        </hgroup>
+    </header>
+    
+    <!-- Search and Controls Section -->
+    <section class="controls-row flex gap justify-between align-center" style="margin-bottom: 1.5rem;">
+        <!-- Search Container -->
+        <div class="search-container flex-item">
+            <div style="position: relative;">
+                <i class="bi bi-search search-icon" aria-hidden="true"></i>
+                <input
+                    type="search"
+                    name="search"
+                    placeholder="Berichte durchsuchen..."
+                    aria-label="Trouble Reports durchsuchen"
+                    onchange="search(event)"
+                    oninput="search(event)"
+                    autocomplete="off"
+                />
+            </div>
+            <!-- Search Results Count -->
+            <small id="search-results-count" style="color: var(--ui-muted); margin-top: 0.25rem; display: block;">
+                <!-- Will be populated by JavaScript -->
+            </small>
+        </div>
+        
+        <!-- Clear Search Button -->
+        <button
+            type="button"
+            class="ghost secondary"
+            onclick="clearSearch()"
+            title="Suche zurücksetzen"
+            style="margin-left: 0.5rem;"
+        >
+            <i class="bi bi-x-circle"></i>
+            <span class="sr-only">Suche zurücksetzen</span>
+        </button>
     </section>
-
-    <section style="margin-top: 0" class="flex gap justify-end">
+    
+    <!-- Create New Report Section -->
+    <section class="flex gap justify-end" style="margin-bottom: 1.5rem;">
         <button
             hx-get="./trouble-reports/dialog-edit"
             hx-trigger="click"
             hx-target="#dialogEdit"
             hx-swap="outerHTML"
-            class="flex row gap justify-between align-center"
-            title="Erstelle einen neuen Eintrag"
+            hx-indicator="#loading-indicator"
+            class="create-button flex row gap justify-center align-center"
+            title="Neuen Problembericht erstellen"
+            aria-label="Neuen Trouble Report erstellen"
         >
-            <i class="bi bi-plus-lg"></i>
-            Erstellen
+            <i class="bi bi-plus-lg" aria-hidden="true"></i>
+            <span>Neuen Bericht erstellen</span>
         </button>
+        
+        <!-- Loading indicator -->
+        <div id="loading-indicator" class="htmx-indicator loading">
+            <i class="bi bi-arrow-clockwise" style="animation: spin 1s linear infinite;"></i>
+            <span style="margin-left: 0.5rem;">Laden...</span>
+        </div>
     </section>
-
-    <section>
-        <blockquote>
-            <ul>
-                <li><i>@TODO: Add a modal for viewing modification history, allow revert changes (admin only)</i></li>
-                <li><i>@TODO: Handle attachments somehow, but no need to hurry here</i></li>
-            </ul>
-        </blockquote>
+    
+    <!-- Development Notes Section -->
+    <section class="todo-section">
+        <h4>
+            <i class="bi bi-code-slash" aria-hidden="true"></i>
+            Entwicklungsnotizen
+        </h4>
+        <ul>
+            <li>
+                <strong>Modal für Änderungshistorie:</strong> 
+                Anzeige der Bearbeitungshistorie mit Möglichkeit zum Rückgängigmachen (nur Admin)
+            </li>
+            <li>
+                <strong>Dateianhänge:</strong> 
+                Integration von Dateianhängen für Trouble Reports (niedrige Priorität)
+            </li>
+            <li>
+                <strong>Abstimmungssystem:</strong> 
+                Implementierung eines Voting-Systems für Löschungen durch Nicht-Admins
+            </li>
+            <li>
+                <strong>Kategorisierung:</strong> 
+                Tags und Kategorien für bessere Organisation der Berichte
+            </li>
+        </ul>
     </section>
-
-    <section>
-        <span
+    
+    <!-- Data Display Section -->
+    <section class="data-container">
+        <div 
             hx-get="./trouble-reports/data"
             hx-trigger="load"
             hx-swap="outerHTML"
-            id="data"></span>
+            hx-indicator="#loading-indicator"
+            id="data"
+            aria-live="polite"
+            aria-label="Trouble Reports Daten"
+        >
+            <!-- Data will be loaded here via HTMX -->
+            <div class="loading">
+                <i class="bi bi-arrow-clockwise" style="animation: spin 1s linear infinite; margin-right: 0.5rem;"></i>
+                Trouble Reports werden geladen...
+            </div>
+        </div>
     </section>
-
-    <span id="dialogEdit"></span>
+    
+    <!-- Dialog Container -->
+    <div id="dialogEdit" aria-live="polite">
+        <!-- Edit dialogs will be loaded here via HTMX -->
+    </div>
 </main>
+
+<!-- Additional CSS for animations and utilities -->
+<style>
+    /* Spinning animation for loading indicators */
+    @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+    
+    /* HTMX loading indicator */
+    .htmx-indicator {
+        display: none;
+    }
+    
+    .htmx-request .htmx-indicator {
+        display: flex;
+    }
+    
+    /* Screen reader only text */
+    .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+    }
+    
+    /* Accessibility improvements */
+    @media (prefers-reduced-motion: reduce) {
+        * {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+        }
+    }
+    
+    /* Focus indicators */
+    button:focus-visible,
+    input:focus-visible {
+        outline: 2px solid var(--ui-primary);
+        outline-offset: 2px;
+    }
+</style>
+
+<!-- Initialize search results count on page load -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Initialize search results count after data loads
+        setTimeout(() => {
+            const elements = document.querySelectorAll("details.data");
+            updateSearchResultsCount(elements, null);
+        }, 100);
+    });
+</script>
 {{end}}
